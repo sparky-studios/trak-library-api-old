@@ -33,6 +33,10 @@ public class Game {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
     private Set<GameGenreXref> gameGenreXrefs;
 
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console")
+    private Set<GameConsoleXref> gameConsoleXrefs;
+
     @Version
     @Column(name = "op_lock_version")
     private Long version;
