@@ -23,7 +23,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependency versions -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
-        <io.springfox.swagger.version>2.9.2</io.springfox.swagger.version>
         <javax.json.version>1.1.4</javax.json.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <net.kaczmarzyk.specification.version>2.1.1</net.kaczmarzyk.specification.version>
@@ -81,16 +80,6 @@
                 <groupId>com.github.javafaker</groupId>
                 <artifactId>javafaker</artifactId>
                 <version>${com.github.faker.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger2</artifactId>
-                <version>${io.springfox.swagger.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.springfox</groupId>
-                <artifactId>springfox-swagger-ui</artifactId>
-                <version>${io.springfox.swagger.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax.validation</groupId>
