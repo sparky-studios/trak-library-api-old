@@ -1,8 +1,10 @@
 package com.sparky.maidcafe.game.service;
 
 import com.sparky.maidcafe.game.domain.Game;
+import com.sparky.maidcafe.game.domain.Genre;
 import com.sparky.maidcafe.game.repository.specification.GameSpecification;
 import com.sparky.maidcafe.game.service.dto.GameDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.json.JsonMergePatch;
@@ -46,6 +48,27 @@ public interface GameService {
      * @return The {@link Game} entity matching the ID mapped to a {@link GameDto}.
      */
     GameDto findById(long id);
+
+    /**
+     * Given the ID of a {@link Genre}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
+     * the given {@link Genre}. If the ID provided does not map to any {@link Genre}, a {@link javax.persistence.EntityNotFoundException}
+     * will be thrown. If there are no {@link Game}s associated with the {@link Genre}, an empty {@link Iterable} will be returned.
+     *
+     * @param genreId The ID of the {@link Genre} to retrieve {@link Game} entries for.
+     * @param pageable The amount of data and the page to return.
+     *
+     * @return A page of {@link GameDto}s that are mapped with the given {@link Genre}.
+     */
+    Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable);
+
+    /**
+     * Retrieves all of the {@link Game} entities stored within the persistence layer. This method should not be used within a live
+     * environment, as the amount of data may cause buffer overflows and bring down the server. It should only be used within a test
+     * environment and even then, with hesitancy.
+     *
+     * @return All of the {@link Game} entities contained within the persistence layer, wrapped as {@link GameDto}s.
+     */
+    Iterable<GameDto> findAll();
 
     /**
      * This method will retrieve an {@link Iterable} of {@link GameDto} with a response size specified by the {@link Pageable}. The

@@ -2,7 +2,9 @@ package com.sparky.maidcafe.game.webapp.seeder;
 
 import com.sparky.maidcafe.game.service.GameService;
 import com.sparky.maidcafe.game.service.dto.GameDto;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
@@ -20,8 +22,10 @@ public class GameSeederTest {
     private GameSeeder gameSeeder;
 
     @Test
-    public void run_withNoData_onlyInsertsOneGame() {
+    public void run_withDefaultData_insertsTenGames() {
         // Arrange
+        gameSeeder.setGamesCount(10);
+
         Mockito.when(gameService.save(ArgumentMatchers.any()))
                 .thenReturn(new GameDto());
 
@@ -29,7 +33,7 @@ public class GameSeederTest {
         gameSeeder.run();
 
         // Assert
-        Mockito.verify(gameService, Mockito.atMostOnce())
+        Mockito.verify(gameService, Mockito.atMost(10))
             .save(ArgumentMatchers.any());
     }
 }

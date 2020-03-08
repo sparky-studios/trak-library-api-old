@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Benjamin Carter" id="001">
+        <comment>
+            Create the initial database structure for the application.
+        </comment>
+
+        <!-- Create the game table -->
+        <createTable tableName="game">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(4096)"/>
+            <column name="release_date" type="date"/>
+            <column name="age_rating" type="smallint" defaultValueNumeric="5">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create the genre table -->
+        <createTable tableName="genre">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_genre" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(4096)"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- genre unique constraints -->
+        <addUniqueConstraint
+                tableName="genre"
+                columnNames="name"
+                constraintName="unq_genre_name" />
+
+        <!-- Create the game_genre_xref table -->
+        <createTable tableName="game_genre_xref">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_genre_xref" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="genre_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- game_genre_xref foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_genre_xref"
+                baseColumnNames="game_id"
+                constraintName="fk_game_genre_xref_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_genre_xref"
+                baseColumnNames="genre_id"
+                constraintName="fk_game_genre_xref_genre_id"
+                referencedTableName="genre"
+                referencedColumnNames="id" />
+
+        <rollback>
+            <dropTable tableName="game_genre_xref" />
+            <dropTable tableName="genre" />
+            <dropTable tableName="game" />
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

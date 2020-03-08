@@ -1,7 +1,10 @@
 package com.sparky.maidcafe.game.service.impl;
 
 import com.sparky.maidcafe.game.domain.Game;
+import com.sparky.maidcafe.game.domain.GameGenreXref;
+import com.sparky.maidcafe.game.repository.GameGenreXrefRepository;
 import com.sparky.maidcafe.game.repository.GameRepository;
+import com.sparky.maidcafe.game.repository.GenreRepository;
 import com.sparky.maidcafe.game.repository.specification.GameSpecification;
 import com.sparky.maidcafe.game.service.dto.GameDto;
 import com.sparky.maidcafe.game.service.mapper.GameMapper;
@@ -14,6 +17,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -26,6 +30,12 @@ public class GameServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
+
+    @Mock
+    private GenreRepository genreRepository;
+
+    @Mock
+    private GameGenreXrefRepository gameGenreXrefRepository;
 
     @Spy
     private GameMapper gameMapper = GameMapper.INSTANCE;
@@ -109,6 +119,99 @@ public class GameServiceImplTest {
         Assertions.assertEquals(game.getDescription(), result.getDescription(), "The description does match the entity.");
         Assertions.assertEquals(game.getReleaseDate(), result.getReleaseDate(), "The release date does match the entity.");
         Assertions.assertEquals(game.getVersion(), result.getVersion(), "The version does match the entity.");
+    }
+
+    @Test
+    public void findGamesByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)));
+    }
+
+    @Test
+    public void findGamesByGenreId_withNoGames_returnsEmptyList() {
+        // Arrange
+        Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findGamesByGenreId_withMultipleGames_returnsList() {
+        // Arrange
+        Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        GameGenreXref gameGenreXref1 = new GameGenreXref();
+        gameGenreXref1.setGame(new Game());
+
+        GameGenreXref gameGenreXref2 = new GameGenreXref();
+        gameGenreXref2.setGame(new Game());
+
+        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(gameGenreXref1, gameGenreXref2)));
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findAll_withNoGamesAndNoPageable_returnsEmptyList() {
+        // Arrange
+        Mockito.when(gameRepository.findAll())
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "There should be no game dto's if no games were found.");
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findAll_withGamesAndNoPageable_returnsListOfGameDtos() {
+        // Arrange
+        Mockito.when(gameRepository.findAll())
+                .thenReturn(Arrays.asList(new Game(), new Game()));
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "There should be game dto's if games were found.");
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .gameToGameDto(ArgumentMatchers.any());
     }
 
     @Test

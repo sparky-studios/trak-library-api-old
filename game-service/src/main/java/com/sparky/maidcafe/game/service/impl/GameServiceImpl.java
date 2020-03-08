@@ -1,6 +1,8 @@
 package com.sparky.maidcafe.game.service.impl;
 
+import com.sparky.maidcafe.game.repository.GameGenreXrefRepository;
 import com.sparky.maidcafe.game.repository.GameRepository;
+import com.sparky.maidcafe.game.repository.GenreRepository;
 import com.sparky.maidcafe.game.repository.specification.GameSpecification;
 import com.sparky.maidcafe.game.service.GameService;
 import com.sparky.maidcafe.game.service.PatchService;
@@ -16,12 +18,16 @@ import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Service
 public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
+    private final GenreRepository genreRepository;
+    private final GameGenreXrefRepository gameGenreXrefRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -47,6 +53,27 @@ public class GameServiceImpl implements GameService {
 
         return gameMapper.gameToGameDto(gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    public Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable) {
+        if (!genreRepository.existsById(genreId)) {
+            String errorMessage = messageSource
+                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameGenreXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId)), pageable)
+                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public Iterable<GameDto> findAll() {
+        return StreamSupport.stream(gameRepository.findAll().spliterator(), false)
+                .map(gameMapper::gameToGameDto)
+                .collect(Collectors.toList());
     }
 
     @Override

@@ -4,33 +4,26 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "game")
-public class Game {
+@Table(name = "genre")
+public class Genre {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
-    @Column(name = "title", nullable = false)
-    private String title;
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "description", length = 4096)
     private String description;
 
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
-
-    @Column(name = "age_rating", nullable = false)
-    private AgeRating ageRating;
-
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre", cascade = CascadeType.ALL)
     private Set<GameGenreXref> gameGenreXrefs;
 
     @Version
