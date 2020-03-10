@@ -6,6 +6,7 @@ import com.sparky.maidcafe.game.repository.GameGenreXrefRepository;
 import com.sparky.maidcafe.game.repository.GameRepository;
 import com.sparky.maidcafe.game.repository.GenreRepository;
 import com.sparky.maidcafe.game.repository.specification.GenreSpecification;
+import com.sparky.maidcafe.game.service.PatchService;
 import com.sparky.maidcafe.game.service.dto.GenreDto;
 import com.sparky.maidcafe.game.service.mapper.GenreMapper;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -42,6 +44,9 @@ public class GenreServiceImplTest {
 
     @Mock
     private MessageSource messageSource;
+
+    @Mock
+    private PatchService patchService;
 
     @InjectMocks
     private GenreServiceImpl genreService;
@@ -181,6 +186,40 @@ public class GenreServiceImplTest {
     }
 
     @Test
+    public void findAll_withNoGenresAndNoPageable_returnsEmptyList() {
+        // Arrange
+        Mockito.when(genreRepository.findAll())
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        List<GenreDto> result = StreamSupport.stream(genreService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "There should be no genre dto's if no genres were found.");
+
+        Mockito.verify(genreMapper, Mockito.never())
+                .genreToGenreDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findAll_withGenresAndNoPageable_returnsListOfGenreDtos() {
+        // Arrange
+        Mockito.when(genreRepository.findAll())
+                .thenReturn(Arrays.asList(new Genre(), new Genre()));
+
+        // Act
+        List<GenreDto> result = StreamSupport.stream(genreService.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "There should be game dto's if games were found.");
+
+        Mockito.verify(genreMapper, Mockito.atMost(2))
+                .genreToGenreDto(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.findAll(Mockito.mock(GenreSpecification.class), null));
@@ -252,6 +291,39 @@ public class GenreServiceImplTest {
 
         // Act
         genreService.update(new GenreDto());
+
+        // Assert
+        Mockito.verify(genreRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void patch_withNoGenreMatchingId_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(genreRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+    }
+
+    @Test
+    public void patch_withValidId_saveGenre() {
+        // Arrange
+        Mockito.when(genreRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new Genre()));
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(patchService.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(new GenreDto());
+
+        // Act
+        genreService.patch(0L, Mockito.mock(JsonMergePatch.class));
 
         // Assert
         Mockito.verify(genreRepository, Mockito.atMostOnce())

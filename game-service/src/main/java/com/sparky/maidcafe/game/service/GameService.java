@@ -61,6 +61,8 @@ public interface GameService {
      */
     Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable);
 
+    Iterable<GameDto> findGamesByConsoleId(long consoleId, Pageable pageable);
+
     /**
      * Retrieves all of the {@link Game} entities stored within the persistence layer. This method should not be used within a live
      * environment, as the amount of data may cause buffer overflows and bring down the server. It should only be used within a test

@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
@@ -69,6 +70,18 @@ public class GenreController {
         return genreRepresentationModelAssembler.toModel(genreService.findById(id));
     }
 
+    /**
+     * End-point that will retrieve a {@link PagedModel} of {@link GameDto}s that have a link to the specified
+     * {@link GenreDto}. If the ID doesn't match an existing {@link GenreDto}, then an {@link ApiError} will be
+     * returned with additional error details. If the {@link GenreDto} exists but has no associated
+     * {@link GameDto}'s, then an empty {@link PagedModel} will be returned.
+     *
+     * @param id The ID of the {@link GenreDto} to retrieve associated {@link GameDto}'s for.
+     * @param pageable The size and ordering of the page to retrieve.
+     * @param pagedResourcesAssembler The assembler used to convert the {@link GameDto}'s to a HATEOAS page.
+     *
+     * @return A {@link PagedModel} of {@link GameDto}'s that are associated with the given {@link GenreDto}.
+     */
     @GetMapping("/{id}/games")
     public PagedModel<EntityModel<GameDto>> findGamesByGenreId(@PathVariable long id,
                                                                @PageableDefault Pageable pageable,

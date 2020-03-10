@@ -71,6 +71,12 @@
                 referencedTableName="genre"
                 referencedColumnNames="id" />
 
+        <!-- game_genre_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_genre_xref"
+                columnNames="game_id,genre_id"
+                constraintName="unq_game_genre_xref_game_id_genre_id" />
+
         <!-- Create the console table -->
         <createTable tableName="console">
             <column name="id" type="bigint" autoIncrement="true">
@@ -110,6 +116,12 @@
                 constraintName="fk_game_console_xref_console_id"
                 referencedTableName="console"
                 referencedColumnNames="id" />
+
+        <!-- game_console_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_console_xref"
+                columnNames="game_id,console_id"
+                constraintName="unq_game_console_xref_game_id_console_id" />
 
         <rollback>
             <dropTable tableName="game_console_xref" />

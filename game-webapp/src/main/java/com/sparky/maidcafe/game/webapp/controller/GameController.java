@@ -1,10 +1,13 @@
 package com.sparky.maidcafe.game.webapp.controller;
 
 import com.sparky.maidcafe.game.repository.specification.GameSpecification;
+import com.sparky.maidcafe.game.service.ConsoleService;
 import com.sparky.maidcafe.game.service.GameService;
 import com.sparky.maidcafe.game.service.GenreService;
+import com.sparky.maidcafe.game.service.dto.ConsoleDto;
 import com.sparky.maidcafe.game.service.dto.GameDto;
 import com.sparky.maidcafe.game.service.dto.GenreDto;
+import com.sparky.maidcafe.game.webapp.assembler.ConsoleRepresentationModelAssembler;
 import com.sparky.maidcafe.game.webapp.assembler.GameRepresentationModelAssembler;
 import com.sparky.maidcafe.game.webapp.assembler.GenreRepresentationModelAssembler;
 import com.sparky.maidcafe.game.webapp.exception.ApiError;
@@ -43,8 +46,10 @@ public class GameController {
 
     private final GameService gameService;
     private final GenreService genreService;
+    private final ConsoleService consoleService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
+    private final ConsoleRepresentationModelAssembler consoleRepresentationModelAssembler;
 
     /**
      * End-point that will attempt to save the given {@link GameDto} request body to the underlying
@@ -93,6 +98,21 @@ public class GameController {
     @GetMapping("/{id}/genres")
     public CollectionModel<EntityModel<GenreDto>> findGenresByGameId(@PathVariable long id) {
         return genreRepresentationModelAssembler.toCollectionModel(genreService.findGenresByGameId(id));
+    }
+
+    /**
+     * End-point that will retrieve a {@link CollectionModel} of {@link ConsoleDto}s that are directly associated
+     * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
+     * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
+     * has no associated {@link GenreDto}'s, then an empty {@link CollectionModel} will be returned.
+     *
+     * @param id The ID of the {@link GameDto} to retrieve genre information for.
+     *
+     * @return A {@link CollectionModel} of {@link ConsoleDto}'s that are associated with the given {@link GameDto}.
+     */
+    @GetMapping("/{id}/consoles")
+    public CollectionModel<EntityModel<ConsoleDto>> findConsolesByGameId(@PathVariable long id) {
+        return consoleRepresentationModelAssembler.toCollectionModel(consoleService.findConsolesFromGameId(id));
     }
 
     /**

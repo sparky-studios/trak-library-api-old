@@ -1,8 +1,6 @@
 package com.sparky.maidcafe.game.service.impl;
 
-import com.sparky.maidcafe.game.repository.GameGenreXrefRepository;
-import com.sparky.maidcafe.game.repository.GameRepository;
-import com.sparky.maidcafe.game.repository.GenreRepository;
+import com.sparky.maidcafe.game.repository.*;
 import com.sparky.maidcafe.game.repository.specification.GameSpecification;
 import com.sparky.maidcafe.game.service.GameService;
 import com.sparky.maidcafe.game.service.PatchService;
@@ -28,6 +26,8 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
     private final GameGenreXrefRepository gameGenreXrefRepository;
+    private final ConsoleRepository consoleRepository;
+    private final GameConsoleXrefRepository gameConsoleXrefRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -66,6 +66,20 @@ public class GameServiceImpl implements GameService {
 
         return gameGenreXrefRepository
                 .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId)), pageable)
+                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public Iterable<GameDto> findGamesByConsoleId(long consoleId, Pageable pageable) {
+        if (!consoleRepository.existsById(consoleId)) {
+            String errorMessage = messageSource
+                    .getMessage("console.exception.not-found", new Object[] { consoleId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameConsoleXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("consoleId"), consoleId)), pageable)
                 .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
     }
 
