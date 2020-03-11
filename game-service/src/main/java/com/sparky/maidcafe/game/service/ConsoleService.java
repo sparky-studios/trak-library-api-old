@@ -3,6 +3,7 @@ package com.sparky.maidcafe.game.service;
 import com.sparky.maidcafe.game.domain.Console;
 import com.sparky.maidcafe.game.repository.specification.ConsoleSpecification;
 import com.sparky.maidcafe.game.service.dto.ConsoleDto;
+import com.sparky.maidcafe.game.service.dto.GameDto;
 import org.springframework.data.domain.Pageable;
 
 import javax.json.JsonMergePatch;
@@ -56,6 +57,17 @@ public interface ConsoleService {
      */
     Iterable<ConsoleDto> findAll();
 
+    /**
+     * Retrieve an {@link Iterable} of all {@link ConsoleDto}'s that are associated with the given {@link GameDto}.
+     * The {@link Iterable} returned by this method will not contain any paged information, as it is under the impression
+     * that no game will be for more {@link ConsoleDto}'s than a single page is expected to contain. If the ID provided
+     * does not map onto an existing {@link GameDto}, then a {@link javax.persistence.EntityNotFoundException} will be
+     * thrown, else every {@link ConsoleDto} associated with the {@link GameDto} will be returned.
+     *
+     * @param gameId The ID of the {@link GameDto} to retrieve the {@link ConsoleDto}'s for.
+     *
+     * @return An {@link Iterable} of every {@link ConsoleDto} the given {@link GameDto} is on.
+     */
     Iterable<ConsoleDto> findConsolesFromGameId(long gameId);
 
     /**

@@ -27,7 +27,7 @@ public class Console {
     private LocalDate releaseDate;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<GameConsoleXref> gameConsoleXrefs;
 
     @Version

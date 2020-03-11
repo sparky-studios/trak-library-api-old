@@ -82,7 +82,7 @@ public class ConsoleController {
      *
      * @return A {@link PagedModel} of {@link GameDto}'s that are associated with the given {@link ConsoleDto}.
      */
-    @GetMapping("/{id}/consoles")
+    @GetMapping("/{id}/games")
     public PagedModel<EntityModel<GameDto>> findGamesByConsoleId(@PathVariable long id,
                                                                  @PageableDefault Pageable pageable,
                                                                  PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
