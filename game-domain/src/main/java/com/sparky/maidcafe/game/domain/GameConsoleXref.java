@@ -7,8 +7,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "game_genre_xref")
-public class GameGenreXref {
+@Table(name = "game_console_xref")
+public class GameConsoleXref {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,11 +23,11 @@ public class GameGenreXref {
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;
 
-    @Column(name = "genre_id", nullable = false, updatable = false)
-    private long genreId;
+    @Column(name = "console_id", nullable = false, updatable = false)
+    private long consoleId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumn(name = "genre_id", updatable = false, insertable = false)
-    private Genre genre;
+    @JoinColumn(name = "console_id", updatable = false, insertable = false)
+    private Console console;
 }

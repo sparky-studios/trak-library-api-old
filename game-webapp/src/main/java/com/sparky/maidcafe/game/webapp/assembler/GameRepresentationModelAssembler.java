@@ -1,6 +1,7 @@
 package com.sparky.maidcafe.game.webapp.assembler;
 
 import com.sparky.maidcafe.game.service.dto.GameDto;
+import com.sparky.maidcafe.game.webapp.controller.ConsoleController;
 import com.sparky.maidcafe.game.webapp.controller.GameController;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -21,6 +22,9 @@ public class GameRepresentationModelAssembler implements SimpleRepresentationMod
         if (content != null) {
             resource.add(linkTo(methodOn(GameController.class).findById(content.getId()))
                     .withSelfRel());
+
+            resource.add(linkTo(methodOn(GameController.class).findConsolesByGameId(content.getId()))
+                    .withRel("consoles"));
 
             resource.add(linkTo(methodOn(GameController.class).findGenresByGameId(content.getId()))
                     .withRel("genres"));

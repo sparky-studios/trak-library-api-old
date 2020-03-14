@@ -1,5 +1,3 @@
-server:
-  port: 8081
 spring:
   datasource:
     url: jdbc:h2:mem:game-db;DB_CLOSE_DELAY=-1

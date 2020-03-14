@@ -2,6 +2,7 @@ package com.sparky.maidcafe.game.webapp.controller;
 
 import com.sparky.maidcafe.game.domain.AgeRating;
 import com.sparky.maidcafe.game.service.dto.GameDto;
+import com.sparky.maidcafe.game.service.dto.GenreDto;
 import com.sparky.maidcafe.game.webapp.exception.ApiError;
 import com.sparky.maidcafe.game.webapp.seeder.GameSeeder;
 import com.sparky.maidcafe.game.webapp.seeder.SeederRunner;
@@ -16,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
@@ -174,6 +176,28 @@ public class GameControllerIntegrationTest {
 
         Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "Status code should be 200 (OK).");
         Assertions.assertEquals(1L, gameDto.getId(), "The ID of the GameDto does not match the one requested.");
+    }
+
+    @Test
+    public void findGenresByGameId_withInvalidGameId_returnsApiErrorAndNotFoundErrorCode() {
+        // Arrange
+        ParameterizedTypeReference<ApiError> typeReference = new ParameterizedTypeReference<ApiError>() {};
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaTypes.HAL_JSON);
+
+        // Act
+        ResponseEntity<ApiError> responseEntity = testRestTemplate
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}/genres", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 200L);
+
+        // Assert
+        ApiError apiError = responseEntity.getBody();
+        Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode(), "Status code should be 404 (NOT_FOUND).");
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, apiError.getStatus(), "The status code of the ApiError should be 404 (NOT_FOUND).");
+        Assertions.assertNotNull(apiError.getTimestamp(), "There should be a timestamp with the ApiError.");
+        Assertions.assertNotNull(apiError.getMessage(), "There should be a exception message with the ApiError.");
     }
 
     @Test

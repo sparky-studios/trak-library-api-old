@@ -86,7 +86,7 @@ public class GenreServiceImpl implements GenreService {
 
         return genreRepository.findAll(genreSpecification, pageable)
                 .map(genreMapper::genreToGenreDto);
-    }
+}
 
     @Override
     public GenreDto update(GenreDto genreDto) {

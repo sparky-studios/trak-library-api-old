@@ -11,11 +11,15 @@ public class SeederRunner implements CommandLineRunner {
     private final GameSeeder gameSeeder;
     private final GenreSeeder genreSeeder;
     private final GameGenreXrefSeeder gameGenreXrefSeeder;
+    private final ConsoleSeeder consoleSeeder;
+    private final GameConsoleXrefSeeder gameConsoleXrefSeeder;
 
     @Override
     public void run(String... args) {
         gameSeeder.run();
         genreSeeder.run();
         gameGenreXrefSeeder.run();
+        consoleSeeder.run();
+        gameConsoleXrefSeeder.run();
     }
 }

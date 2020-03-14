@@ -71,7 +71,61 @@
                 referencedTableName="genre"
                 referencedColumnNames="id" />
 
+        <!-- game_genre_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_genre_xref"
+                columnNames="game_id,genre_id"
+                constraintName="unq_game_genre_xref_game_id_genre_id" />
+
+        <!-- Create the console table -->
+        <createTable tableName="console">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_console" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(4096)"/>
+            <column name="release_date" type="date"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create the game_console_xref table -->
+        <createTable tableName="game_console_xref">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_console_xref" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="console_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- game_console_xref foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_console_xref"
+                baseColumnNames="game_id"
+                constraintName="fk_game_console_xref_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_console_xref"
+                baseColumnNames="console_id"
+                constraintName="fk_game_console_xref_console_id"
+                referencedTableName="console"
+                referencedColumnNames="id" />
+
+        <!-- game_console_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_console_xref"
+                columnNames="game_id,console_id"
+                constraintName="unq_game_console_xref_game_id_console_id" />
+
         <rollback>
+            <dropTable tableName="game_console_xref" />
+            <dropTable tableName="console" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
             <dropTable tableName="game" />
