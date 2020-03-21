@@ -30,11 +30,11 @@ public class Game {
     private AgeRating ageRating;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.ALL)
     private Set<GameGenreXref> gameGenreXrefs;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL)
     private Set<GameConsoleXref> gameConsoleXrefs;
 
     @Version

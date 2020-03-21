@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
-@Relation(collectionRelation = "games", itemRelation = "game")
+@Relation(collectionRelation = "data", itemRelation = "game")
 public class GameDto {
 
     private long id;

@@ -8,7 +8,7 @@ import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Data
-@Relation(collectionRelation = "consoles", itemRelation = "console")
+@Relation(collectionRelation = "data", itemRelation = "console")
 public class ConsoleDto {
 
     private long id;

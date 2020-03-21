@@ -123,7 +123,51 @@
                 columnNames="game_id,console_id"
                 constraintName="unq_game_console_xref_game_id_console_id" />
 
+        <!-- game_user_entry table -->
+        <createTable tableName="game_user_entry">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_user_entry" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="console_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="status" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="rating" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_user_entry foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry"
+                baseColumnNames="game_id"
+                constraintName="fk_game_user_entry_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry"
+                baseColumnNames="console_id"
+                constraintName="fk_game_user_entry_console_id"
+                referencedTableName="console"
+                referencedColumnNames="id" />
+
+        <!-- game_user_entry unique constraints -->
+        <addUniqueConstraint
+                tableName="game_user_entry"
+                columnNames="game_id,console_id,user_id"
+                constraintName="unq_game_user_entry_game_id_console_id_user_id" />
+
         <rollback>
+            <dropTable tableName="game_user_entry" />
             <dropTable tableName="game_console_xref" />
             <dropTable tableName="console" />
             <dropTable tableName="game_genre_xref" />
