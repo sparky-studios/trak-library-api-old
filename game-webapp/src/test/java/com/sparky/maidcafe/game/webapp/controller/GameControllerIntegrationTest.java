@@ -1,11 +1,10 @@
 package com.sparky.maidcafe.game.webapp.controller;
 
 import com.sparky.maidcafe.game.domain.AgeRating;
+import com.sparky.maidcafe.game.service.dto.ConsoleDto;
 import com.sparky.maidcafe.game.service.dto.GameDto;
 import com.sparky.maidcafe.game.service.dto.GenreDto;
 import com.sparky.maidcafe.game.webapp.exception.ApiError;
-import com.sparky.maidcafe.game.webapp.seeder.GameSeeder;
-import com.sparky.maidcafe.game.webapp.seeder.SeederRunner;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.Assertions;
@@ -20,15 +19,13 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.core.TypeReferences;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
 import javax.json.Json;
 import javax.json.JsonMergePatch;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.stream.IntStream;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -107,8 +104,6 @@ public class GameControllerIntegrationTest {
     @Test
     public void save_withValidRequestBody_returnsSavedGameDto() {
         // Arrange
-        ParameterizedTypeReference<EntityModel<GameDto>> typeReference = new ParameterizedTypeReference<EntityModel<GameDto>>() {};
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaTypes.HAL_JSON);
 
@@ -119,7 +114,7 @@ public class GameControllerIntegrationTest {
 
         // Act
         ResponseEntity<EntityModel<GameDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/games", port), HttpMethod.POST, new HttpEntity<>(gameDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games", port), HttpMethod.POST, new HttpEntity<>(gameDto, httpHeaders), new TypeReferences.EntityModelType<GameDto>() {});
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -159,14 +154,12 @@ public class GameControllerIntegrationTest {
     @Test
     public void findById_withValidId_returnsGameDto() {
         // Arrange
-        ParameterizedTypeReference<EntityModel<GameDto>> typeReference = new ParameterizedTypeReference<EntityModel<GameDto>>() {};
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaTypes.HAL_JSON);
 
         // Act
         ResponseEntity<EntityModel<GameDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 1L);
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), new TypeReferences.EntityModelType<GameDto>() {}, 1L);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -198,6 +191,64 @@ public class GameControllerIntegrationTest {
         Assertions.assertEquals(HttpStatus.NOT_FOUND, apiError.getStatus(), "The status code of the ApiError should be 404 (NOT_FOUND).");
         Assertions.assertNotNull(apiError.getTimestamp(), "There should be a timestamp with the ApiError.");
         Assertions.assertNotNull(apiError.getMessage(), "There should be a exception message with the ApiError.");
+    }
+
+    @Test
+    public void findGenresByGameId_withValidGameId_returnsAssociatedGenreDtos() {
+        // Arrange
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaTypes.HAL_JSON);
+
+        // Act
+        ResponseEntity<CollectionModel<EntityModel<GenreDto>>> responseEntity = testRestTemplate
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}/genres", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), new TypeReferences.CollectionModelType<EntityModel<GenreDto>>() {}, 1L);
+
+        // Assert
+        CollectionModel<EntityModel<GenreDto>> response = responseEntity.getBody();
+
+        Assertions.assertNotNull(response, "The response from the endpoint should not be null.");
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "Status code should be 200 (OK).");
+        Assertions.assertFalse(response.getContent().isEmpty(), "The response should contain genre data.");
+    }
+
+    @Test
+    public void findConsolesByGameId_withInvalidGameId_returnsApiErrorAndNotFoundErrorCode() {
+        // Arrange
+        ParameterizedTypeReference<ApiError> typeReference = new ParameterizedTypeReference<ApiError>() {};
+
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaTypes.HAL_JSON);
+
+        // Act
+        ResponseEntity<ApiError> responseEntity = testRestTemplate
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}/consoles", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 200L);
+
+        // Assert
+        ApiError apiError = responseEntity.getBody();
+        Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode(), "Status code should be 404 (NOT_FOUND).");
+
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, apiError.getStatus(), "The status code of the ApiError should be 404 (NOT_FOUND).");
+        Assertions.assertNotNull(apiError.getTimestamp(), "There should be a timestamp with the ApiError.");
+        Assertions.assertNotNull(apiError.getMessage(), "There should be a exception message with the ApiError.");
+    }
+
+    @Test
+    public void findConsolesByGameId_withValidGameId_returnsAssociatedConsoleDtos() {
+        // Arrange
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaTypes.HAL_JSON);
+
+        // Act
+        ResponseEntity<CollectionModel<EntityModel<ConsoleDto>>> responseEntity = testRestTemplate
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}/consoles", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), new TypeReferences.CollectionModelType<EntityModel<ConsoleDto>>() {}, 1L);
+
+        // Assert
+        CollectionModel<EntityModel<ConsoleDto>> response = responseEntity.getBody();
+
+        Assertions.assertNotNull(response, "The response from the endpoint should not be null.");
+        Assertions.assertEquals(HttpStatus.OK, responseEntity.getStatusCode(), "Status code should be 200 (OK).");
+        Assertions.assertFalse(response.getContent().isEmpty(), "The response should contain console data.");
     }
 
     @Test
@@ -263,8 +314,6 @@ public class GameControllerIntegrationTest {
     @Test
     public void update_withValidRequestBody_returnsUpdatedGameDto() {
         // Arrange
-        ParameterizedTypeReference<EntityModel<GameDto>> typeReference = new ParameterizedTypeReference<EntityModel<GameDto>>() {};
-
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaTypes.HAL_JSON);
 
@@ -278,7 +327,7 @@ public class GameControllerIntegrationTest {
 
         // Act
         ResponseEntity<EntityModel<GameDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/games", port), HttpMethod.PUT, new HttpEntity<>(gameDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games", port), HttpMethod.PUT, new HttpEntity<>(gameDto, httpHeaders), new TypeReferences.EntityModelType<GameDto>() {});
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -351,13 +400,11 @@ public class GameControllerIntegrationTest {
     @Test
     public void patch_withValidPatchRequestBody_returnsPatchedGameDto() {
         // Arrange
-        ParameterizedTypeReference<EntityModel<GameDto>> typeReference = new ParameterizedTypeReference<EntityModel<GameDto>>() {};
-
         HttpHeaders getHttpHeaders = new HttpHeaders();
         getHttpHeaders.setContentType(MediaTypes.HAL_JSON);
 
         ResponseEntity<EntityModel<GameDto>> originalGameDto = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.GET, new HttpEntity<>(getHttpHeaders), typeReference, 5L);
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.GET, new HttpEntity<>(getHttpHeaders), new TypeReferences.EntityModelType<GameDto>() {}, 5L);
 
         JsonMergePatch jsonMergePatch = Json.createMergePatch(Json.createObjectBuilder()
                 .add("title", "patched-title")
@@ -370,7 +417,7 @@ public class GameControllerIntegrationTest {
 
         // Act
         ResponseEntity<EntityModel<GameDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, patchHttpHeaders), typeReference, 5L);
+                .exchange(String.format("http://localhost:%d/api/v1/game-management/games/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, patchHttpHeaders), new TypeReferences.EntityModelType<GameDto>() {}, 5L);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");

@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 @Data
-@Relation(collectionRelation = "genres", itemRelation = "genre")
+@Relation(collectionRelation = "data", itemRelation = "genre")
 public class GenreDto {
 
     private long id;

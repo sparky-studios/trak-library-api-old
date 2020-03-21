@@ -23,7 +23,7 @@ public class Genre {
     private String description;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "genre", cascade = CascadeType.ALL)
     private Set<GameGenreXref> gameGenreXrefs;
 
     @Version
