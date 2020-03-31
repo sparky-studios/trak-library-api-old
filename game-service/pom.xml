@@ -3,15 +3,15 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>maid-cafe-api</artifactId>
-        <groupId>com.sparky.maidcafe</groupId>
+        <artifactId>trak-api</artifactId>
+        <groupId>com.sparky.trak</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sparky.maidcafe.game</groupId>
+    <groupId>com.sparky.trak.game</groupId>
     <artifactId>game-service</artifactId>
-    <name>Maid Cafe API Game Service</name>
+    <name>Trak API Game Service</name>
 
     <dependencies>
         <dependency>
@@ -36,7 +36,7 @@
         </dependency>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.sparky.maidcafe.game</groupId>
+            <groupId>com.sparky.trak.game</groupId>
             <artifactId>game-repository</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
