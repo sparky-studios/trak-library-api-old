@@ -1,7 +1,7 @@
-package com.sparky.trak.game.webapp.assembler;
+package com.sparky.trak.game.server.assembler;
 
 import com.sparky.trak.game.service.dto.GameDto;
-import com.sparky.trak.game.webapp.controller.GameController;
+import com.sparky.trak.game.server.controller.GameController;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;

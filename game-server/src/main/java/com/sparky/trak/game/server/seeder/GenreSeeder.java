@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.seeder;
+package com.sparky.trak.game.server.seeder;
 
 import com.github.javafaker.Faker;
 import com.sparky.trak.game.service.GenreService;

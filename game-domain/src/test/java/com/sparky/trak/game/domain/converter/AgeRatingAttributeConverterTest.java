@@ -1,7 +1,6 @@
-package com.sparky.maidcafe.game.domain.converter;
+package com.sparky.trak.game.domain.converter;
 
-import com.sparky.maidcafe.game.domain.AgeRating;
-import com.sparky.maidcafe.game.domain.converter.AgeRatingAttributeConverter;
+import com.sparky.trak.game.domain.AgeRating;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

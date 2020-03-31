@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.configuration;
+package com.sparky.trak.game.server.configuration;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

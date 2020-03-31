@@ -1,6 +1,6 @@
-package com.sparky.maidcafe.game.domain.converter;
+package com.sparky.trak.game.domain.converter;
 
-import com.sparky.maidcafe.game.domain.AgeRating;
+import com.sparky.trak.game.domain.AgeRating;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;

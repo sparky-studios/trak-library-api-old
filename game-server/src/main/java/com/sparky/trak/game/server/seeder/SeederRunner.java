@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.seeder;
+package com.sparky.trak.game.server.seeder;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;

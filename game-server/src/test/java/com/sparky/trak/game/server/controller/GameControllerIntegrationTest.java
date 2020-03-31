@@ -1,10 +1,10 @@
-package com.sparky.trak.game.webapp.controller;
+package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.domain.AgeRating;
 import com.sparky.trak.game.service.dto.ConsoleDto;
 import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.GenreDto;
-import com.sparky.trak.game.webapp.exception.ApiError;
+import com.sparky.trak.game.server.exception.ApiError;
 import org.apache.http.client.HttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.junit.jupiter.api.Assertions;

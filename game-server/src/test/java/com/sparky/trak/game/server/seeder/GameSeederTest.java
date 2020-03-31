@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.seeder;
+package com.sparky.trak.game.server.seeder;
 
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.dto.GameDto;

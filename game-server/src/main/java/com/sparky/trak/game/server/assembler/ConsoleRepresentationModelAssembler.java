@@ -1,8 +1,8 @@
-package com.sparky.trak.game.webapp.assembler;
+package com.sparky.trak.game.server.assembler;
 
 import com.sparky.trak.game.service.dto.ConsoleDto;
 import com.sparky.trak.game.service.dto.GameDto;
-import com.sparky.trak.game.webapp.controller.ConsoleController;
+import com.sparky.trak.game.server.controller.ConsoleController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;

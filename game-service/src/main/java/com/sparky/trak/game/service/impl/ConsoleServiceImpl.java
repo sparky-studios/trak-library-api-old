@@ -7,7 +7,6 @@ import com.sparky.trak.game.repository.specification.ConsoleSpecification;
 import com.sparky.trak.game.service.ConsoleService;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.ConsoleDto;
-import com.sparky.trak.game.service.dto.GenreDto;
 import com.sparky.trak.game.service.mapper.ConsoleMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;

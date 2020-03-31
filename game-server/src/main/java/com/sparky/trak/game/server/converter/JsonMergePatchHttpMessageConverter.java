@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.converter;
+package com.sparky.trak.game.server.converter;
 
 import org.springframework.http.HttpInputMessage;
 import org.springframework.http.HttpOutputMessage;

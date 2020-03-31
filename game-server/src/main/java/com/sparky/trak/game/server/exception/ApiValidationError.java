@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.exception;
+package com.sparky.trak.game.server.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

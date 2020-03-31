@@ -1,13 +1,13 @@
-package com.sparky.trak.game.webapp.controller;
+package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GenreSpecification;
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.GenreService;
 import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.GenreDto;
-import com.sparky.trak.game.webapp.assembler.GameRepresentationModelAssembler;
-import com.sparky.trak.game.webapp.assembler.GenreRepresentationModelAssembler;
-import com.sparky.trak.game.webapp.exception.ApiError;
+import com.sparky.trak.game.server.assembler.GameRepresentationModelAssembler;
+import com.sparky.trak.game.server.assembler.GenreRepresentationModelAssembler;
+import com.sparky.trak.game.server.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -41,7 +41,7 @@ public class GenreController {
      * its pre-requisite conditions in order to attempt a save to the persistence layer.
      *
      * If the {@link GenreDto} being saved contains an ID that matches an existing entity in the persistence layer,
-     * the {@link GenreDto} will not be saved and a {@link com.sparky.trak.game.webapp.exception.ApiError} will
+     * the {@link GenreDto} will not be saved and a {@link com.sparky.trak.game.server.exception.ApiError} will
      * be returned with appropriate exceptions details.
      *
      * @param genreDto The {@link GenreDto} to save.

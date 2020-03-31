@@ -1,4 +1,4 @@
-package com.sparky.maidcafe.game.domain;
+package com.sparky.trak.game.domain;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

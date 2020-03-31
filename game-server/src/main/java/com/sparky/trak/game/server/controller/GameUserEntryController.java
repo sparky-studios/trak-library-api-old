@@ -1,10 +1,10 @@
-package com.sparky.trak.game.webapp.controller;
+package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.GameUserEntryService;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
-import com.sparky.trak.game.webapp.assembler.GameUserEntryRepresentationModelAssembler;
-import com.sparky.trak.game.webapp.exception.ApiError;
+import com.sparky.trak.game.server.assembler.GameUserEntryRepresentationModelAssembler;
+import com.sparky.trak.game.server.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +36,7 @@ public class GameUserEntryController {
      * its pre-requisite conditions in order to attempt a save to the persistence layer.
      *
      * If the {@link GameUserEntryDto} being saved contains an ID that matches an existing entity in the persistence layer,
-     * the {@link GameUserEntryDto} will not be saved and a {@link com.sparky.trak.game.webapp.exception.ApiError} will
+     * the {@link GameUserEntryDto} will not be saved and a {@link com.sparky.trak.game.server.exception.ApiError} will
      * be returned with appropriate exceptions details.
      *
      * @param gameUserEntryDto The {@link GameUserEntryDto} to save.

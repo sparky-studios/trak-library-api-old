@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.exception;
+package com.sparky.trak.game.server.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
@@ -15,7 +15,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
-import javax.xml.ws.Response;
 import java.util.stream.Collectors;
 
 @Slf4j

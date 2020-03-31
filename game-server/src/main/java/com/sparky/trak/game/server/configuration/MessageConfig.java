@@ -1,4 +1,4 @@
-package com.sparky.trak.game.webapp.configuration;
+package com.sparky.trak.game.server.configuration;
 
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;

@@ -1,6 +1,6 @@
-package com.sparky.trak.game.webapp.configuration;
+package com.sparky.trak.game.server.configuration;
 
-import com.sparky.trak.game.webapp.converter.JsonMergePatchHttpMessageConverter;
+import com.sparky.trak.game.server.converter.JsonMergePatchHttpMessageConverter;
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;

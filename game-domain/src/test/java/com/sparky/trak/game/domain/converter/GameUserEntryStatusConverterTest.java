@@ -1,6 +1,6 @@
-package com.sparky.maidcafe.game.domain.converter;
+package com.sparky.trak.game.domain.converter;
 
-import com.sparky.maidcafe.game.domain.GameUserEntryStatus;
+import com.sparky.trak.game.domain.GameUserEntryStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
