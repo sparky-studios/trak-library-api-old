@@ -128,7 +128,7 @@ public class GameUserEntryServiceImplTest {
         // Assert
         Assertions.assertEquals(gameUserEntry.getId(), result.getId(), "The mapped ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getGameId(), result.getGameId(), "The mapped game ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getGame().getTitle(), result.getGameName(), "The mapped game name does not match the entity.");
+        Assertions.assertEquals(gameUserEntry.getGame().getTitle(), result.getGameTitle(), "The mapped game title does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getConsoleId(), result.getConsoleId(), "The mapped console ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getConsole().getName(), result.getConsoleName(), "The mapped console name does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");

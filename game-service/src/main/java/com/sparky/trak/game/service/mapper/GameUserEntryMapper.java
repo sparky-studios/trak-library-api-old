@@ -11,7 +11,7 @@ public interface GameUserEntryMapper {
 
     GameUserEntryMapper INSTANCE = Mappers.getMapper(GameUserEntryMapper.class);
 
-    @Mapping(source = "game.title", target = "gameName")
+    @Mapping(source = "game.title", target = "gameTitle")
     @Mapping(source = "console.name", target = "consoleName")
     GameUserEntryDto gameUserEntryToGameUserEntryDto(GameUserEntry gameUserEntry);
 

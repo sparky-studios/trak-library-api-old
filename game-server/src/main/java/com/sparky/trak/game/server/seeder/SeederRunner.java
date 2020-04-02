@@ -14,6 +14,7 @@ public class SeederRunner implements CommandLineRunner {
     private final ConsoleSeeder consoleSeeder;
     private final GameConsoleXrefSeeder gameConsoleXrefSeeder;
     private final GameUserEntrySeeder gameUserEntrySeeder;
+    private final GameRequestSeeder gameRequestSeeder;
 
     @Override
     public void run(String... args) {
@@ -23,5 +24,6 @@ public class SeederRunner implements CommandLineRunner {
         consoleSeeder.run();
         gameConsoleXrefSeeder.run();
         gameUserEntrySeeder.run();
+        gameRequestSeeder.run();
     }
 }
