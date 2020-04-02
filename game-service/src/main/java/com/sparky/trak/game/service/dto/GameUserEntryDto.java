@@ -16,7 +16,7 @@ public class GameUserEntryDto {
 
     private long gameId;
 
-    private String gameName;
+    private String gameTitle;
 
     private long consoleId;
 

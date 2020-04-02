@@ -1,7 +1,8 @@
 package com.sparky.trak.game.server.assembler;
 
-import com.sparky.trak.game.service.dto.GameUserEntryDto;
+import com.sparky.trak.game.server.controller.GameController;
 import com.sparky.trak.game.server.controller.GameUserEntryController;
+import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
@@ -21,6 +22,8 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
         if (content != null) {
             resource.add(linkTo(methodOn(GameUserEntryController.class).findById(content.getId()))
                     .withSelfRel());
+            resource.add(linkTo(methodOn(GameController.class).findById(content.getGameId()))
+                    .withRel("game"));
         }
     }
 

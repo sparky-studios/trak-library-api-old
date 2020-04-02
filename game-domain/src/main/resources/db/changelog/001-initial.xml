@@ -166,7 +166,26 @@
                 columnNames="game_id,console_id,user_id"
                 constraintName="unq_game_user_entry_game_id_console_id_user_id" />
 
+        <!-- game_user_entry table -->
+        <createTable tableName="game_request">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_request" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completed" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="completed_date" type="date"/>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
         <rollback>
+            <dropTable tableName="game_request" />
             <dropTable tableName="game_user_entry" />
             <dropTable tableName="game_console_xref" />
             <dropTable tableName="console" />
