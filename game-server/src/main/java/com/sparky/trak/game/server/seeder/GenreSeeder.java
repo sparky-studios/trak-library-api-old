@@ -6,16 +6,18 @@ import com.sparky.trak.game.service.dto.GenreDto;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.stream.IntStream;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GenreSeeder implements Runnable {
 
     @Setter
-    @Value("${seeding.genres-count ?: 10}")
+    @Value("${seeding.genre.count ?: 10}")
     private int genreCount;
 
     private final GenreService genreService;

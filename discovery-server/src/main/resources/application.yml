@@ -7,3 +7,5 @@ eureka:
 spring:
   application:
     name: trak-discovery-server
+  profiles:
+    active: development

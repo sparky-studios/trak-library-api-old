@@ -2,8 +2,10 @@ package com.sparky.trak.game.server.seeder;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class SeederRunner implements CommandLineRunner {

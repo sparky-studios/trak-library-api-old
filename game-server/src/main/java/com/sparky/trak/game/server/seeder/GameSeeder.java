@@ -7,6 +7,7 @@ import com.sparky.trak.game.service.dto.GameDto;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -14,12 +15,13 @@ import java.time.ZoneId;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GameSeeder implements Runnable {
 
     @Setter
-    @Value("${seeding.games-count ?: 10}")
+    @Value("${seeding.game.count ?: 10}")
     private int gamesCount;
 
     private final GameService gameService;

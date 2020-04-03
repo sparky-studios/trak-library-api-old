@@ -7,7 +7,9 @@ import com.sparky.trak.game.repository.GameGenreXrefRepository;
 import com.sparky.trak.game.repository.GameRepository;
 import com.sparky.trak.game.repository.GenreRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -19,14 +21,17 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GameGenreXrefSeeder implements Runnable {
 
-    @Value("${seeding.games-genres-xref.min-count ?: 1}")
+    @Setter
+    @Value("${seeding.games-genre-xref.min-count ?: 1}")
     private int gamesGenresXrefMinCount;
 
-    @Value("${seeding.games-genres-xref.max-count ?: 3}")
+    @Setter
+    @Value("${seeding.games-genre-xref.max-count ?: 3}")
     private int gamesGenresXrefMaxCount;
 
     private final GameRepository gameRepository;
