@@ -53,7 +53,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -81,7 +81,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -107,7 +107,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<EntityModel<GenreDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.POST, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -132,7 +132,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 1000L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 1000L);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -154,7 +154,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<EntityModel<GenreDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 1L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(httpHeaders), typeReference, 1L);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -182,7 +182,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -211,7 +211,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -239,7 +239,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<EntityModel<GenreDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
+                .exchange(String.format("http://localhost:%d/v1/genres", port), HttpMethod.PUT, new HttpEntity<>(genreDto, httpHeaders), typeReference);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");
@@ -269,7 +269,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, httpHeaders), typeReference, 5L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, httpHeaders), typeReference, 5L);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -297,7 +297,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<ApiError> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, httpHeaders), typeReference, 1000L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, httpHeaders), typeReference, 1000L);
 
         // Assert
         ApiError apiError = responseEntity.getBody();
@@ -318,7 +318,7 @@ public class GenreControllerIntegationTest {
         getHttpHeaders.setContentType(MediaTypes.HAL_JSON);
 
         ResponseEntity<EntityModel<GenreDto>> originalGenreDto = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(getHttpHeaders), typeReference, 5L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.GET, new HttpEntity<>(getHttpHeaders), typeReference, 5L);
 
         JsonMergePatch jsonMergePatch = Json.createMergePatch(Json.createObjectBuilder()
                 .add("name", "patched-name")
@@ -330,7 +330,7 @@ public class GenreControllerIntegationTest {
 
         // Act
         ResponseEntity<EntityModel<GenreDto>> responseEntity = testRestTemplate
-                .exchange(String.format("http://localhost:%d/api/v1/game-management/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, patchHttpHeaders), typeReference, 5L);
+                .exchange(String.format("http://localhost:%d/v1/genres/{id}", port), HttpMethod.PATCH, new HttpEntity<>(jsonMergePatch, patchHttpHeaders), typeReference, 5L);
 
         // Assert
         Assertions.assertNotNull(responseEntity.getBody(), "The response from the endpoint should not be null.");

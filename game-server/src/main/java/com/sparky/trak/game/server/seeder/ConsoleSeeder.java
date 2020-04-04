@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.time.ZoneId;
 import java.util.stream.IntStream;
 
-@Profile("development")
+@Profile({ "test", "development" })
 @RequiredArgsConstructor
 @Component
 public class ConsoleSeeder implements Runnable {

@@ -27,7 +27,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/game-management/genres", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/v1/genres", produces = MediaTypes.HAL_JSON_VALUE)
 public class GenreController {
 
     private final GenreService genreService;

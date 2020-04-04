@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
-@Profile("development")
+@Profile({ "test", "development" })
 @RequiredArgsConstructor
 @Component
 public class GameUserEntrySeeder implements Runnable {

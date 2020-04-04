@@ -15,7 +15,7 @@ import java.time.ZoneId;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-@Profile("development")
+@Profile({ "test", "development" })
 @RequiredArgsConstructor
 @Component
 public class GameSeeder implements Runnable {
