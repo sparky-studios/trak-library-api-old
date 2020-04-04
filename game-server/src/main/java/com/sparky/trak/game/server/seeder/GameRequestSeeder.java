@@ -4,7 +4,9 @@ import com.github.javafaker.Faker;
 import com.sparky.trak.game.service.GameRequestService;
 import com.sparky.trak.game.service.dto.GameRequestDto;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -12,10 +14,12 @@ import java.time.ZoneId;
 import java.util.Random;
 import java.util.stream.IntStream;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GameRequestSeeder implements Runnable {
 
+    @Setter
     @Value("${seeding.game-request.count ?: 10}")
     private int gameRequestCount;
 

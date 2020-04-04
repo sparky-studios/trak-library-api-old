@@ -6,7 +6,9 @@ import com.sparky.trak.game.repository.GameConsoleXrefRepository;
 import com.sparky.trak.game.service.GameUserEntryService;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -17,11 +19,13 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GameUserEntrySeeder implements Runnable {
 
-    @Value("${seeding.game-user-entries.user-count ?: 1}")
+    @Setter
+    @Value("${seeding.game-user-entry.user-count ?: 1}")
     private int userCount;
 
     private final GameUserEntryService gameUserEntryService;

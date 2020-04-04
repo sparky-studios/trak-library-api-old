@@ -3,7 +3,9 @@ package com.sparky.trak.game.server.seeder;
 import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.*;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.security.SecureRandom;
@@ -15,13 +17,16 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.StreamSupport;
 
+@Profile("development")
 @RequiredArgsConstructor
 @Component
 public class GameConsoleXrefSeeder implements Runnable {
 
+    @Setter
     @Value("${seeding.game-console-xref.min-count ?: 1}")
     private int gameConsoleXrefMinCount;
 
+    @Setter
     @Value("${seeding.game-console-xref.max-count ?: 3}")
     private int gameConsoleXrefMaxCount;
 

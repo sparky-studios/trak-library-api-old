@@ -1,0 +1,16 @@
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka
+spring:
+  application:
+    name: trak-config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/TheLordBritish/trak-api-properties.git
+  profiles:
+    active: development
+server:
+  port: 8888
