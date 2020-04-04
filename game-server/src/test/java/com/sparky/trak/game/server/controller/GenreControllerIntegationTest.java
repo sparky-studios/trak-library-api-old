@@ -1,5 +1,6 @@
 package com.sparky.trak.game.server.controller;
 
+import com.sparky.trak.game.server.seeder.SeederRunner;
 import com.sparky.trak.game.service.dto.GenreDto;
 import com.sparky.trak.game.server.exception.ApiError;
 import org.apache.http.client.HttpClient;
@@ -31,12 +32,17 @@ public class GenreControllerIntegationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private SeederRunner seederRunner;
+
     @BeforeAll
     public void beforeAll() {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         testRestTemplate.getRestTemplate()
                 .setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+        seederRunner.run();
     }
 
     @Test

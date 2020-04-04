@@ -2,6 +2,7 @@ package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.domain.AgeRating;
 import com.sparky.trak.game.server.exception.ApiError;
+import com.sparky.trak.game.server.seeder.SeederRunner;
 import com.sparky.trak.game.service.dto.ConsoleDto;
 import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.GenreDto;
@@ -37,12 +38,17 @@ public class GameControllerIntegrationTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private SeederRunner seederRunner;
+
     @BeforeAll
     public void beforeAll() {
         HttpClient httpClient = HttpClientBuilder.create().build();
 
         testRestTemplate.getRestTemplate()
                 .setRequestFactory(new HttpComponentsClientHttpRequestFactory(httpClient));
+
+        seederRunner.run();
     }
 
     @Test
