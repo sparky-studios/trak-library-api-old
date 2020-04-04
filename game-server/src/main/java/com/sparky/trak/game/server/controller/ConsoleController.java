@@ -27,7 +27,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/game-management/consoles", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/v1/consoles", produces = MediaTypes.HAL_JSON_VALUE)
 public class ConsoleController {
 
     private final ConsoleService consoleService;

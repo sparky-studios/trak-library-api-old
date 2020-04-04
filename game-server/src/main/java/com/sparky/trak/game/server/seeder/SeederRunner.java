@@ -5,10 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
-@Profile("development")
+@Profile({ "test", "development" })
 @RequiredArgsConstructor
 @Component
-public class SeederRunner implements CommandLineRunner {
+public class SeederRunner implements Runnable {
 
     private final GameSeeder gameSeeder;
     private final GenreSeeder genreSeeder;
@@ -19,7 +19,7 @@ public class SeederRunner implements CommandLineRunner {
     private final GameRequestSeeder gameRequestSeeder;
 
     @Override
-    public void run(String... args) {
+    public void run() {
         gameSeeder.run();
         genreSeeder.run();
         gameGenreXrefSeeder.run();

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: trak-game-server
+  cloud:
+    config:
+      discovery:
+        enabled: false
+      enabled: false
+  profiles:
+    active: test

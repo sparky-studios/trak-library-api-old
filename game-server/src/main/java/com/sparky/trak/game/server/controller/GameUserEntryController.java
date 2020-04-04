@@ -24,7 +24,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/game-management/game-user-entries", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/v1/game-user-entries", produces = MediaTypes.HAL_JSON_VALUE)
 public class GameUserEntryController {
 
     private final GameUserEntryService gameUserEntryService;

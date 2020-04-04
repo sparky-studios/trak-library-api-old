@@ -41,7 +41,7 @@ import java.util.stream.StreamSupport;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/api/v1/game-management/games", produces = MediaTypes.HAL_JSON_VALUE)
+@RequestMapping(value = "/v1/games", produces = MediaTypes.HAL_JSON_VALUE)
 public class GameController {
 
     private final GameService gameService;
