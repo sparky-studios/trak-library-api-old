@@ -1,5 +1,6 @@
 package com.sparky.trak.game.server.controller;
 
+import com.sparky.trak.game.server.annotation.AllowedForAdmin;
 import com.sparky.trak.game.server.seeder.SeederRunner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Profile;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.security.Principal;
 
 @Profile({ "test", "development" })
 @RequiredArgsConstructor
@@ -28,9 +31,10 @@ public class SeederController {
      * during generation, which will be returned as a standard {@link com.sparky.trak.game.server.exception.ApiError},
      * depending on the exception type.
      */
+    @AllowedForAdmin
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping
-    public void seed() {
+    public void seed(Principal principal) {
         seederRunner.run();
     }
 }

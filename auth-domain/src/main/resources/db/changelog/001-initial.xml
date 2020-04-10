@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Benjamin Carter" id="001">
+        <comment>
+            Create the initial database structure for the auth application.
+        </comment>
+
+        <!-- Create the user table -->
+        <createTable tableName="user">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user" />
+            </column>
+            <column name="username" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email_address" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="active" type="boolean" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- user unique constraints -->
+        <addUniqueConstraint
+                tableName="user"
+                columnNames="username"
+                constraintName="unq_user_username"/>
+        <addUniqueConstraint
+                tableName="user"
+                columnNames="email_address"
+                constraintName="unq_user_email_address"/>
+
+        <!-- Create the user_role table -->
+        <createTable tableName="user_role">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_role" />
+            </column>
+            <column name="role" type="varchar(30)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- user_role unique constraints -->
+        <addUniqueConstraint
+                tableName="user_role"
+                columnNames="role"
+                constraintName="unq_user_role_role" />
+
+        <!-- Create the user_role_xref table -->
+        <createTable tableName="user_role_xref">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_role_xref" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="user_role_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- user_role_xref foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="user_role_xref"
+                baseColumnNames="user_id"
+                constraintName="fk_user_role_xref_user_id"
+                referencedTableName="user"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="user_role_xref"
+                baseColumnNames="user_role_id"
+                constraintName="fk_user_role_xref_user_role_id"
+                referencedTableName="user_role"
+                referencedColumnNames="id" />
+
+        <!-- user_role_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="user_role_xref"
+                columnNames="user_id,user_role_id"
+                constraintName="unq_user_role_xref_user_id_user_role_id" />
+
+    </changeSet>
+</databaseChangeLog>

@@ -14,7 +14,7 @@ public class ApiError {
 
     private HttpStatus status;
     @Setter(AccessLevel.NONE)
-    private LocalDateTime timestamp;
+    private LocalDateTime time;
     private String message;
     private String debugMessage;
 
@@ -22,7 +22,7 @@ public class ApiError {
     private Collection<ApiSubError> subErrors = new ArrayList<>();
 
     private ApiError() {
-        timestamp = LocalDateTime.now();
+        time = LocalDateTime.now();
     }
 
     public ApiError(HttpStatus status) {

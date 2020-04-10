@@ -28,7 +28,7 @@ public class GenreSeeder implements Runnable {
 
         IntStream.range(0, genreCount).forEach(i -> {
             GenreDto genreDto = new GenreDto();
-            genreDto.setName(faker.name().name());
+            genreDto.setName(faker.lorem().characters(30));
             genreDto.setDescription(faker.lorem().characters(2000));
 
             genreService.save(genreDto);

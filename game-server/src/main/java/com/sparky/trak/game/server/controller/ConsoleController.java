@@ -1,6 +1,8 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.ConsoleSpecification;
+import com.sparky.trak.game.server.annotation.AllowedForModerator;
+import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.service.ConsoleService;
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.dto.ConsoleDto;
@@ -48,6 +50,7 @@ public class ConsoleController {
      *
      * @return The saved {@link ConsoleDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EntityModel<ConsoleDto> save(@Validated @RequestBody ConsoleDto consoleDto) {
@@ -64,6 +67,7 @@ public class ConsoleController {
      *
      * @return The {@link ConsoleDto} that matches the given ID as a HATEOAS response.
      */
+    @AllowedForUser
     @GetMapping("/{id}")
     public EntityModel<ConsoleDto> findById(@PathVariable long id) {
         return consoleRepresentationModelAssembler.toModel(consoleService.findById(id));
@@ -81,6 +85,7 @@ public class ConsoleController {
      *
      * @return A {@link PagedModel} of {@link GameDto}'s that are associated with the given {@link ConsoleDto}.
      */
+    @AllowedForUser
     @GetMapping("/{id}/games")
     public PagedModel<EntityModel<GameDto>> findGamesByConsoleId(@PathVariable long id,
                                                                  @PageableDefault Pageable pageable,
@@ -108,6 +113,7 @@ public class ConsoleController {
      *
      * @return A {@link PagedModel} containing the {@link ConsoleDto} that match the requested page and criteria.
      */
+    @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<ConsoleDto>> findAll(ConsoleSpecification consoleSpecification,
                                                        @PageableDefault Pageable pageable,
@@ -132,6 +138,7 @@ public class ConsoleController {
      *
      * @return The updated {@link ConsoleDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @PutMapping
     public EntityModel<ConsoleDto> update(@Validated @RequestBody ConsoleDto consoleDto) {
         return consoleRepresentationModelAssembler.toModel(consoleService.update(consoleDto));
@@ -153,6 +160,7 @@ public class ConsoleController {
      *
      * @return The patched {@link ConsoleDto} instance.
      */
+    @AllowedForModerator
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<ConsoleDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return consoleRepresentationModelAssembler.toModel(consoleService.patch(id, jsonMergePatch));
@@ -168,6 +176,7 @@ public class ConsoleController {
      *
      * @param id The ID of the {@link ConsoleDto} to delete.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {
