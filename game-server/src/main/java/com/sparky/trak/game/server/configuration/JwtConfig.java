@@ -8,9 +8,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class JwtConfig {
 
-    @Value("${security.jwt.auth-uri}")
+    @Value("${trak.security.jwt.auth-uri}")
     private String authUri;
 
-    @Value("${security.jwt.secret-key}")
+    @Value("${trak.security.jwt.secret-key}")
     private String secretKey;
 }

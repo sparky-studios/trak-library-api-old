@@ -14,7 +14,7 @@ import javax.persistence.*;
  */
 @Data
 @Entity
-@Table(name = "user_role_xref")
+@Table(name = "auth_user_role_xref")
 public class UserRoleXref {
 
     @Id
@@ -22,19 +22,19 @@ public class UserRoleXref {
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
-    @Column(name = "user_id", nullable = false, updatable = false)
+    @Column(name = "auth_user_id", nullable = false, updatable = false)
     private long userId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumn(name = "user_id", updatable = false, insertable = false)
+    @JoinColumn(name = "auth_user_id", updatable = false, insertable = false)
     private User user;
 
-    @Column(name = "user_role_id", nullable = false, updatable = false)
+    @Column(name = "auth_user_role_id", nullable = false, updatable = false)
     private long userRoleId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumn(name = "user_role_id", updatable = false, insertable = false)
+    @JoinColumn(name = "auth_user_role_id", updatable = false, insertable = false)
     private UserRole userRole;
 }
