@@ -29,7 +29,7 @@ public class ConsoleSeeder implements Runnable {
 
         IntStream.range(0, consoleCount).forEach(i -> {
             ConsoleDto consoleDto = new ConsoleDto();
-            consoleDto.setName(faker.book().title());
+            consoleDto.setName(faker.lorem().characters(30));
             consoleDto.setDescription(faker.lorem().characters(2000));
             consoleDto.setReleaseDate(faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
 

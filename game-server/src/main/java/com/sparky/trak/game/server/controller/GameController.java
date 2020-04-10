@@ -1,6 +1,8 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameSpecification;
+import com.sparky.trak.game.server.annotation.AllowedForModerator;
+import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.service.ConsoleService;
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.GenreService;
@@ -64,6 +66,7 @@ public class GameController {
      *
      * @return The saved {@link GameDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EntityModel<GameDto> save(@Validated @RequestBody GameDto gameDto) {
@@ -80,6 +83,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that matches the given ID as a HATEOAS response.
      */
+    @AllowedForUser
     @GetMapping("/{id}")
     public EntityModel<GameDto> findById(@PathVariable long id) {
         return gameRepresentationModelAssembler.toModel(gameService.findById(id));
@@ -95,6 +99,7 @@ public class GameController {
      *
      * @return A {@link CollectionModel} of {@link GenreDto}'s that are associated with the given {@link GameDto}.
      */
+    @AllowedForUser
     @GetMapping("/{id}/genres")
     public CollectionModel<EntityModel<GenreDto>> findGenresByGameId(@PathVariable long id) {
         return genreRepresentationModelAssembler.toCollectionModel(genreService.findGenresByGameId(id));
@@ -110,6 +115,7 @@ public class GameController {
      *
      * @return A {@link CollectionModel} of {@link ConsoleDto}'s that are associated with the given {@link GameDto}.
      */
+    @AllowedForUser
     @GetMapping("/{id}/consoles")
     public CollectionModel<EntityModel<ConsoleDto>> findConsolesByGameId(@PathVariable long id) {
         return consoleRepresentationModelAssembler.toCollectionModel(consoleService.findConsolesFromGameId(id));
@@ -130,6 +136,7 @@ public class GameController {
      *
      * @return A {@link PagedModel} containing the {@link GameDto} that match the requested page and criteria.
      */
+    @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<GameDto>> findAll(GameSpecification gameSpecification,
                                                     @PageableDefault Pageable pageable,
@@ -155,6 +162,7 @@ public class GameController {
      *
      * @return The updated {@link GameDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @PutMapping
     public EntityModel<GameDto> update(@Validated @RequestBody GameDto gameDto) {
         return gameRepresentationModelAssembler.toModel(gameService.update(gameDto));
@@ -176,6 +184,7 @@ public class GameController {
      *
      * @return The patched {@link GameDto} instance.
      */
+    @AllowedForModerator
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GameDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return gameRepresentationModelAssembler.toModel(gameService.patch(id, jsonMergePatch));
@@ -191,6 +200,7 @@ public class GameController {
      *
      * @param id The ID of the {@link GameDto} to delete.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

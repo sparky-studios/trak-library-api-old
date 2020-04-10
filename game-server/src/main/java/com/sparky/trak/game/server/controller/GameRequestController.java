@@ -1,10 +1,12 @@
 package com.sparky.trak.game.server.controller;
 
+import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.server.assembler.GameRequestRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.ApiError;
 import com.sparky.trak.game.service.GameRequestService;
 import com.sparky.trak.game.service.dto.GameRequestDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -39,6 +41,7 @@ public class GameRequestController {
 
     private final GameRequestService gameRequestService;
     private final GameRequestRepresentationModelAssembler gameRequestRepresentationModelAssembler;
+    private final MessageSource messageSource;
 
     /**
      * End-point that will attempt to save the given {@link GameRequestDto} request body to the underlying
@@ -53,6 +56,7 @@ public class GameRequestController {
      *
      * @return The saved {@link GameRequestDto} instance as a HATEOAS response.
      */
+    @AllowedForUser
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EntityModel<GameRequestDto> save(@Validated @RequestBody GameRequestDto gameRequestDto) {
@@ -69,6 +73,7 @@ public class GameRequestController {
      *
      * @return The {@link GameRequestDto} that matches the given ID as a HATEOAS response.
      */
+    @AllowedForUser
     @GetMapping("/{id}")
     public EntityModel<GameRequestDto> findById(@PathVariable long id) {
         return gameRequestRepresentationModelAssembler.toModel(gameRequestService.findById(id));
@@ -87,6 +92,7 @@ public class GameRequestController {
      *
      * @return A {@link PagedModel} containing the {@link GameRequestDto} that match the requested page and criteria.
      */
+    @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<GameRequestDto>> findAll(@PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GameRequestDto> pagedResourcesAssembler) {
@@ -110,6 +116,7 @@ public class GameRequestController {
      *
      * @return The updated {@link GameRequestDto} instance as a HATEOAS response.
      */
+    @AllowedForUser
     @PutMapping
     public EntityModel<GameRequestDto> update(@Validated @RequestBody GameRequestDto gameRequestDto) {
         return gameRequestRepresentationModelAssembler.toModel(gameRequestService.update(gameRequestDto));
@@ -131,6 +138,7 @@ public class GameRequestController {
      *
      * @return The patched {@link GameRequestDto} instance.
      */
+    @AllowedForUser
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GameRequestDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return gameRequestRepresentationModelAssembler.toModel(gameRequestService.patch(id, jsonMergePatch));
@@ -146,6 +154,7 @@ public class GameRequestController {
      *
      * @param id The ID of the {@link GameRequestDto} to delete.
      */
+    @AllowedForUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

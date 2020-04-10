@@ -33,7 +33,7 @@ public class GameSeeder implements Runnable {
 
         IntStream.range(0, gamesCount).forEach(i -> {
             GameDto gameDto = new GameDto();
-            gameDto.setTitle(faker.book().title());
+            gameDto.setTitle(faker.lorem().characters(30));
             gameDto.setDescription(faker.lorem().characters(2000));
             gameDto.setReleaseDate(faker.date().birthday().toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
             gameDto.setAgeRating(AgeRating.values()[random.nextInt(AgeRating.values().length)]);

@@ -1,6 +1,8 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GenreSpecification;
+import com.sparky.trak.game.server.annotation.AllowedForModerator;
+import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.GenreService;
 import com.sparky.trak.game.service.dto.GameDto;
@@ -48,6 +50,7 @@ public class GenreController {
      *
      * @return The saved {@link GenreDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EntityModel<GenreDto> save(@Validated @RequestBody GenreDto genreDto) {
@@ -64,6 +67,7 @@ public class GenreController {
      *
      * @return The {@link GenreDto} that matches the given ID as a HATEOAS response.
      */
+    @AllowedForUser
     @GetMapping("/{id}")
     public EntityModel<GenreDto> findById(@PathVariable long id) {
         return genreRepresentationModelAssembler.toModel(genreService.findById(id));
@@ -81,6 +85,7 @@ public class GenreController {
      *
      * @return A {@link PagedModel} of {@link GameDto}'s that are associated with the given {@link GenreDto}.
      */
+    @AllowedForUser
     @GetMapping("/{id}/games")
     public PagedModel<EntityModel<GameDto>> findGamesByGenreId(@PathVariable long id,
                                                                @PageableDefault Pageable pageable,
@@ -108,6 +113,7 @@ public class GenreController {
      *
      * @return A {@link PagedModel} containing the {@link GenreDto} that match the requested page and criteria.
      */
+    @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<GenreDto>> findAll(GenreSpecification genreSpecification,
                                                     @PageableDefault Pageable pageable,
@@ -132,6 +138,7 @@ public class GenreController {
      *
      * @return The updated {@link GenreDto} instance as a HATEOAS response.
      */
+    @AllowedForModerator
     @PutMapping
     public EntityModel<GenreDto> update(@Validated @RequestBody GenreDto genreDto) {
         return genreRepresentationModelAssembler.toModel(genreService.update(genreDto));
@@ -153,6 +160,7 @@ public class GenreController {
      *
      * @return The patched {@link GenreDto} instance.
      */
+    @AllowedForModerator
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GenreDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return genreRepresentationModelAssembler.toModel(genreService.patch(id, jsonMergePatch));
@@ -168,6 +176,7 @@ public class GenreController {
      *
      * @param id The ID of the {@link GenreDto} to delete.
      */
+    @AllowedForModerator
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

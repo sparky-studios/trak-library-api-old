@@ -1,6 +1,7 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
+import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.service.GameUserEntryService;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import com.sparky.trak.game.server.assembler.GameUserEntryRepresentationModelAssembler;
@@ -14,6 +15,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,6 +45,7 @@ public class GameUserEntryController {
      *
      * @return The saved {@link GameUserEntryDto} instance as a HATEOAS response.
      */
+    @AllowedForUser
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public EntityModel<GameUserEntryDto> save(@Validated @RequestBody GameUserEntryDto gameUserEntryDto) {
@@ -59,6 +62,7 @@ public class GameUserEntryController {
      *
      * @return The {@link GameUserEntryDto} that matches the given ID as a HATEOAS response.
      */
+    @AllowedForUser
     @GetMapping("/{id}")
     public EntityModel<GameUserEntryDto> findById(@PathVariable long id) {
         return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.findById(id));
@@ -79,6 +83,7 @@ public class GameUserEntryController {
      *
      * @return A {@link PagedModel} containing the {@link GameUserEntryDto} that match the requested page and criteria.
      */
+    @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<GameUserEntryDto>> findAll(GameUserEntrySpecification gameUserEntrySpecification,
                                                              @PageableDefault Pageable pageable,
@@ -104,6 +109,7 @@ public class GameUserEntryController {
      *
      * @return The updated {@link GameUserEntryDto} instance as a HATEOAS response.
      */
+    @AllowedForUser
     @PutMapping
     public EntityModel<GameUserEntryDto> update(@Validated @RequestBody GameUserEntryDto gameUserEntryDto) {
         return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.update(gameUserEntryDto));
@@ -125,6 +131,7 @@ public class GameUserEntryController {
      *
      * @return The patched {@link GameUserEntryDto} instance.
      */
+    @AllowedForUser
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GameUserEntryDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.patch(id, jsonMergePatch));
@@ -140,6 +147,7 @@ public class GameUserEntryController {
      *
      * @param id The ID of the {@link GameUserEntryDto} to delete.
      */
+    @AllowedForUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

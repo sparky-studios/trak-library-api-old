@@ -7,7 +7,7 @@
 
     <changeSet author="Benjamin Carter" id="001">
         <comment>
-            Create the initial database structure for the application.
+            Create the initial database structure for the game application.
         </comment>
 
         <!-- Create the game table -->
