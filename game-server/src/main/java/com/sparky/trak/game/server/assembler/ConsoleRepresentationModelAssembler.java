@@ -18,8 +18,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @Component
 public class ConsoleRepresentationModelAssembler implements SimpleRepresentationModelAssembler<ConsoleDto> {
 
-    private final PagedResourcesAssembler<GameDto> gameDtoPagedResourcesAssembler;
-
     @Override
     public void addLinks(EntityModel<ConsoleDto> resource) {
         ConsoleDto content = resource.getContent();
@@ -30,7 +28,7 @@ public class ConsoleRepresentationModelAssembler implements SimpleRepresentation
                     .withSelfRel());
 
             resource.add(linkTo(methodOn(ConsoleController.class)
-                    .findGamesByConsoleId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
+                    .findGamesByConsoleId(content.getId(), Pageable.unpaged(), null))
                     .withRel("games"));
         }
     }
