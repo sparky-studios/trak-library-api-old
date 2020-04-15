@@ -20,7 +20,7 @@ import java.util.Set;
  */
 @Data
 @Entity
-@Table(name = "user")
+@Table(name = "auth_user")
 public class User {
 
     @Id

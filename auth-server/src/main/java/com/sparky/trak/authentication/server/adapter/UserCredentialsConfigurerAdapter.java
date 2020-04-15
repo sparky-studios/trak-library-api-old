@@ -36,11 +36,8 @@ public class UserCredentialsConfigurerAdapter extends WebSecurityConfigurerAdapt
                 .authorizeRequests()
                 // Only allow POST requests through to retrieve the token.
                 .antMatchers(HttpMethod.POST, jwtConfig.getAuthUri()).permitAll()
-                .antMatchers("/h2-console/**").permitAll()
                 // any other requests must be authenticated
                 .anyRequest().authenticated();
-
-        http.headers().frameOptions().disable();
     }
 
     @Override

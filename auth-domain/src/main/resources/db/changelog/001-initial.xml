@@ -10,8 +10,8 @@
             Create the initial database structure for the auth application.
         </comment>
 
-        <!-- Create the user table -->
-        <createTable tableName="user">
+        <!-- Create the auth_user table -->
+        <createTable tableName="auth_user">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user" />
             </column>
@@ -30,20 +30,20 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
-        <!-- user unique constraints -->
+        <!-- auth_user unique constraints -->
         <addUniqueConstraint
-                tableName="user"
+                tableName="auth_user"
                 columnNames="username"
-                constraintName="unq_user_username"/>
+                constraintName="unq_auth_user_username"/>
         <addUniqueConstraint
-                tableName="user"
+                tableName="auth_user"
                 columnNames="email_address"
-                constraintName="unq_user_email_address"/>
+                constraintName="unq_auth_user_email_address"/>
 
-        <!-- Create the user_role table -->
-        <createTable tableName="user_role">
+        <!-- Create the auth_user_role table -->
+        <createTable tableName="auth_user_role">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_role" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role" />
             </column>
             <column name="role" type="varchar(30)">
                 <constraints nullable="false"/>
@@ -51,44 +51,44 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
-        <!-- user_role unique constraints -->
+        <!-- auth_user_role unique constraints -->
         <addUniqueConstraint
-                tableName="user_role"
+                tableName="auth_user_role"
                 columnNames="role"
-                constraintName="unq_user_role_role" />
+                constraintName="unq_auth_user_role_role" />
 
-        <!-- Create the user_role_xref table -->
-        <createTable tableName="user_role_xref">
+        <!-- Create the auth_user_role_xref table -->
+        <createTable tableName="auth_user_role_xref">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user_role_xref" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role_xref" />
             </column>
-            <column name="user_id" type="bigint">
+            <column name="auth_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="user_role_id" type="bigint">
+            <column name="auth_user_role_id" type="bigint">
                 <constraints nullable="false" />
             </column>
         </createTable>
 
-        <!-- user_role_xref foreign key constraints -->
+        <!-- auth_user_role_xref foreign key constraints -->
         <addForeignKeyConstraint
-                baseTableName="user_role_xref"
-                baseColumnNames="user_id"
-                constraintName="fk_user_role_xref_user_id"
-                referencedTableName="user"
+                baseTableName="auth_user_role_xref"
+                baseColumnNames="auth_user_id"
+                constraintName="fk_auth_user_role_xref_auth_user_id"
+                referencedTableName="auth_user"
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
-                baseTableName="user_role_xref"
-                baseColumnNames="user_role_id"
-                constraintName="fk_user_role_xref_user_role_id"
-                referencedTableName="user_role"
+                baseTableName="auth_user_role_xref"
+                baseColumnNames="auth_user_role_id"
+                constraintName="fk_auth_user_role_xref_auth_user_role_id"
+                referencedTableName="auth_user_role"
                 referencedColumnNames="id" />
 
-        <!-- user_role_xref unique constraints -->
+        <!-- auth_user_role_xref unique constraints -->
         <addUniqueConstraint
-                tableName="user_role_xref"
-                columnNames="user_id,user_role_id"
-                constraintName="unq_user_role_xref_user_id_user_role_id" />
+                tableName="auth_user_role_xref"
+                columnNames="auth_user_id,auth_user_role_id"
+                constraintName="unq_auth_user_role_xref_auth_user_id_auth_user_role_id" />
 
     </changeSet>
 </databaseChangeLog>
