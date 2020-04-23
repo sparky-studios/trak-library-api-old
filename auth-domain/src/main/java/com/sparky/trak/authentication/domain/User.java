@@ -37,8 +37,11 @@ public class User {
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "active", nullable = false)
-    private boolean active;
+    @Column(name = "verified", nullable = false)
+    private boolean verified;
+
+    @Column(name = "verification_code")
+    private Short verificationCode;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)

@@ -1,11 +1,12 @@
 package com.sparky.trak.authentication.server.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparky.trak.authentication.server.config.JwtConfig;
+import com.sparky.trak.authentication.server.configuration.JwtConfig;
 import com.sparky.trak.authentication.service.dto.UserCredentialsDto;
 import com.sparky.trak.authentication.service.dto.UserDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -25,19 +26,21 @@ import java.util.stream.Collectors;
 public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final ObjectMapper objectMapper;
     private final JwtConfig jwtConfig;
 
-    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, JwtConfig jwtConfig) {
+    public JwtUsernameAndPasswordAuthenticationFilter(AuthenticationManager authenticationManager, ObjectMapper objectMapper, JwtConfig jwtConfig) {
         this.authenticationManager = authenticationManager;
+        this.objectMapper = objectMapper;
         this.jwtConfig = jwtConfig;
 
-        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher(jwtConfig.getAuthUri()));
+        this.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/auth"));
     }
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
-            UserCredentialsDto userCredentialsDto = new ObjectMapper().readValue(request.getInputStream(), UserCredentialsDto.class);
+            UserCredentialsDto userCredentialsDto = objectMapper.readValue(request.getInputStream(), UserCredentialsDto.class);
 
             UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                     userCredentialsDto.getUsername(), userCredentialsDto.getPassword(), Collections.emptyList());
