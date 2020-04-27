@@ -6,6 +6,7 @@ import org.springframework.hateoas.server.core.Relation;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.validation.constraints.NotEmpty;
 import java.util.Collection;
 import java.util.List;
 
@@ -26,7 +27,8 @@ public class UserDto implements UserDetails {
     private String emailAddress;
     private String password;
     private List<GrantedAuthority> authorities;
-    private boolean active;
+    private boolean verified;
+    private Short verificationCode;
     private Long version;
 
     @Override
@@ -61,6 +63,6 @@ public class UserDto implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return active;
+        return true;
     }
 }

@@ -1,4 +1,4 @@
-package com.sparky.trak.authentication.server.config;
+package com.sparky.trak.authentication.server.configuration;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

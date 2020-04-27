@@ -27,7 +27,8 @@ public class UserMapperTest {
         user.setUsername("username");
         user.setEmailAddress("email@address.com");
         user.setPassword("password");
-        user.setActive(true);
+        user.setVerified(true);
+        user.setVerificationCode((short)245);
         user.setVersion(1L);
         user.setUserRoleXrefs(Collections.singleton(userRoleXref));
 
@@ -39,7 +40,8 @@ public class UserMapperTest {
         Assertions.assertEquals(user.getUsername(), result.getUsername(), "The mapped username does not match the entity.");
         Assertions.assertEquals(user.getEmailAddress(), result.getEmailAddress(), "The mapped email address does not match the entity.");
         Assertions.assertEquals(user.getPassword(), result.getPassword(), "The mapped password does not match the entity.");
-        Assertions.assertEquals(user.isActive(), result.isActive(), "The mapped activity does not match the entity.");
+        Assertions.assertEquals(user.isVerified(), result.isVerified(), "The mapped verified state does not match the entity.");
+        Assertions.assertEquals(user.getVerificationCode(), result.getVerificationCode(), "The mapped verification code state does not match the entity.");
         Assertions.assertEquals(user.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
         Assertions.assertEquals(user.getUserRoleXrefs().iterator().next().getUserRole().getRole(),
                 result.getAuthorities().iterator().next().getAuthority(), "The mapped authority does not match the entity.");
@@ -53,7 +55,8 @@ public class UserMapperTest {
         userDto.setEmailAddress("email@address.com");
         userDto.setUsername("username");
         userDto.setPassword("password");
-        userDto.setActive(true);
+        userDto.setVerified(true);
+        userDto.setVerificationCode((short)3894);
         userDto.setVersion(1L);
 
         // Act
@@ -64,7 +67,8 @@ public class UserMapperTest {
         Assertions.assertEquals(userDto.getEmailAddress(), result.getEmailAddress(), "The mapped email address does not match the DTO.");
         Assertions.assertEquals(userDto.getUsername(), result.getUsername(), "The mapped username does not match the DTO.");
         Assertions.assertEquals(userDto.getPassword(), result.getPassword(), "The mapped password does not match the DTO.");
-        Assertions.assertEquals(userDto.isActive(), result.isActive(), "The mapped activity does not match the DTO.");
+        Assertions.assertEquals(userDto.isVerified(), result.isVerified(), "The mapped verified state does not match the DTO.");
+        Assertions.assertEquals(userDto.getVerificationCode(), result.getVerificationCode(), "The mapped verification code state does not match the DTO.");
         Assertions.assertEquals(userDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
     }
 }
