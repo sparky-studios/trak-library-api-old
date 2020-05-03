@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
-public class JwtTokenFilter extends OncePerRequestFilter {
+public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtConfig jwtConfig;
 

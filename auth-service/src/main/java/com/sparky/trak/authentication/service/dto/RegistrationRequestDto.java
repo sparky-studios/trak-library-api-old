@@ -6,6 +6,15 @@ import lombok.Data;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 
+/**
+ * The {@link RegistrationRequestDto} is a simple POJO DTO that is used by the request that is responsible for creating
+ * and registering new {@link com.sparky.trak.authentication.domain.User}'s to the underlying persistence layer. Its purpose
+ * is to boil down the information needed for registration down to the bare essential fields, and only expose the information
+ * that is strictly needed to create a new {@link com.sparky.trak.authentication.domain.User}.
+ *
+ * Similar to all other DTO's within the API, it contains validation to ensure that the information provided to the end-points
+ * is valid and correctly formatted before {@link com.sparky.trak.authentication.domain.User} creation.
+ */
 @Data
 public class RegistrationRequestDto {
 

@@ -2,7 +2,7 @@ package com.sparky.trak.authentication.server.adapter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparky.trak.authentication.server.configuration.JwtConfig;
-import com.sparky.trak.authentication.server.filter.JwtTokenFilter;
+import com.sparky.trak.authentication.server.filter.JwtFilter;
 import com.sparky.trak.authentication.server.filter.JwtUsernameAndPasswordAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
@@ -30,7 +30,7 @@ public class UserCredentialsConfigurerAdapter extends WebSecurityConfigurerAdapt
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), objectMapper, jwtConfig))
-                .addFilterAfter(new JwtTokenFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
+                .addFilterAfter(new JwtFilter(jwtConfig), JwtUsernameAndPasswordAuthenticationFilter.class)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and().formLogin().disable();
     }

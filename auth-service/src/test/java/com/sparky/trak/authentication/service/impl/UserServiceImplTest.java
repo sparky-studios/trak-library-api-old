@@ -6,8 +6,11 @@ import com.sparky.trak.authentication.domain.UserRoleXref;
 import com.sparky.trak.authentication.repository.UserRepository;
 import com.sparky.trak.authentication.repository.UserRoleRepository;
 import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
+import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
+import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import com.sparky.trak.authentication.service.exception.VerificationFailedException;
+import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -17,6 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -38,8 +42,14 @@ public class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
+    @Mock
+    private RestTemplate restTemplate;
+
     @Spy
     private UserMapper userMapper;
+
+    @Spy
+    private UserResponseMapper userResponseMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -78,15 +88,23 @@ public class UserServiceImplTest {
                 .thenReturn(Optional.of(new User()));
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
+                .thenReturn("username-error");
 
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();
         registrationRequestDto.setUsername("username");
         registrationRequestDto.setEmailAddress("email.address@email.com");
         registrationRequestDto.setPassword("password");
 
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.save(registrationRequestDto);
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> userService.save(registrationRequestDto));
+        Assertions.assertNull(result.getData(), "There should be no user data if the username is already in use.");
+        Assertions.assertEquals("username-error", result.getErrorMessage(), "The error message doesn't match.");
+        Assertions.assertTrue(result.isError(), "The response should be an error for a user that already exists.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
@@ -99,15 +117,23 @@ public class UserServiceImplTest {
                 .thenReturn(Optional.of(new User()));
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
+                .thenReturn("email-error");
 
         RegistrationRequestDto registrationRequestDto = new RegistrationRequestDto();
         registrationRequestDto.setUsername("username");
         registrationRequestDto.setEmailAddress("email.address@email.com");
         registrationRequestDto.setPassword("password");
 
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.save(registrationRequestDto);
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> userService.save(registrationRequestDto));
+        Assertions.assertNull(result.getData(), "There should be no user data if the email address is already in use.");
+        Assertions.assertEquals("email-error", result.getErrorMessage(), "The error message doesn't match.");
+        Assertions.assertTrue(result.isError(), "The response should be an error for a email address that already exists.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
@@ -146,8 +172,12 @@ public class UserServiceImplTest {
         Mockito.when(userRoleRepository.findByRole(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new UserRole()));
 
+        User user = new User();
+        user.setEmailAddress("random-address@trak.com");
+        user.setVerificationCode((short)1234);
+
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(new User());
+                .thenReturn(user);
 
         Mockito.when(userRoleXrefRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new UserRoleXref());
@@ -161,9 +191,13 @@ public class UserServiceImplTest {
         registrationRequestDto.setPassword("password");
 
         // Act
-        userService.save(registrationRequestDto);
+        CheckedResponse<UserResponseDto> result = userService.save(registrationRequestDto);
 
         // Assert
+        Assertions.assertNotNull(result, "The response of the save should not be null.");
+        Assertions.assertEquals("", result.getErrorMessage(), "There should be no error message for a valid response.");
+        Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
+
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
@@ -172,29 +206,32 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void isVerified_withNoMatchingUser_throwsEntityNotFoundException() {
+    public void findByUsername_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.isVerified("username"));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.findByUsername("username"));
     }
 
     @Test
-    public void isVerified_withMatchingUser_returnsVerificationState() {
+    public void findByUsername_withMatchingUser_returnsUserResponse() {
         // Arrange
         User user = new User();
+        user.setId(5L);
+        user.setUsername("test-username");
         user.setVerified(true);
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
 
         // Act
-        boolean result = userService.isVerified("username");
+        userService.findByUsername("username");
 
         // Assert
-        Assertions.assertTrue(result, "The result should be equal to the users verification state.");
+        Mockito.verify(userResponseMapper, Mockito.atMostOnce())
+                .userToUserResponseDto(ArgumentMatchers.any());
     }
 
     @Test
