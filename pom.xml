@@ -22,6 +22,9 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <!-- Dependency versions -->
+        <!-- AWS versions -->
+        <com.amazonaws.version>1.11.772</com.amazonaws.version>
+        <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
@@ -48,6 +51,8 @@
         <module>auth-repository</module>
         <module>auth-service</module>
         <module>auth-server</module>
+        <module>email-service</module>
+        <module>email-server</module>
     </modules>
 
     <dependencies>
@@ -90,6 +95,15 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- AWS dependencies -->
+            <dependency>
+                <groupId>com.amazonaws</groupId>
+                <artifactId>aws-java-sdk-bom</artifactId>
+                <version>${com.amazonaws.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Other dependencies -->
             <dependency>
                 <groupId>com.github.javafaker</groupId>
                 <artifactId>javafaker</artifactId>

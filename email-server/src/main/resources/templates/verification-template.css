@@ -1,0 +1,14 @@
+.header {
+    background-color: #020E2F;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+}
+
+.header__caption {
+    color: white;
+}
+
+.header__logo {
+    width: 10%;
+}
