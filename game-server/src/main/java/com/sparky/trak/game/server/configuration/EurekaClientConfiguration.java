@@ -1,8 +1,10 @@
 package com.sparky.trak.game.server.configuration;
 
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 /**
  * Enables the Eureka client functionality only if the spring profiles are either development or production.
@@ -15,4 +17,9 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @EnableEurekaClient
 public class EurekaClientConfiguration {
+
+    @Bean
+    public ForwardedHeaderFilter forwardedHeaderFilter() {
+        return new ForwardedHeaderFilter();
+    }
 }

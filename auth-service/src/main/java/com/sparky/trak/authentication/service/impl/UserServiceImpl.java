@@ -6,23 +6,26 @@ import com.sparky.trak.authentication.domain.UserRoleXref;
 import com.sparky.trak.authentication.repository.UserRepository;
 import com.sparky.trak.authentication.repository.UserRoleRepository;
 import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
+import com.sparky.trak.authentication.service.AuthenticationService;
 import com.sparky.trak.authentication.service.UserService;
+import com.sparky.trak.authentication.service.command.SendVerificationEmailCommand;
+import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
-import com.sparky.trak.authentication.service.dto.UserCredentialsDto;
-import com.sparky.trak.authentication.service.dto.UserDto;
+import com.sparky.trak.authentication.service.dto.UserResponseDto;
+import com.sparky.trak.authentication.service.exception.InvalidUserException;
 import com.sparky.trak.authentication.service.exception.VerificationFailedException;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
+import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
 import java.util.Optional;
@@ -35,8 +38,11 @@ public class UserServiceImpl implements UserService {
     private final UserRoleRepository userRoleRepository;
     private final UserRoleXrefRepository userRoleXrefRepository;
     private final UserMapper userMapper;
+    private final UserResponseMapper userResponseMapper;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
+    private final RestTemplate restTemplate;
+    private final AuthenticationService authenticationService;
 
     @Override
     @Transactional(readOnly = true)
@@ -54,23 +60,23 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void save(RegistrationRequestDto registrationRequestDto) {
+    public CheckedResponse<UserResponseDto> save(RegistrationRequestDto registrationRequestDto) {
         Optional<User> existingUsername = userRepository.findByUsername(registrationRequestDto.getUsername());
         // If the user already exists with the given username, don't save an identical one, throw an exception that it's already used.
         if (existingUsername.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.username-already-in-use", new Object[] {registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
+                    .getMessage("user.error.existing-username", new Object[] {registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
 
-            throw new EntityExistsException(errorMessage);
+            return new CheckedResponse<>(null, errorMessage);
         }
 
         Optional<User> existingEmailAddress = userRepository.findByEmailAddress(registrationRequestDto.getEmailAddress());
         // If the email address is already in user, don't save an identical one.
         if (existingEmailAddress.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.email-address-already-in-use", new Object[] {registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
+                    .getMessage("user.error.existing-email-address", new Object[] {registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
 
-            throw new EntityExistsException(errorMessage);
+            return new CheckedResponse<>(null, errorMessage);
         }
 
         // Create the link between the ROLE_USER and the new user.
@@ -98,21 +104,34 @@ public class UserServiceImpl implements UserService {
         userRoleXref.setUserRoleId(userRole.get().getId());
 
         userRoleXrefRepository.save(userRoleXref);
+
+        // As we've created a new user, we want to send them a verification email.
+        new SendVerificationEmailCommand(restTemplate, user.getEmailAddress(), user.getVerificationCode())
+                .queue();
+
+        return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user), "");
     }
 
     @Override
     @Transactional(readOnly = true)
-    public boolean isVerified(String username) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
+    public UserResponseDto findByUsername(String username) {
+        Optional<User> user = userRepository.findByUsername(username);
         // Can't verify a user if it doesn't exist.
-        if (!optionalUser.isPresent()) {
+        if (!user.isPresent()) {
             String errorMessage = messageSource
                     .getMessage("user.exception.not-found", new Object[] {username}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return optionalUser.get().isVerified();
+        if (!authenticationService.isCurrentAuthenticatedUser(user.get().getId())) {
+            String errorMessage = messageSource
+                    .getMessage("user.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+
+            throw new InvalidUserException(errorMessage);
+        }
+
+        return userResponseMapper.userToUserResponseDto(user.get());
     }
 
     @Override
@@ -128,6 +147,14 @@ public class UserServiceImpl implements UserService {
         }
 
         User user = optionalUser.get();
+
+        if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
+            String errorMessage = messageSource
+                    .getMessage("user.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+
+            throw new InvalidUserException(errorMessage);
+        }
+
         // No point verifying for a user that's already verified.
         if (!user.isVerified()) {
             // If the verification code doesn't match, then the verification will have failed.

@@ -20,8 +20,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         Authentication authentication = getAuthentication();
 
         // We only check the authentication if the principal provided is the one we're expecting for authentication.
-        if (authentication.getPrincipal() instanceof UsernamePasswordAuthenticationToken) {
-            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication.getPrincipal();
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            UsernamePasswordAuthenticationToken token = (UsernamePasswordAuthenticationToken)authentication;
 
             // If the user calling the end-point has an admin role, authenticate them so that they can edit any data.
             boolean isAdmin = token.getAuthorities()

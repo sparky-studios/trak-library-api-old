@@ -30,6 +30,8 @@ public class JwtConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, jwtConfig.getAuthUri())
                 .permitAll()
+                .antMatchers(HttpMethod.PUT, "/api/email-management/v1/emails/verification")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
     }

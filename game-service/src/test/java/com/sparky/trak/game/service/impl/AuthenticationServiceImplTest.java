@@ -23,13 +23,9 @@ public class AuthenticationServiceImplTest {
     @Test
     public void isCurrentAuthenticatedUser_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
         // Arrange
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
-                .thenReturn(new Object());
-
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
-                .thenReturn(authentication);
+                .thenReturn(Mockito.mock(Authentication.class));
 
         SecurityContextHolder.setContext(securityContext);
 
@@ -46,13 +42,9 @@ public class AuthenticationServiceImplTest {
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
-                .thenReturn(token);
-
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
-                .thenReturn(authentication);
+                .thenReturn(token);
 
         SecurityContextHolder.setContext(securityContext);
 
@@ -70,13 +62,9 @@ public class AuthenticationServiceImplTest {
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
         token.setDetails(1L);
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
-                .thenReturn(token);
-
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
-                .thenReturn(authentication);
+                .thenReturn(token);
 
         SecurityContextHolder.setContext(securityContext);
 
@@ -94,13 +82,9 @@ public class AuthenticationServiceImplTest {
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
         token.setDetails(1L);
 
-        Authentication authentication = Mockito.mock(Authentication.class);
-        Mockito.when(authentication.getPrincipal())
-                .thenReturn(token);
-
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
-                .thenReturn(authentication);
+                .thenReturn(token);
 
         SecurityContextHolder.setContext(securityContext);
 

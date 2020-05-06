@@ -1,13 +1,15 @@
 package com.sparky.trak.authentication.service;
 
+import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
+import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
-    void save(RegistrationRequestDto registrationRequestDto);
+    CheckedResponse<UserResponseDto> save(RegistrationRequestDto registrationRequestDto);
 
-    boolean isVerified(String username);
+    UserResponseDto findByUsername(String username);
 
     void verify(String username, short verificationCode);
 }
