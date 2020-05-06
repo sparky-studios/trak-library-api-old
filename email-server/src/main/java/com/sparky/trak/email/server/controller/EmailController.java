@@ -1,6 +1,5 @@
 package com.sparky.trak.email.server.controller;
 
-import com.sparky.trak.email.server.annotation.AllowedForUser;
 import com.sparky.trak.email.service.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,7 +34,6 @@ public class EmailController {
      * @param emailAddress The email address to dispatch the verification email to.
      * @param verificationCode The verification code of the user to attach to the email.
      */
-    @AllowedForUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/verification")
     public void sendVerificationEmail(@RequestParam("email-address") String emailAddress,

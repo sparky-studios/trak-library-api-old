@@ -6,13 +6,13 @@
     </head>
     <body>
         <div class="header">
-            <span class="header__caption">Welcome to</span>
-            <img class="header__logo" th:src="@{/images/trak-logo.png}" src="../images/trak-logo.png"/>
+            <span th:text="#{email.verification.welcome}" class="header__caption"></span>
+            <img th:src="@{img/trak-logo.png}">
         </div>
-        <h1>Verify your account to finish signing up for Trak</h1>
-        <p>Thank you for choosing Trak.</p>
-        <p>Here is the confirmation code for your account TheLordBritish.</p>
-        <h1 th:text="'Verification code:' + ${verificationCode}">1234</h1>
-        <p>All you have to do is copy the confirmation code and paste it into the verification form to the complete the process.</p>
+        <h1 th:text="#{email.verification.header}"></h1>
+        <p th:text="#{email.verification.thank-you}"></p>
+        <p th:text="#{email.verification.confirmation}"></p>
+        <h1 th:text="#{email.verification.verification-code(${verificationCode})}">1234</h1>
+        <p th:text="#{email.verification.instructions}"></p>
     </body>
 </html>

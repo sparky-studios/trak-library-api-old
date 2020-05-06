@@ -14,8 +14,8 @@ import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
 import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import com.sparky.trak.authentication.service.exception.InvalidUserException;
 import com.sparky.trak.authentication.service.exception.VerificationFailedException;
-import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
+import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
 import java.util.Optional;
@@ -107,7 +106,8 @@ public class UserServiceImpl implements UserService {
         userRoleXrefRepository.save(userRoleXref);
 
         // As we've created a new user, we want to send them a verification email.
-        new SendVerificationEmailCommand(restTemplate, user.getEmailAddress(), user.getVerificationCode()).queue();
+        new SendVerificationEmailCommand(restTemplate, user.getEmailAddress(), user.getVerificationCode())
+                .queue();
 
         return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user), "");
     }

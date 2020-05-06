@@ -1,10 +1,8 @@
 package com.sparky.trak.email.service.impl;
 
-import com.sparky.trak.email.service.AuthenticationService;
 import com.sparky.trak.email.service.EmailService;
 import com.sparky.trak.email.service.dto.EmailDto;
 import com.sparky.trak.email.service.exception.EmailFailedException;
-import com.sparky.trak.email.service.exception.InvalidUserException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,7 +28,6 @@ public class EmailServiceThymeleafImpl implements EmailService {
     @Value("${trak.aws.simple-email-service.from-address}")
     private String fromAddress;
 
-    private final AuthenticationService authenticationService;
     private final JavaMailSender javaMailSender;
     private final ITemplateEngine templateEngine;
     private final MessageSource messageSource;
@@ -38,20 +35,12 @@ public class EmailServiceThymeleafImpl implements EmailService {
     @Async
     @Override
     public void sendVerificationEmail(String emailAddress, short verificationCode) {
-        // Ensure that the email address of the validated user matches the one provided.
-        if (!authenticationService.isCurrentAuthenticatedEmailAddress(emailAddress)) {
-            String errorMessage = messageSource
-                    .getMessage("email.exception.invalid-email-address", new Object[] {emailAddress}, LocaleContextHolder.getLocale());
-
-            throw new InvalidUserException(errorMessage);
-        }
-
         // Create the Email template and all the data it needs before sending.
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailAddress);
         emailDto.setSubject(messageSource.getMessage("email.verification.subject", new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("verificationCode", verificationCode));
+        emailDto.setData(Collections.singletonMap("verificationCode", String.valueOf(verificationCode)));
 
         try {
             javaMailSender.send(getMimeMessage(emailDto, "verification-template"));

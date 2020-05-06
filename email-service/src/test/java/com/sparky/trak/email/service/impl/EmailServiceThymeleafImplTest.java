@@ -1,8 +1,6 @@
 package com.sparky.trak.email.service.impl;
 
-import com.sparky.trak.email.service.AuthenticationService;
 import com.sparky.trak.email.service.exception.EmailFailedException;
-import com.sparky.trak.email.service.exception.InvalidUserException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -18,9 +16,6 @@ import java.util.Locale;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EmailServiceThymeleafImplTest {
-
-    @Mock
-    private AuthenticationService authenticationService;
 
     @Mock
     private MessageSource messageSource;
@@ -41,24 +36,8 @@ public class EmailServiceThymeleafImplTest {
     }
 
     @Test
-    public void sendVerificationEmail_withDifferentEmailAddress_throwsInvalidUserException() {
-        // Arrange
-        Mockito.when(authenticationService.isCurrentAuthenticatedEmailAddress(ArgumentMatchers.anyString()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> emailService.sendVerificationEmail("email@address.com", (short)1234));
-    }
-
-    @Test
     public void sendVerificationEmail_withFailingToSend_throwsEmailFailedException() {
         // Arrange
-        Mockito.when(authenticationService.isCurrentAuthenticatedEmailAddress(ArgumentMatchers.anyString()))
-                .thenReturn(true);
-
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
@@ -75,9 +54,6 @@ public class EmailServiceThymeleafImplTest {
     @Test
     public void sendVerificationEmail_withNoIssues_sendsEmail() {
         // Arrange
-        Mockito.when(authenticationService.isCurrentAuthenticatedEmailAddress(ArgumentMatchers.anyString()))
-                .thenReturn(true);
-
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 

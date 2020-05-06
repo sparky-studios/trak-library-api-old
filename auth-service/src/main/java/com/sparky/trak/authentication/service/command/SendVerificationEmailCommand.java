@@ -3,6 +3,10 @@ package com.sparky.trak.authentication.service.command;
 import com.netflix.hystrix.HystrixCommand;
 import com.netflix.hystrix.HystrixCommandGroupKey;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestTemplate;
 
 /**
@@ -50,8 +54,11 @@ public class SendVerificationEmailCommand extends HystrixCommand<Object> {
      */
     @Override
     protected Object run() {
-        restTemplate.put("http://trak-email-server/v1/emails/verification?email-address={emailAddress}&verification-code={verificationCode}",
-                null, emailAddress, verificationCode);
+        HttpHeaders httpHeaders = new HttpHeaders();
+
+        String url = "http://trak-email-server/v1/emails/verification?email-address={emailAddress}&verification-code={verificationCode}";
+
+        restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(httpHeaders), Void.class, emailAddress, verificationCode);
 
         // We want to return null here, the return doesn't need to be used and the email verification end-point returns a 204.
         return null;
@@ -66,7 +73,7 @@ public class SendVerificationEmailCommand extends HystrixCommand<Object> {
      */
     @Override
     protected Object getFallback() {
-        log.error("Failed to send verification email.");
+        log.error("Failed to send verification email", getFailedExecutionException());
         // We don't want the fallback bringing the service down, just log it as an error.
         return null;
     }
