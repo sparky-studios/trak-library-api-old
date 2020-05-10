@@ -53,6 +53,8 @@
         <module>auth-server</module>
         <module>email-service</module>
         <module>email-server</module>
+        <module>image-service</module>
+        <module>image-server</module>
     </modules>
 
     <dependencies>

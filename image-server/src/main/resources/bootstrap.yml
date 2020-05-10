@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: trak-image-server
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: trak-config-server
+      enabled: true
+  profiles:
+    active: development
