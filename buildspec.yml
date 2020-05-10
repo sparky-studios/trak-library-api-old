@@ -22,13 +22,14 @@ phases:
       - echo [INFO] Completed Trak API `date`
       - echo [INFO] ------------------------------------------------------------------------
       - mvn package
-  artifacts:
-    files:
-      - auth-server/target/auth-server-1.0-SNAPSHOT.jar
-      - config-server/target/config-server-1.0-SNAPSHOT.jar
-      - discovery-server/target/discovery-server-1.0-SNAPSHOT.jar
-      - email-server/target/email-server-1.0-SNAPSHOT.jar
-      - game-server/target/game-server-1.0-SNAPSHOT.jar
-      - gateway-server/target/gateway-server-1.0-SNAPSHOT.jar
-      - image-server/target/image-server-1.0-SNAPSHOT.jar
-    discard-paths: yes
+
+artifacts:
+  files:
+    - auth-server/target/auth-server-1.0-SNAPSHOT.jar
+    - config-server/target/config-server-1.0-SNAPSHOT.jar
+    - discovery-server/target/discovery-server-1.0-SNAPSHOT.jar
+    - email-server/target/email-server-1.0-SNAPSHOT.jar
+    - game-server/target/game-server-1.0-SNAPSHOT.jar
+    - gateway-server/target/gateway-server-1.0-SNAPSHOT.jar
+    - image-server/target/image-server-1.0-SNAPSHOT.jar
+  discard-paths: yes
