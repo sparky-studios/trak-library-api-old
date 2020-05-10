@@ -6,9 +6,11 @@ import com.sparky.trak.authentication.domain.UserRoleXref;
 import com.sparky.trak.authentication.repository.UserRepository;
 import com.sparky.trak.authentication.repository.UserRoleRepository;
 import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
+import com.sparky.trak.authentication.service.AuthenticationService;
 import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
 import com.sparky.trak.authentication.service.dto.UserResponseDto;
+import com.sparky.trak.authentication.service.exception.InvalidUserException;
 import com.sparky.trak.authentication.service.exception.VerificationFailedException;
 import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
@@ -42,9 +44,6 @@ public class UserServiceImplTest {
     @Mock
     private PasswordEncoder passwordEncoder;
 
-    @Mock
-    private RestTemplate restTemplate;
-
     @Spy
     private UserMapper userMapper;
 
@@ -53,6 +52,9 @@ public class UserServiceImplTest {
 
     @Mock
     private MessageSource messageSource;
+
+    @Mock
+    private AuthenticationService authenticationService;
 
     @InjectMocks
     private UserServiceImpl userService;
@@ -216,6 +218,22 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void findByUsername_withDifferentUser_throwsInvalidUserException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.findByUsername("username"));
+    }
+
+    @Test
     public void findByUsername_withMatchingUser_returnsUserResponse() {
         // Arrange
         User user = new User();
@@ -225,6 +243,9 @@ public class UserServiceImplTest {
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
 
         // Act
         userService.findByUsername("username");
@@ -245,6 +266,22 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void verify_withDifferentUser_throwsInvalidUserException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.verify("username", (short)1111));
+    }
+
+    @Test
     public void verify_withVerifiedUser_doesntUpdateVerificationStatus() {
         // Arrange
         User user = new User();
@@ -252,6 +289,9 @@ public class UserServiceImplTest {
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
 
         // Act
         userService.verify("username", (short)1111);
@@ -270,6 +310,9 @@ public class UserServiceImplTest {
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
 
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
         // Assert
         Assertions.assertThrows(VerificationFailedException.class, () -> userService.verify("username", (short)1111));
     }
@@ -282,6 +325,9 @@ public class UserServiceImplTest {
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new User());
