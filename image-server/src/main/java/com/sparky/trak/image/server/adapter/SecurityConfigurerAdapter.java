@@ -1,7 +1,7 @@
-package com.sparky.trak.gateway.server.adapter;
+package com.sparky.trak.image.server.adapter;
 
-import com.sparky.trak.gateway.server.config.JwtConfig;
-import com.sparky.trak.gateway.server.filter.JwtAuthenticationFilter;
+import com.sparky.trak.image.server.configuration.JwtConfig;
+import com.sparky.trak.image.server.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @RequiredArgsConstructor
 @EnableWebSecurity
-public class JwtConfigurerAdapter extends WebSecurityConfigurerAdapter {
+public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
     private final JwtConfig jwtConfig;
 
@@ -28,12 +28,7 @@ public class JwtConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .and()
                 .addFilterAfter(new JwtAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, jwtConfig.getAuthUri())
-                .permitAll()
-                .antMatchers(HttpMethod.PUT, "/api/email-management/v1/emails/verification")
-                .permitAll()
-                .antMatchers(HttpMethod.GET, "/api/image-management/v1/images/**")
-                .permitAll()
+                .antMatchers(HttpMethod.GET, "/v1/images/**").anonymous()
                 .anyRequest()
                 .authenticated();
     }
