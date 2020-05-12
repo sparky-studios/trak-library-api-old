@@ -26,8 +26,8 @@ public class GameServiceImpl implements GameService {
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
     private final GameGenreXrefRepository gameGenreXrefRepository;
-    private final ConsoleRepository consoleRepository;
-    private final GameConsoleXrefRepository gameConsoleXrefRepository;
+    private final PlatformRepository platformRepository;
+    private final GamePlatformXrefRepository gamePlatformXrefRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -70,16 +70,16 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
-    public Iterable<GameDto> findGamesByConsoleId(long consoleId, Pageable pageable) {
-        if (!consoleRepository.existsById(consoleId)) {
+    public Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable) {
+        if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
-                    .getMessage("console.exception.not-found", new Object[] { consoleId }, LocaleContextHolder.getLocale());
+                    .getMessage("platform.exception.not-found", new Object[] { platformId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameConsoleXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("consoleId"), consoleId)), pageable)
+        return gamePlatformXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId)), pageable)
                 .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
     }
 

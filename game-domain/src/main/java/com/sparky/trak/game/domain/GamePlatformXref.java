@@ -7,8 +7,8 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "game_user_entry")
-public class GameUserEntry {
+@Table(name = "game_platform_xref")
+public class GamePlatformXref {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,7 +19,7 @@ public class GameUserEntry {
     private long gameId;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;
 
@@ -27,20 +27,7 @@ public class GameUserEntry {
     private long platformId;
 
     @EqualsAndHashCode.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
     @JoinColumn(name = "platform_id", updatable = false, insertable = false)
     private Platform platform;
-
-    @Column(name = "user_id", nullable = false, updatable = false)
-    private long userId;
-
-    @Column(name = "status", nullable = false)
-    private GameUserEntryStatus status;
-
-    @Column(name = "rating", nullable = false)
-    private short rating;
-
-    @Version
-    @Column(name = "op_lock_version")
-    private Long version;
 }

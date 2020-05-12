@@ -1,7 +1,6 @@
 package com.sparky.trak.game.server.seeder;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -13,8 +12,8 @@ public class SeederRunner implements Runnable {
     private final GameSeeder gameSeeder;
     private final GenreSeeder genreSeeder;
     private final GameGenreXrefSeeder gameGenreXrefSeeder;
-    private final ConsoleSeeder consoleSeeder;
-    private final GameConsoleXrefSeeder gameConsoleXrefSeeder;
+    private final PlatformSeeder platformSeeder;
+    private final GamePlatformXrefSeeder gamePlatformXrefSeeder;
     private final GameUserEntrySeeder gameUserEntrySeeder;
     private final GameRequestSeeder gameRequestSeeder;
 
@@ -23,8 +22,8 @@ public class SeederRunner implements Runnable {
         gameSeeder.run();
         genreSeeder.run();
         gameGenreXrefSeeder.run();
-        consoleSeeder.run();
-        gameConsoleXrefSeeder.run();
+        platformSeeder.run();
+        gamePlatformXrefSeeder.run();
         gameUserEntrySeeder.run();
         gameRequestSeeder.run();
     }

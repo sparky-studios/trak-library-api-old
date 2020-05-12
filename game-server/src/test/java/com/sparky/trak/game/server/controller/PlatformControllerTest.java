@@ -6,12 +6,12 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import com.sparky.trak.game.domain.AgeRating;
-import com.sparky.trak.game.server.assembler.ConsoleRepresentationModelAssembler;
+import com.sparky.trak.game.server.assembler.PlatformRepresentationModelAssembler;
 import com.sparky.trak.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.GlobalExceptionHandler;
-import com.sparky.trak.game.service.ConsoleService;
+import com.sparky.trak.game.service.PlatformService;
 import com.sparky.trak.game.service.GameService;
-import com.sparky.trak.game.service.dto.ConsoleDto;
+import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.service.dto.GameDto;
 import net.kaczmarzyk.spring.data.jpa.web.SpecificationArgumentResolver;
 import org.junit.jupiter.api.AfterEach;
@@ -39,29 +39,29 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @EnableHypermediaSupport(type = EnableHypermediaSupport.HypermediaType.HAL)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ConsoleControllerTest {
+public class PlatformControllerTest {
 
     private MockMvc mockMvc;
 
     @Mock
-    private ConsoleService consoleService;
+    private PlatformService platformService;
 
     @Mock
     private GameService gameService;
 
     @Spy
-    private ConsoleRepresentationModelAssembler consoleRepresentationModelAssembler;
+    private PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
 
     @Spy
     private GameRepresentationModelAssembler gameRepresentationModelAssembler;
 
     @InjectMocks
-    private ConsoleController consoleController;
+    private PlatformController platformController;
 
     @BeforeAll
     public void beforeAll() {
         MockitoAnnotations.initMocks(this);
-        mockMvc = MockMvcBuilders.standaloneSetup(consoleController)
+        mockMvc = MockMvcBuilders.standaloneSetup(platformController)
                 .setControllerAdvice(new GlobalExceptionHandler())
                 .setCustomArgumentResolvers(new PageableHandlerMethodArgumentResolver(), new SpecificationArgumentResolver())
                 .build();
@@ -69,13 +69,13 @@ public class ConsoleControllerTest {
 
     @AfterEach
     public void afterEach() {
-        Mockito.reset(consoleService);
+        Mockito.reset(platformService);
     }
 
     @Test
-    public void save_withNullConsoleDto_returns400AndApiError() throws Exception {
+    public void save_withNullPlatformDto_returns400AndApiError() throws Exception {
         // Act
-        ResultActions result = mockMvc.perform(post("/v1/consoles")
+        ResultActions result = mockMvc.perform(post("/v1/platforms")
                 .accept(MediaTypes.HAL_JSON)
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
@@ -89,10 +89,10 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void save_withInvalidConsoleDto_returns400AndApiError() throws Exception {
+    public void save_withInvalidPlatformDto_returns400AndApiError() throws Exception {
         // Act
-        ResultActions result = mockMvc.perform(post("/v1/consoles")
-                .content(new ObjectMapper().writeValueAsString(new ConsoleDto()))
+        ResultActions result = mockMvc.perform(post("/v1/platforms")
+                .content(new ObjectMapper().writeValueAsString(new PlatformDto()))
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -106,13 +106,13 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void save_withValidConsoleDto_returnsConsoleDtoHateoasResponse() throws Exception {
+    public void save_withValidPlatformDto_returnsPlatformDtoHateoasResponse() throws Exception {
         // Arrange
-        ConsoleDto consoleDto = new ConsoleDto();
-        consoleDto.setName("console-name");
-        consoleDto.setDescription("This sure is a description of a console.");
-        consoleDto.setReleaseDate(LocalDate.now());
-        consoleDto.setVersion(0L);
+        PlatformDto platformDto = new PlatformDto();
+        platformDto.setName("platform-name");
+        platformDto.setDescription("This sure is a description of a platform.");
+        platformDto.setReleaseDate(LocalDate.now());
+        platformDto.setVersion(0L);
 
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -122,12 +122,12 @@ public class ConsoleControllerTest {
                 .registerModule(new Jackson2HalModule())
                 .registerModule(new JSR353Module());
 
-        Mockito.when(consoleService.save(ArgumentMatchers.any()))
-                .thenReturn(consoleDto);
+        Mockito.when(platformService.save(ArgumentMatchers.any()))
+                .thenReturn(platformDto);
 
         // Act
-        ResultActions result = mockMvc.perform(post("/v1/consoles")
-                .content(objectMapper.writeValueAsString(consoleDto))
+        ResultActions result = mockMvc.perform(post("/v1/platforms")
+                .content(objectMapper.writeValueAsString(platformDto))
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -146,11 +146,11 @@ public class ConsoleControllerTest {
     @Test
     public void findById_withInvalidId_returns404ApiError() throws Exception {
         // Arrange
-        Mockito.when(consoleService.findById(ArgumentMatchers.anyLong()))
+        Mockito.when(platformService.findById(ArgumentMatchers.anyLong()))
                 .thenThrow(new EntityNotFoundException("Entity sure is missing."));
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles/1")
+        ResultActions result = mockMvc.perform(get("/v1/platforms/1")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -163,20 +163,20 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void findById_withValidId_returnsConsoleDtoHateoasResponse() throws Exception {
+    public void findById_withValidId_returnsPlatformDtoHateoasResponse() throws Exception {
         // Arrange
-        ConsoleDto consoleDto = new ConsoleDto();
-        consoleDto.setId(1L);
-        consoleDto.setName("console-name");
-        consoleDto.setDescription("The description of the console.");
-        consoleDto.setReleaseDate(LocalDate.now());
-        consoleDto.setVersion(2L);
+        PlatformDto platformDto = new PlatformDto();
+        platformDto.setId(1L);
+        platformDto.setName("platform-name");
+        platformDto.setDescription("The description of the platform.");
+        platformDto.setReleaseDate(LocalDate.now());
+        platformDto.setVersion(2L);
 
-        Mockito.when(consoleService.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(consoleDto);
+        Mockito.when(platformService.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(platformDto);
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles/1")
+        ResultActions result = mockMvc.perform(get("/v1/platforms/1")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -193,13 +193,13 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void findGamesByConsoleId_withNoGames_returnsEmptyHateoasResponse() throws Exception {
+    public void findGamesByPlatformId_withNoGames_returnsEmptyHateoasResponse() throws Exception {
         // Arrange
-        Mockito.when(gameService.findGamesByConsoleId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        Mockito.when(gameService.findGamesByPlatformId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles/1/games")
+        ResultActions result = mockMvc.perform(get("/v1/platforms/1/games")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -217,7 +217,7 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void findGamesByConsoleId_withGames_returnsGameDtoHateoasResponse() throws Exception {
+    public void findGamesByPlatformId_withGames_returnsGameDtoHateoasResponse() throws Exception {
         // Arrange
         GameDto gameDto1 = new GameDto();
         gameDto1.setId(1L);
@@ -235,11 +235,11 @@ public class ConsoleControllerTest {
         gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setVersion(2L);
 
-        Mockito.when(gameService.findGamesByConsoleId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        Mockito.when(gameService.findGamesByPlatformId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(Arrays.asList(gameDto1, gameDto2));
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles/1/games")
+        ResultActions result = mockMvc.perform(get("/v1/platforms/1/games")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -260,7 +260,7 @@ public class ConsoleControllerTest {
 
         result.andExpect(jsonPath("$.content[0].links").isNotEmpty());
         result.andExpect(jsonPath("$.content[0].links[0].rel").value("self"));
-        result.andExpect(jsonPath("$.content[0].links[1].rel").value("consoles"));
+        result.andExpect(jsonPath("$.content[0].links[1].rel").value("platforms"));
         result.andExpect(jsonPath("$.content[0].links[2].rel").value("genres"));
 
         result.andExpect(jsonPath("$.content[1].id").value(gameDto2.getId()));
@@ -272,7 +272,7 @@ public class ConsoleControllerTest {
 
         result.andExpect(jsonPath("$.content[1].links").isNotEmpty());
         result.andExpect(jsonPath("$.content[1].links[0].rel").value("self"));
-        result.andExpect(jsonPath("$.content[1].links[1].rel").value("consoles"));
+        result.andExpect(jsonPath("$.content[1].links[1].rel").value("platforms"));
         result.andExpect(jsonPath("$.content[1].links[2].rel").value("genres"));
 
         result.andExpect(jsonPath("$.page.size").value(10));
@@ -282,13 +282,13 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void findAll_withNoConsoles_returnsEmptyHateoasResponse() throws Exception {
+    public void findAll_withNoPlatforms_returnsEmptyHateoasResponse() throws Exception {
         // Arrange
-        Mockito.when(consoleService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        Mockito.when(platformService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles")
+        ResultActions result = mockMvc.perform(get("/v1/platforms")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -306,27 +306,27 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void findAll_withConsoles_returnsConsoleDtosHateoasResponse() throws Exception {
+    public void findAll_withPlatforms_returnsPlatformDtosHateoasResponse() throws Exception {
         // Arrange
-        ConsoleDto consoleDto1 = new ConsoleDto();
-        consoleDto1.setId(1L);
-        consoleDto1.setName("console-name-one");
-        consoleDto1.setDescription("This sure is the description");
-        consoleDto1.setReleaseDate(LocalDate.now());
-        consoleDto1.setVersion(2L);
+        PlatformDto platformDto1 = new PlatformDto();
+        platformDto1.setId(1L);
+        platformDto1.setName("platform-name-one");
+        platformDto1.setDescription("This sure is the description");
+        platformDto1.setReleaseDate(LocalDate.now());
+        platformDto1.setVersion(2L);
 
-        ConsoleDto consoleDto2 = new ConsoleDto();
-        consoleDto2.setId(2L);
-        consoleDto2.setName("console-name-two");
-        consoleDto2.setDescription("This sure is the description");
-        consoleDto2.setReleaseDate(LocalDate.now());
-        consoleDto2.setVersion(2L);
+        PlatformDto platformDto2 = new PlatformDto();
+        platformDto2.setId(2L);
+        platformDto2.setName("platform-name-two");
+        platformDto2.setDescription("This sure is the description");
+        platformDto2.setReleaseDate(LocalDate.now());
+        platformDto2.setVersion(2L);
 
-        Mockito.when(consoleService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(Arrays.asList(consoleDto1, consoleDto2));
+        Mockito.when(platformService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(Arrays.asList(platformDto1, platformDto2));
 
         // Act
-        ResultActions result = mockMvc.perform(get("/v1/consoles")
+        ResultActions result = mockMvc.perform(get("/v1/platforms")
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -338,21 +338,21 @@ public class ConsoleControllerTest {
         result.andExpect(jsonPath("$.content").isArray());
         result.andExpect(jsonPath("$.content").isNotEmpty());
 
-        result.andExpect(jsonPath("$.content[0].id").value(consoleDto1.getId()));
-        result.andExpect(jsonPath("$.content[0].name").value(consoleDto1.getName()));
-        result.andExpect(jsonPath("$.content[0].description").value(consoleDto1.getDescription()));
+        result.andExpect(jsonPath("$.content[0].id").value(platformDto1.getId()));
+        result.andExpect(jsonPath("$.content[0].name").value(platformDto1.getName()));
+        result.andExpect(jsonPath("$.content[0].description").value(platformDto1.getDescription()));
         result.andExpect(jsonPath("$.content[0].releaseDate").exists());
-        result.andExpect(jsonPath("$.content[0].version").value(consoleDto1.getVersion()));
+        result.andExpect(jsonPath("$.content[0].version").value(platformDto1.getVersion()));
 
         result.andExpect(jsonPath("$.content[0].links").isNotEmpty());
         result.andExpect(jsonPath("$.content[0].links[0].rel").value("self"));
         result.andExpect(jsonPath("$.content[0].links[1].rel").value("games"));
 
-        result.andExpect(jsonPath("$.content[1].id").value(consoleDto2.getId()));
-        result.andExpect(jsonPath("$.content[1].name").value(consoleDto2.getName()));
-        result.andExpect(jsonPath("$.content[1].description").value(consoleDto2.getDescription()));
+        result.andExpect(jsonPath("$.content[1].id").value(platformDto2.getId()));
+        result.andExpect(jsonPath("$.content[1].name").value(platformDto2.getName()));
+        result.andExpect(jsonPath("$.content[1].description").value(platformDto2.getDescription()));
         result.andExpect(jsonPath("$.content[1].releaseDate").exists());
-        result.andExpect(jsonPath("$.content[1].version").value(consoleDto2.getVersion()));
+        result.andExpect(jsonPath("$.content[1].version").value(platformDto2.getVersion()));
 
         result.andExpect(jsonPath("$.content[1].links").isNotEmpty());
         result.andExpect(jsonPath("$.content[1].links[0].rel").value("self"));
@@ -365,9 +365,9 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void update_withNullConsoleDto_returns400AndApiError() throws Exception {
+    public void update_withNullPlatformDto_returns400AndApiError() throws Exception {
         // Act
-        ResultActions result = mockMvc.perform(put("/v1/consoles")
+        ResultActions result = mockMvc.perform(put("/v1/platforms")
                 .accept(MediaTypes.HAL_JSON)
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
@@ -381,10 +381,10 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void update_withInvalidConsoleDto_returns400AndApiError() throws Exception {
+    public void update_withInvalidPlatformDto_returns400AndApiError() throws Exception {
         // Act
-        ResultActions result = mockMvc.perform(put("/v1/consoles")
-                .content(new ObjectMapper().writeValueAsString(new ConsoleDto()))
+        ResultActions result = mockMvc.perform(put("/v1/platforms")
+                .content(new ObjectMapper().writeValueAsString(new PlatformDto()))
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert
@@ -398,13 +398,13 @@ public class ConsoleControllerTest {
     }
 
     @Test
-    public void update_withValidConsoleDto_returnsConsoleDtoHateoasResponse() throws Exception {
+    public void update_withValidPlatformDto_returnsPlatformDtoHateoasResponse() throws Exception {
         // Arrange
-        ConsoleDto consoleDto = new ConsoleDto();
-        consoleDto.setName("console-name");
-        consoleDto.setDescription("This sure is a description of a console.");
-        consoleDto.setReleaseDate(LocalDate.now());
-        consoleDto.setVersion(0L);
+        PlatformDto platformDto = new PlatformDto();
+        platformDto.setName("platform-name");
+        platformDto.setDescription("This sure is a description of a platform.");
+        platformDto.setReleaseDate(LocalDate.now());
+        platformDto.setVersion(0L);
 
         ObjectMapper objectMapper = new ObjectMapper()
                 .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -414,12 +414,12 @@ public class ConsoleControllerTest {
                 .registerModule(new Jackson2HalModule())
                 .registerModule(new JSR353Module());
 
-        Mockito.when(consoleService.update(ArgumentMatchers.any()))
-                .thenReturn(consoleDto);
+        Mockito.when(platformService.update(ArgumentMatchers.any()))
+                .thenReturn(platformDto);
 
         // Act
-        ResultActions result = mockMvc.perform(put("/v1/consoles")
-                .content(objectMapper.writeValueAsString(consoleDto))
+        ResultActions result = mockMvc.perform(put("/v1/platforms")
+                .content(objectMapper.writeValueAsString(platformDto))
                 .contentType(MediaTypes.HAL_JSON_VALUE));
 
         // Assert

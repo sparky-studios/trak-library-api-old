@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "game-user-entry")
@@ -18,9 +19,11 @@ public class GameUserEntryDto {
 
     private String gameTitle;
 
-    private long consoleId;
+    private LocalDate gameReleaseDate;
 
-    private String consoleName;
+    private long platformId;
+
+    private String platformName;
 
     private long userId;
 

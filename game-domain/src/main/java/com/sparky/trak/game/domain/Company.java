@@ -9,8 +9,8 @@ import java.util.Set;
 
 @Data
 @Entity
-@Table(name = "console")
-public class Console {
+@Table(name = "company")
+public class Company {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,12 +23,19 @@ public class Console {
     @Column(name = "description", length = 4096)
     private String description;
 
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
+    @Column(name = "founded_date", nullable = false)
+    private LocalDate foundedDate;
+
+    @Column(name = "company_type", nullable = false)
+    private CompanyType companyType;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL)
-    private Set<GameConsoleXref> gameConsoleXrefs;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+    private Set<GamePublisherXref> gamePublisherXrefs;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
+    private Set<GameDeveloperXref> gameDeveloperXrefs;
 
     @Version
     @Column(name = "op_lock_version")

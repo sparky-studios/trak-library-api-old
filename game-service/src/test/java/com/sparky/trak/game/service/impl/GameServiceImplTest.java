@@ -1,7 +1,7 @@
 package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.Game;
-import com.sparky.trak.game.domain.GameConsoleXref;
+import com.sparky.trak.game.domain.GamePlatformXref;
 import com.sparky.trak.game.domain.GameGenreXref;
 import com.sparky.trak.game.repository.*;
 import com.sparky.trak.game.repository.specification.GameSpecification;
@@ -38,10 +38,10 @@ public class GameServiceImplTest {
     private GameGenreXrefRepository gameGenreXrefRepository;
 
     @Mock
-    private ConsoleRepository consoleRepository;
+    private PlatformRepository platformRepository;
 
     @Mock
-    private GameConsoleXrefRepository gameConsoleXrefRepository;
+    private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Mock
     private PatchService patchService;
@@ -190,29 +190,29 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByConsoleId_withNonExistentConsole_throwsEntityNotFoundException() {
+    public void findGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
         // Arrange
-        Mockito.when(consoleRepository.existsById(ArgumentMatchers.anyLong()))
+        Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByConsoleId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)));
     }
 
     @Test
-    public void findGamesByConsoleId_withNoConsoles_returnsEmptyList() {
+    public void findGamesByPlatformId_withNoPlatforms_returnsEmptyList() {
         // Arrange
-        Mockito.when(consoleRepository.existsById(ArgumentMatchers.anyLong()))
+        Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameConsoleXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
         // Act
-        List<GameDto> result = StreamSupport.stream(gameService.findGamesByConsoleId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -223,22 +223,22 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByConsoleId_withMultipleGames_returnsList() {
+    public void findGamesByPlatformId_withMultipleGames_returnsList() {
         // Arrange
-        Mockito.when(consoleRepository.existsById(ArgumentMatchers.anyLong()))
+        Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GameConsoleXref gameConsoleXref1 = new GameConsoleXref();
-        gameConsoleXref1.setGame(new Game());
+        GamePlatformXref gamePlatformXref1 = new GamePlatformXref();
+        gamePlatformXref1.setGame(new Game());
 
-        GameConsoleXref gameConsoleXref2 = new GameConsoleXref();
-        gameConsoleXref2.setGame(new Game());
+        GamePlatformXref gamePlatformXref2 = new GamePlatformXref();
+        gamePlatformXref2.setGame(new Game());
 
-        Mockito.when(gameConsoleXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gameConsoleXref1, gameConsoleXref2)));
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(gamePlatformXref1, gamePlatformXref2)));
 
         // Act
-        List<GameDto> result = StreamSupport.stream(gameService.findGamesByConsoleId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert

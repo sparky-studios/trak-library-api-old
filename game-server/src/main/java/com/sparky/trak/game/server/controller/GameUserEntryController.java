@@ -2,22 +2,23 @@ package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
-import com.sparky.trak.game.service.GameUserEntryService;
-import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import com.sparky.trak.game.server.assembler.GameUserEntryRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.ApiError;
+import com.sparky.trak.game.service.GameUserEntryService;
+import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
 import java.util.List;
@@ -88,12 +89,18 @@ public class GameUserEntryController {
     public PagedModel<EntityModel<GameUserEntryDto>> findAll(GameUserEntrySpecification gameUserEntrySpecification,
                                                              @PageableDefault Pageable pageable,
                                                              PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
+
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameUserEntryService.findAll(gameUserEntrySpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, gameUserEntryDtos.size()), gameUserEntryRepresentationModelAssembler);
+        return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, gameUserEntryDtos.size()), gameUserEntryRepresentationModelAssembler, link);
     }
 
     /**

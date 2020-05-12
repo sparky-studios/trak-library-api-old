@@ -171,7 +171,7 @@ public class GameRequestServiceImplTest {
                 .collect(Collectors.toList());
 
         // Assert
-        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages console results were found.");
+        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages platform results were found.");
     }
 
     @Test

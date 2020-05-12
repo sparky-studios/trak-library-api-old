@@ -22,8 +22,8 @@ public class GameRepresentationModelAssembler implements SimpleRepresentationMod
             resource.add(linkTo(methodOn(GameController.class).findById(content.getId()))
                     .withSelfRel());
 
-            resource.add(linkTo(methodOn(GameController.class).findConsolesByGameId(content.getId()))
-                    .withRel("consoles"));
+            resource.add(linkTo(methodOn(GameController.class).findPlatformsByGameId(content.getId()))
+                    .withRel("platforms"));
 
             resource.add(linkTo(methodOn(GameController.class).findGenresByGameId(content.getId()))
                     .withRel("genres"));

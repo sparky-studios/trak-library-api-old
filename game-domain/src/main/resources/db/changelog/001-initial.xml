@@ -77,10 +77,10 @@
                 columnNames="game_id,genre_id"
                 constraintName="unq_game_genre_xref_game_id_genre_id" />
 
-        <!-- Create the console table -->
-        <createTable tableName="console">
+        <!-- Create the platform table -->
+        <createTable tableName="platform">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_console" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_platform" />
             </column>
             <column name="name" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -90,38 +90,38 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
-        <!-- Create the game_console_xref table -->
-        <createTable tableName="game_console_xref">
+        <!-- Create the game_platform_xref table -->
+        <createTable tableName="game_platform_xref">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_console_xref" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_platform_xref" />
             </column>
             <column name="game_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="console_id" type="bigint">
+            <column name="platform_id" type="bigint">
                 <constraints nullable="false" />
             </column>
         </createTable>
 
-        <!-- game_console_xref foreign key constraints -->
+        <!-- game_platform_xref foreign key constraints -->
         <addForeignKeyConstraint
-                baseTableName="game_console_xref"
+                baseTableName="game_platform_xref"
                 baseColumnNames="game_id"
-                constraintName="fk_game_console_xref_game_id"
+                constraintName="fk_game_platform_xref_game_id"
                 referencedTableName="game"
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
-                baseTableName="game_console_xref"
-                baseColumnNames="console_id"
-                constraintName="fk_game_console_xref_console_id"
-                referencedTableName="console"
+                baseTableName="game_platform_xref"
+                baseColumnNames="platform_id"
+                constraintName="fk_game_platform_xref_platform_id"
+                referencedTableName="platform"
                 referencedColumnNames="id" />
 
-        <!-- game_console_xref unique constraints -->
+        <!-- game_platform_xref unique constraints -->
         <addUniqueConstraint
-                tableName="game_console_xref"
-                columnNames="game_id,console_id"
-                constraintName="unq_game_console_xref_game_id_console_id" />
+                tableName="game_platform_xref"
+                columnNames="game_id,platform_id"
+                constraintName="unq_game_platform_xref_game_id_platform_id" />
 
         <!-- game_user_entry table -->
         <createTable tableName="game_user_entry">
@@ -131,7 +131,7 @@
             <column name="game_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="console_id" type="bigint">
+            <column name="platform_id" type="bigint">
                 <constraints nullable="false" />
             </column>
             <column name="user_id" type="bigint">
@@ -155,16 +155,16 @@
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
                 baseTableName="game_user_entry"
-                baseColumnNames="console_id"
-                constraintName="fk_game_user_entry_console_id"
-                referencedTableName="console"
+                baseColumnNames="platform_id"
+                constraintName="fk_game_user_entry_platform_id"
+                referencedTableName="platform"
                 referencedColumnNames="id" />
 
         <!-- game_user_entry unique constraints -->
         <addUniqueConstraint
                 tableName="game_user_entry"
-                columnNames="game_id,console_id,user_id"
-                constraintName="unq_game_user_entry_game_id_console_id_user_id" />
+                columnNames="game_id,platform_id,user_id"
+                constraintName="unq_game_user_entry_game_id_platform_id_user_id" />
 
         <!-- game_user_entry table -->
         <createTable tableName="game_request">
@@ -184,11 +184,98 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
+        <!-- Create the company table -->
+        <createTable tableName="company">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_company" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(4096)"/>
+            <column name="founded_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="company_type" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Create the game_publisher_xref table -->
+        <createTable tableName="game_publisher_xref">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_publisher_xref" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- game_publisher_xref foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_publisher_xref"
+                baseColumnNames="game_id"
+                constraintName="fk_game_publisher_xref_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_publisher_xref"
+                baseColumnNames="company_id"
+                constraintName="fk_game_publisher_xref_company_id"
+                referencedTableName="company"
+                referencedColumnNames="id" />
+
+        <!-- game_publisher_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_publisher_xref"
+                columnNames="game_id,company_id"
+                constraintName="unq_game_publisher_xref_game_id_company_id" />
+
+        <!-- Create the game_developer_xref table -->
+        <createTable tableName="game_developer_xref">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_developer_xref" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- game_developer_xref foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_developer_xref"
+                baseColumnNames="game_id"
+                constraintName="fk_game_developer_xref_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_developer_xref"
+                baseColumnNames="company_id"
+                constraintName="fk_game_developer_xref_company_id"
+                referencedTableName="company"
+                referencedColumnNames="id" />
+
+        <!-- game_developer_xref unique constraints -->
+        <addUniqueConstraint
+                tableName="game_developer_xref"
+                columnNames="game_id,company_id"
+                constraintName="unq_game_developer_xref_game_id_company_id" />
+
         <rollback>
+            <dropTable tableName="game_developer_xref"/>
+            <dropTable tableName="game_publisher_xref"/>
+            <dropTable tableName="company" />
             <dropTable tableName="game_request" />
             <dropTable tableName="game_user_entry" />
-            <dropTable tableName="game_console_xref" />
-            <dropTable tableName="console" />
+            <dropTable tableName="game_platform_xref" />
+            <dropTable tableName="platform" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
             <dropTable tableName="game" />

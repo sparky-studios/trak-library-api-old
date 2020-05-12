@@ -3,13 +3,13 @@ package com.sparky.trak.game.server.controller;
 import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.server.annotation.AllowedForModerator;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
-import com.sparky.trak.game.service.ConsoleService;
+import com.sparky.trak.game.service.PlatformService;
 import com.sparky.trak.game.service.GameService;
 import com.sparky.trak.game.service.GenreService;
-import com.sparky.trak.game.service.dto.ConsoleDto;
+import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.GenreDto;
-import com.sparky.trak.game.server.assembler.ConsoleRepresentationModelAssembler;
+import com.sparky.trak.game.server.assembler.PlatformRepresentationModelAssembler;
 import com.sparky.trak.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparky.trak.game.server.assembler.GenreRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.ApiError;
@@ -48,10 +48,10 @@ public class GameController {
 
     private final GameService gameService;
     private final GenreService genreService;
-    private final ConsoleService consoleService;
+    private final PlatformService platformService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
-    private final ConsoleRepresentationModelAssembler consoleRepresentationModelAssembler;
+    private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
 
     /**
      * End-point that will attempt to save the given {@link GameDto} request body to the underlying
@@ -106,19 +106,19 @@ public class GameController {
     }
 
     /**
-     * End-point that will retrieve a {@link CollectionModel} of {@link ConsoleDto}s that are directly associated
+     * End-point that will retrieve a {@link CollectionModel} of {@link PlatformDto}s that are directly associated
      * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
      * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
      * has no associated {@link GenreDto}'s, then an empty {@link CollectionModel} will be returned.
      *
      * @param id The ID of the {@link GameDto} to retrieve genre information for.
      *
-     * @return A {@link CollectionModel} of {@link ConsoleDto}'s that are associated with the given {@link GameDto}.
+     * @return A {@link CollectionModel} of {@link PlatformDto}'s that are associated with the given {@link GameDto}.
      */
     @AllowedForUser
-    @GetMapping("/{id}/consoles")
-    public CollectionModel<EntityModel<ConsoleDto>> findConsolesByGameId(@PathVariable long id) {
-        return consoleRepresentationModelAssembler.toCollectionModel(consoleService.findConsolesFromGameId(id));
+    @GetMapping("/{id}/platforms")
+    public CollectionModel<EntityModel<PlatformDto>> findPlatformsByGameId(@PathVariable long id) {
+        return platformRepresentationModelAssembler.toCollectionModel(platformService.findPlatformsFromGameId(id));
     }
 
     /**

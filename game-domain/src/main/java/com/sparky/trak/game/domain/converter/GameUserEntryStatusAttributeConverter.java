@@ -7,7 +7,7 @@ import javax.persistence.Converter;
 import java.util.stream.Stream;
 
 @Converter(autoApply = true)
-public class GameUserEntryStatusConverter implements AttributeConverter<GameUserEntryStatus, Short> {
+public class GameUserEntryStatusAttributeConverter implements AttributeConverter<GameUserEntryStatus, Short> {
 
     @Override
     public Short convertToDatabaseColumn(GameUserEntryStatus gameUserEntryStatus) {

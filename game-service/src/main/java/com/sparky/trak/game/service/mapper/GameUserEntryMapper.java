@@ -12,10 +12,11 @@ public interface GameUserEntryMapper {
     GameUserEntryMapper INSTANCE = Mappers.getMapper(GameUserEntryMapper.class);
 
     @Mapping(source = "game.title", target = "gameTitle")
-    @Mapping(source = "console.name", target = "consoleName")
+    @Mapping(source = "game.releaseDate", target = "gameReleaseDate")
+    @Mapping(source = "platform.name", target = "platformName")
     GameUserEntryDto gameUserEntryToGameUserEntryDto(GameUserEntry gameUserEntry);
 
     @Mapping(target = "game", ignore = true)
-    @Mapping(target = "console", ignore = true)
+    @Mapping(target = "platform", ignore = true)
     GameUserEntry gameUserEntryDtoToGameUserEntry(GameUserEntryDto gameUserEntryDto);
 }
