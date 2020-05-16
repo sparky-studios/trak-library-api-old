@@ -23,13 +23,13 @@ public class GameUserEntry {
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;
 
-    @Column(name = "console_id", nullable = false, updatable = false)
-    private long consoleId;
+    @Column(name = "platform_id", nullable = false, updatable = false)
+    private long platformId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "console_id", updatable = false, insertable = false)
-    private Console console;
+    @JoinColumn(name = "platform_id", updatable = false, insertable = false)
+    private Platform platform;
 
     @Column(name = "user_id", nullable = false, updatable = false)
     private long userId;

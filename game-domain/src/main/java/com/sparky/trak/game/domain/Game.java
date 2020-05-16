@@ -34,8 +34,16 @@ public class Game {
     private Set<GameGenreXref> gameGenreXrefs;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "console", cascade = CascadeType.ALL)
-    private Set<GameConsoleXref> gameConsoleXrefs;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.ALL)
+    private Set<GamePlatformXref> gamePlatformXrefs;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.ALL)
+    private Set<GamePublisherXref> gamePublisherXrefs;
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "game", cascade = CascadeType.ALL)
+    private Set<GameDeveloperXref> gameDeveloperXrefs;
 
     @Version
     @Column(name = "op_lock_version")

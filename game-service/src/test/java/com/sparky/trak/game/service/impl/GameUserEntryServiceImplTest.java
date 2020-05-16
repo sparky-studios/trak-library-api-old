@@ -1,6 +1,6 @@
 package com.sparky.trak.game.service.impl;
 
-import com.sparky.trak.game.domain.Console;
+import com.sparky.trak.game.domain.Platform;
 import com.sparky.trak.game.domain.Game;
 import com.sparky.trak.game.domain.GameUserEntry;
 import com.sparky.trak.game.domain.GameUserEntryStatus;
@@ -132,15 +132,15 @@ public class GameUserEntryServiceImplTest {
         Game game = new Game();
         game.setTitle("test-title");
 
-        Console console = new Console();
-        console.setName("test-name");
+        Platform platform = new Platform();
+        platform.setName("test-name");
 
         GameUserEntry gameUserEntry = new GameUserEntry();
         gameUserEntry.setId(1L);
         gameUserEntry.setGameId(2L);
         gameUserEntry.setGame(game);
-        gameUserEntry.setConsoleId(3L);
-        gameUserEntry.setConsole(console);
+        gameUserEntry.setPlatformId(3L);
+        gameUserEntry.setPlatform(platform);
         gameUserEntry.setUserId(4L);
         gameUserEntry.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntry.setRating((short)4);
@@ -159,8 +159,8 @@ public class GameUserEntryServiceImplTest {
         Assertions.assertEquals(gameUserEntry.getId(), result.getId(), "The mapped ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getGameId(), result.getGameId(), "The mapped game ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getGame().getTitle(), result.getGameTitle(), "The mapped game title does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getConsoleId(), result.getConsoleId(), "The mapped console ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getConsole().getName(), result.getConsoleName(), "The mapped console name does not match the entity.");
+        Assertions.assertEquals(gameUserEntry.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the entity.");
+        Assertions.assertEquals(gameUserEntry.getPlatform().getName(), result.getPlatformName(), "The mapped platform name does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");
@@ -326,7 +326,20 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingButDifferentUser_throwsInvalidUserException() {
+    public void deleteById_withNonExistentEntity_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.deleteById(0L));
+    }
+
+    @Test
+    public void deleteById_withExistingButDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
@@ -344,7 +357,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    public void deleteById_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));

@@ -3,15 +3,9 @@ package com.sparky.trak.game.server.controller;
 import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.server.annotation.AllowedForModerator;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
-import com.sparky.trak.game.service.ConsoleService;
-import com.sparky.trak.game.service.GameService;
-import com.sparky.trak.game.service.GenreService;
-import com.sparky.trak.game.service.dto.ConsoleDto;
-import com.sparky.trak.game.service.dto.GameDto;
-import com.sparky.trak.game.service.dto.GenreDto;
-import com.sparky.trak.game.server.assembler.ConsoleRepresentationModelAssembler;
-import com.sparky.trak.game.server.assembler.GameRepresentationModelAssembler;
-import com.sparky.trak.game.server.assembler.GenreRepresentationModelAssembler;
+import com.sparky.trak.game.server.assembler.*;
+import com.sparky.trak.game.service.*;
+import com.sparky.trak.game.service.dto.*;
 import com.sparky.trak.game.server.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
@@ -48,10 +42,14 @@ public class GameController {
 
     private final GameService gameService;
     private final GenreService genreService;
-    private final ConsoleService consoleService;
+    private final PlatformService platformService;
+    private final DeveloperService developerService;
+    private final PublisherService publisherService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
-    private final ConsoleRepresentationModelAssembler consoleRepresentationModelAssembler;
+    private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
+    private final DeveloperRepresentationModelAssembler developerRepresentationModelAssembler;
+    private final PublisherRepresentationModelAssembler publisherRepresentationModelAssembler;
 
     /**
      * End-point that will attempt to save the given {@link GameDto} request body to the underlying
@@ -106,19 +104,77 @@ public class GameController {
     }
 
     /**
-     * End-point that will retrieve a {@link CollectionModel} of {@link ConsoleDto}s that are directly associated
+     * End-point that will retrieve a {@link CollectionModel} of {@link PlatformDto}s that are directly associated
      * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
      * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
-     * has no associated {@link GenreDto}'s, then an empty {@link CollectionModel} will be returned.
+     * has no associated {@link PlatformDto}'s, then an empty {@link CollectionModel} will be returned.
      *
      * @param id The ID of the {@link GameDto} to retrieve genre information for.
      *
-     * @return A {@link CollectionModel} of {@link ConsoleDto}'s that are associated with the given {@link GameDto}.
+     * @return A {@link CollectionModel} of {@link PlatformDto}'s that are associated with the given {@link GameDto}.
      */
     @AllowedForUser
-    @GetMapping("/{id}/consoles")
-    public CollectionModel<EntityModel<ConsoleDto>> findConsolesByGameId(@PathVariable long id) {
-        return consoleRepresentationModelAssembler.toCollectionModel(consoleService.findConsolesFromGameId(id));
+    @GetMapping("/{id}/platforms")
+    public PagedModel<EntityModel<PlatformDto>> findPlatformsByGameId(@PathVariable long id,
+                                                                      @PageableDefault Pageable pageable,
+                                                                      PagedResourcesAssembler<PlatformDto> pagedResourcesAssembler) {
+        // Get the paged data from the service and convert into a list so it can be added to a page object.
+        List<PlatformDto> platformDtos = StreamSupport.stream(platformService.findPlatformsByGameId(id, pageable).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Wrap the page in a HATEOAS response.
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(platformDtos, pageable, platformDtos.size()), platformRepresentationModelAssembler);
+    }
+
+    /**
+     * End-point that will retrieve a {@link CollectionModel} of {@link DeveloperDto}s that are directly associated
+     * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
+     * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
+     * has no associated {@link DeveloperDto}'s, then an empty {@link CollectionModel} will be returned.
+     *
+     * @param id The ID of the {@link GameDto} to retrieve genre information for.
+     *
+     * @return A {@link CollectionModel} of {@link DeveloperDto}'s that are associated with the given {@link GameDto}.
+     */
+    @AllowedForUser
+    @GetMapping("/{id}/developers")
+    public PagedModel<EntityModel<DeveloperDto>> findDevelopersByGameId(@PathVariable long id,
+                                                                        @PageableDefault Pageable pageable,
+                                                                        PagedResourcesAssembler<DeveloperDto> pagedResourcesAssembler) {
+
+        // Get the paged data from the service and convert into a list so it can be added to a page object.
+        List<DeveloperDto> developerDtos = StreamSupport.stream(developerService.findDevelopersByGameId(id, pageable).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Wrap the page in a HATEOAS response.
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(developerDtos, pageable, developerDtos.size()), developerRepresentationModelAssembler);
+    }
+
+    /**
+     * End-point that will retrieve a {@link CollectionModel} of {@link PublisherDto}s that are directly associated
+     * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
+     * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
+     * has no associated {@link PublisherDto}'s, then an empty {@link CollectionModel} will be returned.
+     *
+     * @param id The ID of the {@link GameDto} to retrieve genre information for.
+     *
+     * @return A {@link CollectionModel} of {@link PublisherDto}'s that are associated with the given {@link GameDto}.
+     */
+    @AllowedForUser
+    @GetMapping("/{id}/publishers")
+    public PagedModel<EntityModel<PublisherDto>> findPublishersByGameId(@PathVariable long id,
+                                                                        @PageableDefault Pageable pageable,
+                                                                        PagedResourcesAssembler<PublisherDto> pagedResourcesAssembler) {
+
+        // Get the paged data from the service and convert into a list so it can be added to a page object.
+        List<PublisherDto> publisherDtos = StreamSupport.stream(publisherService.findPublishersByGameId(id, pageable).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Wrap the page in a HATEOAS response.
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(publisherDtos, pageable, publisherDtos.size()), publisherRepresentationModelAssembler);
     }
 
     /**

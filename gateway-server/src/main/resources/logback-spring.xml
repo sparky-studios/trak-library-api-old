@@ -2,7 +2,7 @@
 <configuration>
     <property name="LOGS" value="./logs" />
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="platform" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
             <Pattern>
                 %d{yyyy-MM-dd HH:mm:ss.SSS} %-4relative [%thread] %-5level %logger{35} - %X{req.method} %X{req.requestURI} %msg %n
@@ -27,7 +27,7 @@
 
     <root level="info">
         <appender-ref ref="rolling-file" />
-        <appender-ref ref="console" />
+        <appender-ref ref="platform" />
     </root>
 
 </configuration>

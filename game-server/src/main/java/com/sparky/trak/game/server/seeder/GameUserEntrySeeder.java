@@ -1,8 +1,8 @@
 package com.sparky.trak.game.server.seeder;
 
-import com.sparky.trak.game.domain.GameConsoleXref;
+import com.sparky.trak.game.domain.GamePlatformXref;
 import com.sparky.trak.game.domain.GameUserEntryStatus;
-import com.sparky.trak.game.repository.GameConsoleXrefRepository;
+import com.sparky.trak.game.repository.GamePlatformXrefRepository;
 import com.sparky.trak.game.service.GameUserEntryService;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import lombok.RequiredArgsConstructor;
@@ -29,22 +29,22 @@ public class GameUserEntrySeeder implements Runnable {
     private int userCount;
 
     private final GameUserEntryService gameUserEntryService;
-    private final GameConsoleXrefRepository gameConsoleXrefRepository;
+    private final GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Override
     public void run() {
         Random random = new SecureRandom();
 
-        List<GameConsoleXref> gameConsoleXrefs = StreamSupport.stream(gameConsoleXrefRepository.findAll().spliterator(), false)
-                .sorted(Comparator.comparingLong(GameConsoleXref::getGameId))
+        List<GamePlatformXref> gamePlatformXrefs = StreamSupport.stream(gamePlatformXrefRepository.findAll().spliterator(), false)
+                .sorted(Comparator.comparingLong(GamePlatformXref::getGameId))
                 .collect(Collectors.toList());
 
         IntStream.range(0, userCount).forEach(i -> {
 
-            for (GameConsoleXref gameConsoleXref : gameConsoleXrefs) {
+            for (GamePlatformXref gamePlatformXref : gamePlatformXrefs) {
                 GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
-                gameUserEntryDto.setGameId(gameConsoleXref.getGameId());
-                gameUserEntryDto.setConsoleId(gameConsoleXref.getConsoleId());
+                gameUserEntryDto.setGameId(gamePlatformXref.getGameId());
+                gameUserEntryDto.setPlatformId(gamePlatformXref.getPlatformId());
                 gameUserEntryDto.setUserId(i);
                 gameUserEntryDto.setRating((short)random.nextInt(6));
                 gameUserEntryDto.setStatus(GameUserEntryStatus.values()[random.nextInt(GameUserEntryStatus.values().length)]);

@@ -13,7 +13,9 @@ public interface GameMapper {
 
     GameDto gameToGameDto(Game game);
 
-    @Mapping(target = "gameConsoleXrefs", ignore = true)
+    @Mapping(target = "gamePlatformXrefs", ignore = true)
     @Mapping(target = "gameGenreXrefs", ignore = true)
+    @Mapping(target = "gameDeveloperXrefs", ignore = true)
+    @Mapping(target = "gamePublisherXrefs", ignore = true)
     Game gameDtoToGame(GameDto gameDto);
 }
