@@ -28,6 +28,10 @@ public class GameServiceImpl implements GameService {
     private final GameGenreXrefRepository gameGenreXrefRepository;
     private final PlatformRepository platformRepository;
     private final GamePlatformXrefRepository gamePlatformXrefRepository;
+    private final DeveloperRepository developerRepository;
+    private final GameDeveloperXrefRepository gameDeveloperXrefRepository;
+    private final PublisherRepository publisherRepository;
+    private final GamePublisherXrefRepository gamePublisherXrefRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -80,6 +84,34 @@ public class GameServiceImpl implements GameService {
 
         return gamePlatformXrefRepository
                 .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId)), pageable)
+                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public Iterable<GameDto> findGamesByDeveloperId(long developerId, Pageable pageable) {
+        if (!developerRepository.existsById(developerId)) {
+            String errorMessage = messageSource
+                    .getMessage("developer.exception.not-found", new Object[] { developerId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameDeveloperXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("developerId"), developerId)), pageable)
+                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable) {
+        if (!publisherRepository.existsById(publisherId)) {
+            String errorMessage = messageSource
+                    .getMessage("publisher.exception.not-found", new Object[] { publisherId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePublisherXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("publisherId"), publisherId)), pageable)
                 .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
     }
 

@@ -1,15 +1,19 @@
 package com.sparky.trak.game.domain;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.Set;
 
 @Data
 @Entity
 @Table(name = "company")
+@Inheritance(strategy = InheritanceType.JOINED)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Developer.class, name = "developer"),
+        @JsonSubTypes.Type(value = Publisher.class, name = "publisher")
+})
 public class Company {
 
     @Id
@@ -25,17 +29,6 @@ public class Company {
 
     @Column(name = "founded_date", nullable = false)
     private LocalDate foundedDate;
-
-    @Column(name = "company_type", nullable = false)
-    private CompanyType companyType;
-
-    @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<GamePublisherXref> gamePublisherXrefs;
-
-    @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "company", cascade = CascadeType.ALL)
-    private Set<GameDeveloperXref> gameDeveloperXrefs;
 
     @Version
     @Column(name = "op_lock_version")

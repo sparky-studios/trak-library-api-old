@@ -23,11 +23,11 @@ public class GameDeveloperXref {
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;
 
-    @Column(name = "company_id", nullable = false, updatable = false)
-    private long companyId;
+    @Column(name = "developer_id", nullable = false, updatable = false)
+    private long developerId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumn(name = "company_id", updatable = false, insertable = false)
-    private Company company;
+    @JoinColumn(name = "developer_id", updatable = false, insertable = false)
+    private Developer developer;
 }

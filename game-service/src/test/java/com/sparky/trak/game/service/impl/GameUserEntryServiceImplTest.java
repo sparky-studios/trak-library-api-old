@@ -326,7 +326,20 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingButDifferentUser_throwsInvalidUserException() {
+    public void deleteById_withNonExistentEntity_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.deleteById(0L));
+    }
+
+    @Test
+    public void deleteById_withExistingButDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
@@ -344,7 +357,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    public void deleteById_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));

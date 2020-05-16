@@ -1,23 +1,28 @@
 package com.sparky.trak.game.service.mapper;
 
-import com.sparky.trak.game.domain.Platform;
-import com.sparky.trak.game.domain.Game;
-import com.sparky.trak.game.domain.GameUserEntry;
-import com.sparky.trak.game.domain.GameUserEntryStatus;
+import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 public class GameUserEntryMapperTest {
 
     @Test
     public void gameUserEntryToGameUserEntryDto_withGameUserEntry_mapsFields() {
         // Arrange
+        Publisher publisher = new Publisher();
+        publisher.setName("publisher-name");
+
+        GamePublisherXref gamePublisherXref = new GamePublisherXref();
+        gamePublisherXref.setPublisher(publisher);
+
         Game game = new Game();
         game.setTitle("test-title");
         game.setReleaseDate(LocalDate.now());
+        game.setGamePublisherXrefs(Collections.singleton(gamePublisherXref));
 
         Platform platform = new Platform();
         platform.setName("test-name");
@@ -42,6 +47,7 @@ public class GameUserEntryMapperTest {
         Assertions.assertEquals(gameUserEntry.getGame().getReleaseDate(), result.getGameReleaseDate(), "The mapped game release date does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatform().getName(), result.getPlatformName(), "The mapped platform name does not match the entity.");
+        Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next(), "The mapped publisher does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");

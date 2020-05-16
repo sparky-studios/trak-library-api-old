@@ -5,7 +5,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
 
-    <changeSet author="Benjamin Carter" id="001">
+    <changeSet author="Sparky Studios" id="001">
         <comment>
             Create the initial database structure for the game application.
         </comment>
@@ -196,10 +196,29 @@
             <column name="founded_date" type="date">
                 <constraints nullable="false"/>
             </column>
-            <column name="company_type" type="smallint" defaultValueNumeric="0">
-                <constraints nullable="false"/>
-            </column>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <createTable tableName="developer" remarks="Extends from company table.">
+            <column name="id" type="bigint">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_developer"
+                        nullable="false"
+                        foreignKeyName="fk_developer_company"
+                        references="company"/>
+            </column>
+        </createTable>
+
+        <createTable tableName="publisher" remarks="Extends from company table.">
+            <column name="id" type="bigint">
+                <constraints
+                        primaryKey="true"
+                        primaryKeyName="pk_publisher"
+                        nullable="false"
+                        foreignKeyName="fk_publisher_company"
+                        references="company"/>
+            </column>
         </createTable>
 
         <!-- Create the game_publisher_xref table -->
@@ -210,7 +229,7 @@
             <column name="game_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="company_id" type="bigint">
+            <column name="publisher_id" type="bigint">
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -224,16 +243,16 @@
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
                 baseTableName="game_publisher_xref"
-                baseColumnNames="company_id"
-                constraintName="fk_game_publisher_xref_company_id"
-                referencedTableName="company"
+                baseColumnNames="publisher_id"
+                constraintName="fk_game_publisher_xref_publisher_id"
+                referencedTableName="publisher"
                 referencedColumnNames="id" />
 
         <!-- game_publisher_xref unique constraints -->
         <addUniqueConstraint
                 tableName="game_publisher_xref"
-                columnNames="game_id,company_id"
-                constraintName="unq_game_publisher_xref_game_id_company_id" />
+                columnNames="game_id,publisher_id"
+                constraintName="unq_game_publisher_xref_game_id_publisher_id" />
 
         <!-- Create the game_developer_xref table -->
         <createTable tableName="game_developer_xref">
@@ -243,7 +262,7 @@
             <column name="game_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="company_id" type="bigint">
+            <column name="developer_id" type="bigint">
                 <constraints nullable="false" />
             </column>
         </createTable>
@@ -257,20 +276,22 @@
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
                 baseTableName="game_developer_xref"
-                baseColumnNames="company_id"
-                constraintName="fk_game_developer_xref_company_id"
-                referencedTableName="company"
+                baseColumnNames="developer_id"
+                constraintName="fk_game_developer_xref_developer_id"
+                referencedTableName="developer"
                 referencedColumnNames="id" />
 
         <!-- game_developer_xref unique constraints -->
         <addUniqueConstraint
                 tableName="game_developer_xref"
-                columnNames="game_id,company_id"
-                constraintName="unq_game_developer_xref_game_id_company_id" />
+                columnNames="game_id,developer_id"
+                constraintName="unq_game_developer_xref_game_id_developer_id" />
 
         <rollback>
-            <dropTable tableName="game_developer_xref"/>
-            <dropTable tableName="game_publisher_xref"/>
+            <dropTable tableName="game_developer_xref" />
+            <dropTable tableName="game_publisher_xref" />
+            <dropTable tableName="publisher" />
+            <dropTable tableName="developer" />
             <dropTable tableName="company" />
             <dropTable tableName="game_request" />
             <dropTable tableName="game_user_entry" />

@@ -23,11 +23,11 @@ public class GamePublisherXref {
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;
 
-    @Column(name = "company_id", nullable = false, updatable = false)
-    private long companyId;
+    @Column(name = "publisher_id", nullable = false, updatable = false)
+    private long publisherId;
 
     @EqualsAndHashCode.Exclude
     @ManyToOne(fetch = FetchType.LAZY, cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
-    @JoinColumn(name = "company_id", updatable = false, insertable = false)
-    private Company company;
+    @JoinColumn(name = "publisher_id", updatable = false, insertable = false)
+    private Publisher publisher;
 }

@@ -1,6 +1,9 @@
 package com.sparky.trak.game.service.impl;
 
+import com.sparky.trak.game.domain.GamePlatformXref;
 import com.sparky.trak.game.domain.Platform;
+import com.sparky.trak.game.repository.GamePlatformXrefRepository;
+import com.sparky.trak.game.repository.GameRepository;
 import com.sparky.trak.game.repository.PlatformRepository;
 import com.sparky.trak.game.repository.specification.PlatformSpecification;
 import com.sparky.trak.game.service.PatchService;
@@ -29,6 +32,12 @@ public class PlatformServiceImplTest {
 
     @Mock
     private PlatformRepository platformRepository;
+
+    @Mock
+    private GameRepository gameRepository;
+
+    @Mock
+    private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Spy
     private PlatformMapper platformMapper = PlatformMapper.INSTANCE;
@@ -116,6 +125,65 @@ public class PlatformServiceImplTest {
         Assertions.assertEquals(platform.getDescription(), result.getDescription(), "The description does match the entity.");
         Assertions.assertEquals(platform.getReleaseDate(), result.getReleaseDate(), "The release date does match the entity.");
         Assertions.assertEquals(platform.getVersion(), result.getVersion(), "The version does match the entity.");
+    }
+
+    @Test
+    public void findPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)));
+    }
+
+    @Test
+    public void findPlatformsByGameId_withNoPlatforms_returnsEmptyList() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        // Act
+        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no platforms are returned.");
+
+        Mockito.verify(platformMapper, Mockito.never())
+                .platformToPlatformDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findPlatformsByGameId_withMultiplePlatforms_returnsList() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        GamePlatformXref gamePlatformXref1 = new GamePlatformXref();
+        gamePlatformXref1.setPlatform(new Platform());
+
+        GamePlatformXref gamePlatformXref2 = new GamePlatformXref();
+        gamePlatformXref2.setPlatform(new Platform());
+
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(gamePlatformXref1, gamePlatformXref2)));
+
+        // Act
+        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+
+        Mockito.verify(platformMapper, Mockito.atMost(2))
+                .platformToPlatformDto(ArgumentMatchers.any());
     }
 
     @Test

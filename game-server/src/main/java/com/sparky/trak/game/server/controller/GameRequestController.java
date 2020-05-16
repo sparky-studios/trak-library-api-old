@@ -95,7 +95,7 @@ public class GameRequestController {
     @AllowedForUser
     @GetMapping
     public PagedModel<EntityModel<GameRequestDto>> findAll(@PageableDefault Pageable pageable,
-                                                    PagedResourcesAssembler<GameRequestDto> pagedResourcesAssembler) {
+                                                           PagedResourcesAssembler<GameRequestDto> pagedResourcesAssembler) {
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameRequestDto> gameRequestDtos = StreamSupport.stream(gameRequestService.findAll(pageable).spliterator(), false)
                 .collect(Collectors.toList());

@@ -58,17 +58,15 @@ public interface PlatformService {
     Iterable<PlatformDto> findAll();
 
     /**
-     * Retrieve an {@link Iterable} of all {@link PlatformDto}'s that are associated with the given {@link GameDto}.
-     * The {@link Iterable} returned by this method will not contain any paged information, as it is under the impression
-     * that no game will be for more {@link PlatformDto}'s than a single page is expected to contain. If the ID provided
-     * does not map onto an existing {@link GameDto}, then a {@link javax.persistence.EntityNotFoundException} will be
-     * thrown, else every {@link PlatformDto} associated with the {@link GameDto} will be returned.
+     * This method will retrieve an {@link Iterable} of {@link PlatformDto} with a response size specified by the {@link Pageable}
+     * that are referenced by the specified {@link GameDto} ID.
      *
-     * @param gameId The ID of the {@link GameDto} to retrieve the {@link PlatformDto}'s for.
+     * @param gameId The ID of the {@link GameDto} to retrieve paged platform data for.
+     * @param pageable The size and page of data to return.
      *
-     * @return An {@link Iterable} of every {@link PlatformDto} the given {@link GameDto} is on.
+     * @return An {@link Iterable} of relevant queried {@link PlatformDto} instances.
      */
-    Iterable<PlatformDto> findPlatformsFromGameId(long gameId);
+    Iterable<PlatformDto> findPlatformsByGameId(long gameId, Pageable pageable);
 
     /**
      * This method will retrieve an {@link Iterable} of {@link PlatformDto} with a response size specified by the {@link Pageable}. The

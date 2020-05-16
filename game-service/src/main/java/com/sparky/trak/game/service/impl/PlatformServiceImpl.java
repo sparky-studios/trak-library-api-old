@@ -64,7 +64,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
-    public Iterable<PlatformDto> findPlatformsFromGameId(long gameId) {
+    public Iterable<PlatformDto> findPlatformsByGameId(long gameId, Pageable pageable) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
                     .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -73,11 +73,8 @@ public class PlatformServiceImpl implements PlatformService {
         }
 
         return gamePlatformXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
-                .stream()
-                .map(xref -> platformMapper.platformToPlatformDto(xref.getPlatform()))
-                .sorted(Comparator.comparing(PlatformDto::getName))
-                .collect(Collectors.toList());
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
+                .map(xref -> platformMapper.platformToPlatformDto(xref.getPlatform()));
     }
 
     @Override
