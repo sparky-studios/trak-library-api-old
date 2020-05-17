@@ -1,1 +1,4 @@
 # trak-api
+
+[![Build Status](https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibDN4eUZpaXhQMkFQbmtEekdiZVZCSWM5aGFER2tRbVl2V2E4UEpvN29YTm5XUlMxTkovOXZxY2pmdnJwd0dHWkl4RzNrdE9URjFjOVVlcnp0dEFZRC9FPSIsIml2UGFyYW1ldGVyU3BlYyI6ImNPa1M1STRwOWJ5R251aGciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop)](https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/projects/trak-api-development/history?region=eu-west-2&builds-state=%7B%22f%22%3A%7B%22text%22%3A%22%22%7D%2C%22s%22%3A%7B%7D%2C%22n%22%3A20%2C%22i%22%3A0%7D)
+[![Coverage Status](https://coveralls.io/repos/github/sparky-studios/trak-api/badge.svg?branch=develop)](https://coveralls.io/github/sparky-studios/trak-api?branch=develop)

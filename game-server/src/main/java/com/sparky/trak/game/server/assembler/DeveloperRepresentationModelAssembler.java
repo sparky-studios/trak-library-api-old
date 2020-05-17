@@ -29,7 +29,7 @@ public class DeveloperRepresentationModelAssembler implements SimpleRepresentati
             resource.add(linkTo(methodOn(DeveloperController.class).findById(content.getId()))
                     .withSelfRel());
 
-            resource.add(linkTo(methodOn(DeveloperController.class).findGamesFromDeveloperId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
+            resource.add(linkTo(methodOn(DeveloperController.class).findGamesByDeveloperId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                     .withRel("games"));
         }
     }
