@@ -32,6 +32,8 @@
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <net.kaczmarzyk.specification.version>2.1.1</net.kaczmarzyk.specification.version>
         <org.apache.httpcomponents.version>4.5.3</org.apache.httpcomponents.version>
+        <org.eluder.coveralls.version>4.3.0</org.eluder.coveralls.version>
+        <org.jacoco.version>0.8.5</org.jacoco.version>
         <org.glassfish.javax.json.version>1.1.4</org.glassfish.javax.json.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
@@ -139,6 +141,26 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>${org.eluder.coveralls.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${org.jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>

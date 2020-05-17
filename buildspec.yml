@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  parameter-store:
+    COVERALLS_TOKEN: "/trak-api/coveralls-token"
+
 phases:
   install:
     runtime-versions:
@@ -15,13 +19,15 @@ phases:
       - echo [INFO] ------------------------------------------------------------------------
       - echo [INFO] Building Trak API `date`
       - echo [INFO] ------------------------------------------------------------------------
+      - mvn compile
       - mvn test
   post_build:
     commands:
       - echo [INFO] ------------------------------------------------------------------------
       - echo [INFO] Completed Trak API `date`
       - echo [INFO] ------------------------------------------------------------------------
-      - mvn package
+      - mvn clean test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
+      - mvn package -DskipTests
 
 artifacts:
   files:
