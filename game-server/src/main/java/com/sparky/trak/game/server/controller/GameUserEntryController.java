@@ -99,8 +99,11 @@ public class GameUserEntryController {
         List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameUserEntryService.findAll(gameUserEntrySpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameUserEntryService.count(gameUserEntrySpecification);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, gameUserEntryDtos.size()), gameUserEntryRepresentationModelAssembler, link);
+        return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, count), gameUserEntryRepresentationModelAssembler, link);
     }
 
     /**

@@ -2,6 +2,7 @@ package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.*;
+import com.sparky.trak.game.repository.specification.DeveloperSpecification;
 import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.GameDto;
@@ -200,6 +201,36 @@ public class GameServiceImplTest {
     }
 
     @Test
+    public void countGamesByGenreId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.countGamesByGenreId(0L));
+    }
+
+    @Test
+    public void countGamesByGenreId_withGenre_invokesGameGenreXrefRepository() {
+        // Arrange
+        Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameGenreXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.countGamesByGenreId(0L);
+
+        // Assert
+        Mockito.verify(gameGenreXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
@@ -256,6 +287,36 @@ public class GameServiceImplTest {
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
                 .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void countGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.countGamesByPlatformId(0L));
+    }
+
+    @Test
+    public void countGamesByPlatformId_withPlatform_invokesGamePlatformXrefRepository() {
+        // Arrange
+        Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gamePlatformXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.countGamesByPlatformId(0L);
+
+        // Assert
+        Mockito.verify(gamePlatformXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
     }
 
     @Test
@@ -318,6 +379,36 @@ public class GameServiceImplTest {
     }
 
     @Test
+    public void countGamesByDeveloperId_withNonExistentDeveloper_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.countGamesByDeveloperId(0L));
+    }
+
+    @Test
+    public void countGamesByDeveloperId_withPlatform_invokesGameDeveloperXrefRepository() {
+        // Arrange
+        Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameDeveloperXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.countGamesByDeveloperId(0L);
+
+        // Assert
+        Mockito.verify(gameDeveloperXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
@@ -374,6 +465,36 @@ public class GameServiceImplTest {
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
                 .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void countGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.countGamesByPublisherId(0L));
+    }
+
+    @Test
+    public void countGamesByPublisherId_withPublisher_invokesGamePublisherXrefRepository() {
+        // Arrange
+        Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gamePublisherXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.countGamesByPublisherId(0L);
+
+        // Assert
+        Mockito.verify(gamePublisherXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
     }
 
     @Test
@@ -450,6 +571,26 @@ public class GameServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned games.");
+    }
+
+    @Test
+    public void count_withNullGameSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> gameService.count(null));
+    }
+
+    @Test
+    public void count_withValidGameSpecification_invokesCount() {
+        // Arrange
+        Mockito.when(gameRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.count(Mockito.mock(GameSpecification.class));
+
+        // Assert
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

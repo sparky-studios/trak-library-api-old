@@ -13,11 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
 import java.util.List;
@@ -98,12 +100,20 @@ public class CompanyController {
     public PagedModel<EntityModel<CompanyDto>> findAll(CompanySpecification companySpecification,
                                                        @PageableDefault Pageable pageable,
                                                        PagedResourcesAssembler<CompanyDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<CompanyDto> companyDtos = StreamSupport.stream(companyService.findAll(companySpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = companyService.count(companySpecification);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(companyDtos, pageable, companyDtos.size()), companyRepresentationModelAssembler);
+        return pagedResourcesAssembler.toModel(new PageImpl<>(companyDtos, pageable, count), companyRepresentationModelAssembler, link);
     }
 
     /**

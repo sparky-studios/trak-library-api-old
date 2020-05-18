@@ -2,6 +2,7 @@ package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.Company;
 import com.sparky.trak.game.repository.specification.CompanySpecification;
+import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.service.dto.CompanyDto;
 import org.springframework.data.domain.Pageable;
 
@@ -61,6 +62,16 @@ public interface CompanyService {
      * @return An {@link Iterable} of relevant queried {@link CompanyDto} instances.
      */
     Iterable<CompanyDto> findAll(CompanySpecification companySpecification, Pageable pageable);
+
+    /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link CompanySpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param companySpecification The {@link CompanySpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(CompanySpecification companySpecification);
 
     /**
      * Given a {@link CompanyDto} instance, the service will attempt to the update the persisted data which matches the given {@link CompanyDto}

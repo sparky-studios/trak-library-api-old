@@ -155,6 +155,26 @@ public class CompanyServiceImplTest {
     }
 
     @Test
+    public void count_withNullCompanySpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> companyService.count(null));
+    }
+
+    @Test
+    public void count_withValidCompanySpecification_invokesCount() {
+        // Arrange
+        Mockito.when(companyRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        companyService.count(Mockito.mock(CompanySpecification.class));
+
+        // Assert
+        Mockito.verify(companyRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
+    }
+
+    @Test
     public void update_withNullCompanyDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> companyService.update(null));

@@ -1,10 +1,10 @@
 package com.sparky.trak.game.service.impl;
 
-import com.sparky.trak.game.domain.Publisher;
 import com.sparky.trak.game.domain.GamePublisherXref;
-import com.sparky.trak.game.repository.PublisherRepository;
+import com.sparky.trak.game.domain.Publisher;
 import com.sparky.trak.game.repository.GamePublisherXrefRepository;
 import com.sparky.trak.game.repository.GameRepository;
+import com.sparky.trak.game.repository.PublisherRepository;
 import com.sparky.trak.game.repository.specification.PublisherSpecification;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.PublisherDto;
@@ -181,6 +181,36 @@ public class PublisherServiceImplTest {
     }
 
     @Test
+    public void countPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.countPublishersByGameId(0L));
+    }
+
+    @Test
+    public void countPublishersByGameId_withGame_invokesGamePublisherXrefRepository() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gamePublisherXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        publisherService.countPublishersByGameId(0L);
+
+        // Assert
+        Mockito.verify(gamePublisherXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> publisherService.findAll(Mockito.mock(PublisherSpecification.class), null));
@@ -220,6 +250,26 @@ public class PublisherServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned companies.");
+    }
+
+    @Test
+    public void count_withNullPublisherSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> publisherService.count(null));
+    }
+
+    @Test
+    public void count_withPlatformSpecification_invokesCount() {
+        // Arrange
+        Mockito.when(publisherRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        publisherService.count(Mockito.mock(PublisherSpecification.class));
+
+        // Assert
+        Mockito.verify(publisherRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

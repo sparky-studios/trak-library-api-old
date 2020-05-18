@@ -68,11 +68,31 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    public long countDevelopersByGameId(long gameId) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameDeveloperXrefRepository
+                .count(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)));
+    }
+
+    @Override
     public Iterable<DeveloperDto> findAll(DeveloperSpecification developerSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
         return developerRepository.findAll(developerSpecification, pageable)
                 .map(developerMapper::developerToDeveloperDto);
+    }
+
+    @Override
+    public long count(DeveloperSpecification developerSpecification) {
+        Objects.requireNonNull(developerSpecification);
+
+        return developerRepository.count(developerSpecification);
     }
 
     @Override

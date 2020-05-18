@@ -5,6 +5,7 @@ import com.sparky.trak.game.domain.Game;
 import com.sparky.trak.game.domain.GameUserEntry;
 import com.sparky.trak.game.domain.GameUserEntryStatus;
 import com.sparky.trak.game.repository.GameUserEntryRepository;
+import com.sparky.trak.game.repository.specification.DeveloperSpecification;
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.AuthenticationService;
 import com.sparky.trak.game.service.PatchService;
@@ -206,6 +207,26 @@ public class GameUserEntryServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned game user entries.");
+    }
+
+    @Test
+    public void count_withNullGameUserEntrySpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.count(null));
+    }
+
+    @Test
+    public void count_withValidGameUserEntrySpecification_invokesCount() {
+        // Arrange
+        Mockito.when(gameUserEntryRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameUserEntryService.count(Mockito.mock(GameUserEntrySpecification.class));
+
+        // Assert
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

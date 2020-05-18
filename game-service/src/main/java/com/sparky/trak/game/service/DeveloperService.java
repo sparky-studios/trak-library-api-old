@@ -62,6 +62,17 @@ public interface DeveloperService {
     Iterable<DeveloperDto> findDevelopersByGameId(long gameId, Pageable pageable);
 
     /**
+     * Given the ID of a {@link GameDto}, this method will retrieve the total count for how many {@link DeveloperDto}'s have an association
+     * to the given {@link GameDto}. If the ID provided does not map to any {@link GameDto}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param gameId The ID of the {@link GameDto} to retrieve the total count of {@link DeveloperDto} entries for.
+     *
+     * @return The total count of {@link DeveloperDto}'s associated with the given {@link GameDto}.
+     */
+    long countDevelopersByGameId(long gameId);
+
+    /**
      * This method will retrieve an {@link Iterable} of {@link DeveloperDto} with a response size specified by the {@link Pageable}. The
      * results can be queried and filtered by utilising the exposed specifications on the {@link DeveloperSpecification} object. If the response
      * from the specifications is that none match, an empty {@link Iterable} will be returned.
@@ -75,6 +86,16 @@ public interface DeveloperService {
      * @return An {@link Iterable} of relevant queried {@link DeveloperDto} instances.
      */
     Iterable<DeveloperDto> findAll(DeveloperSpecification developerSpecification, Pageable pageable);
+
+    /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link DeveloperSpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param developerSpecification The {@link DeveloperSpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(DeveloperSpecification developerSpecification);
 
     /**
      * Given a {@link DeveloperDto} instance, the service will attempt to the update the persisted data which matches the given {@link DeveloperDto}

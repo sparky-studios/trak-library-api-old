@@ -187,6 +187,36 @@ public class PlatformServiceImplTest {
     }
 
     @Test
+    public void countPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.countPlatformsByGameId(0L));
+    }
+
+    @Test
+    public void countPlatformsByGameId_withGame_invokesGamePlatformXrefRepository() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gamePlatformXrefRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        platformService.countPlatformsByGameId(0L);
+
+        // Assert
+        Mockito.verify(gamePlatformXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findAll_withNoPlatformsAndNoPageable_returnsEmptyList() {
         // Arrange
         Mockito.when(platformRepository.findAll())
@@ -260,6 +290,26 @@ public class PlatformServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned platforms.");
+    }
+
+    @Test
+    public void count_withNullPlatformSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> platformService.count(null));
+    }
+
+    @Test
+    public void count_withPlatformSpecification_invokesCount() {
+        // Arrange
+        Mockito.when(platformRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        platformService.count(Mockito.mock(PlatformSpecification.class));
+
+        // Assert
+        Mockito.verify(platformRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

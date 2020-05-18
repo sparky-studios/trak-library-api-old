@@ -12,13 +12,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
 import java.util.List;
@@ -118,13 +116,21 @@ public class GameController {
     public PagedModel<EntityModel<PlatformDto>> findPlatformsByGameId(@PathVariable long id,
                                                                       @PageableDefault Pageable pageable,
                                                                       PagedResourcesAssembler<PlatformDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<PlatformDto> platformDtos = StreamSupport.stream(platformService.findPlatformsByGameId(id, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = platformService.countPlatformsByGameId(id);
+
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler
-                .toModel(new PageImpl<>(platformDtos, pageable, platformDtos.size()), platformRepresentationModelAssembler);
+                .toModel(new PageImpl<>(platformDtos, pageable, count), platformRepresentationModelAssembler, link);
     }
 
     /**
@@ -142,14 +148,21 @@ public class GameController {
     public PagedModel<EntityModel<DeveloperDto>> findDevelopersByGameId(@PathVariable long id,
                                                                         @PageableDefault Pageable pageable,
                                                                         PagedResourcesAssembler<DeveloperDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<DeveloperDto> developerDtos = StreamSupport.stream(developerService.findDevelopersByGameId(id, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = developerService.countDevelopersByGameId(id);
+
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler
-                .toModel(new PageImpl<>(developerDtos, pageable, developerDtos.size()), developerRepresentationModelAssembler);
+                .toModel(new PageImpl<>(developerDtos, pageable, count), developerRepresentationModelAssembler, link);
     }
 
     /**
@@ -167,14 +180,21 @@ public class GameController {
     public PagedModel<EntityModel<PublisherDto>> findPublishersByGameId(@PathVariable long id,
                                                                         @PageableDefault Pageable pageable,
                                                                         PagedResourcesAssembler<PublisherDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<PublisherDto> publisherDtos = StreamSupport.stream(publisherService.findPublishersByGameId(id, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = publisherService.countPublishersByGameId(id);
+
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler
-                .toModel(new PageImpl<>(publisherDtos, pageable, publisherDtos.size()), publisherRepresentationModelAssembler);
+                .toModel(new PageImpl<>(publisherDtos, pageable, count), publisherRepresentationModelAssembler, link);
     }
 
     /**
@@ -197,12 +217,20 @@ public class GameController {
     public PagedModel<EntityModel<GameDto>> findAll(GameSpecification gameSpecification,
                                                     @PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameDto> gameDtos = StreamSupport.stream(gameService.findAll(gameSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameService.count(gameSpecification);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(gameDtos, pageable, gameDtos.size()), gameRepresentationModelAssembler);
+        return pagedResourcesAssembler.toModel(new PageImpl<>(gameDtos, pageable, count), gameRepresentationModelAssembler, link);
     }
 
     /**

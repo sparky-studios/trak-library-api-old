@@ -16,11 +16,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
 import java.util.List;
@@ -90,12 +92,21 @@ public class GenreController {
     public PagedModel<EntityModel<GameDto>> findGamesByGenreId(@PathVariable long id,
                                                                @PageableDefault Pageable pageable,
                                                                PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameDto> gameDtos = StreamSupport.stream(gameService.findGamesByGenreId(id, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameService.countGamesByGenreId(id);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(gameDtos, pageable, gameDtos.size()), gameRepresentationModelAssembler);
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(gameDtos, pageable, count), gameRepresentationModelAssembler, link);
     }
 
     /**
@@ -118,12 +129,21 @@ public class GenreController {
     public PagedModel<EntityModel<GenreDto>> findAll(GenreSpecification genreSpecification,
                                                     @PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GenreDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GenreDto> genreDtos = StreamSupport.stream(genreService.findAll(genreSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = genreService.count(genreSpecification);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(genreDtos, pageable, genreDtos.size()), genreRepresentationModelAssembler);
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(genreDtos, pageable, count), genreRepresentationModelAssembler, link);
     }
 
     /**

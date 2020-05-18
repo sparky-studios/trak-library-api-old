@@ -89,6 +89,13 @@ public class GenreServiceImpl implements GenreService {
 }
 
     @Override
+    public long count(GenreSpecification genreSpecification) {
+        Objects.requireNonNull(genreSpecification);
+
+        return genreRepository.count(genreSpecification);
+    }
+
+    @Override
     public GenreDto update(GenreDto genreDto) {
         Objects.requireNonNull(genreDto);
 
