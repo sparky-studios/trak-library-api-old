@@ -74,6 +74,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public long countGamesByGenreId(long genreId) {
+        if (!genreRepository.existsById(genreId)) {
+            String errorMessage = messageSource
+                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameGenreXrefRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId));
+    }
+
+    @Override
     public Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable) {
         if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
@@ -85,6 +98,19 @@ public class GameServiceImpl implements GameService {
         return gamePlatformXrefRepository
                 .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId)), pageable)
                 .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public long countGamesByPlatformId(long platformId) {
+        if (!platformRepository.existsById(platformId)) {
+            String errorMessage = messageSource
+                    .getMessage("platform.exception.not-found", new Object[] { platformId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePlatformXrefRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId));
     }
 
     @Override
@@ -102,6 +128,19 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public long countGamesByDeveloperId(long developerId) {
+        if (!developerRepository.existsById(developerId)) {
+            String errorMessage = messageSource
+                    .getMessage("developer.exception.not-found", new Object[] { developerId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameDeveloperXrefRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("developerId"), developerId));
+    }
+
+    @Override
     public Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable) {
         if (!publisherRepository.existsById(publisherId)) {
             String errorMessage = messageSource
@@ -113,6 +152,19 @@ public class GameServiceImpl implements GameService {
         return gamePublisherXrefRepository
                 .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("publisherId"), publisherId)), pageable)
                 .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+    }
+
+    @Override
+    public long countGamesByPublisherId(long publisherId) {
+        if (!publisherRepository.existsById(publisherId)) {
+            String errorMessage = messageSource
+                    .getMessage("publisher.exception.not-found", new Object[] { publisherId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePublisherXrefRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("publisherId"), publisherId));
     }
 
     @Override
@@ -128,6 +180,13 @@ public class GameServiceImpl implements GameService {
 
         return gameRepository.findAll(gameSpecification, pageable)
                 .map(gameMapper::gameToGameDto);
+    }
+
+    @Override
+    public long count(GameSpecification gameSpecification) {
+        Objects.requireNonNull(gameSpecification);
+
+        return gameRepository.count(gameSpecification);
     }
 
     @Override

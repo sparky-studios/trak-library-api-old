@@ -2,6 +2,7 @@ package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.GameRequest;
 import com.sparky.trak.game.repository.GameRequestRepository;
+import com.sparky.trak.game.repository.specification.GameRequestSpecification;
 import com.sparky.trak.game.service.AuthenticationService;
 import com.sparky.trak.game.service.GameRequestService;
 import com.sparky.trak.game.service.PatchService;
@@ -61,11 +62,18 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
-    public Iterable<GameRequestDto> findAll(Pageable pageable) {
+    public Iterable<GameRequestDto> findAll(GameRequestSpecification gameRequestSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
-        return gameRequestRepository.findAll(pageable)
+        return gameRequestRepository.findAll(gameRequestSpecification, pageable)
                 .map(gameRequestMapper::gameRequestToGameRequestDto);
+    }
+
+    @Override
+    public long count(GameRequestSpecification gameRequestSpecification) {
+        Objects.requireNonNull(gameRequestSpecification);
+
+        return gameRequestRepository.count(gameRequestSpecification);
     }
 
     @Override

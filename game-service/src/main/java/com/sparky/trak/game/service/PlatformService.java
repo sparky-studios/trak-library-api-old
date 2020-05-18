@@ -2,8 +2,8 @@ package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.Platform;
 import com.sparky.trak.game.repository.specification.PlatformSpecification;
-import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.service.dto.GameDto;
+import com.sparky.trak.game.service.dto.PlatformDto;
 import org.springframework.data.domain.Pageable;
 
 import javax.json.JsonMergePatch;
@@ -69,6 +69,17 @@ public interface PlatformService {
     Iterable<PlatformDto> findPlatformsByGameId(long gameId, Pageable pageable);
 
     /**
+     * Given the ID of a {@link GameDto}, this method will retrieve the total count for how many {@link PlatformDto}'s have an association
+     * to the given {@link GameDto}. If the ID provided does not map to any {@link GameDto}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param gameId The ID of the {@link GameDto} to retrieve the total count of {@link PlatformDto} entries for.
+     *
+     * @return The total count of {@link PlatformDto}'s associated with the given {@link GameDto}.
+     */
+    long countPlatformsByGameId(long gameId);
+
+    /**
      * This method will retrieve an {@link Iterable} of {@link PlatformDto} with a response size specified by the {@link Pageable}. The
      * results can be queried and filtered by utilising the exposed specifications on the {@link PlatformSpecification} object. If the response
      * from the specifications is that none match, an empty {@link Iterable} will be returned.
@@ -82,6 +93,16 @@ public interface PlatformService {
      * @return An {@link Iterable} of relevant queried {@link PlatformDto} instances.
      */
     Iterable<PlatformDto> findAll(PlatformSpecification platformSpecification, Pageable pageable);
+
+    /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link PlatformSpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param platformSpecification The {@link PlatformSpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(PlatformSpecification platformSpecification);
 
     /**
      * Given a {@link PlatformDto} instance, the service will attempt to the update the persisted data which matches the given {@link PlatformDto}

@@ -262,6 +262,26 @@ public class GenreServiceImplTest {
     }
 
     @Test
+    public void count_withNullGenreSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> genreService.count(null));
+    }
+
+    @Test
+    public void count_withValidGameUserEntrySpecification_invokesCount() {
+        // Arrange
+        Mockito.when(genreRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        genreService.count(Mockito.mock(GenreSpecification.class));
+
+        // Assert
+        Mockito.verify(genreRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
+    }
+
+    @Test
     public void update_withNullGenreDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.update(null));

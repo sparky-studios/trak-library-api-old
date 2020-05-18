@@ -2,6 +2,7 @@ package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.GameRequest;
 import com.sparky.trak.game.repository.GameRequestRepository;
+import com.sparky.trak.game.repository.specification.GameRequestSpecification;
 import com.sparky.trak.game.service.AuthenticationService;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.GameRequestDto;
@@ -155,19 +156,20 @@ public class GameRequestServiceImplTest {
     @Test
     public void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.findAll(null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.findAll(Mockito.mock(GameRequestSpecification.class), null));
     }
 
     @Test
     public void findAll_withNoGameRequests_returnsEmptyList() {
         // Arrange
-        Mockito.when(gameRequestRepository.findAll(ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRequestRepository.findAll(ArgumentMatchers.any(GameRequestSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
+        GameRequestSpecification gameRequestSpecification = Mockito.mock(GameRequestSpecification.class);
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Act
-        List<GameRequestDto> result = StreamSupport.stream(gameRequestService.findAll(pageable).spliterator(), false)
+        List<GameRequestDto> result = StreamSupport.stream(gameRequestService.findAll(gameRequestSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -179,17 +181,38 @@ public class GameRequestServiceImplTest {
         // Arrange
         Page<GameRequest> gameRequests = new PageImpl<>(Arrays.asList(new GameRequest(), new GameRequest()));
 
-        Mockito.when(gameRequestRepository.findAll(ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRequestRepository.findAll(ArgumentMatchers.any(GameRequestSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(gameRequests);
 
+        GameRequestSpecification gameRequestSpecification = Mockito.mock(GameRequestSpecification.class);
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Act
-        List<GameRequestDto> result = StreamSupport.stream(gameRequestService.findAll(pageable).spliterator(), false)
+        List<GameRequestDto> result = StreamSupport.stream(gameRequestService.findAll(gameRequestSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned game requests.");
+    }
+
+    @Test
+    public void count_withNullGameRequestSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.count(null));
+    }
+
+    @Test
+    public void count_withValidGameRequestSpecification_invokesCount() {
+        // Arrange
+        Mockito.when(gameRequestRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameRequestService.count(Mockito.mock(GameRequestSpecification.class));
+
+        // Assert
+        Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

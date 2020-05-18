@@ -1,6 +1,9 @@
 package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.GameRequest;
+import com.sparky.trak.game.repository.specification.DeveloperSpecification;
+import com.sparky.trak.game.repository.specification.GameRequestSpecification;
+import com.sparky.trak.game.service.dto.DeveloperDto;
 import com.sparky.trak.game.service.dto.GameRequestDto;
 import org.springframework.data.domain.Pageable;
 
@@ -51,14 +54,29 @@ public interface GameRequestService {
     GameRequestDto findById(long id);
 
     /**
-     * This method will retrieve an {@link Iterable} of {@link GameRequestDto} with a response size specified by the {@link Pageable}. The response
-     * can be sorted by relying on the default behavior provided by the {@link Pageable} interface.
+     * This method will retrieve an {@link Iterable} of {@link GameRequestDto} with a response size specified by the {@link Pageable}. The
+     * results can be queried and filtered by utilising the exposed specifications on the {@link GameRequestSpecification} object. If the response
+     * from the specifications is that none match, an empty {@link Iterable} will be returned.
      *
+     * The {@link GameRequestSpecification} argument can be omitted and is optional, however if the callee provides <code>null</code> for the
+     * {@link Pageable}, an exception will be thrown.
+     *
+     * @param gameRequestSpecification The {@link GameRequestSpecification} to filter the query by.
      * @param pageable The size and page of data to return.
      *
      * @return An {@link Iterable} of relevant queried {@link GameRequestDto} instances.
      */
-    Iterable<GameRequestDto> findAll(Pageable pageable);
+    Iterable<GameRequestDto> findAll(GameRequestSpecification gameRequestSpecification, Pageable pageable);
+
+    /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link GameRequestSpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param gameRequestSpecification The {@link GameRequestSpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(GameRequestSpecification gameRequestSpecification);
 
     /**
      * Given a {@link GameRequestDto} instance, the service will attempt to the update the persisted data which matches the given {@link GameRequestDto}

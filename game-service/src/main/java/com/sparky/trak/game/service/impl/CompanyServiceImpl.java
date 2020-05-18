@@ -58,6 +58,13 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
+    public long count(CompanySpecification companySpecification) {
+        Objects.requireNonNull(companySpecification);
+
+        return companyRepository.count(companySpecification);
+    }
+
+    @Override
     public CompanyDto update(CompanyDto companyDto) {
         Objects.requireNonNull(companyDto);
 

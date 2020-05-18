@@ -56,6 +56,16 @@ public interface GameUserEntryService {
     Iterable<GameUserEntryDto> findAll(GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable);
 
     /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link GameUserEntrySpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param gameUserEntrySpecification The {@link GameUserEntrySpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(GameUserEntrySpecification gameUserEntrySpecification);
+
+    /**
      * Given a {@link GameUserEntryDto} instance, the service will attempt to the update the persisted data which matches the given {@link GameUserEntryDto}
      * in the underlying persistence layer. If the {@link GameUserEntryDto} supplied contains an ID that doesn't match any existing entities, then
      * the update will fail and a {@link javax.persistence.EntityNotFoundException} will be thrown. If persistence succeeds, the relevant

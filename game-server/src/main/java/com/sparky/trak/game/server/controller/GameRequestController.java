@@ -1,5 +1,6 @@
 package com.sparky.trak.game.server.controller;
 
+import com.sparky.trak.game.repository.specification.GameRequestSpecification;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.server.assembler.GameRequestRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.ApiError;
@@ -12,11 +13,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
 import java.util.List;
@@ -94,14 +97,24 @@ public class GameRequestController {
      */
     @AllowedForUser
     @GetMapping
-    public PagedModel<EntityModel<GameRequestDto>> findAll(@PageableDefault Pageable pageable,
+    public PagedModel<EntityModel<GameRequestDto>> findAll(GameRequestSpecification gameRequestSpecification,
+                                                           @PageableDefault Pageable pageable,
                                                            PagedResourcesAssembler<GameRequestDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
         // Get the paged data from the service and convert into a list so it can be added to a page object.
-        List<GameRequestDto> gameRequestDtos = StreamSupport.stream(gameRequestService.findAll(pageable).spliterator(), false)
+        List<GameRequestDto> gameRequestDtos = StreamSupport.stream(gameRequestService.findAll(gameRequestSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameRequestService.count(gameRequestSpecification);
+
         // Wrap the page in a HATEOAS response.
-        return pagedResourcesAssembler.toModel(new PageImpl<>(gameRequestDtos, pageable, gameRequestDtos.size()), gameRequestRepresentationModelAssembler);
+        return pagedResourcesAssembler
+                .toModel(new PageImpl<>(gameRequestDtos, pageable, count), gameRequestRepresentationModelAssembler, link);
     }
 
     /**

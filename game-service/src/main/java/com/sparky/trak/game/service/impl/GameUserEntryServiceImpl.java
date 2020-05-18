@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import javax.swing.text.html.Option;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -70,6 +69,13 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
         return StreamSupport.stream(gameUserEntryRepository.findAll(gameUserEntrySpecification, pageable).spliterator(), false)
                 .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public long count(GameUserEntrySpecification gameUserEntrySpecification) {
+        Objects.requireNonNull(gameUserEntrySpecification);
+
+        return gameUserEntryRepository.count(gameUserEntrySpecification);
     }
 
     @Override

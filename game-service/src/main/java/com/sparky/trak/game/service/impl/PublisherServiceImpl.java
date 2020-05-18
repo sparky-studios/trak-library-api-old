@@ -68,11 +68,31 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    public long countPublishersByGameId(long gameId) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePublisherXrefRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId));
+    }
+
+    @Override
     public Iterable<PublisherDto> findAll(PublisherSpecification publisherSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
         return publisherRepository.findAll(publisherSpecification, pageable)
                 .map(publisherMapper::publisherToPublisherDto);
+    }
+
+    @Override
+    public long count(PublisherSpecification publisherSpecification) {
+        Objects.requireNonNull(publisherSpecification);
+
+        return publisherRepository.count(publisherSpecification);
     }
 
     @Override

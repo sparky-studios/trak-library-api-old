@@ -1,11 +1,11 @@
 package com.sparky.trak.game.service.impl;
 
-import com.sparky.trak.game.repository.PlatformRepository;
 import com.sparky.trak.game.repository.GamePlatformXrefRepository;
 import com.sparky.trak.game.repository.GameRepository;
+import com.sparky.trak.game.repository.PlatformRepository;
 import com.sparky.trak.game.repository.specification.PlatformSpecification;
-import com.sparky.trak.game.service.PlatformService;
 import com.sparky.trak.game.service.PatchService;
+import com.sparky.trak.game.service.PlatformService;
 import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.service.mapper.PlatformMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -78,11 +77,31 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    public long countPlatformsByGameId(long gameId) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePlatformXrefRepository
+                .count(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)));
+    }
+
+    @Override
     public Iterable<PlatformDto> findAll(PlatformSpecification platformSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
         return platformRepository.findAll(platformSpecification, pageable)
                 .map(platformMapper::platformToPlatformDto);
+    }
+
+    @Override
+    public long count(PlatformSpecification platformSpecification) {
+        Objects.requireNonNull(platformSpecification);
+
+        return platformRepository.count(platformSpecification);
     }
 
     @Override

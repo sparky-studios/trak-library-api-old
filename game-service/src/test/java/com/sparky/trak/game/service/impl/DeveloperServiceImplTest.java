@@ -181,6 +181,36 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
+    public void countDevelopersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.countDevelopersByGameId(0L));
+    }
+
+    @Test
+    public void countDevelopersByGameId_withGame_invokesGameDeveloperXrefRepository() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameDeveloperXrefRepository.count(ArgumentMatchers.any()))
+            .thenReturn(0L);
+
+        // Act
+        developerService.countDevelopersByGameId(0L);
+
+        // Assert
+        Mockito.verify(gameDeveloperXrefRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> developerService.findAll(Mockito.mock(DeveloperSpecification.class), null));
@@ -220,6 +250,26 @@ public class DeveloperServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned companies.");
+    }
+
+    @Test
+    public void count_withNullDeveloperSpecification_throwsNullPointerException() {
+        // Assert
+        Assertions.assertThrows(NullPointerException.class, () -> developerService.count(null));
+    }
+
+    @Test
+    public void count_withValidDeveloperSpecification_invokesCount() {
+        // Arrange
+        Mockito.when(developerRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        developerService.count(Mockito.mock(DeveloperSpecification.class));
+
+        // Assert
+        Mockito.verify(developerRepository, Mockito.atMostOnce())
+                .count(Mockito.any());
     }
 
     @Test

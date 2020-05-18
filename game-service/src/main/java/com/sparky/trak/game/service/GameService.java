@@ -2,6 +2,7 @@ package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.specification.GameSpecification;
+import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.dto.CompanyDto;
 import com.sparky.trak.game.service.dto.DeveloperDto;
 import com.sparky.trak.game.service.dto.GameDto;
@@ -64,6 +65,17 @@ public interface GameService {
     Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable);
 
     /**
+     * Given the ID of a {@link Genre}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Genre}. If the ID provided does not map to any {@link Genre}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param genreId The ID of the {@link Genre} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Genre}.
+     */
+    long countGamesByGenreId(long genreId);
+
+    /**
      * Given the ID of a {@link Platform}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
      * the given {@link Platform}. If the ID provided does not map to any {@link Platform}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link Game}s associated with the {@link Platform}, an empty {@link Iterable} will be returned.
@@ -74,6 +86,17 @@ public interface GameService {
      * @return A page of {@link GameDto}s that are mapped with the given {@link Platform}.
      */
     Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable);
+
+    /**
+     * Given the ID of a {@link Platform}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Platform}. If the ID provided does not map to any {@link Platform}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param platformId The ID of the {@link Platform} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Platform}.
+     */
+    long countGamesByPlatformId(long platformId);
 
     /**
      * Given the ID of a {@link Developer}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
@@ -88,6 +111,17 @@ public interface GameService {
     Iterable<GameDto> findGamesByDeveloperId(long developerId, Pageable pageable);
 
     /**
+     * Given the ID of a {@link Developer}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Developer}. If the ID provided does not map to any {@link Developer}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param developerId The ID of the {@link Developer} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Developer}.
+     */
+    long countGamesByDeveloperId(long developerId);
+
+    /**
      * Given the ID of a {@link Publisher}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
      * the given {@link PublisherDto}. If the ID provided does not map to any {@link DeveloperDto}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link Game}s associated with the {@link PublisherDto}, an empty {@link Iterable} will be returned.
@@ -98,6 +132,17 @@ public interface GameService {
      * @return A page of {@link GameDto}s that are mapped with the given {@link Publisher} entity.
      */
     Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable);
+
+    /**
+     * Given the ID of a {@link Publisher}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Publisher}. If the ID provided does not map to any {@link Publisher}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param publisherId The ID of the {@link Publisher} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Publisher}.
+     */
+    long countGamesByPublisherId(long publisherId);
 
     /**
      * Retrieves all of the {@link Game} entities stored within the persistence layer. This method should not be used within a live
@@ -122,6 +167,16 @@ public interface GameService {
      * @return An {@link Iterable} of relevant queried {@link GameDto} instances.
      */
     Iterable<GameDto> findAll(GameSpecification gameSpecification, Pageable pageable);
+
+    /**
+     * Retrieves the total number of rows that match the criteria specified within the {@link GameSpecification}. The specification
+     * provided must be a valid instance, if <code>null</code> is provided, a {@link NullPointerException} will be thrown to the callee.
+     *
+     * @param gameSpecification The {@link GameSpecification} criteria to count the results for.
+     *
+     * @return The total number of rows that matches the given criteria.
+     */
+    long count(GameSpecification gameSpecification);
 
     /**
      * Given a {@link GameDto} instance, the service will attempt to the update the persisted data which matches the given {@link GameDto}
