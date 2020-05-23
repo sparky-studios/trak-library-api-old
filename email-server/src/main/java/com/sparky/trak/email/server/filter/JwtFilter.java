@@ -1,7 +1,6 @@
 package com.sparky.trak.email.server.filter;
 
 import com.sparky.trak.email.server.configuration.JwtConfig;
-import com.sparky.trak.email.service.dto.UserInfoDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
@@ -54,13 +53,9 @@ public class JwtFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
-                UserInfoDto userInfoDto = new UserInfoDto();
-                userInfoDto.setUserId(claims.get("userId", Long.class));
-                userInfoDto.setEmailAddress(claims.get("emailAddress", String.class));
-
                 // Create the authenticated object, which includes the username and the authorities associated with the user.
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                auth.setDetails(userInfoDto);
+                auth.setDetails(claims.get("userId", Long.class));
 
                 // Authentication the user.
                 SecurityContextHolder.getContext().setAuthentication(auth);

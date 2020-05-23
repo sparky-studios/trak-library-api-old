@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Arrays;
 
 @RequiredArgsConstructor
 @Service
@@ -30,36 +31,38 @@ public class ImageServiceAwsS3Impl implements ImageService {
     private final MessageSource messageSource;
 
     @Override
-    public void upload(String folder, String name, byte[] content) {
-        // Only allow the uploading of *.png files.
-        if (!Files.getFileExtension(name).equals("png")) {
+    public void upload(String folder, String filename, byte[] content) {
+        // Only allow the uploading of valid image files.
+        String extension = Files.getFileExtension(filename);
+
+        if (!Arrays.asList("png", "jpg", "jpeg").contains(extension)) {
             throw new IllegalArgumentException(messageSource
                     .getMessage("image.exception.invalid-file-format", new Object[] {}, LocaleContextHolder.getLocale()));
         }
 
         try {
-            Path path = java.nio.file.Files.createTempFile(folder, "." + Files.getFileExtension(name));
+            Path path = java.nio.file.Files.createTempFile(folder, filename);
 
             try (FileOutputStream stream = new FileOutputStream(path.toFile())) {
                 stream.write(content);
-                amazonS3.putObject(bucketName, folder + "/" + name, path.toFile());
+                amazonS3.putObject(bucketName, folder + "/" + filename, path.toFile());
             }
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.upload-failed", new Object[] {name}, LocaleContextHolder.getLocale());
+                    .getMessage("image.exception.upload-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }
     }
 
     @Override
-    public byte[] download(String folder, String name) {
-        try (S3Object object = amazonS3.getObject(bucketName, folder + "/" + name)) {
+    public byte[] download(String folder, String filename) {
+        try (S3Object object = amazonS3.getObject(bucketName, folder + "/" + filename)) {
             S3ObjectInputStream stream = object.getObjectContent();
             return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.download-failed", new Object[] {name}, LocaleContextHolder.getLocale());
+                    .getMessage("image.exception.download-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }

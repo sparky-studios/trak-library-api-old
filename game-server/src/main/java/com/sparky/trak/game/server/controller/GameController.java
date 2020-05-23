@@ -1,21 +1,26 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameSpecification;
+import com.sparky.trak.game.server.annotation.AllowedForAdmin;
 import com.sparky.trak.game.server.annotation.AllowedForModerator;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.server.assembler.*;
+import com.sparky.trak.game.server.exception.ApiError;
 import com.sparky.trak.game.service.*;
 import com.sparky.trak.game.service.dto.*;
-import com.sparky.trak.game.server.exception.ApiError;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
@@ -43,6 +48,7 @@ public class GameController {
     private final PlatformService platformService;
     private final DeveloperService developerService;
     private final PublisherService publisherService;
+    private final GameImageService gameImageService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
     private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
@@ -67,6 +73,24 @@ public class GameController {
     @PostMapping
     public EntityModel<GameDto> save(@Validated @RequestBody GameDto gameDto) {
         return gameRepresentationModelAssembler.toModel(gameService.save(gameDto));
+    }
+
+    /**
+     * End-point that create a {@link com.sparky.trak.game.domain.GameImage} instance and register
+     * the specified file with the chosen image provider. If the file is in a incorrect format or a
+     * image already exists for the given {@link GameDto}, an exception will be thrown and an {@link ApiError}
+     * will be returned to the callee.
+     *
+     * {@link com.sparky.trak.game.domain.GameImage}'s can only be created for users with admin privileges.
+     *
+     * @param id The ID of the {@link GameDto} to persist and image for.
+     * @param file The {@link MultipartFile} containing the image to upload.
+     */
+    @AllowedForAdmin
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void saveGameImageForGameId(@PathVariable long id, @RequestPart MultipartFile file) {
+        gameImageService.upload(id, file);
     }
 
     /**
@@ -195,6 +219,29 @@ public class GameController {
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler
                 .toModel(new PageImpl<>(publisherDtos, pageable, count), publisherRepresentationModelAssembler, link);
+    }
+
+    /**
+     * End-point that will retrieve a {@link ByteArrayResource} for the image that is associated with the given
+     * {@link GameDto} ID. If no image is associated with the {@link GameDto} or it fails to retrieve the data,
+     * an empty {@link ByteArrayResource} will be returned and the error will be logged.
+     *
+     * This end-point can be called anonymously by anyone without providing any authentication or credentials.
+     *
+     * @param id The ID of the {@link GameDto} to retrieve the associated image for.
+     *
+     * @return A {@link ByteArrayResource} representing the byte information of the image file.
+     */
+    @GetMapping(value = "/{id}/image", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<ByteArrayResource> findGameImageByGameId(@PathVariable long id) {
+        // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
+        ImageDataDto imageDataDto = gameImageService.download(id);
+
+        return ResponseEntity
+                .ok()
+                .contentLength(imageDataDto.getContent().length)
+                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename() + "\"")
+                .body(new ByteArrayResource(imageDataDto.getContent()));
     }
 
     /**

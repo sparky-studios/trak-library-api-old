@@ -3,6 +3,7 @@ package com.sparky.trak.game.server.adapter;
 import com.sparky.trak.game.server.configuration.JwtConfig;
 import com.sparky.trak.game.server.filter.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,13 +23,13 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
         http
                 .csrf().disable()
-                .anonymous().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .exceptionHandling().authenticationEntryPoint((req, res, e) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED))
                 .and()
                 .addFilterAfter(new JwtAuthenticationFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
+                .antMatchers(HttpMethod.GET, "/v1/games/**/image").anonymous()
                 .anyRequest()
                 .authenticated();
     }

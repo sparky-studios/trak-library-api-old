@@ -60,7 +60,6 @@ public class JwtUsernameAndPasswordAuthenticationFilter extends UsernamePassword
                 .claim("authorities", auth.getAuthorities().stream()
                         .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .claim("userId", ((UserDto)auth.getPrincipal()).getId())
-                .claim("emailAddress", ((UserDto)auth.getPrincipal()).getEmailAddress())
                 .setIssuedAt(new Date(now))
                 .setExpiration(new Date(now + (24 * 60 * 60 * 1000)))
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecretKey().getBytes())

@@ -1,5 +1,6 @@
 package com.sparky.trak.game.service.impl;
 
+import com.sparky.trak.game.service.dto.AuthenticatedUserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -60,7 +61,11 @@ public class AuthenticationServiceImplTest {
         // Arrange
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
-        token.setDetails(1L);
+
+        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
+        authenticatedUserDto.setUserId(1L);
+
+        token.setDetails(authenticatedUserDto);
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -80,7 +85,11 @@ public class AuthenticationServiceImplTest {
         // Arrange
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
-        token.setDetails(1L);
+
+        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
+        authenticatedUserDto.setUserId(1L);
+
+        token.setDetails(authenticatedUserDto);
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())

@@ -24,25 +24,13 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
     public void addLinks(EntityModel<GameUserEntryDto> resource) {
         GameUserEntryDto content = resource.getContent();
 
-        URI uri = (URI)RequestContextHolder
-                .getRequestAttributes()
-                .getAttribute("org.springframework.hateoas.server.mvc.UriComponentsBuilderFactory#BUILDER_CACHE", 0);
-
-        String url = UriComponentsBuilder.newInstance()
-                .scheme(uri.getScheme())
-                .host(uri.getHost())
-                .port(uri.getPort())
-                .build()
-                .toUriString();
-
         if (content != null) {
             resource.add(linkTo(methodOn(GameUserEntryController.class).findById(content.getId()))
                     .withSelfRel());
             resource.add(linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
-            resource.add(new Link(url + "/api/image-management/v1/images/games/{id}")
-                    .withRel(LinkRelation.of("image"))
-                    .expand(content.getGameId()));
+            resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))
+                    .withRel("image"));
         }
     }
 

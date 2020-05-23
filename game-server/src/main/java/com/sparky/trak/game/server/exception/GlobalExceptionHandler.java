@@ -1,7 +1,9 @@
 package com.sparky.trak.game.server.exception;
 
 import com.sparky.trak.game.service.exception.InvalidUserException;
+import com.sparky.trak.game.service.exception.UploadFailedException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.hateoas.MediaTypes;
@@ -13,6 +15,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -32,6 +35,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
@@ -42,6 +46,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -52,6 +57,18 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(UploadFailedException.class)
+    protected ResponseEntity<Object> handleUploadFailed(UploadFailedException ex) {
+        log.error("Upload failed", ex);
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -62,6 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, headers, status);
     }
@@ -72,6 +90,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         // Stream through each sub-error and add all of them to the response.
         apiError.getSubErrors().addAll(ex.getBindingResult().getFieldErrors()
@@ -88,6 +107,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         apiError.getSubErrors().addAll(ex.getConstraintViolations()
                 .stream()
