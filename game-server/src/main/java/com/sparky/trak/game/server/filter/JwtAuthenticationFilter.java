@@ -1,10 +1,12 @@
 package com.sparky.trak.game.server.filter;
 
 import com.sparky.trak.game.server.configuration.JwtConfig;
+import com.sparky.trak.game.service.dto.AuthenticatedUserDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.engine.transaction.jta.platform.spi.JtaPlatform;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -53,9 +55,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
+                // Create the authenticated user, which stores some details about the user that made the request.
+                AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
+                authenticatedUserDto.setUserId(claims.get("userId", Long.class));
+                authenticatedUserDto.setToken(token);
+
                 // Create the authenticated object, which includes the username and the authorities associated with the user.
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                auth.setDetails(claims.get("userId"));
+                auth.setDetails(authenticatedUserDto);
 
                 // Authentication the user.
                 SecurityContextHolder.getContext().setAuthentication(auth);

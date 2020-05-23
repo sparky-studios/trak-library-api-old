@@ -34,6 +34,8 @@ public class JwtConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .antMatchers(HttpMethod.GET, "/api/image-management/v1/images/**")
                 .permitAll()
+                .antMatchers(HttpMethod.GET, "/api/game-management/v1/games/**/image")
+                .permitAll()
                 .anyRequest()
                 .authenticated();
     }

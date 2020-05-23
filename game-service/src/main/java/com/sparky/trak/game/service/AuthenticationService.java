@@ -13,6 +13,14 @@ public interface AuthenticationService {
     Authentication getAuthentication();
 
     /**
+     * Retrieves the current JWT that has been used to invoke the current request. When retrieving the
+     * token, it is assumed that the method has already been accessed by the authenticated user.
+     *
+     * @return The current JWT of the authenticated user.
+     */
+    String getToken();
+
+    /**
      * Checks to see if the user that is currently interacting with the API matches the user ID provided.
      * The primary purpose of this method is to ensure that the user is only changing information that
      * is directly associated with their user credentials, therefore not allowing them to change information
