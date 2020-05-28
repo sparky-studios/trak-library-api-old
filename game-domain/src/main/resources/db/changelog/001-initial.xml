@@ -287,7 +287,36 @@
                 columnNames="game_id,developer_id"
                 constraintName="unq_game_developer_xref_game_id_developer_id" />
 
+        <!-- Create the game_image table -->
+        <createTable tableName="game_image">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_image" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="filename" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_image foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_image"
+                baseColumnNames="game_id"
+                constraintName="fk_game_image_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+
+        <!-- game_image unique constraints -->
+        <addUniqueConstraint
+                tableName="game_image"
+                columnNames="game_id"
+                constraintName="unq_game_image_game_id" />
+
         <rollback>
+            <dropTable tableName="game_image" />
             <dropTable tableName="game_developer_xref" />
             <dropTable tableName="game_publisher_xref" />
             <dropTable tableName="publisher" />

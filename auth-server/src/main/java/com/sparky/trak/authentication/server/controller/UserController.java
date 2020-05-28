@@ -5,8 +5,8 @@ import com.sparky.trak.authentication.server.exception.ApiError;
 import com.sparky.trak.authentication.service.UserService;
 import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
-import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import com.sparky.trak.authentication.service.dto.UserDto;
+import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -77,17 +77,37 @@ public class UserController {
      * when the username provided points to a valid entry and the verification code provided matches the one assigned to
      * the account.
      *
-     * If the verification code provided is incorrect, an exception will be thrown and a {@link ApiError} will be returned
-     * to the client. If the {@link UserDto} that the username matches to is already verified, extra verification of the
-     * account does not take place. It should be noted, similar to the /verified endpoint, the user can only verify the
-     * account that matches their username, they cannot verify other accounts unless they have elevated privileges.
+     * If the verification code provided is incorrect, the {@link CheckedResponse} will contain <code>false</code> and
+     * an error message stating to the user that the value is incorrect. If the {@link UserDto} that the username matches to
+     * is already verified, extra verification of the account does not take place. It should be noted, similar to the /verified
+     * endpoint, the user can only verify the account that matches their username, they cannot verify other accounts unless
+     * they have elevated privileges.
      *
      * @param username The username of the {@link UserDto} to verify.
      * @param verificationCode The verification code to check verification against.
+     *
+     * @return A {@link CheckedResponse} specifying the current verification state of the user.
      */
     @AllowedForUser
     @PutMapping("/users/{username}/verify")
-    public void verify(@PathVariable String username, @RequestParam("verification-code") short verificationCode) {
-        userService.verify(username, verificationCode);
+    public CheckedResponse<Boolean> verify(@PathVariable String username, @RequestParam("verification-code") String verificationCode) {
+        return userService.verify(username, verificationCode);
+    }
+
+    /**
+     * End-point that is used to re-verify an existing {@link UserDto} that is associated with the given username. Re-verification
+     * will remove any verified information associated with the user and re-generate and re-populate the verification code and the
+     * expiry date for the code.
+     *
+     * Similar to other end-points, the user can only re-verify accounts that they have the correct authentication for, they cannot
+     * re-verify accounts they are not associated with unless they have elevated privileges.
+     *
+     * @param username The username of the {@link UserDto} to re-verify.
+     */
+    @AllowedForUser
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/users/{username}/reverify")
+    public void reVerify(@PathVariable String username) {
+        userService.reverify(username);
     }
 }

@@ -26,5 +26,5 @@ public interface EmailService {
      * @param emailAddress The email address to send the verification email to.
      * @param verificationCode The verification code to attach to the email.
      */
-    void sendVerificationEmail(String emailAddress, short verificationCode);
+    void sendVerificationEmail(String emailAddress, String verificationCode);
 }
