@@ -7,6 +7,7 @@ import com.sparky.trak.authentication.service.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 public class UserMapperTest {
@@ -28,7 +29,8 @@ public class UserMapperTest {
         user.setEmailAddress("email@address.com");
         user.setPassword("password");
         user.setVerified(true);
-        user.setVerificationCode((short)245);
+        user.setVerificationCode("123AB");
+        user.setVerificationExpiryDate(LocalDateTime.now());
         user.setVersion(1L);
         user.setUserRoleXrefs(Collections.singleton(userRoleXref));
 
@@ -56,7 +58,8 @@ public class UserMapperTest {
         userDto.setUsername("username");
         userDto.setPassword("password");
         userDto.setVerified(true);
-        userDto.setVerificationCode((short)3894);
+        userDto.setVerificationCode("123AB");
+        userDto.setVerificationExpiryDate(LocalDateTime.now());
         userDto.setVersion(1L);
 
         // Act

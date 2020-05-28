@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,6 +54,9 @@ public class UserServiceImplTest {
 
     @Mock
     private MessageSource messageSource;
+
+    @Mock
+    private ApplicationEventPublisher applicationEventPublisher;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -163,7 +168,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void save_withValidCredentialsAndUserRole_savesUserAndMakesUserRoleXref() {
+    public void save_withValidCredentialsAndUserRole_savesUserAndMakesUserRoleXrefAndPublishesEvent() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -174,9 +179,11 @@ public class UserServiceImplTest {
         Mockito.when(userRoleRepository.findByRole(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new UserRole()));
 
+        Mockito.doNothing()
+                .when(applicationEventPublisher).publishEvent(ArgumentMatchers.any());
+
         User user = new User();
         user.setEmailAddress("random-address@trak.com");
-        user.setVerificationCode((short)1234);
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(user);
@@ -205,6 +212,9 @@ public class UserServiceImplTest {
 
         Mockito.verify(userRoleXrefRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(applicationEventPublisher)
+                .publishEvent(ArgumentMatchers.any());
     }
 
     @Test
@@ -256,13 +266,44 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void createVerificationCode_withNullUser_returnsEmptyString() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Act
+        String result = userService.createVerificationCode("username");
+
+        // Assert
+        Assertions.assertEquals("", result, "The string should be empty if no user is found.");
+    }
+
+    @Test
+    public void createVerificationCode_withExistingUser_savesAndReturnsToken() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
+        // Act
+        String result = userService.createVerificationCode("username");
+
+        // Assert
+        Assertions.assertEquals(5, result.length(), "The token should contain 5 characters.");
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
     public void verify_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.verify("username", (short)1111));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.verify("username", "11111"));
     }
 
     @Test
@@ -278,7 +319,7 @@ public class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.verify("username", (short)1111));
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.verify("username", "11111"));
     }
 
     @Test
@@ -294,18 +335,22 @@ public class UserServiceImplTest {
                 .thenReturn(true);
 
         // Act
-        userService.verify("username", (short)1111);
+        CheckedResponse<Boolean> result = userService.verify("username", "11111");
 
         // Assert
+        Assertions.assertTrue(result.getData(), "The response should be true if the user is already verified.");
+        Assertions.assertFalse(result.isError(), "There should be no errors for an already verified user.");
+        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for an already verified user.");
+
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void verify_withNonVerifiedUserButIncorrectVerificationCode_throwsVerificationFailedException() {
+    public void verify_withNonVerifiedUserButIncorrectVerificationCode_returnsCheckedResponseWithError() {
         // Arrange
         User user = new User();
-        user.setVerificationCode((short)1112);
+        user.setVerificationCode("11112");
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
@@ -313,15 +358,52 @@ public class UserServiceImplTest {
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("error");
+
+        // Act
+        CheckedResponse<Boolean> result = userService.verify("username", "11111");
+
         // Assert
-        Assertions.assertThrows(VerificationFailedException.class, () -> userService.verify("username", (short)1111));
+        Assertions.assertFalse(result.getData(), "The response should be false if the verification code is incorrect.");
+        Assertions.assertTrue(result.isError(), "There should be errors if the verification code is incorrect.");
+        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void verify_withNonVerifiedUserWithNullVerificationCode_returnsCheckedResponseWithError() {
+        // Arrange
+        User user = new User();
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("error");
+
+        // Act
+        CheckedResponse<Boolean> result = userService.verify("username", "11111");
+
+        // Assert
+        Assertions.assertFalse(result.getData(), "The response should be false if the user verification code is null.");
+        Assertions.assertTrue(result.isError(), "There should be errors if the user verification code is null.");
+        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
     public void verify_withNonVerifiedUserWithCorrectVerificationCode_updatesUser() {
         // Arrange
         User user = new User();
-        user.setVerificationCode((short)1111);
+        user.setVerificationCode("11111");
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
@@ -333,10 +415,67 @@ public class UserServiceImplTest {
                 .thenReturn(new User());
 
         // Act
-        userService.verify("username", (short)1111);
+        CheckedResponse<Boolean> result = userService.verify("username", "11111");
 
         // Assert
+        Assertions.assertTrue(result.getData(), "The response should be true if the user has been successfully verified.");
+        Assertions.assertFalse(result.isError(), "There should be no errors for an successfully verified user.");
+        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successfully verified user.");
+
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void reverify_withNoMatchingUser_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.reverify("username"));
+    }
+
+    @Test
+    public void reverify_withDifferentUser_throwsInvalidUserException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.reverify("username"));
+    }
+
+    @Test
+    public void reverify_withValidUserAndAuthentication_publishesOnVerificationNeededEvent() {
+        // Arrange
+        User user = new User();
+        user.setEmailAddress("email@address.com");
+        user.setUsername("username");
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.doNothing().when(applicationEventPublisher)
+                .publishEvent(ArgumentMatchers.any());
+
+        // Act
+        userService.reverify("username");
+
+        // Assert
+        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
+                .publishEvent(ArgumentMatchers.any());
     }
 }

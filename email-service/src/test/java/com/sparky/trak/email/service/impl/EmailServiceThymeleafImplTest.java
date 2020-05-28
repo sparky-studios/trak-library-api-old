@@ -48,7 +48,7 @@ public class EmailServiceThymeleafImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendVerificationEmail("", (short)0));
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendVerificationEmail("", ""));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class EmailServiceThymeleafImplTest {
                 .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
 
         // Act
-        emailService.sendVerificationEmail("email.address@test.com", (short)1234);
+        emailService.sendVerificationEmail("email.address@test.com", "12345");
 
         // Assert
         Mockito.verify(javaMailSender, Mockito.atMostOnce())

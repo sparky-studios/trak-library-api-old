@@ -34,13 +34,13 @@ public class EmailServiceThymeleafImpl implements EmailService {
 
     @Async
     @Override
-    public void sendVerificationEmail(String emailAddress, short verificationCode) {
+    public void sendVerificationEmail(String emailAddress, String verificationCode) {
         // Create the Email template and all the data it needs before sending.
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailAddress);
         emailDto.setSubject(messageSource.getMessage("email.verification.subject", new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("verificationCode", String.valueOf(verificationCode)));
+        emailDto.setData(Collections.singletonMap("verificationCode", verificationCode));
 
         try {
             javaMailSender.send(getMimeMessage(emailDto, "verification-template"));

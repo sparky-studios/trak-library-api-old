@@ -8,15 +8,15 @@ import com.sparky.trak.authentication.repository.UserRoleRepository;
 import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
 import com.sparky.trak.authentication.service.AuthenticationService;
 import com.sparky.trak.authentication.service.UserService;
-import com.sparky.trak.authentication.service.command.SendVerificationEmailCommand;
 import com.sparky.trak.authentication.service.dto.CheckedResponse;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
 import com.sparky.trak.authentication.service.dto.UserResponseDto;
+import com.sparky.trak.authentication.service.event.OnVerificationNeededEvent;
 import com.sparky.trak.authentication.service.exception.InvalidUserException;
-import com.sparky.trak.authentication.service.exception.VerificationFailedException;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
 import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,11 +24,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.RestTemplate;
 
 import javax.persistence.EntityNotFoundException;
 import java.security.SecureRandom;
+import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
+import java.util.stream.IntStream;
 
 @RequiredArgsConstructor
 @Service
@@ -41,7 +43,7 @@ public class UserServiceImpl implements UserService {
     private final UserResponseMapper userResponseMapper;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
-    private final RestTemplate restTemplate;
+    private final ApplicationEventPublisher applicationEventPublisher;
     private final AuthenticationService authenticationService;
 
     @Override
@@ -50,7 +52,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[] {username}, LocaleContextHolder.getLocale());
+                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new UsernameNotFoundException(errorMessage);
         }
@@ -65,7 +67,7 @@ public class UserServiceImpl implements UserService {
         // If the user already exists with the given username, don't save an identical one, throw an exception that it's already used.
         if (existingUsername.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.error.existing-username", new Object[] {registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
+                    .getMessage("user.error.existing-username", new Object[]{registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -74,7 +76,7 @@ public class UserServiceImpl implements UserService {
         // If the email address is already in user, don't save an identical one.
         if (existingEmailAddress.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.error.existing-email-address", new Object[] {registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
+                    .getMessage("user.error.existing-email-address", new Object[]{registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -83,18 +85,16 @@ public class UserServiceImpl implements UserService {
         Optional<UserRole> userRole = userRoleRepository.findByRole("ROLE_USER");
         if (!userRole.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user-role-xref.exception.not-found", new Object[] {"ROLE_USER"}, LocaleContextHolder.getLocale());
+                    .getMessage("user-role-xref.exception.not-found", new Object[]{"ROLE_USER"}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        // Create a new user and assign it the ROLE_USER by default, but ensure it's not yet validated.
+        // Create a new user and assign it the ROLE_USER by default, but ensure it's not yet verified.
         User newUser = new User();
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
-        // Generate a random verification code between 1000 and 9999.
-        newUser.setVerificationCode((short)(new SecureRandom().nextInt((9999 - 1000) + 1) + 1000));
 
         User user = userRepository.save(newUser);
 
@@ -105,9 +105,9 @@ public class UserServiceImpl implements UserService {
 
         userRoleXrefRepository.save(userRoleXref);
 
-        // As we've created a new user, we want to send them a verification email.
-        new SendVerificationEmailCommand(restTemplate, user.getEmailAddress(), user.getVerificationCode())
-                .queue();
+        // Dispatch an event to generate the verification token and send the email.
+        applicationEventPublisher
+                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
 
         return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user), "");
     }
@@ -119,14 +119,14 @@ public class UserServiceImpl implements UserService {
         // Can't verify a user if it doesn't exist.
         if (!user.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[] {username}, LocaleContextHolder.getLocale());
+                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
         if (!authenticationService.isCurrentAuthenticatedUser(user.get().getId())) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
@@ -135,13 +135,37 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String createVerificationCode(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElse(null);
+
+        if (user != null) {
+            String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            StringBuilder verificationCode = new StringBuilder();
+            Random random = new SecureRandom();
+
+            IntStream.range(0, 5).forEach(i -> verificationCode.append(chars.charAt(random.nextInt(chars.length()))));
+
+            user.setVerified(false);
+            user.setVerificationCode(verificationCode.toString());
+            user.setVerificationExpiryDate(LocalDateTime.now());
+
+            userRepository.save(user);
+
+            return verificationCode.toString();
+        }
+
+        return "";
+    }
+
+    @Override
     @Transactional(rollbackFor = Exception.class)
-    public void verify(String username, short verificationCode) {
+    public CheckedResponse<Boolean> verify(String username, String verificationCode) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         // Can't verify a user if it doesn't exist.
         if (!optionalUser.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[] {username}, LocaleContextHolder.getLocale());
+                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -150,7 +174,7 @@ public class UserServiceImpl implements UserService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
@@ -158,18 +182,46 @@ public class UserServiceImpl implements UserService {
         // No point verifying for a user that's already verified.
         if (!user.isVerified()) {
             // If the verification code doesn't match, then the verification will have failed.
-            if (user.getVerificationCode() != verificationCode) {
+            if (user.getVerificationCode() == null || !user.getVerificationCode().equals(verificationCode)) {
                 String errorMessage = messageSource
-                        .getMessage("user.exception.verification-failed", new Object[] {verificationCode, username}, LocaleContextHolder.getLocale());
+                        .getMessage("user.error.incorrect-verification-code", new Object[]{verificationCode, username}, LocaleContextHolder.getLocale());
 
-                throw new VerificationFailedException(errorMessage);
+                return new CheckedResponse<>(false, errorMessage);
             }
 
             // Update the verification state and persist the change.
             user.setVerified(true);
             user.setVerificationCode(null);
+            user.setVerificationExpiryDate(null);
 
             userRepository.save(user);
         }
+
+        return new CheckedResponse<>(true);
+    }
+
+    @Override
+    public void reverify(String username) {
+        Optional<User> optionalUser = userRepository.findByUsername(username);
+        // Can't verify a user if it doesn't exist.
+        if (!optionalUser.isPresent()) {
+            String errorMessage = messageSource
+                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException(errorMessage);
+        }
+
+        User user = optionalUser.get();
+
+        if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
+            String errorMessage = messageSource
+                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
+
+            throw new InvalidUserException(errorMessage);
+        }
+
+        // Resend the verification request to generate a new verification code and email.
+        applicationEventPublisher
+                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
     }
 }

@@ -34,6 +34,7 @@ public interface UserMapper {
         userDto.setPassword(user.getPassword());
         userDto.setVerified(user.isVerified());
         userDto.setVerificationCode(user.getVerificationCode());
+        userDto.setVerificationExpiryDate(user.getVerificationExpiryDate());
         userDto.setVersion(user.getVersion());
         userDto.setAuthorities(authorities);
 

@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -41,7 +42,10 @@ public class User {
     private boolean verified;
 
     @Column(name = "verification_code")
-    private Short verificationCode;
+    private String verificationCode;
+
+    @Column(name = "verification_expiry_date")
+    private LocalDateTime verificationExpiryDate;
 
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)

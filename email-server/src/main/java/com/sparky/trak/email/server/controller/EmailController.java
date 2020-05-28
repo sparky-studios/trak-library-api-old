@@ -37,7 +37,7 @@ public class EmailController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/verification")
     public void sendVerificationEmail(@RequestParam("email-address") String emailAddress,
-                                      @RequestParam("verification-code") short verificationCode) {
+                                      @RequestParam("verification-code") String verificationCode) {
         emailService.sendVerificationEmail(emailAddress, verificationCode);
     }
 }

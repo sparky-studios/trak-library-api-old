@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,7 +33,8 @@ public class UserDto implements UserDetails {
     private String password;
     private List<GrantedAuthority> authorities;
     private boolean verified;
-    private Short verificationCode;
+    private String verificationCode;
+    private LocalDateTime verificationExpiryDate;
     private Long version;
 
     @Override

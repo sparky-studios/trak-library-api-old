@@ -11,5 +11,9 @@ public interface UserService extends UserDetailsService {
 
     UserResponseDto findByUsername(String username);
 
-    void verify(String username, short verificationCode);
+    String createVerificationCode(String username);
+
+    CheckedResponse<Boolean> verify(String username, String verificationCode);
+
+    void reverify(String username);
 }
