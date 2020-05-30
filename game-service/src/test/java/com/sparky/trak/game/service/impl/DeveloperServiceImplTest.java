@@ -18,14 +18,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -131,7 +129,7 @@ public class DeveloperServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.findDevelopersByGameId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.findDevelopersByGameId(0L));
     }
 
     @Test
@@ -140,11 +138,11 @@ public class DeveloperServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(Page.empty());
+        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.<Specification<GameDeveloperXref>>any()))
+                .thenReturn(Collections.emptyList());
 
         // Act
-        List<DeveloperDto> result = StreamSupport.stream(developerService.findDevelopersByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<DeveloperDto> result = StreamSupport.stream(developerService.findDevelopersByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -160,54 +158,31 @@ public class DeveloperServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
+        Developer developer1 = new Developer();
+        developer1.setName("developer-1");
+
         GameDeveloperXref gameDeveloperXref1 = new GameDeveloperXref();
-        gameDeveloperXref1.setDeveloper(new Developer());
+        gameDeveloperXref1.setDeveloper(developer1);
+
+        Developer developer2 = new Developer();
+        developer2.setName("developer-2");
 
         GameDeveloperXref gameDeveloperXref2 = new GameDeveloperXref();
-        gameDeveloperXref2.setDeveloper(new Developer());
+        gameDeveloperXref2.setDeveloper(developer2);
 
         Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Arrays.asList(gameDeveloperXref1, gameDeveloperXref2)));
 
         // Act
-        List<DeveloperDto> result = StreamSupport.stream(developerService.findDevelopersByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<DeveloperDto> result = StreamSupport.stream(developerService.findDevelopersByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+        Assertions.assertEquals(2, result.size(), "There should be only two developers if there are two xrefs");
 
         Mockito.verify(developerMapper, Mockito.atMost(2))
                 .developerToDeveloperDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void countDevelopersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.countDevelopersByGameId(0L));
-    }
-
-    @Test
-    public void countDevelopersByGameId_withGame_invokesGameDeveloperXrefRepository() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gameDeveloperXrefRepository.count(ArgumentMatchers.any()))
-            .thenReturn(0L);
-
-        // Act
-        developerService.countDevelopersByGameId(0L);
-
-        // Assert
-        Mockito.verify(gameDeveloperXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
     }
 
     @Test

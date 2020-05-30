@@ -18,6 +18,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -137,7 +138,7 @@ public class PlatformServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.findPlatformsByGameId(0L));
     }
 
     @Test
@@ -146,11 +147,11 @@ public class PlatformServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(Page.empty());
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.<Specification<GamePlatformXref>>any()))
+                .thenReturn(Collections.emptyList());
 
         // Act
-        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -161,90 +162,33 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findPlatformsByGameId_withMultiplePlatforms_returnsList() {
+    public void findPlatformsByGameId_withPlatforms_returnsList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
+        Platform platform1 = new Platform();
+        platform1.setName("platform-1");
+
         GamePlatformXref gamePlatformXref1 = new GamePlatformXref();
-        gamePlatformXref1.setPlatform(new Platform());
+        gamePlatformXref1.setPlatform(platform1);
+
+        Platform platform2 = new Platform();
+        platform2.setName("platform-2");
 
         GamePlatformXref gamePlatformXref2 = new GamePlatformXref();
-        gamePlatformXref2.setPlatform(new Platform());
+        gamePlatformXref2.setPlatform(platform2);
 
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gamePlatformXref1, gamePlatformXref2)));
+        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.<Specification<GamePlatformXref>>any()))
+                .thenReturn(Arrays.asList(gamePlatformXref1, gamePlatformXref2));
 
         // Act
-        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
-
-        Mockito.verify(platformMapper, Mockito.atMost(2))
-                .platformToPlatformDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void countPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.countPlatformsByGameId(0L));
-    }
-
-    @Test
-    public void countPlatformsByGameId_withGame_invokesGamePlatformXrefRepository() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gamePlatformXrefRepository.count(ArgumentMatchers.any()))
-                .thenReturn(0L);
-
-        // Act
-        platformService.countPlatformsByGameId(0L);
-
-        // Assert
-        Mockito.verify(gamePlatformXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void findAll_withNoPlatformsAndNoPageable_returnsEmptyList() {
-        // Arrange
-        Mockito.when(platformRepository.findAll())
-                .thenReturn(Collections.emptyList());
-
-        // Act
-        List<PlatformDto> result = StreamSupport.stream(platformService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-
-        // Assert
-        Assertions.assertTrue(result.isEmpty(), "There should be no platform dto's if no platforms were found.");
-
-        Mockito.verify(platformMapper, Mockito.never())
-                .platformToPlatformDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void findAll_withPlatformsAndNoPageable_returnsListOfPlatformDtos() {
-        // Arrange
-        Mockito.when(platformRepository.findAll())
-                .thenReturn(Arrays.asList(new Platform(), new Platform()));
-
-        // Act
-        List<PlatformDto> result = StreamSupport.stream(platformService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-
-        // Assert
-        Assertions.assertFalse(result.isEmpty(), "There should be platform DTO's if platforms were found.");
+        Assertions.assertEquals(2, result.size(), "There should be only two platforms if there are two xrefs");
 
         Mockito.verify(platformMapper, Mockito.atMost(2))
                 .platformToPlatformDto(ArgumentMatchers.any());

@@ -17,9 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @Service
@@ -56,37 +56,20 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
-    public Iterable<PlatformDto> findAll() {
-        return StreamSupport.stream(platformRepository.findAll().spliterator(), false)
-                .map(platformMapper::platformToPlatformDto)
+    public Iterable<PlatformDto> findPlatformsByGameId(long gameId) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gamePlatformXrefRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
+                .stream()
+                .map(xref -> platformMapper.platformToPlatformDto(xref.getPlatform()))
+                .sorted(Comparator.comparing(PlatformDto::getName))
                 .collect(Collectors.toList());
-    }
-
-    @Override
-    public Iterable<PlatformDto> findPlatformsByGameId(long gameId, Pageable pageable) {
-        if (!gameRepository.existsById(gameId)) {
-            String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException((errorMessage));
-        }
-
-        return gamePlatformXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
-                .map(xref -> platformMapper.platformToPlatformDto(xref.getPlatform()));
-    }
-
-    @Override
-    public long countPlatformsByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
-            String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException((errorMessage));
-        }
-
-        return gamePlatformXrefRepository
-                .count(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)));
     }
 
     @Override

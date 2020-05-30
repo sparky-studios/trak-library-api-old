@@ -7,6 +7,7 @@ import com.sparky.trak.game.repository.specification.DeveloperSpecification;
 import com.sparky.trak.game.service.DeveloperService;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.DeveloperDto;
+import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.service.mapper.DeveloperMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
@@ -17,7 +18,9 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,7 +57,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
-    public Iterable<DeveloperDto> findDevelopersByGameId(long gameId, Pageable pageable) {
+    public Iterable<DeveloperDto> findDevelopersByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
                     .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -63,21 +66,11 @@ public class DeveloperServiceImpl implements DeveloperService {
         }
 
         return gameDeveloperXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
-                .map(xref -> developerMapper.developerToDeveloperDto(xref.getDeveloper()));
-    }
-
-    @Override
-    public long countDevelopersByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
-            String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException((errorMessage));
-        }
-
-        return gameDeveloperXrefRepository
-                .count(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)));
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
+                .stream()
+                .map(xref -> developerMapper.developerToDeveloperDto(xref.getDeveloper()))
+                .sorted(Comparator.comparing(DeveloperDto::getName))
+                .collect(Collectors.toList());
     }
 
     @Override

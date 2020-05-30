@@ -4,6 +4,7 @@ import com.sparky.trak.authentication.domain.User;
 import com.sparky.trak.authentication.domain.UserRoleXref;
 import com.sparky.trak.authentication.service.dto.UserDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -41,5 +42,6 @@ public interface UserMapper {
         return userDto;
     }
 
+    @Mapping(target = "userRoleXrefs", ignore = true)
     User userDtoToUser(UserDto userDto);
 }

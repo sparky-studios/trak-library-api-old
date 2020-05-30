@@ -18,14 +18,12 @@ import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -131,7 +129,7 @@ public class PublisherServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.findPublishersByGameId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.findPublishersByGameId(0L));
     }
 
     @Test
@@ -140,11 +138,11 @@ public class PublisherServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(Page.empty());
+        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.<Specification<GamePublisherXref>>any()))
+                .thenReturn(Collections.emptyList());
 
         // Act
-        List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -170,44 +168,15 @@ public class PublisherServiceImplTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(gamePublisherXref1, gamePublisherXref2)));
 
         // Act
-        List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+        Assertions.assertEquals(2, result.size(), "There should be only two publishers if there are two xrefs");
 
         Mockito.verify(publisherMapper, Mockito.atMost(2))
                 .publisherToPublisherDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void countPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.countPublishersByGameId(0L));
-    }
-
-    @Test
-    public void countPublishersByGameId_withGame_invokesGamePublisherXrefRepository() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gamePublisherXrefRepository.count(ArgumentMatchers.any()))
-                .thenReturn(0L);
-
-        // Act
-        publisherService.countPublishersByGameId(0L);
-
-        // Assert
-        Mockito.verify(gamePublisherXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
     }
 
     @Test
