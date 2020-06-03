@@ -6,7 +6,6 @@ import com.sparky.trak.game.repository.PublisherRepository;
 import com.sparky.trak.game.repository.specification.PublisherSpecification;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.PublisherService;
-import com.sparky.trak.game.service.dto.DeveloperDto;
 import com.sparky.trak.game.service.dto.PublisherDto;
 import com.sparky.trak.game.service.mapper.PublisherMapper;
 import lombok.RequiredArgsConstructor;

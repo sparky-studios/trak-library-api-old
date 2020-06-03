@@ -1,8 +1,10 @@
 package com.sparky.trak.game.service;
 
+import com.sparky.trak.game.domain.Game;
 import com.sparky.trak.game.domain.GameUserEntry;
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.dto.GameUserEntryDto;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import javax.json.JsonMergePatch;
@@ -39,6 +41,29 @@ public interface GameUserEntryService {
      * @throws javax.persistence.EntityNotFoundException Thrown if the ID doesn't match an existing {@link GameUserEntry}.
      */
     GameUserEntryDto findById(long id);
+
+    /**
+     * Given the ID of a {@link Game}, this method will retrieve a {@link Page} of {@link GameUserEntry}'s that are associated with
+     * the given {@link Game}. If the ID provided does not map to any {@link Game}, a {@link javax.persistence.EntityNotFoundException}
+     * will be thrown. If there are no {@link GameUserEntry}'s associated with the {@link Game}, an empty {@link Iterable} will be returned.
+     *
+     * @param gameId The ID of the {@link Game} to retrieve {@link GameUserEntry} entries for.
+     * @param pageable The amount of data and the page to return.
+     *
+     * @return A page of {@link GameUserEntryDto}s that are mapped with the given {@link Game}.
+     */
+    Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable);
+
+    /**
+     * Given the ID of a {@link Game}, this method will retrieve the total count for how many {@link GameUserEntryDto}'s have an association
+     * to the given {@link Game}. If the ID provided does not map to any {@link Game}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param gameId The ID of the {@link Game} to retrieve the total count of {@link GameUserEntryDto} entries for.
+     *
+     * @return The total count of {@link GameUserEntryDto}'s associated with the given {@link Game}.
+     */
+    long countGameUserEntriesByGameId(long gameId);
 
     /**
      * This method will retrieve an {@link Iterable} of {@link GameUserEntryDto} with a response size specified by the {@link Pageable}. The

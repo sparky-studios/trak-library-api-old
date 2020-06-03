@@ -5,6 +5,7 @@ import com.sparky.trak.game.service.dto.CompanyDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,7 +26,7 @@ public class CompanyRepresentationModelAssembler implements SimpleRepresentation
     }
 
     @Override
-    public void addLinks(CollectionModel<EntityModel<CompanyDto>> resources) {
+    public void addLinks(@NonNull CollectionModel<EntityModel<CompanyDto>> resources) {
         // Needed for implementation purposes, but unused.
     }
 }

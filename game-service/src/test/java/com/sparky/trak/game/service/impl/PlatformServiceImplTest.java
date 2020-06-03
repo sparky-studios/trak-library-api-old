@@ -41,7 +41,7 @@ public class PlatformServiceImplTest {
     private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Spy
-    private PlatformMapper platformMapper = PlatformMapper.INSTANCE;
+    private final PlatformMapper platformMapper = PlatformMapper.INSTANCE;
 
     @Mock
     private MessageSource messageSource;

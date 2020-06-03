@@ -40,7 +40,7 @@ public class GenreServiceImplTest {
     private GameGenreXrefRepository gameGenreXrefRepository;
 
     @Spy
-    private GenreMapper genreMapper = GenreMapper.INSTANCE;
+    private final GenreMapper genreMapper = GenreMapper.INSTANCE;
 
     @Mock
     private MessageSource messageSource;
@@ -183,40 +183,6 @@ public class GenreServiceImplTest {
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should be not be empty if they're game genre xrefs.");
         Assertions.assertEquals(2, result.size(), "There should be only two genres if there are two xrefs");
-    }
-
-    @Test
-    public void findAll_withNoGenresAndNoPageable_returnsEmptyList() {
-        // Arrange
-        Mockito.when(genreRepository.findAll())
-                .thenReturn(Collections.emptyList());
-
-        // Act
-        List<GenreDto> result = StreamSupport.stream(genreService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-
-        // Assert
-        Assertions.assertTrue(result.isEmpty(), "There should be no genre dto's if no genres were found.");
-
-        Mockito.verify(genreMapper, Mockito.never())
-                .genreToGenreDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    public void findAll_withGenresAndNoPageable_returnsListOfGenreDtos() {
-        // Arrange
-        Mockito.when(genreRepository.findAll())
-                .thenReturn(Arrays.asList(new Genre(), new Genre()));
-
-        // Act
-        List<GenreDto> result = StreamSupport.stream(genreService.findAll().spliterator(), false)
-                .collect(Collectors.toList());
-
-        // Assert
-        Assertions.assertFalse(result.isEmpty(), "There should be game dto's if games were found.");
-
-        Mockito.verify(genreMapper, Mockito.atMost(2))
-                .genreToGenreDto(ArgumentMatchers.any());
     }
 
     @Test

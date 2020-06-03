@@ -17,6 +17,7 @@ import javax.annotation.PostConstruct;
 public class EmailClientCircuitBreakerImpl implements EmailClient {
 
     private final RestTemplate restTemplate;
+    @SuppressWarnings("rawtypes")
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     private CircuitBreaker sendVerificationEmailCircuitBreaker;

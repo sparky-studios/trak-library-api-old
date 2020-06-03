@@ -2,8 +2,6 @@ package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.specification.GameSpecification;
-import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
-import com.sparky.trak.game.service.dto.CompanyDto;
 import com.sparky.trak.game.service.dto.DeveloperDto;
 import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.PublisherDto;

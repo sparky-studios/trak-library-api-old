@@ -48,12 +48,14 @@ public class GameController {
     private final PlatformService platformService;
     private final DeveloperService developerService;
     private final PublisherService publisherService;
+    private final GameUserEntryService gameUserEntryService;
     private final GameImageService gameImageService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
     private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
     private final DeveloperRepresentationModelAssembler developerRepresentationModelAssembler;
     private final PublisherRepresentationModelAssembler publisherRepresentationModelAssembler;
+    private final GameUserEntryRepresentationModelAssembler gameUserEntryRepresentationModelAssembler;
 
     /**
      * End-point that will attempt to save the given {@link GameDto} request body to the underlying
@@ -171,6 +173,27 @@ public class GameController {
     @GetMapping("/{id}/publishers")
     public CollectionModel<EntityModel<PublisherDto>> findPublishersByGameId(@PathVariable long id) {
         return publisherRepresentationModelAssembler.toCollectionModel(publisherService.findPublishersByGameId(id));
+    }
+
+    @AllowedForUser
+    @GetMapping("/{id}/entries")
+    public PagedModel<EntityModel<GameUserEntryDto>> findGameUserEntriesByGameId(@PathVariable long id,
+                                                                                 @PageableDefault Pageable pageable,
+                                                                                 PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
+        // Get the paged data from the service and convert into a list so it can be added to a page object.
+        List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(id, pageable).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameUserEntryService.countGameUserEntriesByGameId(id);
+
+        // Wrap the page in a HATEOAS response.
+        return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, count), gameUserEntryRepresentationModelAssembler, link);
     }
 
     /**

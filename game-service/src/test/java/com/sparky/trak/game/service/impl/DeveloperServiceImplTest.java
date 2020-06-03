@@ -43,7 +43,7 @@ public class DeveloperServiceImplTest {
     private MessageSource messageSource;
 
     @Spy
-    private DeveloperMapper developerMapper = DeveloperMapper.INSTANCE;
+    private final DeveloperMapper developerMapper = DeveloperMapper.INSTANCE;
 
     @Mock
     private PatchService patchService;

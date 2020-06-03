@@ -68,15 +68,6 @@ public interface GenreService {
     Iterable<GenreDto> findGenresByGameId(long gameId);
 
     /**
-     * Retrieves all of the {@link Genre} entities stored within the persistence layer. This method should not be used within a live
-     * environment, as the amount of data may cause buffer overflows and bring down the server. It should only be used within a test
-     * environment and even then, with hesitancy.
-     *
-     * @return All of the {@link Genre} entities contained within the persistence layer, wrapped as {@link GenreDto}s.
-     */
-    Iterable<GenreDto> findAll();
-
-    /**
      * This method will retrieve an {@link Iterable} of {@link GenreDto} with a response size specified by the {@link Pageable}. The
      * results can be queried and filtered by utilising the exposed specifications on the {@link GenreSpecification} object. If the response
      * from the specifications is that none match, an empty {@link Iterable} will be returned.

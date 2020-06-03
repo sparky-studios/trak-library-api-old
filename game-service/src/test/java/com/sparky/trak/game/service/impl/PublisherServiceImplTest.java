@@ -43,7 +43,7 @@ public class PublisherServiceImplTest {
     private MessageSource messageSource;
 
     @Spy
-    private PublisherMapper publisherMapper = PublisherMapper.INSTANCE;
+    private final PublisherMapper publisherMapper = PublisherMapper.INSTANCE;
 
     @Mock
     private PatchService patchService;

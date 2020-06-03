@@ -1,6 +1,7 @@
 package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.GameUserEntry;
+import com.sparky.trak.game.repository.GameRepository;
 import com.sparky.trak.game.repository.GameUserEntryRepository;
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.AuthenticationService;
@@ -28,6 +29,7 @@ import java.util.stream.StreamSupport;
 public class GameUserEntryServiceImpl implements GameUserEntryService {
 
     private final GameUserEntryRepository gameUserEntryRepository;
+    private final GameRepository gameRepository;
     private final GameUserEntryMapper gameUserEntryMapper;
     private final AuthenticationService authenticationService;
     private final MessageSource messageSource;
@@ -62,6 +64,33 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameUserEntryRepository
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
+                .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto);
+    }
+
+    @Override
+    public long countGameUserEntriesByGameId(long gameId) {
+        if (!gameRepository.existsById(gameId)) {
+            String errorMessage = messageSource
+                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameUserEntryRepository
+                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId));
     }
 
     @Override

@@ -1,12 +1,15 @@
 package com.sparky.trak.game.server.assembler;
 
+import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.PlatformDto;
 import com.sparky.trak.game.server.controller.PlatformController;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -15,6 +18,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 @RequiredArgsConstructor
 @Component
 public class PlatformRepresentationModelAssembler implements SimpleRepresentationModelAssembler<PlatformDto> {
+
+    private final PagedResourcesAssembler<GameDto> gameDtoPagedResourcesAssembler;
 
     @Override
     public void addLinks(EntityModel<PlatformDto> resource) {
@@ -26,13 +31,13 @@ public class PlatformRepresentationModelAssembler implements SimpleRepresentatio
                     .withSelfRel());
 
             resource.add(linkTo(methodOn(PlatformController.class)
-                    .findGamesByPlatformId(content.getId(), Pageable.unpaged(), null))
+                    .findGamesByPlatformId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                     .withRel("games"));
         }
     }
 
     @Override
-    public void addLinks(CollectionModel<EntityModel<PlatformDto>> resources) {
+    public void addLinks(@NonNull CollectionModel<EntityModel<PlatformDto>> resources) {
         // Needed for implementation purposes, but unused.
     }
 }
