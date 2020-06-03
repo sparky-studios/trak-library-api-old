@@ -170,8 +170,8 @@ public class DeveloperServiceImplTest {
         GameDeveloperXref gameDeveloperXref2 = new GameDeveloperXref();
         gameDeveloperXref2.setDeveloper(developer2);
 
-        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gameDeveloperXref1, gameDeveloperXref2)));
+        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.<Specification<GameDeveloperXref>>any()))
+                .thenReturn(Arrays.asList(gameDeveloperXref1, gameDeveloperXref2));
 
         // Act
         List<DeveloperDto> result = StreamSupport.stream(developerService.findDevelopersByGameId(0L).spliterator(), false)

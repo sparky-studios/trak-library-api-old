@@ -158,14 +158,20 @@ public class PublisherServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
+        Publisher publisher1 = new Publisher();
+        publisher1.setName("publisher-1");
+
         GamePublisherXref gamePublisherXref1 = new GamePublisherXref();
-        gamePublisherXref1.setPublisher(new Publisher());
+        gamePublisherXref1.setPublisher(publisher1);
+
+        Publisher publisher2 = new Publisher();
+        publisher2.setName("publisher-2");
 
         GamePublisherXref gamePublisherXref2 = new GamePublisherXref();
-        gamePublisherXref2.setPublisher(new Publisher());
+        gamePublisherXref2.setPublisher(publisher2);
 
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gamePublisherXref1, gamePublisherXref2)));
+        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.<Specification<GamePublisherXref>>any()))
+                .thenReturn(Arrays.asList(gamePublisherXref1, gamePublisherXref2));
 
         // Act
         List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L).spliterator(), false)
