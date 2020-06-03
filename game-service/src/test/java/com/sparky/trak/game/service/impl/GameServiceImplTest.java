@@ -2,7 +2,6 @@ package com.sparky.trak.game.service.impl;
 
 import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.*;
-import com.sparky.trak.game.repository.specification.DeveloperSpecification;
 import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.service.PatchService;
 import com.sparky.trak.game.service.dto.GameDto;
@@ -58,7 +57,7 @@ public class GameServiceImplTest {
     private PatchService patchService;
 
     @Spy
-    private GameMapper gameMapper = GameMapper.INSTANCE;
+    private final GameMapper gameMapper = GameMapper.INSTANCE;
 
     @Mock
     private MessageSource messageSource;

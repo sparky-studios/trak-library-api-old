@@ -17,7 +17,9 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Comparator;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -54,7 +56,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
-    public Iterable<PublisherDto> findPublishersByGameId(long gameId, Pageable pageable) {
+    public Iterable<PublisherDto> findPublishersByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
                     .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -63,21 +65,11 @@ public class PublisherServiceImpl implements PublisherService {
         }
 
         return gamePublisherXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
-                .map(xref -> publisherMapper.publisherToPublisherDto(xref.getPublisher()));
-    }
-
-    @Override
-    public long countPublishersByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
-            String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException((errorMessage));
-        }
-
-        return gamePublisherXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId));
+                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
+                .stream()
+                .map(xref -> publisherMapper.publisherToPublisherDto(xref.getPublisher()))
+                .sorted(Comparator.comparing(PublisherDto::getName))
+                .collect(Collectors.toList());
     }
 
     @Override

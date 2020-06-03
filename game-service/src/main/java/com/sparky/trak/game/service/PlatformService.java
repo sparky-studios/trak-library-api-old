@@ -1,8 +1,10 @@
 package com.sparky.trak.game.service;
 
+import com.sparky.trak.game.domain.Game;
+import com.sparky.trak.game.domain.GamePlatformXref;
+import com.sparky.trak.game.domain.Genre;
 import com.sparky.trak.game.domain.Platform;
 import com.sparky.trak.game.repository.specification.PlatformSpecification;
-import com.sparky.trak.game.service.dto.GameDto;
 import com.sparky.trak.game.service.dto.PlatformDto;
 import org.springframework.data.domain.Pageable;
 
@@ -49,35 +51,19 @@ public interface PlatformService {
     PlatformDto findById(long id);
 
     /**
-     * Retrieves all of the {@link Platform} entities stored within the persistence layer. This method should not be used within a live
-     * environment, as the amount of data may cause buffer overflows and bring down the server. It should only be used within a test
-     * environment and even then, with hesitancy.
+     * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Platform}s entities that are associated
+     * with this {@link Game}, which is mapped by {@link GamePlatformXref} entities. If no {@link Platform}s are associated with a given
+     * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a
+     * {@link javax.persistence.EntityNotFoundException} exception will be thrown. The {@link Platform}'s within the list are returned
+     * in name ascending order.
      *
-     * @return All of the {@link Platform} entities contained within the persistence layer, wrapped as {@link PlatformDto}s.
+     * @param gameId The ID of the {@link Game} to retrieve {@link Genre}s for.
+     *
+     * @return The {@link Platform} entities mapped to the {@link Game}, converted to {@link PlatformDto}'s.
+     *
+     * @throws javax.persistence.EntityNotFoundException Thrown if the gameId doesn't match any {@link Game} entities.
      */
-    Iterable<PlatformDto> findAll();
-
-    /**
-     * This method will retrieve an {@link Iterable} of {@link PlatformDto} with a response size specified by the {@link Pageable}
-     * that are referenced by the specified {@link GameDto} ID.
-     *
-     * @param gameId The ID of the {@link GameDto} to retrieve paged platform data for.
-     * @param pageable The size and page of data to return.
-     *
-     * @return An {@link Iterable} of relevant queried {@link PlatformDto} instances.
-     */
-    Iterable<PlatformDto> findPlatformsByGameId(long gameId, Pageable pageable);
-
-    /**
-     * Given the ID of a {@link GameDto}, this method will retrieve the total count for how many {@link PlatformDto}'s have an association
-     * to the given {@link GameDto}. If the ID provided does not map to any {@link GameDto}, {@link javax.persistence.EntityNotFoundException}
-     * will be thrown.
-     *
-     * @param gameId The ID of the {@link GameDto} to retrieve the total count of {@link PlatformDto} entries for.
-     *
-     * @return The total count of {@link PlatformDto}'s associated with the given {@link GameDto}.
-     */
-    long countPlatformsByGameId(long gameId);
+    Iterable<PlatformDto> findPlatformsByGameId(long gameId);
 
     /**
      * This method will retrieve an {@link Iterable} of {@link PlatformDto} with a response size specified by the {@link Pageable}. The

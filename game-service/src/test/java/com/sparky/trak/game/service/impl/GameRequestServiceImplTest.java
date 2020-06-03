@@ -36,7 +36,7 @@ public class GameRequestServiceImplTest {
     private GameRequestRepository gameRequestRepository;
 
     @Spy
-    private GameRequestMapper gameRequestMapper = GameRequestMapper.INSTANCE;
+    private final GameRequestMapper gameRequestMapper = GameRequestMapper.INSTANCE;
 
     @Mock
     private AuthenticationService authenticationService;

@@ -5,6 +5,7 @@ import com.sparky.trak.game.service.dto.GameRequestDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -25,7 +26,7 @@ public class GameRequestRepresentationModelAssembler implements SimpleRepresenta
     }
 
     @Override
-    public void addLinks(CollectionModel<EntityModel<GameRequestDto>> resources) {
+    public void addLinks(@NonNull CollectionModel<EntityModel<GameRequestDto>> resources) {
         // Needed for implementation purposes, but unused.
     }
 }

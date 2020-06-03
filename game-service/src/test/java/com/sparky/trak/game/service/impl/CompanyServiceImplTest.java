@@ -36,7 +36,7 @@ public class CompanyServiceImplTest {
     private MessageSource messageSource;
 
     @Spy
-    private CompanyMapper companyMapper = CompanyMapper.INSTANCE;
+    private final CompanyMapper companyMapper = CompanyMapper.INSTANCE;
 
     @Mock
     private PatchService patchService;

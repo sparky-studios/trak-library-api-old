@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" lang="en">
     <head>
         <link rel="stylesheet" href="verification-template.css">
         <title>Account verification</title>
@@ -7,7 +6,7 @@
     <body>
         <div class="header">
             <span th:text="#{email.verification.welcome}" class="header__caption"></span>
-            <img th:src="@{img/trak-logo.png}">
+            <img th:src="@{img/trak-logo.png}" alt="Trak Logo">
         </div>
         <h1 th:text="#{email.verification.header}"></h1>
         <p th:text="#{email.verification.thank-you}"></p>

@@ -115,23 +115,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = true)
     public UserResponseDto findByUsername(String username) {
-        Optional<User> user = userRepository.findByUsername(username);
-        // Can't verify a user if it doesn't exist.
-        if (!user.isPresent()) {
-            String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException(errorMessage);
-        }
-
-        if (!authenticationService.isCurrentAuthenticatedUser(user.get().getId())) {
-            String errorMessage = messageSource
-                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
-
-            throw new InvalidUserException(errorMessage);
-        }
-
-        return userResponseMapper.userToUserResponseDto(user.get());
+        return userResponseMapper.userToUserResponseDto(getUserFromUsername(username));
     }
 
     @Override
@@ -161,23 +145,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CheckedResponse<Boolean> verify(String username, String verificationCode) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
-        // Can't verify a user if it doesn't exist.
-        if (!optionalUser.isPresent()) {
-            String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
-
-            throw new EntityNotFoundException(errorMessage);
-        }
-
-        User user = optionalUser.get();
-
-        if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
-            String errorMessage = messageSource
-                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
-
-            throw new InvalidUserException(errorMessage);
-        }
+        User user = getUserFromUsername(username);
 
         // No point verifying for a user that's already verified.
         if (!user.isVerified()) {
@@ -202,6 +170,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void reverify(String username) {
+        User user = getUserFromUsername(username);
+
+        // Resend the verification request to generate a new verification code and email.
+        applicationEventPublisher
+                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
+    }
+
+    private User getUserFromUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         // Can't verify a user if it doesn't exist.
         if (!optionalUser.isPresent()) {
@@ -220,8 +196,6 @@ public class UserServiceImpl implements UserService {
             throw new InvalidUserException(errorMessage);
         }
 
-        // Resend the verification request to generate a new verification code and email.
-        applicationEventPublisher
-                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
+        return user;
     }
 }

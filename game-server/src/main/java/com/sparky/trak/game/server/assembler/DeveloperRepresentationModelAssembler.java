@@ -9,6 +9,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.SimpleRepresentationModelAssembler;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -35,7 +36,7 @@ public class DeveloperRepresentationModelAssembler implements SimpleRepresentati
     }
 
     @Override
-    public void addLinks(CollectionModel<EntityModel<DeveloperDto>> resources) {
+    public void addLinks(@NonNull CollectionModel<EntityModel<DeveloperDto>> resources) {
 
     }
 }

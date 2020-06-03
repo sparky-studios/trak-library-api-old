@@ -33,6 +33,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
     @Override
     public void upload(String folder, String filename, byte[] content) {
         // Only allow the uploading of valid image files.
+        @SuppressWarnings("UnstableApiUsage")
         String extension = Files.getFileExtension(filename);
 
         if (!Arrays.asList("png", "jpg", "jpeg").contains(extension)) {

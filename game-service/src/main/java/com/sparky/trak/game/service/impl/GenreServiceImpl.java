@@ -74,13 +74,6 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
-    public Iterable<GenreDto> findAll() {
-        return StreamSupport.stream(genreRepository.findAll().spliterator(), false)
-                .map(genreMapper::genreToGenreDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Iterable<GenreDto> findAll(GenreSpecification genreSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 

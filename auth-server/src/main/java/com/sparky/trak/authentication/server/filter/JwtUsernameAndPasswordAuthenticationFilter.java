@@ -6,7 +6,6 @@ import com.sparky.trak.authentication.service.dto.UserCredentialsDto;
 import com.sparky.trak.authentication.service.dto.UserDto;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;

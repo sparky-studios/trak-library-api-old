@@ -2,7 +2,6 @@ package com.sparky.trak.game.service;
 
 import com.sparky.trak.game.domain.Company;
 import com.sparky.trak.game.repository.specification.CompanySpecification;
-import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.service.dto.CompanyDto;
 import org.springframework.data.domain.Pageable;
 

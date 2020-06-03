@@ -5,7 +5,6 @@ import com.sparky.trak.game.domain.Game;
 import com.sparky.trak.game.domain.GameUserEntry;
 import com.sparky.trak.game.domain.GameUserEntryStatus;
 import com.sparky.trak.game.repository.GameUserEntryRepository;
-import com.sparky.trak.game.repository.specification.DeveloperSpecification;
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.AuthenticationService;
 import com.sparky.trak.game.service.PatchService;
@@ -39,7 +38,7 @@ public class GameUserEntryServiceImplTest {
     private GameUserEntryRepository gameUserEntryRepository;
 
     @Spy
-    private GameUserEntryMapper gameUserEntryMapper = GameUserEntryMapper.INSTANCE;
+    private final GameUserEntryMapper gameUserEntryMapper = GameUserEntryMapper.INSTANCE;
 
     @Mock
     private AuthenticationService authenticationService;

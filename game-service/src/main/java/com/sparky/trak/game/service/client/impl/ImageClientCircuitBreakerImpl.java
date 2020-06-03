@@ -26,6 +26,7 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Objects;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -33,26 +34,24 @@ import java.io.IOException;
 public class ImageClientCircuitBreakerImpl implements ImageClient {
 
     private final AuthenticationService authenticationService;
+    @SuppressWarnings("rawtypes")
     private final CircuitBreakerFactory circuitBreakerFactory;
     private final MessageSource messageSource;
     private final RestTemplate restTemplate;
 
     @Setter
-    private CircuitBreaker uploadGameImageCircuitBreaker;
-
-    @Setter
-    private CircuitBreaker downloadGameImageCircuitBreaker;
+    private CircuitBreaker imageServerCircuitBreaker;
 
     @PostConstruct
     private void postConstruct() {
-        uploadGameImageCircuitBreaker = circuitBreakerFactory.create("game-image-upload");
-        downloadGameImageCircuitBreaker = circuitBreakerFactory.create("game-image-download");
+        imageServerCircuitBreaker = circuitBreakerFactory.create("image-server-circuit-breaker");
     }
 
     @Override
     public void uploadGameImage(MultipartFile multipartFile, long gameId) {
         // Create a temporary directory for the file to ensure the name doesn't clash with any other files.
-        File file = new File(Files.createTempDir(), multipartFile.getOriginalFilename());
+        @SuppressWarnings("UnstableApiUsage")
+        File file = new File(Files.createTempDir(), Objects.requireNonNull(multipartFile.getOriginalFilename()));
         // Write the contents of the file to the new temporary file created.
         try (FileOutputStream stream = new FileOutputStream(file)) {
             stream.write(multipartFile.getBytes());
@@ -77,7 +76,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
 
         // Send the request. We'll fail the call if the image can't be uploaded to keep the table
         // and image provider in sync with one another.
-        uploadGameImageCircuitBreaker.run(() ->
+        imageServerCircuitBreaker.run(() ->
                 restTemplate.postForEntity("http://trak-image-server/v1/images/games", requestEntity, Void.class), throwable -> {
             String errorMessage = messageSource
                     .getMessage("game-image.exception.upload-failed", new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -88,7 +87,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
 
     @Override
     public byte[] downloadGameImage(String filename, long gameId) {
-        return downloadGameImageCircuitBreaker.run(() -> {
+        return imageServerCircuitBreaker.run(() -> {
                     ByteArrayResource resource = restTemplate
                             .getForObject("http://trak-image-server/v1/images/games/{filename}", ByteArrayResource.class, filename);
 
