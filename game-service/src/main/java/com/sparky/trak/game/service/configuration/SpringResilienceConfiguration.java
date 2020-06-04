@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 
 @Configuration
-public class SpringRetryConfiguration {
+public class SpringResilienceConfiguration {
 
     @Bean
     public Customizer<Resilience4JCircuitBreakerFactory> resilience4JCircuitBreakerFactoryCustomizer() {

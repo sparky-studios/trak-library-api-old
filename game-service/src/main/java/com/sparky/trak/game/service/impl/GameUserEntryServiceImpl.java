@@ -72,7 +72,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             String errorMessage = messageSource
                     .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
 
-            throw new EntityNotFoundException((errorMessage));
+            throw new EntityNotFoundException(errorMessage);
         }
 
         return gameUserEntryRepository

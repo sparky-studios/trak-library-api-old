@@ -1,8 +1,9 @@
 package com.sparky.trak.game.server.assembler;
 
-import com.sparky.trak.game.service.dto.GameDto;
-import com.sparky.trak.game.service.dto.GenreDto;
 import com.sparky.trak.game.server.controller.GenreController;
+import com.sparky.trak.game.service.dto.GameDto;
+import com.sparky.trak.game.service.dto.GameInfoDto;
+import com.sparky.trak.game.service.dto.GenreDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
@@ -20,6 +21,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class GenreRepresentationModelAssembler implements SimpleRepresentationModelAssembler<GenreDto> {
 
     private final PagedResourcesAssembler<GameDto> gameDtoPagedResourcesAssembler;
+    private final PagedResourcesAssembler<GameInfoDto> gameInfoDtoPagedResourcesAssembler;
 
     @Override
     public void addLinks(EntityModel<GenreDto> resource) {
@@ -32,6 +34,9 @@ public class GenreRepresentationModelAssembler implements SimpleRepresentationMo
 
             resource.add(linkTo(methodOn(GenreController.class).findGamesByGenreId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                 .withRel("games"));
+
+            resource.add(linkTo(methodOn(GenreController.class).findGameInfosByGenreId(content.getId(), Pageable.unpaged(), gameInfoDtoPagedResourcesAssembler))
+                    .withRel("gameInfos"));
         }
     }
 
