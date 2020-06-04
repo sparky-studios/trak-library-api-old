@@ -4,6 +4,7 @@ import com.sparky.trak.game.domain.*;
 import com.sparky.trak.game.repository.specification.GameSpecification;
 import com.sparky.trak.game.service.dto.DeveloperDto;
 import com.sparky.trak.game.service.dto.GameDto;
+import com.sparky.trak.game.service.dto.GameInfoDto;
 import com.sparky.trak.game.service.dto.PublisherDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

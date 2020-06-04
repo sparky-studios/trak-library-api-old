@@ -25,6 +25,8 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
                     .withSelfRel());
             resource.add(linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
+            resource.add(linkTo(methodOn(GameController.class).findGameInfoByGameId(content.getGameId()))
+                    .withRel("gameInfo"));
             resource.add(linkTo(methodOn(PlatformController.class).findById(content.getPlatformId()))
                     .withRel("platform"));
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))

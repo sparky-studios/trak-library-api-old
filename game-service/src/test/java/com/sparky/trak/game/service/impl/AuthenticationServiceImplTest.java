@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.Assert;
 
 import java.util.Collections;
 
@@ -20,6 +21,46 @@ public class AuthenticationServiceImplTest {
 
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
+
+    @Test
+    public void getToken_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
+        // Arrange
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication())
+                .thenReturn(Mockito.mock(Authentication.class));
+
+        SecurityContextHolder.setContext(securityContext);
+
+        // Act
+        String result = authenticationService.getToken();
+
+        // Assert
+        Assertions.assertEquals("", result, "The token should be false if no username and password token is found.");
+    }
+
+    @Test
+    public void getToken_withAuthenticationUser_returnsAuthenticationUserToken() {
+        // Arrange
+        UsernamePasswordAuthenticationToken token =
+                new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
+
+        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
+        authenticatedUserDto.setToken("token-123");
+
+        token.setDetails(authenticatedUserDto);
+
+        SecurityContext securityContext = Mockito.mock(SecurityContext.class);
+        Mockito.when(securityContext.getAuthentication())
+                .thenReturn(token);
+
+        SecurityContextHolder.setContext(securityContext);
+
+        // Act
+        String result = authenticationService.getToken();
+
+        // Assert
+        Assertions.assertEquals(authenticatedUserDto.getToken(), result, "The token should be equal to the authenticated user token.");
+    }
 
     @Test
     public void isCurrentAuthenticatedUser_withNonUsernamePasswordAuthenticationToken_returnsFalse() {

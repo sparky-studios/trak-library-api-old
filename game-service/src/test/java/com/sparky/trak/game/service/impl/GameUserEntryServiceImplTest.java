@@ -1,9 +1,7 @@
 package com.sparky.trak.game.service.impl;
 
-import com.sparky.trak.game.domain.Platform;
-import com.sparky.trak.game.domain.Game;
-import com.sparky.trak.game.domain.GameUserEntry;
-import com.sparky.trak.game.domain.GameUserEntryStatus;
+import com.sparky.trak.game.domain.*;
+import com.sparky.trak.game.repository.GameRepository;
 import com.sparky.trak.game.repository.GameUserEntryRepository;
 import com.sparky.trak.game.repository.specification.GameUserEntrySpecification;
 import com.sparky.trak.game.service.AuthenticationService;
@@ -36,6 +34,9 @@ public class GameUserEntryServiceImplTest {
 
     @Mock
     private GameUserEntryRepository gameUserEntryRepository;
+
+    @Mock
+    private GameRepository gameRepository;
 
     @Spy
     private final GameUserEntryMapper gameUserEntryMapper = GameUserEntryMapper.INSTANCE;
@@ -164,6 +165,95 @@ public class GameUserEntryServiceImplTest {
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");
+    }
+
+    @Test
+    public void findGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)));
+    }
+
+    @Test
+    public void findGameUserEntriesByGameId_withNoGameUserEntries_returnsEmptyList() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        // Act
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no game user entries are returned.");
+
+        Mockito.verify(gameUserEntryMapper, Mockito.never())
+                .gameUserEntryToGameUserEntryDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void findGamesByGenreId_withMultipleGames_returnsList() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        GameGenreXref gameGenreXref1 = new GameGenreXref();
+        gameGenreXref1.setGame(new Game());
+
+        GameGenreXref gameGenreXref2 = new GameGenreXref();
+        gameGenreXref2.setGame(new Game());
+
+        Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new GameUserEntry(), new GameUserEntry())));
+
+        // Act
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .gameUserEntryToGameUserEntryDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void countGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.countGameUserEntriesByGameId(0L));
+    }
+
+    @Test
+    public void countGameUserEntriesByGameId_withGame_invokesGameUserEntryRepository() {
+        // Arrange
+        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.count(ArgumentMatchers.any()))
+                .thenReturn(0L);
+
+        // Act
+        gameUserEntryService.countGameUserEntriesByGameId(0L);
+
+        // Assert
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .count(ArgumentMatchers.any());
     }
 
     @Test

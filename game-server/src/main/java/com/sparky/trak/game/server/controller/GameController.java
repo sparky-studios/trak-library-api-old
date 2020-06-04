@@ -44,6 +44,7 @@ import java.util.stream.StreamSupport;
 public class GameController {
 
     private final GameService gameService;
+    private final GameInfoService gameInfoService;
     private final GenreService genreService;
     private final PlatformService platformService;
     private final DeveloperService developerService;
@@ -51,6 +52,7 @@ public class GameController {
     private final GameUserEntryService gameUserEntryService;
     private final GameImageService gameImageService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
+    private final GameInfoRepresentationModelAssembler gameInfoRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
     private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
     private final DeveloperRepresentationModelAssembler developerRepresentationModelAssembler;
@@ -109,6 +111,22 @@ public class GameController {
     @GetMapping("/{id}")
     public EntityModel<GameDto> findById(@PathVariable long id) {
         return gameRepresentationModelAssembler.toModel(gameService.findById(id));
+    }
+
+    /**
+     * End-point that will retrieve a {@link GameInfoDto} instance that matches the given Id and convert
+     * it into a consumable HATEOAS response. If a {@link GameInfoDto} instance is found that matches the Id, then
+     * that data is returned with a status of 200, however if the {@link GameInfoDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param id The ID of the {@link GameInfoDto} to retrieve.
+     *
+     * @return The {@link GameInfoDto} that matches the given ID as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/{id}/info")
+    public EntityModel<GameInfoDto> findGameInfoByGameId(@PathVariable long id) {
+        return gameInfoRepresentationModelAssembler.toModel(gameInfoService.findByGameId(id));
     }
 
     /**
@@ -253,6 +271,42 @@ public class GameController {
 
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler.toModel(new PageImpl<>(gameDtos, pageable, count), gameRepresentationModelAssembler, link);
+    }
+
+    /**
+     * End-point that can be used to retrieve a paged result of {@link GameInfoDto} instances, that are filtered by
+     * the provided {@link GameSpecification} which appear as request parameters on the URL. The page and each
+     * {@link GameInfoDto} will be wrapped in a HATEOAS response. If no {@link GameInfoDto} match the given criteria,
+     * an empty HATEOAS page response will be returned.
+     *
+     * If any exceptions are thrown internally, and {@link ApiError} response will be returned with additional
+     * error details.
+     *
+     * @param gameSpecification The filter queries to filter the page by.
+     * @param pageable The size, page and ordering of the {@link GameInfoDto} elements in the page.
+     * @param pagedResourcesAssembler Injected, used to convert the {@link GameInfoDto}s into a {@link PagedModel}.
+     *
+     * @return A {@link PagedModel} containing the {@link GameInfoDto} that match the requested page and criteria.
+     */
+    @AllowedForUser
+    @GetMapping("/info")
+    public PagedModel<EntityModel<GameInfoDto>> findAllGameInfo(GameSpecification gameSpecification,
+                                                                @PageableDefault Pageable pageable,
+                                                                PagedResourcesAssembler<GameInfoDto> pagedResourcesAssembler) {
+        // The self, next and prev links won't include query parameters if not built manually.
+        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+                .toUriString())
+                .withSelfRel();
+
+        // Get the paged data from the service and convert into a list so it can be added to a page object.
+        List<GameInfoDto> gameInfoDtos = StreamSupport.stream(gameInfoService.findAll(gameSpecification, pageable).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Get the total number of entities that match the given criteria, dis-regarding page sizing.
+        long count = gameInfoService.count(gameSpecification);
+
+        // Wrap the page in a HATEOAS response.
+        return pagedResourcesAssembler.toModel(new PageImpl<>(gameInfoDtos, pageable, count), gameInfoRepresentationModelAssembler, link);
     }
 
     /**
