@@ -10,23 +10,17 @@ phases:
       java: openjdk8
   pre_build:
     commands:
-      - echo [INFO] ------------------------------------------------------------------------
       - echo [INFO] Cleaning Trak API `date`
-      - echo [INFO] ------------------------------------------------------------------------
       - mvn clean
   build:
     commands:
-      - echo [INFO] ------------------------------------------------------------------------
       - echo [INFO] Building Trak API `date`
-      - echo [INFO] ------------------------------------------------------------------------
       - mvn compile
-      - mvn test
   post_build:
     commands:
-      - echo [INFO] ------------------------------------------------------------------------
-      - echo [INFO] Completed Trak API `date`
-      - echo [INFO] ------------------------------------------------------------------------
-      - mvn clean test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
+      - echo [INFO] Running Trak API tests `date`
+      - mvn test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
+      - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 
 artifacts:

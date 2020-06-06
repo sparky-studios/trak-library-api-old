@@ -10,6 +10,15 @@ import java.time.LocalDate;
 public class CompanyMapperTest {
 
     @Test
+    public void companyToCompanyDto_withNull_returnsNull() {
+        // Act
+        CompanyDto result = CompanyMapper.INSTANCE.companyToCompanyDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void companyToCompanyDto_withCompany_mapsFields() {
         // Arrange
         Company company = new Company();
@@ -28,6 +37,15 @@ public class CompanyMapperTest {
         Assertions.assertEquals(company.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
         Assertions.assertEquals(company.getFoundedDate(), result.getFoundedDate(), "The mapped founded date does not match the entity.");
         Assertions.assertEquals(company.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void companyDtoToCompany_withNull_returnsNull() {
+        // Act
+        Company result = CompanyMapper.INSTANCE.companyDtoToCompany(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

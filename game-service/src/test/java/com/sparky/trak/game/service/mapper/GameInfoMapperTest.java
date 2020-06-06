@@ -11,6 +11,15 @@ import java.util.Collections;
 public class GameInfoMapperTest {
 
     @Test
+    public void gameToGameInfoDto_withNull_returnsNull() {
+        // Act
+        GameInfoDto result = GameInfoMapper.INSTANCE.gameToGameInfoDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void gameToGameInfoDto_withGame_mapsFields() {
         // Arrange
         Game game = new Game();

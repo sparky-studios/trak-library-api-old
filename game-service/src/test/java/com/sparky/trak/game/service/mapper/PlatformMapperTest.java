@@ -10,6 +10,15 @@ import java.time.LocalDate;
 public class PlatformMapperTest {
 
     @Test
+    public void platformToPlatformDto_withNull_returnsNull() {
+        // Act
+        PlatformDto result = PlatformMapper.INSTANCE.platformToPlatformDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void platformToPlatformDto_withPlatform_mapsFields() {
         // Arrange
         Platform platform = new Platform();
@@ -28,6 +37,15 @@ public class PlatformMapperTest {
         Assertions.assertEquals(platform.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
         Assertions.assertEquals(platform.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
         Assertions.assertEquals(platform.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void platformDtoToPlatform_withNull_returnsNull() {
+        // Act
+        Platform result = PlatformMapper.INSTANCE.platformDtoToPlatform(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

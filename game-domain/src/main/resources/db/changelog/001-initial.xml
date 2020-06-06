@@ -166,7 +166,7 @@
                 columnNames="game_id,platform_id,user_id"
                 constraintName="unq_game_user_entry_game_id_platform_id_user_id" />
 
-        <!-- game_user_entry table -->
+        <!-- game_request table -->
         <createTable tableName="game_request">
             <column name="id" type="bigint" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_request" />
@@ -315,7 +315,42 @@
                 columnNames="game_id"
                 constraintName="unq_game_image_game_id" />
 
+        <!-- Create the game_barcode table -->
+        <createTable tableName="game_barcode">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_barcode" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="barcode" type="varchar(48)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_game_barcode_barcode" />
+            </column>
+            <column name="barcode_type" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_barcode foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_barcode"
+                baseColumnNames="game_id"
+                constraintName="fk_game_barcode_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_barcode"
+                baseColumnNames="platform_id"
+                constraintName="fk_game_barcode_platform_id"
+                referencedTableName="platform"
+                referencedColumnNames="id" />
+
         <rollback>
+            <dropTable tableName="game_barcode" />
             <dropTable tableName="game_image" />
             <dropTable tableName="game_developer_xref" />
             <dropTable tableName="game_publisher_xref" />

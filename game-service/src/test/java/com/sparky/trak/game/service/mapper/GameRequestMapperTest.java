@@ -10,6 +10,15 @@ import java.time.LocalDate;
 public class GameRequestMapperTest {
 
     @Test
+    public void gameRequestToGameRequestDto_withNull_returnsNull() {
+        // Act
+        GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
         // Arrange
         GameRequest gameRequest = new GameRequest();
@@ -30,6 +39,15 @@ public class GameRequestMapperTest {
         Assertions.assertEquals(gameRequest.getCompletedDate(), result.getCompletedDate(), "The mapped completed date does not match the entity.");
         Assertions.assertEquals(gameRequest.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameRequest.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void gameRequestDtoToGameRequest_withNull_returnsNull() {
+        // Act
+        GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
