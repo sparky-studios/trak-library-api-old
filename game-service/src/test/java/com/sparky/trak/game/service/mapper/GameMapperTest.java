@@ -11,6 +11,15 @@ import java.time.LocalDate;
 public class GameMapperTest {
 
     @Test
+    public void gameToGameDto_withNull_returnsNull() {
+        // Act
+        GameDto result = GameMapper.INSTANCE.gameToGameDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void gameToGameDto_withGame_mapsFields() {
         // Arrange
         Game game = new Game();
@@ -31,6 +40,15 @@ public class GameMapperTest {
         Assertions.assertEquals(game.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
         Assertions.assertEquals(game.getAgeRating(), result.getAgeRating(), "The mapped age rating does not match the entity.");
         Assertions.assertEquals(game.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void gameDtoToGame_withNull_returnsNull() {
+        // Act
+        Game result = GameMapper.INSTANCE.gameDtoToGame(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

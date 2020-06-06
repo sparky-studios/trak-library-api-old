@@ -11,6 +11,15 @@ import java.util.Collections;
 public class GameUserEntryMapperTest {
 
     @Test
+    public void gameUserEntryToGameUserEntryDto_withNull_returnsNull() {
+        // Act
+        GameUserEntryDto result = GameUserEntryMapper.INSTANCE.gameUserEntryToGameUserEntryDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void gameUserEntryToGameUserEntryDto_withGameUserEntry_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
@@ -51,6 +60,15 @@ public class GameUserEntryMapperTest {
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");
+    }
+
+    @Test
+    public void gameUserEntryDtpToGameUserEntry_withNull_returnsNull() {
+        // Act
+        GameUserEntry result = GameUserEntryMapper.INSTANCE.gameUserEntryDtoToGameUserEntry(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

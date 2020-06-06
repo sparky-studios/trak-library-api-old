@@ -10,6 +10,15 @@ import java.time.LocalDate;
 public class PublisherMapperTest {
 
     @Test
+    public void publisherToPublisherDto_withNull_returnsNull() {
+        // Act
+        PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void publisherToPublisherDto_withPublisher_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
@@ -28,6 +37,15 @@ public class PublisherMapperTest {
         Assertions.assertEquals(publisher.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
         Assertions.assertEquals(publisher.getFoundedDate(), result.getFoundedDate(), "The mapped founded date does not match the entity.");
         Assertions.assertEquals(publisher.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void publisherDtoToPublisher_withNull_returnsNull() {
+        // Act
+        Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

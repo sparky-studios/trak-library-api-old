@@ -8,6 +8,15 @@ import org.junit.jupiter.api.Test;
 public class GenreMapperTest {
 
     @Test
+    public void genreToGenreDto_withNull_returnsNull() {
+        // Act
+        GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     public void genreToGenreDto_withGenre_mapsFields() {
         // Arrange
         Genre genre = new Genre();
@@ -24,6 +33,15 @@ public class GenreMapperTest {
         Assertions.assertEquals(genre.getName(), result.getName(), "The mapped title does not match the entity.");
         Assertions.assertEquals(genre.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
         Assertions.assertEquals(genre.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+    }
+
+    @Test
+    public void genreDtoToGenre_withNull_returnsNull() {
+        // Act
+        Genre result = GenreMapper.INSTANCE.genreDtoToGenre(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

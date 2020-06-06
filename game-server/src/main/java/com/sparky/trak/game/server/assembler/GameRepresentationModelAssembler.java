@@ -47,6 +47,9 @@ public class GameRepresentationModelAssembler implements SimpleRepresentationMod
 
             resource.add(linkTo(methodOn(GameController.class).findGameUserEntriesByGameId(content.getId(), Pageable.unpaged(), gameUserEntryDtoPagedResourcesAssembler))
                     .withRel("entries"));
+
+            resource.add(linkTo(methodOn(GameController.class).findGameInfoByGameId(content.getId()))
+                    .withRel("info"));
         }
     }
 
