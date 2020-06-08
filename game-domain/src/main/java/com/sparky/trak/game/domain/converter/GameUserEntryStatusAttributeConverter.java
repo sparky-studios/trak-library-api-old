@@ -12,7 +12,7 @@ public class GameUserEntryStatusAttributeConverter implements AttributeConverter
     @Override
     public Short convertToDatabaseColumn(GameUserEntryStatus gameUserEntryStatus) {
         if (gameUserEntryStatus == null) {
-            return GameUserEntryStatus.WISH_LIST.getId();
+            return GameUserEntryStatus.BACKLOG.getId();
         }
 
         return gameUserEntryStatus.getId();
@@ -21,7 +21,7 @@ public class GameUserEntryStatusAttributeConverter implements AttributeConverter
     @Override
     public GameUserEntryStatus convertToEntityAttribute(Short gameUserEntryStatusId) {
         if (gameUserEntryStatusId == null) {
-            return GameUserEntryStatus.WISH_LIST;
+            return GameUserEntryStatus.BACKLOG;
         }
 
         return Stream.of(GameUserEntryStatus.values())

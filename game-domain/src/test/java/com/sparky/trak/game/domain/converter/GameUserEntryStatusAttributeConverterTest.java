@@ -12,7 +12,7 @@ public class GameUserEntryStatusAttributeConverterTest {
         Short result = new GameUserEntryStatusAttributeConverter().convertToDatabaseColumn(null);
 
         // Assert
-        Assertions.assertEquals(GameUserEntryStatus.WISH_LIST.getId(), result, "If null is provided, it should default to the id of WISH_LIST.");
+        Assertions.assertEquals(GameUserEntryStatus.BACKLOG.getId(), result, "If null is provided, it should default to the id of BACKLOG.");
     }
 
     @Test
@@ -30,7 +30,7 @@ public class GameUserEntryStatusAttributeConverterTest {
         GameUserEntryStatus result = new GameUserEntryStatusAttributeConverter().convertToEntityAttribute(null);
 
         // Assert
-        Assertions.assertEquals(GameUserEntryStatus.WISH_LIST, result, "If null is provided, it should default to WISH_LIST.");
+        Assertions.assertEquals(GameUserEntryStatus.BACKLOG, result, "If null is provided, it should default to BACKLOG.");
     }
 
     @Test

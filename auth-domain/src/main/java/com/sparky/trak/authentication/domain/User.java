@@ -47,6 +47,12 @@ public class User {
     @Column(name = "verification_expiry_date")
     private LocalDateTime verificationExpiryDate;
 
+    @Column(name = "recovery_token", length = 30)
+    private String recoveryToken;
+
+    @Column(name = "recovery_token_expiry_date")
+    private LocalDateTime recoveryTokenExpiryDate;
+
     @EqualsAndHashCode.Exclude
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL)
     private Set<UserRoleXref> userRoleXrefs = new HashSet<>();

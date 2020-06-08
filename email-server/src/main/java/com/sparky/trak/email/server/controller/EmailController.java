@@ -40,4 +40,23 @@ public class EmailController {
                                       @RequestParam("verification-code") String verificationCode) {
         emailService.sendVerificationEmail(emailAddress, verificationCode);
     }
+
+    /**
+     * End-point that will dispatch an account recovery email to the given email address. When the service method is invoked
+     * by the end-point, it will verify that the email address matches the currently authenticated user, this is to
+     * prevent the end-point from being used to send emails to random accounts when the user does not have permission
+     * to do so.
+     *
+     * If the email is sent successfully, the end-point will return a 204 response code, otherwise if any issues
+     * occurred a {@link com.sparky.trak.email.service.exception.EmailFailedException} will be thrown.
+     *
+     * @param emailAddress The email address to dispatch the account recovery email to.
+     * @param recoveryToken The randomly generated password of the user to attach to the email.
+     */
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/recovery")
+    public void sendRecoveryEmail(@RequestParam("email-address") String emailAddress,
+                                  @RequestParam("recovery-token") String recoveryToken) {
+        emailService.sendRecoveryEmail(emailAddress, recoveryToken);
+    }
 }

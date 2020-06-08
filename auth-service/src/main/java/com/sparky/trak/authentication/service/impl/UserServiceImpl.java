@@ -9,13 +9,18 @@ import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
 import com.sparky.trak.authentication.service.AuthenticationService;
 import com.sparky.trak.authentication.service.UserService;
 import com.sparky.trak.authentication.service.dto.CheckedResponse;
+import com.sparky.trak.authentication.service.dto.RecoveryRequestDto;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
 import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import com.sparky.trak.authentication.service.event.OnVerificationNeededEvent;
+import com.sparky.trak.authentication.service.event.OnRecoveryNeededEvent;
 import com.sparky.trak.authentication.service.exception.InvalidUserException;
 import com.sparky.trak.authentication.service.mapper.UserMapper;
 import com.sparky.trak.authentication.service.mapper.UserResponseMapper;
 import lombok.RequiredArgsConstructor;
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -109,7 +114,37 @@ public class UserServiceImpl implements UserService {
         applicationEventPublisher
                 .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
 
-        return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user), "");
+        return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user));
+    }
+
+    @Override
+    public CheckedResponse<UserResponseDto> update(RecoveryRequestDto recoveryRequestDto) {
+        Optional<User> optionalUser = userRepository.findByUsername(recoveryRequestDto.getUsername());
+
+        // If the user has provided an incorrect username, return an error message stating it can't be found.
+        if (!optionalUser.isPresent()) {
+            String errorMessage = messageSource
+                    .getMessage("user.error.non-existent-username", new Object[]{recoveryRequestDto.getUsername()}, LocaleContextHolder.getLocale());
+
+            return new CheckedResponse<>(null, errorMessage);
+        }
+
+        User user = optionalUser.get();
+        // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
+        if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(recoveryRequestDto.getRecoveryToken())) {
+            String errorMessage = messageSource
+                    .getMessage("user.error.incorrect-recovery-token", new Object[]{recoveryRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
+
+            return new CheckedResponse<>(null, errorMessage);
+        }
+
+        // Recovery was successful, remove any recovery information and change their password.
+        user.setRecoveryToken(null);
+        user.setRecoveryTokenExpiryDate(null);
+        user.setPassword(passwordEncoder.encode(recoveryRequestDto.getPassword()));
+
+        // No need to re-verify, just return the new information.
+        return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(userRepository.save(user)));
     }
 
     @Override
@@ -137,6 +172,28 @@ public class UserServiceImpl implements UserService {
             userRepository.save(user);
 
             return verificationCode.toString();
+        }
+
+        return "";
+    }
+
+    @Override
+    public String createRecoveryToken(String username) {
+        User user = userRepository.findByUsername(username)
+                .orElse(null);
+
+        if (user != null) {
+            String recoveryToken = new PasswordGenerator().generatePassword(30,
+                    new CharacterRule(EnglishCharacterData.UpperCase, 1),
+                    new CharacterRule(EnglishCharacterData.LowerCase, 1),
+                    new CharacterRule(EnglishCharacterData.Digit, 1));
+
+            user.setRecoveryToken(recoveryToken);
+            user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+
+            userRepository.save(user);
+
+            return recoveryToken;
         }
 
         return "";
@@ -175,6 +232,19 @@ public class UserServiceImpl implements UserService {
         // Resend the verification request to generate a new verification code and email.
         applicationEventPublisher
                 .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
+    }
+
+    @Override
+    public void requestRecovery(String emailAddress) {
+        Optional<User> optionalUser = userRepository.findByEmailAddress(emailAddress);
+        // The user has an email address registered with the system, process the reset request.
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            // Publish a reset password event to send an email.
+            applicationEventPublisher
+                    .publishEvent(new OnRecoveryNeededEvent(this, user.getEmailAddress(), user.getUsername()));
+        }
     }
 
     private User getUserFromUsername(String username) {

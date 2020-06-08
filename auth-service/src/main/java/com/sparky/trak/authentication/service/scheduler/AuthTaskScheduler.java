@@ -52,4 +52,32 @@ public class AuthTaskScheduler {
 
         log.info("---------- Finished scheduled task: Remove expired verification codes on thread: " + currentThread + " ----------");
     }
+
+    /**
+     * Scheduled task that is executed once an hour, at the half-past mark. Its purpose is to remove any recovery tokens
+     * that have expired for users that have not yet completed account recovery. The expiration time for a recovery token is
+     * around 24 hours, depending on when the recovery token was requested. Once a token has expired, the user will have to
+     * request a new one.
+     */
+    @Scheduled(cron = "0 30 * * * *")
+    public void removeExpiredRecoveryTokensScheduledTask() {
+        // Get the name of the current thread that this scheduled task is running on, for debug purposes.
+        String currentThread = Thread.currentThread().getName();
+        log.info("---------- Running scheduled task: Remove expired recovery tokens on thread: " + currentThread + " ----------");
+
+        // Retrieve all of the accounts that have recovery tokens whose expiry date have eclipsed 24 hours..
+        Collection<User> users = userRepository
+                .findByRecoveryTokenExpiryDateBefore(LocalDateTime.now().minusDays(1));
+
+        // Loop through each user that matches the criteria and remove both the expiry date and the recovery token.
+        // A new recovery token won't be automatically generated, the user will have to request a new one.
+        users.forEach(user -> {
+            user.setRecoveryTokenExpiryDate(null);
+            user.setRecoveryToken(null);
+
+            userRepository.save(user);
+        });
+
+        log.info("---------- Finished scheduled task: Remove expired recovery tokens on thread: " + currentThread + " ----------");
+    }
 }

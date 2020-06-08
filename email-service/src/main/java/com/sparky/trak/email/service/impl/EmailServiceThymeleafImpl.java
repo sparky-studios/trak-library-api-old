@@ -49,6 +49,22 @@ public class EmailServiceThymeleafImpl implements EmailService {
         }
     }
 
+    @Override
+    public void sendRecoveryEmail(String emailAddress, String recoveryToken) {
+        // Create the Email template and all the data it needs before sending.
+        EmailDto emailDto = new EmailDto();
+        emailDto.setFrom(fromAddress);
+        emailDto.setTo(emailAddress);
+        emailDto.setSubject(messageSource.getMessage("email.recovery.subject", new Object[] {}, LocaleContextHolder.getLocale()));
+        emailDto.setData(Collections.singletonMap("recoveryToken", recoveryToken));
+
+        try {
+            javaMailSender.send(getMimeMessage(emailDto, "recovery-template"));
+        } catch (Exception e) {
+            throw new EmailFailedException("Failed to send recovery email.", e);
+        }
+    }
+
     private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());

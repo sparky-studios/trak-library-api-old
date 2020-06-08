@@ -27,6 +27,7 @@ public class UserCredentialsConfigurerAdapter extends WebSecurityConfigurerAdapt
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and().csrf().disable().authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth", "/auth/users").permitAll()
+                .antMatchers(HttpMethod.PUT, "/auth/users/recover", "/auth/users").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JwtUsernameAndPasswordAuthenticationFilter(authenticationManager(), objectMapper, jwtConfig))

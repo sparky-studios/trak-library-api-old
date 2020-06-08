@@ -56,4 +56,40 @@ public class AuthTaskSchedulerTest {
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
     }
+
+    @Test
+    public void removeExpiredRecoveryTokensScheduledTask_withNoUsers_doesntMakeChanges() {
+        // Arrange
+        Mockito.when(userRepository.findByRecoveryTokenExpiryDateBefore(ArgumentMatchers.any()))
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        authTaskScheduler.removeExpiredRecoveryTokensScheduledTask();
+
+        // Assert
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void removeExpiredRecoveryTokensScheduledTask_withUsers_removesRecoveryTokenAndExpiryDateAndSaves() {
+        // Arrange
+        User user = Mockito.spy(User.class);
+
+        Mockito.when(userRepository.findByRecoveryTokenExpiryDateBefore(ArgumentMatchers.any()))
+                .thenReturn(Collections.singletonList(user));
+
+        // Act
+        authTaskScheduler.removeExpiredRecoveryTokensScheduledTask();
+
+        // Assert
+        Mockito.verify(user, Mockito.atMostOnce())
+                .setRecoveryTokenExpiryDate(null);
+
+        Mockito.verify(user, Mockito.atMostOnce())
+                .setRecoveryToken(null);
+
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
 }

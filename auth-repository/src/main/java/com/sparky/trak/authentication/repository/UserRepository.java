@@ -14,4 +14,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findByEmailAddress(String emailAddress);
 
     Collection<User> findByVerifiedIsFalseAndVerificationExpiryDateBefore(LocalDateTime expiryDate);
+
+    Collection<User> findByRecoveryTokenExpiryDateBefore(LocalDateTime expiryDate);
 }
