@@ -29,6 +29,8 @@
             </column>
             <column name="verification_code" type="varchar(5)"/>
             <column name="verification_expiry_date" type="datetime"/>
+            <column name="recovery_token" type="varchar(30)"/>
+            <column name="recovery_token_expiry_date" type="datetime"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 

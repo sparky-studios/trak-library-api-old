@@ -8,6 +8,7 @@ import com.sparky.trak.authentication.repository.UserRoleRepository;
 import com.sparky.trak.authentication.repository.UserRoleXrefRepository;
 import com.sparky.trak.authentication.service.AuthenticationService;
 import com.sparky.trak.authentication.service.dto.CheckedResponse;
+import com.sparky.trak.authentication.service.dto.RecoveryRequestDto;
 import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
 import com.sparky.trak.authentication.service.dto.UserResponseDto;
 import com.sparky.trak.authentication.service.exception.InvalidUserException;
@@ -214,6 +215,115 @@ public class UserServiceImplTest {
     }
 
     @Test
+    public void update_withNonExistentUser_returnsCheckedResponseWithError() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("user.error.non-existent-username"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("user-error");
+
+        RecoveryRequestDto recoveryRequestDto = new RecoveryRequestDto();
+        recoveryRequestDto.setUsername("username");
+
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
+
+        // Assert
+        Assertions.assertNull(result.getData(), "There should be no user data if the username wasn't found.");
+        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
+        Assertions.assertTrue(result.isError(), "The response should be an error for a username that doesn't exist.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void update_withNullUserRecoveryToken_returnsCheckedResponseWithError() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("user.error.incorrect-recovery-token"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("user-error");
+
+        RecoveryRequestDto recoveryRequestDto = new RecoveryRequestDto();
+        recoveryRequestDto.setUsername("username");
+        recoveryRequestDto.setRecoveryToken("recovery");
+
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
+
+        // Assert
+        Assertions.assertNull(result.getData(), "There should be no user data if the user has no recovery token.");
+        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
+        Assertions.assertTrue(result.isError(), "The response should be an error if the user has no recovery token.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void update_withIncorrectRecoveryToken_returnsCheckedResponseWithError() {
+        // Arrange
+        User user = new User();
+        user.setRecoveryToken("recovery-2");
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("user.error.incorrect-recovery-token"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("user-error");
+
+        RecoveryRequestDto recoveryRequestDto = new RecoveryRequestDto();
+        recoveryRequestDto.setUsername("username");
+        recoveryRequestDto.setRecoveryToken("recovery");
+
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
+
+        // Assert
+        Assertions.assertNull(result.getData(), "There should be no user data if the recovery token doesn't match.");
+        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
+        Assertions.assertTrue(result.isError(), "The response should be an error if the recovery token doesn't match.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void update_withValidRecoveryToken_savesUserAndReturnsValidCheckedResponse() {
+        // Arrange
+        User user = new User();
+        user.setRecoveryToken("recovery");
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(user);
+
+        Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString()))
+                .thenReturn("password");
+
+        RecoveryRequestDto recoveryRequestDto = new RecoveryRequestDto();
+        recoveryRequestDto.setUsername("username");
+        recoveryRequestDto.setRecoveryToken("recovery");
+        recoveryRequestDto.setPassword("password");
+
+        // Act
+        CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
+
+        // Assert
+        Assertions.assertNotNull(result, "The response of the updarte should not be null.");
+        Assertions.assertEquals("", result.getErrorMessage(), "There should be no error message for a valid response.");
+        Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
+
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
     public void findByUsername_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
@@ -288,6 +398,37 @@ public class UserServiceImplTest {
 
         // Assert
         Assertions.assertEquals(5, result.length(), "The token should contain 5 characters.");
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void createRecoveryToken_withNullUser_returnsEmptyString() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Act
+        String result = userService.createRecoveryToken("username");
+
+        // Assert
+        Assertions.assertEquals("", result, "The recovery token should be empty if no user is found.");
+    }
+
+    @Test
+    public void createRecoveryToken_withExistingUser_savesAndReturnsToken() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
+        // Act
+        String result = userService.createRecoveryToken("username");
+
+        // Assert
+        Assertions.assertEquals(30, result.length(), "The recovery token should contain 30 characters.");
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
     }
@@ -469,6 +610,34 @@ public class UserServiceImplTest {
 
         // Act
         userService.reverify("username");
+
+        // Assert
+        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
+                .publishEvent(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void requestRecovery_withNonExistentUser_doesntPublishOnRecoveryNeededEvent() {
+        // Arrange
+        Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Act
+        userService.requestRecovery("email");
+
+        // Assert
+        Mockito.verify(applicationEventPublisher, Mockito.never())
+                .publishEvent(ArgumentMatchers.any());
+    }
+
+    @Test
+    public void requestRecovery_withUser_publishesOnRecoveryNeededEvent() {
+        // Arrange
+        Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        // Act
+        userService.requestRecovery("email");
 
         // Assert
         Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())

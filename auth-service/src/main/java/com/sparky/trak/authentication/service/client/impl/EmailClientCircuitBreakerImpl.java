@@ -21,10 +21,12 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     private CircuitBreaker sendVerificationEmailCircuitBreaker;
+    private CircuitBreaker sendRecoveryEmailCircuitBreaker;
 
     @PostConstruct
     private void postConstruct() {
         sendVerificationEmailCircuitBreaker = circuitBreakerFactory.create("send-verification-email");
+        sendRecoveryEmailCircuitBreaker = circuitBreakerFactory.create("send-recovery-email");
     }
 
     @Override
@@ -32,6 +34,15 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
         String url = "http://trak-email-server/v1/emails/verification?email-address={emailAddress}&verification-code={verificationCode}";
         sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, null, Void.class, emailAddress, verificationCode), throwable -> {
             log.error("failed to send verification email", throwable);
+            return null;
+        });
+    }
+
+    @Override
+    public void sendRecoveryEmail(String emailAddress, String recoveryToken) {
+        String url = "http://trak-email-server/v1/emails/recovery?email-address={emailAddress}&recovery-token={recoveryToken}";
+        sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, null, Void.class, emailAddress, recoveryToken), throwable -> {
+            log.error("failed to send account recovery email", throwable);
             return null;
         });
     }

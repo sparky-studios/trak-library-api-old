@@ -3,10 +3,7 @@ package com.sparky.trak.authentication.server.controller;
 import com.sparky.trak.authentication.server.annotation.AllowedForUser;
 import com.sparky.trak.authentication.server.exception.ApiError;
 import com.sparky.trak.authentication.service.UserService;
-import com.sparky.trak.authentication.service.dto.CheckedResponse;
-import com.sparky.trak.authentication.service.dto.RegistrationRequestDto;
-import com.sparky.trak.authentication.service.dto.UserDto;
-import com.sparky.trak.authentication.service.dto.UserResponseDto;
+import com.sparky.trak.authentication.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,6 +51,25 @@ public class UserController {
     @PostMapping("/users")
     public CheckedResponse<UserResponseDto> save(@Validated @RequestBody RegistrationRequestDto registrationRequestDto) {
         return userService.save(registrationRequestDto);
+    }
+
+    /**
+     * End-point that is used when needing to recovery an existing {@link UserDto}. This method will check that the
+     * recovery information provided is in a valid state, before passing the information off to the {@link UserService#update(RecoveryRequestDto)}
+     * method. The method will return a successful response if the {@link RecoveryRequestDto} information
+     * provided points to a valid account and contains the correct recovery token, if successful user information will
+     * be returned a {@link UserResponseDto}.
+     *
+     * If the method fails to update an existing {@link UserDto} or contains invalid recovery information, a
+     * {@link ApiError} will be returned containing the error details.
+     *
+     * @param recoveryRequestDto The recovery information to try and update a {@link UserDto} with.
+     *
+     * @return A {@link UserResponseDto} instance which represents some bare-bones information about the {@link UserDto}.
+     */
+    @PutMapping("/users")
+    public CheckedResponse<UserResponseDto> update(@Validated @RequestBody RecoveryRequestDto recoveryRequestDto) {
+        return userService.update(recoveryRequestDto);
     }
 
     /**
@@ -109,5 +125,23 @@ public class UserController {
     @PutMapping("/users/{username}/reverify")
     public void reVerify(@PathVariable String username) {
         userService.reverify(username);
+    }
+
+    /**
+     * End-point that is used when a user has forgotten password and requests for their account to be recovered. Recovery involves
+     * generating a recovery token for the given user and emailing their token to the specified email address, if it is registered
+     * within the system. The recovery token is assigned to the user that matches the email address and is assigned for 24 hours to
+     * aid in recovery. If the token has not been used within this time, it is removed and the user will have to request an additional
+     * token.
+     *
+     * As no authentication is available at this time, this URL can be accessed anonymously. However, it cannot be used in abuse
+     * to send email addresses to random accounts, the email address must be registered within the system to receive an email.
+     *
+     * @param emailAddress The email address of the {@link UserDto} to generate a recovery token for.
+     */
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/users/recover")
+    public void requestRecovery(@RequestParam("email-address") String emailAddress) {
+        userService.requestRecovery(emailAddress);
     }
 }

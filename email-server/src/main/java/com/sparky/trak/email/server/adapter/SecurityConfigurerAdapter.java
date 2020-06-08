@@ -29,6 +29,7 @@ public class SecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JwtFilter(jwtConfig), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.PUT, "/v1/emails/verification").anonymous()
+                .antMatchers(HttpMethod.PUT, "/v1/emails/recovery").anonymous()
                 .anyRequest()
                 .authenticated();
     }

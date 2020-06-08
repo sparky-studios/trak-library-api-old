@@ -7,11 +7,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public enum GameUserEntryStatus {
 
-    WISH_LIST((short)0),
-    BACKLOG((short)1),
-    IN_PROGRESS((short)2),
-    COMPLETED((short)3),
-    DROPPED((short)4);
+    BACKLOG((short)0),
+    IN_PROGRESS((short)1),
+    COMPLETED((short)2),
+    DROPPED((short)3);
 
     private final short id;
 }
