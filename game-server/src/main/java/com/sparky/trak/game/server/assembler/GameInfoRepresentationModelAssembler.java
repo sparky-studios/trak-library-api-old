@@ -28,7 +28,7 @@ public class GameInfoRepresentationModelAssembler implements SimpleRepresentatio
 
         // Only add content if a valid model has been provided.
         if (content != null) {
-            resource.add(linkTo(methodOn(GameController.class).findById(content.getId()))
+            resource.add(linkTo(methodOn(GameController.class).findGameInfoByGameId(content.getId()))
                     .withSelfRel());
 
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getId()))
