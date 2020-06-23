@@ -5,6 +5,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "game-request")
@@ -17,7 +18,7 @@ public class GameRequestDto {
 
     private boolean completed;
 
-    private LocalDate completedDate;
+    private LocalDateTime completedDate;
 
     private long userId;
 

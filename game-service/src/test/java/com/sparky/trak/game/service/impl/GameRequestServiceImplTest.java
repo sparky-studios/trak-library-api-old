@@ -22,6 +22,7 @@ import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -131,7 +132,7 @@ public class GameRequestServiceImplTest {
         gameRequest.setId(1L);
         gameRequest.setTitle("test-title");
         gameRequest.setCompleted(true);
-        gameRequest.setCompletedDate(LocalDate.now());
+        gameRequest.setCompletedDate(LocalDateTime.now());
         gameRequest.setUserId(2L);
         gameRequest.setVersion(3L);
 

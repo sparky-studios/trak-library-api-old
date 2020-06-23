@@ -4,6 +4,7 @@ import com.sparky.trak.game.domain.GameRequest;
 import com.sparky.trak.game.repository.specification.GameRequestSpecification;
 import com.sparky.trak.game.service.dto.GameRequestDto;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 
 import javax.json.JsonMergePatch;
 
@@ -92,6 +93,17 @@ public interface GameRequestService {
      * @throws NullPointerException Thrown if the {@link GameRequestDto} argument provided is null.
      */
     GameRequestDto update(GameRequestDto gameRequestDto);
+
+    /**
+     * Given a {@link GameRequestDto} instance, the service will attempt to complete the associated {@link GameRequestDto} and send a notification
+     * to the user that initially sent the request. Completion and notifications will only occur for a {@link GameRequestDto} that isn't already
+     * marked as completed.
+     *
+     * It is assumed that the {@link GameRequestDto} instance being passed in is valid and not equal to <code>null</code>.
+     *
+     * @param gameRequestDto The {@link GameRequestDto} to complete and send a notification against.
+     */
+    void complete(@NonNull GameRequestDto gameRequestDto);
 
     /**
      * Given a {@link JsonMergePatch} which will contain JSON information pertaining to a {@link GameRequestDto}, this method will attempt to retrieve
