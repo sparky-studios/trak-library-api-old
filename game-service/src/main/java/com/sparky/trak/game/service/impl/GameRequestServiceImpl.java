@@ -6,6 +6,7 @@ import com.sparky.trak.game.repository.specification.GameRequestSpecification;
 import com.sparky.trak.game.service.AuthenticationService;
 import com.sparky.trak.game.service.GameRequestService;
 import com.sparky.trak.game.service.PatchService;
+import com.sparky.trak.game.service.client.NotificationClient;
 import com.sparky.trak.game.service.dto.GameRequestDto;
 import com.sparky.trak.game.service.exception.InvalidUserException;
 import com.sparky.trak.game.service.mapper.GameRequestMapper;
@@ -13,11 +14,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -30,6 +33,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     private final AuthenticationService authenticationService;
     private final MessageSource messageSource;
     private final PatchService patchService;
+    private final NotificationClient notificationClient;
 
     @Override
     public GameRequestDto save(GameRequestDto gameRequestDto) {
@@ -95,6 +99,28 @@ public class GameRequestServiceImpl implements GameRequestService {
         }
 
         return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(gameRequestDto)));
+    }
+
+    @Override
+    public void complete(@NonNull GameRequestDto gameRequestDto) {
+        // Only complete the request if it's not already flagged as completed.
+        if (!gameRequestDto.isCompleted()) {
+            gameRequestDto.setCompleted(true);
+            gameRequestDto.setCompletedDate(LocalDateTime.now());
+
+            // Save to the underlying persistence layer.
+            gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(gameRequestDto));
+
+            // Grab the localized text for the notification.
+            String title = messageSource
+                    .getMessage("game-request.notification.complete.title", new Object[]{}, LocaleContextHolder.getLocale());
+
+            String content = messageSource
+                    .getMessage("game-request.notification.complete.content", new Object[] {gameRequestDto.getTitle()}, LocaleContextHolder.getLocale());
+
+            // Dispatch the notification.
+            notificationClient.send(gameRequestDto.getUserId(), title, content);
+        }
     }
 
     @Override

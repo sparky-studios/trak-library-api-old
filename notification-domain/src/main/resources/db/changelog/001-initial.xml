@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <changeSet author="Benjamin Carter" id="001">
+        <comment>
+            Create the initial database structure for the notification server.
+        </comment>
+
+        <!-- Create the auth_user table -->
+        <createTable tableName="mobile_device_link">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_mobile_device_link" />
+            </column>
+            <column name="user_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="device_guid" type="varchar(36)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="linked_date" type="datetime">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="endpoint_arn" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- auth_user unique constraints -->
+        <addUniqueConstraint
+                tableName="mobile_device_link"
+                columnNames="user_id,device_guid,token"
+                constraintName="unq_mobile_device_link_user_id_device_guid_token" />
+
+        <rollback>
+            <dropTable tableName="mobile_device_link" />
+        </rollback>
+
+    </changeSet>
+</databaseChangeLog>

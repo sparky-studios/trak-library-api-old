@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class GameRequestMapperTest {
 
@@ -25,7 +26,7 @@ public class GameRequestMapperTest {
         gameRequest.setId(5L);
         gameRequest.setTitle("test-game-request");
         gameRequest.setCompleted(true);
-        gameRequest.setCompletedDate(LocalDate.now());
+        gameRequest.setCompletedDate(LocalDateTime.now());
         gameRequest.setUserId(3L);
         gameRequest.setVersion(2L);
 
@@ -56,7 +57,7 @@ public class GameRequestMapperTest {
         GameRequestDto gameRequestDto = new GameRequestDto();
         gameRequestDto.setId(5L);
         gameRequestDto.setCompleted(true);
-        gameRequestDto.setCompletedDate(LocalDate.now());
+        gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(3L);
         gameRequestDto.setVersion(2L);
 

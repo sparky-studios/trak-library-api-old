@@ -58,6 +58,10 @@
         <module>email-server</module>
         <module>image-service</module>
         <module>image-server</module>
+        <module>notification-domain</module>
+        <module>notification-repository</module>
+        <module>notification-service</module>
+        <module>notification-server</module>
     </modules>
 
     <repositories>

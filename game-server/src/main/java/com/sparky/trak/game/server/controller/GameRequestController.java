@@ -1,6 +1,7 @@
 package com.sparky.trak.game.server.controller;
 
 import com.sparky.trak.game.repository.specification.GameRequestSpecification;
+import com.sparky.trak.game.server.annotation.AllowedForAdmin;
 import com.sparky.trak.game.server.annotation.AllowedForUser;
 import com.sparky.trak.game.server.assembler.GameRequestRepresentationModelAssembler;
 import com.sparky.trak.game.server.exception.ApiError;
@@ -44,7 +45,6 @@ public class GameRequestController {
 
     private final GameRequestService gameRequestService;
     private final GameRequestRepresentationModelAssembler gameRequestRepresentationModelAssembler;
-    private final MessageSource messageSource;
 
     /**
      * End-point that will attempt to save the given {@link GameRequestDto} request body to the underlying
@@ -133,6 +133,28 @@ public class GameRequestController {
     @PutMapping
     public EntityModel<GameRequestDto> update(@Validated @RequestBody GameRequestDto gameRequestDto) {
         return gameRequestRepresentationModelAssembler.toModel(gameRequestService.update(gameRequestDto));
+    }
+
+    /**
+     * End-point that is used to complete the {@link GameRequestDto} that is associated with the given ID. When a {@link GameRequestDto}
+     * is completed, the completed value is set to true and the completion date is set to when this end-point was invoked.
+     * If the {@link GameRequestDto} is successfully completed, a push notification is sent to the user that made the
+     * initial request. If the {@link GameRequestDto} that is associated with the given ID is already completed, it is
+     * not completed again and no push notifications are sent.
+     *
+     * It should be noted that the ID should match an existing {@link GameRequestDto} instance, if not an exception will be thrown
+     * and an {@link ApiError} will be returned.
+     *
+     * As requests send push notifications, it is only available to users who have elevated admin privileges. If any issues
+     * occur during completion, an {@link ApiError} will be returned with additional exception details.
+     *
+     * @param id The ID of the {@link GameRequestDto} to complete.
+     */
+    @AllowedForAdmin
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{id}/complete")
+    public void complete(@PathVariable long id) {
+        gameRequestService.complete(gameRequestService.findById(id));
     }
 
     /**

@@ -15,7 +15,7 @@ public class MessageConfig {
     @Bean
     public MessageSource messageSource() {
         ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
-        reloadableResourceBundleMessageSource.setBasenames("classpath:i18n/exception", "classpath:i18n/validation");
+        reloadableResourceBundleMessageSource.setBasenames("classpath:i18n/exception", "classpath:i18n/validation", "classpath:i18n/messages");
         reloadableResourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
 
         return reloadableResourceBundleMessageSource;

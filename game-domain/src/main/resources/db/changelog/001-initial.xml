@@ -177,7 +177,7 @@
             <column name="completed" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false"/>
             </column>
-            <column name="completed_date" type="date"/>
+            <column name="completed_date" type="datetime"/>
             <column name="user_id" type="bigint">
                 <constraints nullable="false" />
             </column>

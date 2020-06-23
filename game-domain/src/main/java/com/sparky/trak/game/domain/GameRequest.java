@@ -3,7 +3,7 @@ package com.sparky.trak.game.domain;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -22,7 +22,7 @@ public class GameRequest {
     private boolean completed;
 
     @Column(name = "completed_date")
-    private LocalDate completedDate;
+    private LocalDateTime completedDate;
 
     @Column(name = "user_id", nullable = false, updatable = false)
     private long userId;
