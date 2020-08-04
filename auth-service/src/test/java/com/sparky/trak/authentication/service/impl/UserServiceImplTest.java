@@ -315,7 +315,7 @@ public class UserServiceImplTest {
         CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
 
         // Assert
-        Assertions.assertNotNull(result, "The response of the updarte should not be null.");
+        Assertions.assertNotNull(result, "The response of the update should not be null.");
         Assertions.assertEquals("", result.getErrorMessage(), "There should be no error message for a valid response.");
         Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
 
