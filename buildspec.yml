@@ -32,4 +32,5 @@ artifacts:
     - game-server/target/game-server-1.0-SNAPSHOT.jar
     - gateway-server/target/gateway-server-1.0-SNAPSHOT.jar
     - image-server/target/image-server-1.0-SNAPSHOT.jar
+    - notification-server/target/notification-server-1.0-SNAPSHOT.jar
   discard-paths: yes
