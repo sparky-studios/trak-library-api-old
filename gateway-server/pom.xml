@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.sparky.trak</groupId>
+        <groupId>com.traklibrary</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sparky.trak.gateway</groupId>
+    <groupId>com.traklibrary.gateway</groupId>
     <artifactId>gateway-server</artifactId>
     <name>Trak API Gateway Server</name>
 
