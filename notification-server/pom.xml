@@ -4,12 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.sparky.trak</groupId>
+        <groupId>com.traklibrary</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.sparky.trak.notification</groupId>
+    <groupId>com.traklibrary.notification</groupId>
     <artifactId>notification-server</artifactId>
     <name>Trak API Notification Server</name>
 
@@ -40,7 +40,7 @@
         </dependency>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.sparky.trak.notification</groupId>
+            <groupId>com.traklibrary.notification</groupId>
             <artifactId>notification-service</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
