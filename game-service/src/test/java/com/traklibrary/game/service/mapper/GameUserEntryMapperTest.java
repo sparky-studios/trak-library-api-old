@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 
-public class GameUserEntryMapperTest {
+class GameUserEntryMapperTest {
 
     @Test
-    public void gameUserEntryToGameUserEntryDto_withNull_returnsNull() {
+    void gameUserEntryToGameUserEntryDto_withNull_returnsNull() {
         // Act
         GameUserEntryDto result = GameUserEntryMapper.INSTANCE.gameUserEntryToGameUserEntryDto(null);
 
@@ -20,7 +20,7 @@ public class GameUserEntryMapperTest {
     }
 
     @Test
-    public void gameUserEntryToGameUserEntryDto_withGameUserEntry_mapsFields() {
+    void gameUserEntryToGameUserEntryDto_withGameUserEntry_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setName("publisher-name");
@@ -63,7 +63,7 @@ public class GameUserEntryMapperTest {
     }
 
     @Test
-    public void gameUserEntryDtpToGameUserEntry_withNull_returnsNull() {
+    void gameUserEntryDtpToGameUserEntry_withNull_returnsNull() {
         // Act
         GameUserEntry result = GameUserEntryMapper.INSTANCE.gameUserEntryDtoToGameUserEntry(null);
 
@@ -72,7 +72,7 @@ public class GameUserEntryMapperTest {
     }
 
     @Test
-    public void gameUserEntryDtoToGameUserEntry_withGameUserEntryDto_mapsFields() {
+    void gameUserEntryDtoToGameUserEntry_withGameUserEntryDto_mapsFields() {
         // Arrange
         GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
         gameUserEntryDto.setId(5L);

@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class DeveloperMapperTest {
+class DeveloperMapperTest {
 
     @Test
-    public void developerToDeveloperDto_withNull_returnsNull() {
+    void developerToDeveloperDto_withNull_returnsNull() {
         // Act
         DeveloperDto result = DeveloperMapper.INSTANCE.developerToDeveloperDto(null);
 
@@ -19,7 +19,7 @@ public class DeveloperMapperTest {
     }
 
     @Test
-    public void developerToDeveloperDto_withDeveloper_mapsFields() {
+    void developerToDeveloperDto_withDeveloper_mapsFields() {
         // Arrange
         Developer developer = new Developer();
         developer.setId(5L);
@@ -40,7 +40,7 @@ public class DeveloperMapperTest {
     }
 
     @Test
-    public void developerDtoToDeveloper_withNull_returnsNull() {
+    void developerDtoToDeveloper_withNull_returnsNull() {
         // Act
         Developer result = DeveloperMapper.INSTANCE.developerDtoToDeveloper(null);
 
@@ -49,7 +49,7 @@ public class DeveloperMapperTest {
     }
 
     @Test
-    public void developerDtoToDeveloper_withDeveloperDto_mapsFields() {
+    void developerDtoToDeveloper_withDeveloperDto_mapsFields() {
         // Arrange
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setId(5L);

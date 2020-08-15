@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDate;
 import java.util.Collections;
 
-public class GameInfoMapperTest {
+class GameInfoMapperTest {
 
     @Test
-    public void gameToGameInfoDto_withNull_returnsNull() {
+    void gameToGameInfoDto_withNull_returnsNull() {
         // Act
         GameInfoDto result = GameInfoMapper.INSTANCE.gameToGameInfoDto(null);
 
@@ -20,7 +20,7 @@ public class GameInfoMapperTest {
     }
 
     @Test
-    public void gameToGameInfoDto_withGame_mapsFields() {
+    void gameToGameInfoDto_withGame_mapsFields() {
         // Arrange
         Game game = new Game();
         game.setId(5L);

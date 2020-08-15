@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class PlatformServiceImplTest {
+class PlatformServiceImplTest {
 
     @Mock
     private PlatformRepository platformRepository;
@@ -53,13 +53,13 @@ public class PlatformServiceImplTest {
     private PlatformServiceImpl platformService;
 
     @Test
-    public void save_withNullPlatformDto_throwsNullPointerException() {
+    void save_withNullPlatformDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> platformService.save(null));
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -72,7 +72,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void save_withNewPlatformDto_savesPlatformDto() {
+    void save_withNewPlatformDto_savesPlatformDto() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -89,7 +89,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -102,7 +102,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findById_withValidPlatform_returnsPlatformDto() {
+    void findById_withValidPlatform_returnsPlatformDto() {
         // Arrange
         Platform platform = new Platform();
         platform.setId(1L);
@@ -129,7 +129,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void findPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -142,7 +142,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findPlatformsByGameId_withNoPlatforms_returnsEmptyList() {
+    void findPlatformsByGameId_withNoPlatforms_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -162,7 +162,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findPlatformsByGameId_withPlatforms_returnsList() {
+    void findPlatformsByGameId_withPlatforms_returnsList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -195,13 +195,13 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> platformService.findAll(Mockito.mock(PlatformSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoPlatforms_returnsEmptyList() {
+    void findAll_withNoPlatforms_returnsEmptyList() {
         // Arrange
         Mockito.when(platformRepository.findAll(ArgumentMatchers.any(PlatformSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -218,7 +218,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void findAll_withPlatforms_returnsPlatformsAsPlatformDtos() {
+    void findAll_withPlatforms_returnsPlatformsAsPlatformDtos() {
         // Arrange
         Page<Platform> platforms = new PageImpl<>(Arrays.asList(new Platform(), new Platform()));
 
@@ -237,13 +237,13 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void count_withNullPlatformSpecification_throwsNullPointerException() {
+    void count_withNullPlatformSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> platformService.count(null));
     }
 
     @Test
-    public void count_withPlatformSpecification_invokesCount() {
+    void count_withPlatformSpecification_invokesCount() {
         // Arrange
         Mockito.when(platformRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -257,13 +257,13 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void update_withNullPlatformDto_throwsNullPointerException() {
+    void update_withNullPlatformDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> platformService.update(null));
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -276,7 +276,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void update_withExistingPlatformDto_updatesPlatformDto() {
+    void update_withExistingPlatformDto_updatesPlatformDto() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -293,7 +293,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void patch_withNoPlatformMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoPlatformMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -306,7 +306,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void patch_withValidId_savesPlatform() {
+    void patch_withValidId_savesPlatform() {
         // Arrange
         Mockito.when(platformRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new Platform()));
@@ -326,7 +326,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentId_throwsEntityNotFoundException() {
+    void delete_withNonExistentId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -336,7 +336,7 @@ public class PlatformServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);

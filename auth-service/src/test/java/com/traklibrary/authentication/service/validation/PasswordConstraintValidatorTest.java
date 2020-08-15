@@ -7,10 +7,10 @@ import org.mockito.Mockito;
 
 import javax.validation.ConstraintValidatorContext;
 
-public class PasswordConstraintValidatorTest {
+class PasswordConstraintValidatorTest {
 
     @Test
-    public void isValid_withPasswordLessThan8Characters_returnsFalse() {
+    void isValid_withPasswordLessThan8Characters_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -26,7 +26,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withPasswordMoreThan30Characters_returnsFalse() {
+    void isValid_withPasswordMoreThan30Characters_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -42,7 +42,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withPasswordWithNoUppercase_returnsFalse() {
+    void isValid_withPasswordWithNoUppercase_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -58,7 +58,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withPasswordWithNoLowercase_returnsFalse() {
+    void isValid_withPasswordWithNoLowercase_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -74,7 +74,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withPasswordWithNoNumbers_returnsFalse() {
+    void isValid_withPasswordWithNoNumbers_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -90,7 +90,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withPasswordWithWhitespace_returnsFalse() {
+    void isValid_withPasswordWithWhitespace_returnsFalse() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))
@@ -106,7 +106,7 @@ public class PasswordConstraintValidatorTest {
     }
 
     @Test
-    public void isValid_withValidPassword_returnsTrue() {
+    void isValid_withValidPassword_returnsTrue() {
         // Arrange
         ConstraintValidatorContext constraintValidatorContextMock = Mockito.mock(ConstraintValidatorContext.class);
         Mockito.when(constraintValidatorContextMock.buildConstraintViolationWithTemplate(ArgumentMatchers.anyString()))

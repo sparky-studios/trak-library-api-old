@@ -19,7 +19,7 @@ import java.util.Collections;
 import java.util.Locale;
 
 @ExtendWith(MockitoExtension.class)
-public class NotificationServiceSnsImplTest {
+class NotificationServiceSnsImplTest {
 
     @Mock
     private MobileDeviceLinkRepository mobileDeviceLinkRepository;
@@ -34,7 +34,7 @@ public class NotificationServiceSnsImplTest {
     private NotificationServiceSnsImpl notificationService;
 
     @Test
-    public void send_withEmptyMobileDeviceLinks_doesntPublishNotifications() {
+    void send_withEmptyMobileDeviceLinks_doesntPublishNotifications() {
         // Arrange
         Mockito.when(mobileDeviceLinkRepository.findAllByUserId(ArgumentMatchers.anyLong()))
                 .thenReturn(Collections.emptyList());
@@ -48,7 +48,7 @@ public class NotificationServiceSnsImplTest {
     }
 
     @Test
-    public void send_withErroneousPublishRequest_throwsNotificationException() {
+    void send_withErroneousPublishRequest_throwsNotificationException() {
         // Arrange
         MobileDeviceLink mobileDeviceLink = new MobileDeviceLink();
         mobileDeviceLink.setEndpointArn("endpoint-arn");
@@ -68,7 +68,7 @@ public class NotificationServiceSnsImplTest {
     }
 
     @Test
-    public void send_withValidMobileDeviceLinks_invokesPublish() {
+    void send_withValidMobileDeviceLinks_invokesPublish() {
         // Arrange
         MobileDeviceLink mobileDeviceLink1 = new MobileDeviceLink();
         mobileDeviceLink1.setEndpointArn("endpoint-arn-1");

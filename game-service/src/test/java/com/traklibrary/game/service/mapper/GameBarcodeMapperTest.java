@@ -6,10 +6,10 @@ import com.traklibrary.game.service.dto.GameBarcodeDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GameBarcodeMapperTest {
+class GameBarcodeMapperTest {
 
     @Test
-    public void gameBarcodeToGameBarcodeDto_withNull_returnsNull() {
+    void gameBarcodeToGameBarcodeDto_withNull_returnsNull() {
         // Act
         GameBarcodeDto result = GameBarcodeMapper.INSTANCE.gameBarcodeToGameBarcodeDto(null);
 
@@ -18,7 +18,7 @@ public class GameBarcodeMapperTest {
     }
 
     @Test
-    public void gameBarcodeToGameBarcodeDto_withGameBarcode_mapsFields() {
+    void gameBarcodeToGameBarcodeDto_withGameBarcode_mapsFields() {
         // Arrange
         GameBarcode gameBarcode = new GameBarcode();
         gameBarcode.setId(5L);

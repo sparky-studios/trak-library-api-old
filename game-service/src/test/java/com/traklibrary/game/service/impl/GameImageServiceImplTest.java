@@ -21,7 +21,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class GameImageServiceImplTest {
+class GameImageServiceImplTest {
 
     @Mock
     private GameImageRepository gameImageRepository;
@@ -36,7 +36,7 @@ public class GameImageServiceImplTest {
     private GameImageServiceImpl gameImageService;
 
     @Test
-    public void upload_withExistingGameImage_throwsEntityExistsException() {
+    void upload_withExistingGameImage_throwsEntityExistsException() {
         // Arrange
         Mockito.when(gameImageRepository.existsByGameId(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -49,7 +49,7 @@ public class GameImageServiceImplTest {
     }
 
     @Test
-    public void upload_withNewGameImage_invokesSaveAndImageClientUpload() {
+    void upload_withNewGameImage_invokesSaveAndImageClientUpload() {
         // Arrange
         Mockito.when(gameImageRepository.existsByGameId(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -76,7 +76,7 @@ public class GameImageServiceImplTest {
     }
 
     @Test
-    public void download_withNonExistentGameImage_throwsEntityNotFoundException() {
+    void download_withNonExistentGameImage_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameImageRepository.findByGameId(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -89,7 +89,7 @@ public class GameImageServiceImplTest {
     }
 
     @Test
-    public void download_withValidGameImage_invokesImageClientDownload() {
+    void download_withValidGameImage_invokesImageClientDownload() {
         // Arrange
         byte[] imageData = new byte[] { 'a', 'b' };
 

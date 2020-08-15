@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-public class UserMapperTest {
+class UserMapperTest {
 
     @Test
-    public void userToUserDto_withUser_mapsFields() {
+    void userToUserDto_withUser_mapsFields() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setId(1L);
@@ -50,7 +50,7 @@ public class UserMapperTest {
     }
 
     @Test
-    public void userDtoToUser_withUserDto_mapsFields() {
+    void userDtoToUser_withUserDto_mapsFields() {
         // Arrange
         UserDto userDto = new UserDto();
         userDto.setId(5L);

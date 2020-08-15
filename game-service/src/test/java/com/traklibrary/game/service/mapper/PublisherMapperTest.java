@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class PublisherMapperTest {
+class PublisherMapperTest {
 
     @Test
-    public void publisherToPublisherDto_withNull_returnsNull() {
+    void publisherToPublisherDto_withNull_returnsNull() {
         // Act
         PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(null);
 
@@ -19,7 +19,7 @@ public class PublisherMapperTest {
     }
 
     @Test
-    public void publisherToPublisherDto_withPublisher_mapsFields() {
+    void publisherToPublisherDto_withPublisher_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setId(5L);
@@ -40,7 +40,7 @@ public class PublisherMapperTest {
     }
 
     @Test
-    public void publisherDtoToPublisher_withNull_returnsNull() {
+    void publisherDtoToPublisher_withNull_returnsNull() {
         // Act
         Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(null);
 
@@ -49,7 +49,7 @@ public class PublisherMapperTest {
     }
 
     @Test
-    public void publisherDtoToPublisher_withPublisherDto_mapsFields() {
+    void publisherDtoToPublisher_withPublisherDto_mapsFields() {
         // Arrange
         PublisherDto publisherDto = new PublisherDto();
         publisherDto.setId(5L);

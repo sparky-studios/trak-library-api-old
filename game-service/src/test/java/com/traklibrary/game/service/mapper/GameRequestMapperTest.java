@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class GameRequestMapperTest {
+class GameRequestMapperTest {
 
     @Test
-    public void gameRequestToGameRequestDto_withNull_returnsNull() {
+    void gameRequestToGameRequestDto_withNull_returnsNull() {
         // Act
         GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(null);
 
@@ -19,7 +19,7 @@ public class GameRequestMapperTest {
     }
 
     @Test
-    public void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
+    void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
         // Arrange
         GameRequest gameRequest = new GameRequest();
         gameRequest.setId(5L);
@@ -42,7 +42,7 @@ public class GameRequestMapperTest {
     }
 
     @Test
-    public void gameRequestDtoToGameRequest_withNull_returnsNull() {
+    void gameRequestDtoToGameRequest_withNull_returnsNull() {
         // Act
         GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(null);
 
@@ -51,7 +51,7 @@ public class GameRequestMapperTest {
     }
 
     @Test
-    public void gameRequestDtoToGameRequest_withGameRequestDto_mapsFields() {
+    void gameRequestDtoToGameRequest_withGameRequestDto_mapsFields() {
         // Arrange
         GameRequestDto gameRequestDto = new GameRequestDto();
         gameRequestDto.setId(5L);

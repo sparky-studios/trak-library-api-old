@@ -5,10 +5,10 @@ import com.traklibrary.game.service.dto.GenreDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GenreMapperTest {
+class GenreMapperTest {
 
     @Test
-    public void genreToGenreDto_withNull_returnsNull() {
+    void genreToGenreDto_withNull_returnsNull() {
         // Act
         GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(null);
 
@@ -17,7 +17,7 @@ public class GenreMapperTest {
     }
 
     @Test
-    public void genreToGenreDto_withGenre_mapsFields() {
+    void genreToGenreDto_withGenre_mapsFields() {
         // Arrange
         Genre genre = new Genre();
         genre.setId(5L);
@@ -36,7 +36,7 @@ public class GenreMapperTest {
     }
 
     @Test
-    public void genreDtoToGenre_withNull_returnsNull() {
+    void genreDtoToGenre_withNull_returnsNull() {
         // Act
         Genre result = GenreMapper.INSTANCE.genreDtoToGenre(null);
 
@@ -45,7 +45,7 @@ public class GenreMapperTest {
     }
 
     @Test
-    public void genreDtoToGenre_withGenreDto_mapsFields() {
+    void genreDtoToGenre_withGenreDto_mapsFields() {
         // Arrange
         GenreDto genreDto = new GenreDto();
         genreDto.setId(5L);

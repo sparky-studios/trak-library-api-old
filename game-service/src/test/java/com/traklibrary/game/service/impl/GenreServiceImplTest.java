@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class GenreServiceImplTest {
+class GenreServiceImplTest {
 
     @Mock
     private GenreRepository genreRepository;
@@ -52,13 +52,13 @@ public class GenreServiceImplTest {
     private GenreServiceImpl genreService;
 
     @Test
-    public void save_withNullGenreDto_throwsNullPointerException() {
+    void save_withNullGenreDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.save(null));
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -71,7 +71,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void save_withNewGenreDto_savesGenreDto() {
+    void save_withNewGenreDto_savesGenreDto() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -88,7 +88,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -101,7 +101,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findById_withValidGenre_returnsGenreDto() {
+    void findById_withValidGenre_returnsGenreDto() {
         // Arrange
         Genre genre = new Genre();
         genre.setId(1L);
@@ -126,7 +126,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findGenresByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void findGenresByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -139,7 +139,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findGenresByGameId_withNoGenres_returnsEmptyList() {
+    void findGenresByGameId_withNoGenres_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -156,7 +156,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findGenresByGameId_withGenres_returnsGenreDtoList() {
+    void findGenresByGameId_withGenres_returnsGenreDtoList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -186,13 +186,13 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.findAll(Mockito.mock(GenreSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoGenres_returnsEmptyList() {
+    void findAll_withNoGenres_returnsEmptyList() {
         // Arrange
         Mockito.when(genreRepository.findAll(ArgumentMatchers.any(GenreSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -209,7 +209,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void findAll_withGenres_returnsGenresAsGenreDtos() {
+    void findAll_withGenres_returnsGenresAsGenreDtos() {
         // Arrange
         Page<Genre> genres = new PageImpl<>(Arrays.asList(new Genre(), new Genre()));
 
@@ -228,13 +228,13 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void count_withNullGenreSpecification_throwsNullPointerException() {
+    void count_withNullGenreSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.count(null));
     }
 
     @Test
-    public void count_withValidGameUserEntrySpecification_invokesCount() {
+    void count_withValidGameUserEntrySpecification_invokesCount() {
         // Arrange
         Mockito.when(genreRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -248,13 +248,13 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void update_withNullGenreDto_throwsNullPointerException() {
+    void update_withNullGenreDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> genreService.update(null));
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -267,7 +267,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void update_withExistingGenreDto_updatesGenreDto() {
+    void update_withExistingGenreDto_updatesGenreDto() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -284,7 +284,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void patch_withNoGenreMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoGenreMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -297,7 +297,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void patch_withValidId_saveGenre() {
+    void patch_withValidId_saveGenre() {
         // Arrange
         Mockito.when(genreRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new Genre()));
@@ -317,7 +317,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentId_throwsEntityNotFoundException() {
+    void delete_withNonExistentId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -327,7 +327,7 @@ public class GenreServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);

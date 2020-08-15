@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class DeveloperServiceImplTest {
+class DeveloperServiceImplTest {
 
     @Mock
     private DeveloperRepository developerRepository;
@@ -52,13 +52,13 @@ public class DeveloperServiceImplTest {
     private DeveloperServiceImpl developerService;
 
     @Test
-    public void save_withNullDeveloperDto_throwsNullPointerException() {
+    void save_withNullDeveloperDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> developerService.save(null));
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -71,7 +71,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void save_withNewDeveloperDto_savesDeveloperDto() {
+    void save_withNewDeveloperDto_savesDeveloperDto() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -88,7 +88,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -101,7 +101,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findById_withValidDeveloper_returnsDeveloperDto() {
+    void findById_withValidDeveloper_returnsDeveloperDto() {
         // Arrange
         Developer developer = new Developer();
         developer.setId(1L);
@@ -120,7 +120,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findDevelopersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void findDevelopersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -133,7 +133,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findDevelopersByGameId_withNoDevelopers_returnsEmptyList() {
+    void findDevelopersByGameId_withNoDevelopers_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -153,7 +153,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findDevelopersByGameId_withMultipleDevelopers_returnsList() {
+    void findDevelopersByGameId_withMultipleDevelopers_returnsList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -186,13 +186,13 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> developerService.findAll(Mockito.mock(DeveloperSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoCompanies_returnsEmptyList() {
+    void findAll_withNoCompanies_returnsEmptyList() {
         // Arrange
         Mockito.when(developerRepository.findAll(ArgumentMatchers.any(DeveloperSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -209,7 +209,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void findAll_withCompanies_returnsCompaniesAsDeveloperDtos() {
+    void findAll_withCompanies_returnsCompaniesAsDeveloperDtos() {
         // Arrange
         Page<Developer> companies = new PageImpl<>(Arrays.asList(new Developer(), new Developer()));
 
@@ -228,13 +228,13 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void count_withNullDeveloperSpecification_throwsNullPointerException() {
+    void count_withNullDeveloperSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> developerService.count(null));
     }
 
     @Test
-    public void count_withValidDeveloperSpecification_invokesCount() {
+    void count_withValidDeveloperSpecification_invokesCount() {
         // Arrange
         Mockito.when(developerRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -248,13 +248,13 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void update_withNullDeveloperDto_throwsNullPointerException() {
+    void update_withNullDeveloperDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> developerService.update(null));
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -267,7 +267,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void update_withExistingDeveloperDto_updatesDeveloperDto() {
+    void update_withExistingDeveloperDto_updatesDeveloperDto() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -284,7 +284,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void patch_withNoDeveloperMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoDeveloperMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(developerRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -297,7 +297,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void patch_withValidId_savesDeveloper() {
+    void patch_withValidId_savesDeveloper() {
         // Arrange
         Mockito.when(developerRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new Developer()));
@@ -317,7 +317,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentId_throwsEntityNotFoundException() {
+    void delete_withNonExistentId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -327,7 +327,7 @@ public class DeveloperServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);

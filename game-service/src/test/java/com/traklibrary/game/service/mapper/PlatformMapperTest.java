@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class PlatformMapperTest {
+class PlatformMapperTest {
 
     @Test
-    public void platformToPlatformDto_withNull_returnsNull() {
+    void platformToPlatformDto_withNull_returnsNull() {
         // Act
         PlatformDto result = PlatformMapper.INSTANCE.platformToPlatformDto(null);
 
@@ -19,7 +19,7 @@ public class PlatformMapperTest {
     }
 
     @Test
-    public void platformToPlatformDto_withPlatform_mapsFields() {
+    void platformToPlatformDto_withPlatform_mapsFields() {
         // Arrange
         Platform platform = new Platform();
         platform.setId(5L);
@@ -40,7 +40,7 @@ public class PlatformMapperTest {
     }
 
     @Test
-    public void platformDtoToPlatform_withNull_returnsNull() {
+    void platformDtoToPlatform_withNull_returnsNull() {
         // Act
         Platform result = PlatformMapper.INSTANCE.platformDtoToPlatform(null);
 
@@ -49,7 +49,7 @@ public class PlatformMapperTest {
     }
 
     @Test
-    public void platformToPlatformDto_withPlatformDto_mapsFields() {
+    void platformToPlatformDto_withPlatformDto_mapsFields() {
         // Arrange
         PlatformDto platformDto = new PlatformDto();
         platformDto.setId(5L);

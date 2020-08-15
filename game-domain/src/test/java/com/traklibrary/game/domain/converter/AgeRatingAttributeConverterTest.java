@@ -4,10 +4,10 @@ import com.traklibrary.game.domain.AgeRating;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class AgeRatingAttributeConverterTest {
+class AgeRatingAttributeConverterTest {
 
     @Test
-    public void convertToDatabaseColumn_withNullAgeRating_returnsRatingPendingId() {
+    void convertToDatabaseColumn_withNullAgeRating_returnsRatingPendingId() {
         // Act
         Short result = new AgeRatingAttributeConverter().convertToDatabaseColumn(null);
 
@@ -16,7 +16,7 @@ public class AgeRatingAttributeConverterTest {
     }
 
     @Test
-    public void convertToDatabaseColumn_withValidAgeRating_returnsIdOfAgeRating() {
+    void convertToDatabaseColumn_withValidAgeRating_returnsIdOfAgeRating() {
         // Act
         Short result = new AgeRatingAttributeConverter().convertToDatabaseColumn(AgeRating.TEEN);
 
@@ -25,7 +25,7 @@ public class AgeRatingAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withNullId_returnsAgeRatingPending() {
+    void convertToEntityAttribute_withNullId_returnsAgeRatingPending() {
         // Act
         AgeRating result = new AgeRatingAttributeConverter().convertToEntityAttribute(null);
 
@@ -34,13 +34,13 @@ public class AgeRatingAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+    void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
         // Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> new AgeRatingAttributeConverter().convertToEntityAttribute((short)1000));
     }
 
     @Test
-    public void convertToEntityAttribute_withValidAgeRatingId_returnsCorrectAgeRating() {
+    void convertToEntityAttribute_withValidAgeRatingId_returnsCorrectAgeRating() {
         // Act
         AgeRating result = new AgeRatingAttributeConverter().convertToEntityAttribute(AgeRating.TEEN.getId());
 

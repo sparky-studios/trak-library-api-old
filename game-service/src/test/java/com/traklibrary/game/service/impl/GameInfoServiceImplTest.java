@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class GameInfoServiceImplTest {
+class GameInfoServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
@@ -48,7 +48,7 @@ public class GameInfoServiceImplTest {
     private GameInfoServiceImpl gameInfoService;
 
     @Test
-    public void findByGameId_withEmptyOptional_throwsEntityNotFoundException() {
+    void findByGameId_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -61,7 +61,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findByGameId_withValidGame_returnsGameInfoDto() {
+    void findByGameId_withValidGame_returnsGameInfoDto() {
         // Arrange
         Game game = new Game();
         game.setId(1L);
@@ -83,7 +83,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
+    void findByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -96,7 +96,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findByGenreId_withNoGames_returnsEmptyList() {
+    void findByGenreId_withNoGames_returnsEmptyList() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -116,7 +116,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findByGenreId_withMultipleGames_returnsList() {
+    void findByGenreId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -142,7 +142,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void countByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
+    void countByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -155,7 +155,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void countByGenreId_withGenre_invokesGameGenreXrefRepository() {
+    void countByGenreId_withGenre_invokesGameGenreXrefRepository() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -172,13 +172,13 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.findAll(Mockito.mock(GameSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoGames_returnsEmptyList() {
+    void findAll_withNoGames_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -195,7 +195,7 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void findAll_withGames_returnsGamesAsGameInfoDtos() {
+    void findAll_withGames_returnsGamesAsGameInfoDtos() {
         // Arrange
         Page<Game> games = new PageImpl<>(Arrays.asList(new Game(), new Game()));
 
@@ -214,13 +214,13 @@ public class GameInfoServiceImplTest {
     }
 
     @Test
-    public void count_withNullGameSpecification_throwsNullPointerException() {
+    void count_withNullGameSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.count(null));
     }
 
     @Test
-    public void count_withValidGameSpecification_invokesCount() {
+    void count_withValidGameSpecification_invokesCount() {
         // Arrange
         Mockito.when(gameRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);

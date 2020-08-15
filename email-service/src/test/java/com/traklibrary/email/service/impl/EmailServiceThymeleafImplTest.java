@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 import java.util.Locale;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class EmailServiceThymeleafImplTest {
+class EmailServiceThymeleafImplTest {
 
     @Mock
     private MessageSource messageSource;
@@ -30,13 +30,13 @@ public class EmailServiceThymeleafImplTest {
     private EmailServiceThymeleafImpl emailService;
 
     @BeforeAll
-    public void beforeAll() {
+    void beforeAll() {
         MockitoAnnotations.initMocks(this);
         emailService.setFromAddress("from.address@test.com");
     }
 
     @Test
-    public void sendVerificationEmail_withFailingToSend_throwsEmailFailedException() {
+    void sendVerificationEmail_withFailingToSend_throwsEmailFailedException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -52,7 +52,7 @@ public class EmailServiceThymeleafImplTest {
     }
 
     @Test
-    public void sendVerificationEmail_withNoIssues_sendsEmail() {
+    void sendVerificationEmail_withNoIssues_sendsEmail() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");

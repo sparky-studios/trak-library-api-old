@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class GameMapperTest {
+class GameMapperTest {
 
     @Test
-    public void gameToGameDto_withNull_returnsNull() {
+    void gameToGameDto_withNull_returnsNull() {
         // Act
         GameDto result = GameMapper.INSTANCE.gameToGameDto(null);
 
@@ -20,7 +20,7 @@ public class GameMapperTest {
     }
 
     @Test
-    public void gameToGameDto_withGame_mapsFields() {
+    void gameToGameDto_withGame_mapsFields() {
         // Arrange
         Game game = new Game();
         game.setId(5L);
@@ -43,7 +43,7 @@ public class GameMapperTest {
     }
 
     @Test
-    public void gameDtoToGame_withNull_returnsNull() {
+    void gameDtoToGame_withNull_returnsNull() {
         // Act
         Game result = GameMapper.INSTANCE.gameDtoToGame(null);
 
@@ -52,7 +52,7 @@ public class GameMapperTest {
     }
 
     @Test
-    public void gameDtoToGame_withGameDto_mapsFields() {
+    void gameDtoToGame_withGameDto_mapsFields() {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);

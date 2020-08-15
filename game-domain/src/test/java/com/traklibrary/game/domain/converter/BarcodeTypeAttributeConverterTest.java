@@ -4,10 +4,10 @@ import com.traklibrary.game.domain.BarcodeType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class BarcodeTypeAttributeConverterTest {
+class BarcodeTypeAttributeConverterTest {
 
     @Test
-    public void convertToDatabaseColumn_withNullBarcodeType_returnsBarcodeTypeEAN_13Id() {
+    void convertToDatabaseColumn_withNullBarcodeType_returnsBarcodeTypeEAN_13Id() {
         // Act
         Short result = new BarcodeTypeAttributeConverter().convertToDatabaseColumn(null);
 
@@ -16,7 +16,7 @@ public class BarcodeTypeAttributeConverterTest {
     }
 
     @Test
-    public void convertToDatabaseColumn_withValidBarcodeType_returnsIdOfBarcodeType() {
+    void convertToDatabaseColumn_withValidBarcodeType_returnsIdOfBarcodeType() {
         // Act
         Short result = new BarcodeTypeAttributeConverter().convertToDatabaseColumn(BarcodeType.UPC_A);
 
@@ -25,7 +25,7 @@ public class BarcodeTypeAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withNullId_returnsBarcodeTypePending() {
+    void convertToEntityAttribute_withNullId_returnsBarcodeTypePending() {
         // Act
         BarcodeType result = new BarcodeTypeAttributeConverter().convertToEntityAttribute(null);
 
@@ -34,13 +34,13 @@ public class BarcodeTypeAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+    void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
         // Assert
         Assertions.assertThrows(IllegalArgumentException.class, () -> new BarcodeTypeAttributeConverter().convertToEntityAttribute((short)1000));
     }
 
     @Test
-    public void convertToEntityAttribute_withValidBarcodeTypeId_returnsCorrectBarcodeType() {
+    void convertToEntityAttribute_withValidBarcodeTypeId_returnsCorrectBarcodeType() {
         // Act
         BarcodeType result = new BarcodeTypeAttributeConverter().convertToEntityAttribute(BarcodeType.UPC_A.getId());
 

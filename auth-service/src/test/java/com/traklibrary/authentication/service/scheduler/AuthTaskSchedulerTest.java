@@ -13,7 +13,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthTaskSchedulerTest {
+class AuthTaskSchedulerTest {
 
     @Mock
     private UserRepository userRepository;
@@ -22,7 +22,7 @@ public class AuthTaskSchedulerTest {
     private AuthTaskScheduler authTaskScheduler;
 
     @Test
-    public void removeExpiredVerificationCodesScheduledTask_withNoUsers_doesntMakeChanges() {
+    void removeExpiredVerificationCodesScheduledTask_withNoUsers_doesntMakeChanges() {
         // Arrange
         Mockito.when(userRepository.findByVerifiedIsFalseAndVerificationExpiryDateBefore(ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
@@ -36,7 +36,7 @@ public class AuthTaskSchedulerTest {
     }
 
     @Test
-    public void removeExpiredVerificationCodesScheduledTask_withUsers_removesVerificationCodeAndExpiryDateAndSaves() {
+    void removeExpiredVerificationCodesScheduledTask_withUsers_removesVerificationCodeAndExpiryDateAndSaves() {
         // Arrange
         User user = Mockito.spy(User.class);
 
@@ -58,7 +58,7 @@ public class AuthTaskSchedulerTest {
     }
 
     @Test
-    public void removeExpiredRecoveryTokensScheduledTask_withNoUsers_doesntMakeChanges() {
+    void removeExpiredRecoveryTokensScheduledTask_withNoUsers_doesntMakeChanges() {
         // Arrange
         Mockito.when(userRepository.findByRecoveryTokenExpiryDateBefore(ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
@@ -72,7 +72,7 @@ public class AuthTaskSchedulerTest {
     }
 
     @Test
-    public void removeExpiredRecoveryTokensScheduledTask_withUsers_removesRecoveryTokenAndExpiryDateAndSaves() {
+    void removeExpiredRecoveryTokensScheduledTask_withUsers_removesRecoveryTokenAndExpiryDateAndSaves() {
         // Arrange
         User user = Mockito.spy(User.class);
 

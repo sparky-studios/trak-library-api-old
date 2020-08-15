@@ -16,7 +16,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class GameBarcodeServiceImplTest {
+class GameBarcodeServiceImplTest {
 
     @Mock
     private GameBarcodeRepository gameBarcodeRepository;
@@ -31,7 +31,7 @@ public class GameBarcodeServiceImplTest {
     private GameBarcodeServiceImpl gameBarcodeService;
 
     @Test
-    public void findByBarcode_withInvalidBarcode_throwsEntityNotFoundException() {
+    void findByBarcode_withInvalidBarcode_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -44,7 +44,7 @@ public class GameBarcodeServiceImplTest {
     }
 
     @Test
-    public void findByBarcode_withValidBarcode_returnsGameBarcodeDto() {
+    void findByBarcode_withValidBarcode_returnsGameBarcodeDto() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");

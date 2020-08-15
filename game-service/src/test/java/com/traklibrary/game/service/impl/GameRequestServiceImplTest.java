@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class GameRequestServiceImplTest {
+class GameRequestServiceImplTest {
 
     @Mock
     private GameRequestRepository gameRequestRepository;
@@ -51,7 +51,7 @@ public class GameRequestServiceImplTest {
     private GameRequestServiceImpl gameRequestService;
 
     @Test
-    public void save_withNullGameRequestDto_throwsNullPointerException() {
+    void save_withNullGameRequestDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.save(null));
         Mockito.verify(gameRequestRepository, Mockito.never())
@@ -59,7 +59,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void save_againstDifferentUser_throwsInvalidUserException() {
+    void save_againstDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -74,7 +74,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -92,7 +92,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void save_withNewGameRequestDto_savesGameRequestDto() {
+    void save_withNewGameRequestDto_savesGameRequestDto() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -112,7 +112,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -125,7 +125,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void findById_withValidGameRequest_returnsGameRequestDto() {
+    void findById_withValidGameRequest_returnsGameRequestDto() {
         // Arrange
         GameRequest gameRequest = new GameRequest();
         gameRequest.setId(1L);
@@ -154,13 +154,13 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.findAll(Mockito.mock(GameRequestSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoGameRequests_returnsEmptyList() {
+    void findAll_withNoGameRequests_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRequestRepository.findAll(ArgumentMatchers.any(GameRequestSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -177,7 +177,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void findAll_withGameRequests_returnsGameRequestsAsGameRequestDtos() {
+    void findAll_withGameRequests_returnsGameRequestsAsGameRequestDtos() {
         // Arrange
         Page<GameRequest> gameRequests = new PageImpl<>(Arrays.asList(new GameRequest(), new GameRequest()));
 
@@ -196,13 +196,13 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void count_withNullGameRequestSpecification_throwsNullPointerException() {
+    void count_withNullGameRequestSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.count(null));
     }
 
     @Test
-    public void count_withValidGameRequestSpecification_invokesCount() {
+    void count_withValidGameRequestSpecification_invokesCount() {
         // Arrange
         Mockito.when(gameRequestRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -216,7 +216,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void update_withNullGameRequestDto_throwsNullPointerException() {
+    void update_withNullGameRequestDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.update(null));
         Mockito.verify(gameRequestRepository, Mockito.never())
@@ -224,7 +224,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void update_againstDifferentUser_throwsInvalidUserException() {
+    void update_againstDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -239,7 +239,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -257,7 +257,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void update_withExistingGameRequestDto_updatesGameRequestDto() {
+    void update_withExistingGameRequestDto_updatesGameRequestDto() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -277,7 +277,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void patch_withNoGameRequestMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoGameRequestMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -292,7 +292,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void patch_withValidIdButInvalidUser_throwsInvalidUserException() {
+    void patch_withValidIdButInvalidUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameRequest()));
@@ -313,7 +313,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void patch_withValidId_savesGameRequest() {
+    void patch_withValidId_savesGameRequest() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameRequest()));
@@ -333,7 +333,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentGameRequest_throwsEntityNotFoundException() {
+    void delete_withNonExistentGameRequest_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -348,7 +348,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingButDifferentUser_throwsInvalidUserException() {
+    void delete_withExistingButDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameRequest()));
@@ -366,7 +366,7 @@ public class GameRequestServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameRequest()));

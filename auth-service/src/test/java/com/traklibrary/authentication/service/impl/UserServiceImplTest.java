@@ -29,7 +29,7 @@ import java.util.Locale;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceImplTest {
+class UserServiceImplTest {
 
     @Mock
     private UserRepository userRepository;
@@ -62,7 +62,7 @@ public class UserServiceImplTest {
     private UserServiceImpl userService;
 
     @Test
-    public void loadUserByUsername_withNonExistentUser_throwsUsernameNotFoundException() {
+    void loadUserByUsername_withNonExistentUser_throwsUsernameNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -72,7 +72,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void loadUserByUsername_withExistingUser_returnsMappedUserDto() {
+    void loadUserByUsername_withExistingUser_returnsMappedUserDto() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -86,7 +86,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void save_withExistingUsername_throwsEntityExistsException() {
+    void save_withExistingUsername_throwsEntityExistsException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -112,7 +112,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void save_withExistingEmailAddress_throwsEntityExistsException() {
+    void save_withExistingEmailAddress_throwsEntityExistsException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -141,7 +141,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void save_withMissingUserRole_throwsEntityNotFoundException() {
+    void save_withMissingUserRole_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -165,7 +165,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void save_withValidCredentialsAndUserRole_savesUserAndMakesUserRoleXrefAndPublishesEvent() {
+    void save_withValidCredentialsAndUserRole_savesUserAndMakesUserRoleXrefAndPublishesEvent() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -215,7 +215,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void update_withNonExistentUser_returnsCheckedResponseWithError() {
+    void update_withNonExistentUser_returnsCheckedResponseWithError() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -239,7 +239,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void update_withNullUserRecoveryToken_returnsCheckedResponseWithError() {
+    void update_withNullUserRecoveryToken_returnsCheckedResponseWithError() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -264,7 +264,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void update_withIncorrectRecoveryToken_returnsCheckedResponseWithError() {
+    void update_withIncorrectRecoveryToken_returnsCheckedResponseWithError() {
         // Arrange
         User user = new User();
         user.setRecoveryToken("recovery-2");
@@ -292,7 +292,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void update_withValidRecoveryToken_savesUserAndReturnsValidCheckedResponse() {
+    void update_withValidRecoveryToken_savesUserAndReturnsValidCheckedResponse() {
         // Arrange
         User user = new User();
         user.setRecoveryToken("recovery");
@@ -324,7 +324,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByUsername_withNoMatchingUser_throwsEntityNotFoundException() {
+    void findByUsername_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -334,7 +334,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByUsername_withDifferentUser_throwsInvalidUserException() {
+    void findByUsername_withDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -350,7 +350,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void findByUsername_withMatchingUser_returnsUserResponse() {
+    void findByUsername_withMatchingUser_returnsUserResponse() {
         // Arrange
         User user = new User();
         user.setId(5L);
@@ -372,7 +372,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createVerificationCode_withNullUser_returnsEmptyString() {
+    void createVerificationCode_withNullUser_returnsEmptyString() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -385,7 +385,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createVerificationCode_withExistingUser_savesAndReturnsToken() {
+    void createVerificationCode_withExistingUser_savesAndReturnsToken() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -403,7 +403,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createRecoveryToken_withNullUser_returnsEmptyString() {
+    void createRecoveryToken_withNullUser_returnsEmptyString() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -416,7 +416,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void createRecoveryToken_withExistingUser_savesAndReturnsToken() {
+    void createRecoveryToken_withExistingUser_savesAndReturnsToken() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -434,7 +434,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withNoMatchingUser_throwsEntityNotFoundException() {
+    void verify_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -444,7 +444,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withDifferentUser_throwsInvalidUserException() {
+    void verify_withDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -460,7 +460,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withVerifiedUser_doesntUpdateVerificationStatus() {
+    void verify_withVerifiedUser_doesntUpdateVerificationStatus() {
         // Arrange
         User user = new User();
         user.setVerified(true);
@@ -484,7 +484,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withNonVerifiedUserButIncorrectVerificationCode_returnsCheckedResponseWithError() {
+    void verify_withNonVerifiedUserButIncorrectVerificationCode_returnsCheckedResponseWithError() {
         // Arrange
         User user = new User();
         user.setVerificationCode("11112");
@@ -511,7 +511,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withNonVerifiedUserWithNullVerificationCode_returnsCheckedResponseWithError() {
+    void verify_withNonVerifiedUserWithNullVerificationCode_returnsCheckedResponseWithError() {
         // Arrange
         User user = new User();
 
@@ -537,7 +537,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void verify_withNonVerifiedUserWithCorrectVerificationCode_updatesUser() {
+    void verify_withNonVerifiedUserWithCorrectVerificationCode_updatesUser() {
         // Arrange
         User user = new User();
         user.setVerificationCode("11111");
@@ -564,7 +564,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void reverify_withNoMatchingUser_throwsEntityNotFoundException() {
+    void reverify_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -577,7 +577,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void reverify_withDifferentUser_throwsInvalidUserException() {
+    void reverify_withDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -593,7 +593,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void reverify_withValidUserAndAuthentication_publishesOnVerificationNeededEvent() {
+    void reverify_withValidUserAndAuthentication_publishesOnVerificationNeededEvent() {
         // Arrange
         User user = new User();
         user.setEmailAddress("email@address.com");
@@ -617,7 +617,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void requestRecovery_withNonExistentUser_doesntPublishOnRecoveryNeededEvent() {
+    void requestRecovery_withNonExistentUser_doesntPublishOnRecoveryNeededEvent() {
         // Arrange
         Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
@@ -631,7 +631,7 @@ public class UserServiceImplTest {
     }
 
     @Test
-    public void requestRecovery_withUser_publishesOnRecoveryNeededEvent() {
+    void requestRecovery_withUser_publishesOnRecoveryNeededEvent() {
         // Arrange
         Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));

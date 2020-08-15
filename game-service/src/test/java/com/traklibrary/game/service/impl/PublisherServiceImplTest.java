@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class PublisherServiceImplTest {
+class PublisherServiceImplTest {
 
     @Mock
     private PublisherRepository publisherRepository;
@@ -52,13 +52,13 @@ public class PublisherServiceImplTest {
     private PublisherServiceImpl publisherService;
 
     @Test
-    public void save_withNullPublisherDto_throwsNullPointerException() {
+    void save_withNullPublisherDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> publisherService.save(null));
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -71,7 +71,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void save_withNewPublisherDto_savesPublisherDto() {
+    void save_withNewPublisherDto_savesPublisherDto() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -88,7 +88,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -101,7 +101,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findById_withValidPublisher_returnsPublisherDto() {
+    void findById_withValidPublisher_returnsPublisherDto() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setId(1L);
@@ -120,7 +120,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void findPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -133,7 +133,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findPublishersByGameId_withNoPublishers_returnsEmptyList() {
+    void findPublishersByGameId_withNoPublishers_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -153,7 +153,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findPublishersByGameId_withMultiplePublishers_returnsList() {
+    void findPublishersByGameId_withMultiplePublishers_returnsList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -186,13 +186,13 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> publisherService.findAll(Mockito.mock(PublisherSpecification.class), null));
     }
 
     @Test
-    public void findAll_withNoCompanies_returnsEmptyList() {
+    void findAll_withNoCompanies_returnsEmptyList() {
         // Arrange
         Mockito.when(publisherRepository.findAll(ArgumentMatchers.any(PublisherSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -209,7 +209,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void findAll_withCompanies_returnsCompaniesAsPublisherDtos() {
+    void findAll_withCompanies_returnsCompaniesAsPublisherDtos() {
         // Arrange
         Page<Publisher> companies = new PageImpl<>(Arrays.asList(new Publisher(), new Publisher()));
 
@@ -228,13 +228,13 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void count_withNullPublisherSpecification_throwsNullPointerException() {
+    void count_withNullPublisherSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> publisherService.count(null));
     }
 
     @Test
-    public void count_withPlatformSpecification_invokesCount() {
+    void count_withPlatformSpecification_invokesCount() {
         // Arrange
         Mockito.when(publisherRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -248,13 +248,13 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void update_withNullPublisherDto_throwsNullPointerException() {
+    void update_withNullPublisherDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> publisherService.update(null));
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -267,7 +267,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void update_withExistingPublisherDto_updatesPublisherDto() {
+    void update_withExistingPublisherDto_updatesPublisherDto() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -284,7 +284,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void patch_withNoPublisherMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoPublisherMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -297,7 +297,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void patch_withValidId_savesPublisher() {
+    void patch_withValidId_savesPublisher() {
         // Arrange
         Mockito.when(publisherRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new Publisher()));
@@ -317,7 +317,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentId_throwsEntityNotFoundException() {
+    void delete_withNonExistentId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -327,7 +327,7 @@ public class PublisherServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
