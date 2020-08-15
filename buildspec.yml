@@ -11,15 +11,15 @@ phases:
   pre_build:
     commands:
       - echo [INFO] Cleaning Trak API `date`
-      - mvn clean -P coverage
+      - mvn clean -Pcoverage
   build:
     commands:
       - echo [INFO] Building Trak API `date`
-      - mvn compile -P coverage
+      - mvn compile -Pcoverage
   post_build:
     commands:
       - echo [INFO] Running Trak API tests `date`
-      - mvn verify sonar:sonar -P coverage
+      - mvn verify sonar:sonar -Pcoverage
       - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 
