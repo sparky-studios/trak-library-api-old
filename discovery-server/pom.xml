@@ -13,6 +13,10 @@
     <artifactId>discovery-server</artifactId>
     <name>Trak API Discovery Server</name>
 
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>

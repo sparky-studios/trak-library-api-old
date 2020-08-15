@@ -13,6 +13,10 @@
     <artifactId>image-server</artifactId>
     <name>Trak API Image Server</name>
 
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>io.jsonwebtoken</groupId>

@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   parameter-store:
-    COVERALLS_TOKEN: "/trak-api/coveralls-token"
+    SONAR_TOKEN: "/trak-api/sonarcloud-token"
 
 phases:
   install:
@@ -11,15 +11,15 @@ phases:
   pre_build:
     commands:
       - echo [INFO] Cleaning Trak API `date`
-      - mvn clean
+      - mvn clean -P coverage
   build:
     commands:
       - echo [INFO] Building Trak API `date`
-      - mvn compile
+      - mvn compile -P coverage
   post_build:
     commands:
       - echo [INFO] Running Trak API tests `date`
-      - mvn test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
+      - mvn verify sonar:sonar -P coverage
       - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 

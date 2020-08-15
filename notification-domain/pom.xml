@@ -13,6 +13,10 @@
     <artifactId>notification-domain</artifactId>
     <name>Trak API Notification domain</name>
 
+    <properties>
+        <sonar.coverage.jacoco.xmlReportPaths>${basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
