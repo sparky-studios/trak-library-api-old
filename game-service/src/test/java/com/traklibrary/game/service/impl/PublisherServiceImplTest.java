@@ -8,6 +8,7 @@ import com.traklibrary.game.repository.PublisherRepository;
 import com.traklibrary.game.repository.specification.PublisherSpecification;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.PublisherDto;
+import com.traklibrary.game.service.mapper.GameMappers;
 import com.traklibrary.game.service.mapper.PublisherMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,7 +44,7 @@ class PublisherServiceImplTest {
     private MessageSource messageSource;
 
     @Spy
-    private final PublisherMapper publisherMapper = PublisherMapper.INSTANCE;
+    private final PublisherMapper publisherMapper = GameMappers.PUBLISHER_MAPPER;
 
     @Mock
     private PatchService patchService;

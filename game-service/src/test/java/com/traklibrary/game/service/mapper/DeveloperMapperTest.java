@@ -12,7 +12,7 @@ class DeveloperMapperTest {
     @Test
     void developerToDeveloperDto_withNull_returnsNull() {
         // Act
-        DeveloperDto result = DeveloperMapper.INSTANCE.developerToDeveloperDto(null);
+        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -29,7 +29,7 @@ class DeveloperMapperTest {
         developer.setVersion(1L);
 
         // Act
-        DeveloperDto result = DeveloperMapper.INSTANCE.developerToDeveloperDto(developer);
+        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(developer);
 
         // Assert
         Assertions.assertEquals(developer.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -42,7 +42,7 @@ class DeveloperMapperTest {
     @Test
     void developerDtoToDeveloper_withNull_returnsNull() {
         // Act
-        Developer result = DeveloperMapper.INSTANCE.developerDtoToDeveloper(null);
+        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -59,7 +59,7 @@ class DeveloperMapperTest {
         developerDto.setVersion(1L);
 
         // Act
-        Developer result = DeveloperMapper.INSTANCE.developerDtoToDeveloper(developerDto);
+        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(developerDto);
 
         // Assert
         Assertions.assertEquals(developerDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

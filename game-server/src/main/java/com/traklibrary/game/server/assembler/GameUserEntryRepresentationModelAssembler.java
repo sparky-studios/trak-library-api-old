@@ -37,6 +37,6 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameUserEntryDto>> resources) {
-
+        // Unused. Additional resource links aren't added to collections.
     }
 }

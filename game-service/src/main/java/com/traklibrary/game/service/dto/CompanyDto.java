@@ -1,7 +1,6 @@
 package com.traklibrary.game.service.dto;
 
 import lombok.Data;
-import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;

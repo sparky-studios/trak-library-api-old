@@ -9,6 +9,7 @@ import com.traklibrary.game.repository.specification.DeveloperSpecification;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.DeveloperDto;
 import com.traklibrary.game.service.mapper.DeveloperMapper;
+import com.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,7 +44,7 @@ class DeveloperServiceImplTest {
     private MessageSource messageSource;
 
     @Spy
-    private final DeveloperMapper developerMapper = DeveloperMapper.INSTANCE;
+    private final DeveloperMapper developerMapper = GameMappers.DEVELOPER_MAPPER;
 
     @Mock
     private PatchService patchService;
@@ -66,8 +67,10 @@ class DeveloperServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        DeveloperDto developerDto = new DeveloperDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> developerService.save(new DeveloperDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> developerService.save(developerDto));
     }
 
     @Test

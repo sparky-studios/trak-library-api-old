@@ -13,7 +13,7 @@ class GameInfoMapperTest {
     @Test
     void gameToGameInfoDto_withNull_returnsNull() {
         // Act
-        GameInfoDto result = GameInfoMapper.INSTANCE.gameToGameInfoDto(null);
+        GameInfoDto result = GameMappers.GAME_INFO_MAPPER.gameToGameInfoDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -55,7 +55,7 @@ class GameInfoMapperTest {
         game.setGamePublisherXrefs(Collections.singleton(gamePublisherXref));
 
         // Act
-        GameInfoDto result = GameInfoMapper.INSTANCE.gameToGameInfoDto(game);
+        GameInfoDto result = GameMappers.GAME_INFO_MAPPER.gameToGameInfoDto(game);
 
         // Assert
         Assertions.assertEquals(game.getId(), result.getId(), "The mapped ID does not match the entity.");

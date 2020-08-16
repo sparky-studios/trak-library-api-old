@@ -13,7 +13,7 @@ class GameUserEntryMapperTest {
     @Test
     void gameUserEntryToGameUserEntryDto_withNull_returnsNull() {
         // Act
-        GameUserEntryDto result = GameUserEntryMapper.INSTANCE.gameUserEntryToGameUserEntryDto(null);
+        GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -47,7 +47,7 @@ class GameUserEntryMapperTest {
         gameUserEntry.setRating((short)5);
 
         // Act
-        GameUserEntryDto result = GameUserEntryMapper.INSTANCE.gameUserEntryToGameUserEntryDto(gameUserEntry);
+        GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(gameUserEntry);
 
         // Assert
         Assertions.assertEquals(gameUserEntry.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -65,7 +65,7 @@ class GameUserEntryMapperTest {
     @Test
     void gameUserEntryDtpToGameUserEntry_withNull_returnsNull() {
         // Act
-        GameUserEntry result = GameUserEntryMapper.INSTANCE.gameUserEntryDtoToGameUserEntry(null);
+        GameUserEntry result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryDtoToGameUserEntry(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -83,7 +83,7 @@ class GameUserEntryMapperTest {
         gameUserEntryDto.setRating((short)5);
 
         // Act
-        GameUserEntry result = GameUserEntryMapper.INSTANCE.gameUserEntryDtoToGameUserEntry(gameUserEntryDto);
+        GameUserEntry result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryDtoToGameUserEntry(gameUserEntryDto);
 
         // Assert
         Assertions.assertEquals(gameUserEntryDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

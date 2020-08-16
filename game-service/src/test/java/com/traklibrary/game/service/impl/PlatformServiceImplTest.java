@@ -8,6 +8,7 @@ import com.traklibrary.game.repository.PlatformRepository;
 import com.traklibrary.game.repository.specification.PlatformSpecification;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.PlatformDto;
+import com.traklibrary.game.service.mapper.GameMappers;
 import com.traklibrary.game.service.mapper.PlatformMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ class PlatformServiceImplTest {
     private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Spy
-    private final PlatformMapper platformMapper = PlatformMapper.INSTANCE;
+    private final PlatformMapper platformMapper = GameMappers.PLATFORM_MAPPER;
 
     @Mock
     private MessageSource messageSource;

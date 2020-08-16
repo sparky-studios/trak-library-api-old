@@ -16,7 +16,7 @@ class UserResponseMapperTest {
         user.setVerified(true);
 
         // Act
-        UserResponseDto result = UserResponseMapper.INSTANCE.userToUserResponseDto(user);
+        UserResponseDto result = AuthMappers.USER_RESPONSE_MAPPER.userToUserResponseDto(user);
 
         // Assert
         Assertions.assertEquals(user.getId(), result.getId(), "The mapped ID does not match the entity.");

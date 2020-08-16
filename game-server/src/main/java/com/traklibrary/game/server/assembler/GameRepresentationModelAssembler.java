@@ -56,6 +56,6 @@ public class GameRepresentationModelAssembler implements SimpleRepresentationMod
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameDto>> resources) {
-        // Needed for implementation purposes, but unused.
+        // Unused. Additional resource links aren't added to collections.
     }
 }

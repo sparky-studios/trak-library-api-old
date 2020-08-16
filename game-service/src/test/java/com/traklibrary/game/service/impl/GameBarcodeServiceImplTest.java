@@ -4,6 +4,7 @@ import com.traklibrary.game.domain.GameBarcode;
 import com.traklibrary.game.repository.GameBarcodeRepository;
 import com.traklibrary.game.service.dto.GameBarcodeDto;
 import com.traklibrary.game.service.mapper.GameBarcodeMapper;
+import com.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,7 +23,7 @@ class GameBarcodeServiceImplTest {
     private GameBarcodeRepository gameBarcodeRepository;
 
     @Spy
-    private final GameBarcodeMapper gameBarcodeMapper = GameBarcodeMapper.INSTANCE;
+    private final GameBarcodeMapper gameBarcodeMapper = GameMappers.GAME_BARCODE_MAPPER;
 
     @Mock
     private MessageSource messageSource;

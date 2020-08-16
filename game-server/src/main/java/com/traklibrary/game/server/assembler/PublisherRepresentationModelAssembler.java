@@ -37,6 +37,6 @@ public class PublisherRepresentationModelAssembler implements SimpleRepresentati
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<PublisherDto>> resources) {
-
+        // Unused. Additional resource links aren't added to collections.
     }
 }

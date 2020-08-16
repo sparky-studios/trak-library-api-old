@@ -12,7 +12,7 @@ class PlatformMapperTest {
     @Test
     void platformToPlatformDto_withNull_returnsNull() {
         // Act
-        PlatformDto result = PlatformMapper.INSTANCE.platformToPlatformDto(null);
+        PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -29,7 +29,7 @@ class PlatformMapperTest {
         platform.setVersion(1L);
 
         // Act
-        PlatformDto result = PlatformMapper.INSTANCE.platformToPlatformDto(platform);
+        PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(platform);
 
         // Assert
         Assertions.assertEquals(platform.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -42,7 +42,7 @@ class PlatformMapperTest {
     @Test
     void platformDtoToPlatform_withNull_returnsNull() {
         // Act
-        Platform result = PlatformMapper.INSTANCE.platformDtoToPlatform(null);
+        Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -59,7 +59,7 @@ class PlatformMapperTest {
         platformDto.setVersion(1L);
 
         // Act
-        Platform result = PlatformMapper.INSTANCE.platformDtoToPlatform(platformDto);
+        Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(platformDto);
 
         // Assert
         Assertions.assertEquals(platformDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

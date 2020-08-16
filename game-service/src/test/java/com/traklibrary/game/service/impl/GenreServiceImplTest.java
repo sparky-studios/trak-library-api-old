@@ -8,6 +8,7 @@ import com.traklibrary.game.repository.GenreRepository;
 import com.traklibrary.game.repository.specification.GenreSpecification;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GenreDto;
+import com.traklibrary.game.service.mapper.GameMappers;
 import com.traklibrary.game.service.mapper.GenreMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,7 @@ class GenreServiceImplTest {
     private GameGenreXrefRepository gameGenreXrefRepository;
 
     @Spy
-    private final GenreMapper genreMapper = GenreMapper.INSTANCE;
+    private final GenreMapper genreMapper = GameMappers.GENRE_MAPPER;
 
     @Mock
     private MessageSource messageSource;

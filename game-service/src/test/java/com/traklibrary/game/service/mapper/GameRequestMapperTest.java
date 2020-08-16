@@ -12,7 +12,7 @@ class GameRequestMapperTest {
     @Test
     void gameRequestToGameRequestDto_withNull_returnsNull() {
         // Act
-        GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(null);
+        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -30,7 +30,7 @@ class GameRequestMapperTest {
         gameRequest.setVersion(2L);
 
         // Act
-        GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(gameRequest);
+        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(gameRequest);
 
         // Assert
         Assertions.assertEquals(gameRequest.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -44,7 +44,7 @@ class GameRequestMapperTest {
     @Test
     void gameRequestDtoToGameRequest_withNull_returnsNull() {
         // Act
-        GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(null);
+        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -61,7 +61,7 @@ class GameRequestMapperTest {
         gameRequestDto.setVersion(2L);
 
         // Act
-        GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(gameRequestDto);
+        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(gameRequestDto);
 
         // Assert
         Assertions.assertEquals(gameRequestDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

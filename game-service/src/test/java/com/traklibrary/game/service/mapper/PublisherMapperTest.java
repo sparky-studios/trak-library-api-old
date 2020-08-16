@@ -12,7 +12,7 @@ class PublisherMapperTest {
     @Test
     void publisherToPublisherDto_withNull_returnsNull() {
         // Act
-        PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(null);
+        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -29,7 +29,7 @@ class PublisherMapperTest {
         publisher.setVersion(1L);
 
         // Act
-        PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(publisher);
+        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
 
         // Assert
         Assertions.assertEquals(publisher.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -42,7 +42,7 @@ class PublisherMapperTest {
     @Test
     void publisherDtoToPublisher_withNull_returnsNull() {
         // Act
-        Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(null);
+        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -59,7 +59,7 @@ class PublisherMapperTest {
         publisherDto.setVersion(1L);
 
         // Act
-        Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(publisherDto);
+        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(publisherDto);
 
         // Assert
         Assertions.assertEquals(publisherDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

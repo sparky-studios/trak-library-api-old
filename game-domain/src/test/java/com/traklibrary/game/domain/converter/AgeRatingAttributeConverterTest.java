@@ -35,8 +35,11 @@ class AgeRatingAttributeConverterTest {
 
     @Test
     void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+        // Arrange
+        AgeRatingAttributeConverter converter = new AgeRatingAttributeConverter();
+
         // Assert
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new AgeRatingAttributeConverter().convertToEntityAttribute((short)1000));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> converter.convertToEntityAttribute((short)1000));
     }
 
     @Test

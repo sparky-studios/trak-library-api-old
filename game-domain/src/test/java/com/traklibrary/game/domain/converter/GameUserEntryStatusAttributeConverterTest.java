@@ -35,8 +35,11 @@ class GameUserEntryStatusAttributeConverterTest {
 
     @Test
     void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+        // Arrange
+        GameUserEntryStatusAttributeConverter converter = new GameUserEntryStatusAttributeConverter();
+
         // Assert
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new GameUserEntryStatusAttributeConverter().convertToEntityAttribute((short)1000));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> converter.convertToEntityAttribute((short)1000));
     }
 
     @Test

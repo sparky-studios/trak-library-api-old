@@ -7,6 +7,7 @@ import com.traklibrary.game.service.AuthenticationService;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
 import com.traklibrary.game.service.exception.InvalidUserException;
+import com.traklibrary.game.service.mapper.GameMappers;
 import com.traklibrary.game.service.mapper.GameUserEntryMapper;
 import com.traklibrary.game.domain.*;
 import org.junit.jupiter.api.Assertions;
@@ -39,7 +40,7 @@ class GameUserEntryServiceImplTest {
     private GameRepository gameRepository;
 
     @Spy
-    private final GameUserEntryMapper gameUserEntryMapper = GameUserEntryMapper.INSTANCE;
+    private final GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
 
     @Mock
     private AuthenticationService authenticationService;

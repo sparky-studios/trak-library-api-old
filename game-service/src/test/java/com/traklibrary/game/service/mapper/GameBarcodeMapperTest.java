@@ -11,7 +11,7 @@ class GameBarcodeMapperTest {
     @Test
     void gameBarcodeToGameBarcodeDto_withNull_returnsNull() {
         // Act
-        GameBarcodeDto result = GameBarcodeMapper.INSTANCE.gameBarcodeToGameBarcodeDto(null);
+        GameBarcodeDto result = GameMappers.GAME_BARCODE_MAPPER.gameBarcodeToGameBarcodeDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -29,7 +29,7 @@ class GameBarcodeMapperTest {
         gameBarcode.setVersion(8L);
 
         // Act
-        GameBarcodeDto result = GameBarcodeMapper.INSTANCE.gameBarcodeToGameBarcodeDto(gameBarcode);
+        GameBarcodeDto result = GameMappers.GAME_BARCODE_MAPPER.gameBarcodeToGameBarcodeDto(gameBarcode);
 
         // Assert
         Assertions.assertEquals(gameBarcode.getId(), result.getId(), "The mapped ID does not match the entity.");

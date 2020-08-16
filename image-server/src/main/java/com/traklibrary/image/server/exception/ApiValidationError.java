@@ -2,14 +2,12 @@ package com.traklibrary.image.server.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
-@EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-class ApiValidationError extends ApiSubError {
+class ApiValidationError implements ApiSubError {
 
     private String object;
     private String field;

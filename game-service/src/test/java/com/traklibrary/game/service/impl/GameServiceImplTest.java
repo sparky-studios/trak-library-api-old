@@ -6,6 +6,7 @@ import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GameDto;
 import com.traklibrary.game.service.mapper.GameMapper;
 import com.traklibrary.game.domain.*;
+import com.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ class GameServiceImplTest {
     private PatchService patchService;
 
     @Spy
-    private final GameMapper gameMapper = GameMapper.INSTANCE;
+    private final GameMapper gameMapper = GameMappers.GAME_MAPPER;
 
     @Mock
     private MessageSource messageSource;

@@ -10,7 +10,7 @@ class GenreMapperTest {
     @Test
     void genreToGenreDto_withNull_returnsNull() {
         // Act
-        GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(null);
+        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -26,7 +26,7 @@ class GenreMapperTest {
         genre.setVersion(1L);
 
         // Act
-        GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(genre);
+        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
 
         // Assert
         Assertions.assertEquals(genre.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -38,7 +38,7 @@ class GenreMapperTest {
     @Test
     void genreDtoToGenre_withNull_returnsNull() {
         // Act
-        Genre result = GenreMapper.INSTANCE.genreDtoToGenre(null);
+        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
@@ -54,7 +54,7 @@ class GenreMapperTest {
         genreDto.setVersion(1L);
 
         // Act
-        Genre result = GenreMapper.INSTANCE.genreDtoToGenre(genreDto);
+        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(genreDto);
 
         // Assert
         Assertions.assertEquals(genreDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

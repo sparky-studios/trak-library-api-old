@@ -28,6 +28,6 @@ public class GameRequestRepresentationModelAssembler implements SimpleRepresenta
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameRequestDto>> resources) {
-        // Needed for implementation purposes, but unused.
+        // Unused. Additional resource links aren't added to collections.
     }
 }

@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
-
     default UserDto userToUserDto(User user) {
         if (user == null) {
             return null;

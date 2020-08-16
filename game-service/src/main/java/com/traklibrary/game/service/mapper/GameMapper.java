@@ -4,12 +4,9 @@ import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.service.dto.GameDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface GameMapper {
-
-    GameMapper INSTANCE = Mappers.getMapper(GameMapper.class);
 
     GameDto gameToGameDto(Game game);
 

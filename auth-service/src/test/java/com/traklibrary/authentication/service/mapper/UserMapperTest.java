@@ -35,7 +35,7 @@ class UserMapperTest {
         user.setUserRoleXrefs(Collections.singleton(userRoleXref));
 
         // Act
-        UserDto result = UserMapper.INSTANCE.userToUserDto(user);
+        UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
 
         // Assert
         Assertions.assertEquals(user.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -63,7 +63,7 @@ class UserMapperTest {
         userDto.setVersion(1L);
 
         // Act
-        User result = UserMapper.INSTANCE.userDtoToUser(userDto);
+        User result = AuthMappers.USER_MAPPER.userDtoToUser(userDto);
 
         // Assert
         Assertions.assertEquals(userDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
