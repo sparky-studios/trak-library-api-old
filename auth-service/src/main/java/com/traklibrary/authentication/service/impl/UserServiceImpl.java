@@ -41,6 +41,15 @@ import java.util.stream.IntStream;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String NOT_FOUND_MESSAGE = "user.exception.not-found";
+    private static final String EXISTING_USERNAME_MESSAGE = "user.error.existing-username";
+    private static final String EXISTING_EMAIL_ADDRESS_MESSAGE = "user.error.existing-email-address";
+    private static final String USER_ROLE_XREF_NOT_FOUND_MESSAGE = "user-role-xref.exception.not-found";
+    private static final String NOT_EXISTENT_USERNAME_MESSAGE = "user.error.non-existent-username";
+    private static final String INCORRECT_RECOVERY_TOKEN_MESSAGE = "user.error.incorrect-recovery-token";
+    private static final String INCORRECT_VERIFICATION_CODE_MESSAGE = "user.error.incorrect-verification-code";
+    private static final String INVALID_USER_MESSAGE = "user.exception.invalid-user";
+
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
     private final UserRoleXrefRepository userRoleXrefRepository;
@@ -57,7 +66,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findByUsername(username);
         if (!user.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new UsernameNotFoundException(errorMessage);
         }
@@ -72,7 +81,7 @@ public class UserServiceImpl implements UserService {
         // If the user already exists with the given username, don't save an identical one, throw an exception that it's already used.
         if (existingUsername.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.error.existing-username", new Object[]{registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
+                    .getMessage(EXISTING_USERNAME_MESSAGE, new Object[]{registrationRequestDto.getUsername()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -81,7 +90,7 @@ public class UserServiceImpl implements UserService {
         // If the email address is already in user, don't save an identical one.
         if (existingEmailAddress.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.error.existing-email-address", new Object[]{registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
+                    .getMessage(EXISTING_EMAIL_ADDRESS_MESSAGE, new Object[]{registrationRequestDto.getEmailAddress()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -90,7 +99,7 @@ public class UserServiceImpl implements UserService {
         Optional<UserRole> userRole = userRoleRepository.findByRole("ROLE_USER");
         if (!userRole.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user-role-xref.exception.not-found", new Object[]{"ROLE_USER"}, LocaleContextHolder.getLocale());
+                    .getMessage(USER_ROLE_XREF_NOT_FOUND_MESSAGE, new Object[]{"ROLE_USER"}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -124,7 +133,7 @@ public class UserServiceImpl implements UserService {
         // If the user has provided an incorrect username, return an error message stating it can't be found.
         if (!optionalUser.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.error.non-existent-username", new Object[]{recoveryRequestDto.getUsername()}, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_EXISTENT_USERNAME_MESSAGE, new Object[]{recoveryRequestDto.getUsername()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -133,7 +142,7 @@ public class UserServiceImpl implements UserService {
         // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
         if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(recoveryRequestDto.getRecoveryToken())) {
             String errorMessage = messageSource
-                    .getMessage("user.error.incorrect-recovery-token", new Object[]{recoveryRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
+                    .getMessage(INCORRECT_RECOVERY_TOKEN_MESSAGE, new Object[]{recoveryRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -209,7 +218,7 @@ public class UserServiceImpl implements UserService {
             // If the verification code doesn't match, then the verification will have failed.
             if (user.getVerificationCode() == null || !user.getVerificationCode().equals(verificationCode)) {
                 String errorMessage = messageSource
-                        .getMessage("user.error.incorrect-verification-code", new Object[]{verificationCode, username}, LocaleContextHolder.getLocale());
+                        .getMessage(INCORRECT_VERIFICATION_CODE_MESSAGE, new Object[]{verificationCode, username}, LocaleContextHolder.getLocale());
 
                 return new CheckedResponse<>(false, errorMessage);
             }
@@ -252,7 +261,7 @@ public class UserServiceImpl implements UserService {
         // Can't verify a user if it doesn't exist.
         if (!optionalUser.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.not-found", new Object[]{username}, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -261,7 +270,7 @@ public class UserServiceImpl implements UserService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
             String errorMessage = messageSource
-                    .getMessage("user.exception.invalid-user", new Object[]{}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }

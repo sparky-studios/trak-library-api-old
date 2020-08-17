@@ -15,6 +15,8 @@ import javax.persistence.EntityNotFoundException;
 @Service
 public class GameBarcodeServiceImpl implements GameBarcodeService {
 
+    private static final String NOT_FOUND_MESSAGE = "game-barcode.exception.barcode-not-found";
+
     private final GameBarcodeRepository gameBarcodeRepository;
     private final MessageSource messageSource;
     private final GameBarcodeMapper gameBarcodeMapper;
@@ -22,7 +24,7 @@ public class GameBarcodeServiceImpl implements GameBarcodeService {
     @Override
     public GameBarcodeDto findByBarcode(String barcode) {
         String errorMessage = messageSource
-                .getMessage("game-barcode.exception.barcode-not-found", new Object[] { barcode }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { barcode }, LocaleContextHolder.getLocale());
 
         return gameBarcodeMapper.gameBarcodeToGameBarcodeDto(gameBarcodeRepository.findByBarcode(barcode)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));

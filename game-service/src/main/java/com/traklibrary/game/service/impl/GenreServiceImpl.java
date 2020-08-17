@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class GenreServiceImpl implements GenreService {
 
+    private static final String ENTITY_EXISTS_MESSAGE = "genre.exception.entity-exists";
+    private static final String NOT_FOUND_MESSAGE = "genre.exception.not-found";
+    private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
+
     private final GenreRepository genreRepository;
     private final GameRepository gameRepository;
     private final GameGenreXrefRepository gameGenreXrefRepository;
@@ -38,7 +42,7 @@ public class GenreServiceImpl implements GenreService {
 
         if (genreRepository.existsById(genreDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.entity-exists", new Object[] { genreDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { genreDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -49,7 +53,7 @@ public class GenreServiceImpl implements GenreService {
     @Override
     public GenreDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("genre.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return genreMapper.genreToGenreDto(genreRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -59,7 +63,7 @@ public class GenreServiceImpl implements GenreService {
     public Iterable<GenreDto> findGenresByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -93,7 +97,7 @@ public class GenreServiceImpl implements GenreService {
 
         if (!genreRepository.existsById(genreDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { genreDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { genreDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -113,7 +117,7 @@ public class GenreServiceImpl implements GenreService {
     public void deleteById(long id) {
         if (!genreRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

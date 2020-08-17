@@ -55,9 +55,11 @@ class MobileDeviceLinkServiceSnsImplTest {
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
 
+        MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
+
         // Assert
         Assertions.assertThrows(InvalidUserException.class,
-                () -> mobileDeviceLinkService.register(new MobileDeviceLinkRegistrationRequestDto()));
+                () -> mobileDeviceLinkService.register(mobileDeviceLinkRegistrationRequestDto));
     }
 
     @Test

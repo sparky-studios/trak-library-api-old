@@ -23,6 +23,10 @@ import java.util.Arrays;
 @Service
 public class ImageServiceAwsS3Impl implements ImageService {
 
+    private static final String INVALID_FILE_FORMAT_MESSAGE = "image.exception.invalid-file-format";
+    private static final String UPLOAD_FAILED_MESSAGE = "image.exception.upload-failed";
+    private static final String DOWNLOAD_FAILED_MESSAGE = "image.exception.download-failed";
+
     @Setter
     @Value("${trak.aws.s3.bucket-name}")
     private String bucketName;
@@ -38,7 +42,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
 
         if (!Arrays.asList("png", "jpg", "jpeg").contains(extension)) {
             throw new IllegalArgumentException(messageSource
-                    .getMessage("image.exception.invalid-file-format", new Object[] {}, LocaleContextHolder.getLocale()));
+                    .getMessage(INVALID_FILE_FORMAT_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale()));
         }
 
         try {
@@ -50,7 +54,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
             }
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.upload-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
+                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }
@@ -63,7 +67,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
             return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.download-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
+                    .getMessage(DOWNLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }

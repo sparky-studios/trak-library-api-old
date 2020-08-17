@@ -22,6 +22,9 @@ import java.util.Optional;
 @Service
 public class GameImageServiceImpl implements GameImageService {
 
+    private static final String ENTITY_EXISTS_MESSAGE = "game-image.exception.image-exists";
+    private static final String NOT_FOUND_MESSAGE = "game-image.exception.not-found";
+
     private final GameImageRepository gameImageRepository;
     private final MessageSource messageSource;
     private final ImageClient imageClient;
@@ -32,7 +35,7 @@ public class GameImageServiceImpl implements GameImageService {
         // Can't upload additional images for the same game.
         if (gameImageRepository.existsByGameId(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game-image.exception.image-exists", new Object[] {gameId}, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] {gameId}, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -55,7 +58,7 @@ public class GameImageServiceImpl implements GameImageService {
 
         if (!gameImage.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("game-image.exception.not-found", new Object[] {gameId}, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] {gameId}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

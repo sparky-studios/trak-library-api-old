@@ -22,7 +22,7 @@ import javax.annotation.PostConstruct;
 public class NotificationClientCircuitBreakerImpl implements NotificationClient {
 
     private final AuthenticationService authenticationService;
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("all")
     private final CircuitBreakerFactory circuitBreakerFactory;
     private final RestTemplate restTemplate;
 

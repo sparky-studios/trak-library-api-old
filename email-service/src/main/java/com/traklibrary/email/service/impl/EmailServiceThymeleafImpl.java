@@ -24,6 +24,9 @@ import java.util.Collections;
 @Service
 public class EmailServiceThymeleafImpl implements EmailService {
 
+    private static final String VERIFICATION_SUBJECT = "email.verification.subject";
+    private static final String RECOVERY_SUBJECT = "email.recovery.subject";
+
     @Setter
     @Value("${trak.aws.simple-email-service.from-address}")
     private String fromAddress;
@@ -39,7 +42,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailAddress);
-        emailDto.setSubject(messageSource.getMessage("email.verification.subject", new Object[] {}, LocaleContextHolder.getLocale()));
+        emailDto.setSubject(messageSource.getMessage(VERIFICATION_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
         emailDto.setData(Collections.singletonMap("verificationCode", verificationCode));
 
         try {
@@ -55,7 +58,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailAddress);
-        emailDto.setSubject(messageSource.getMessage("email.recovery.subject", new Object[] {}, LocaleContextHolder.getLocale()));
+        emailDto.setSubject(messageSource.getMessage(RECOVERY_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
         emailDto.setData(Collections.singletonMap("recoveryToken", recoveryToken));
 
         try {

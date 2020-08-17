@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class DeveloperServiceImpl implements DeveloperService {
 
+    private static final String ENTITY_EXISTS_MESSAGE = "developer.exception.entity-exists";
+    private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
+    private static final String NOT_FOUND_MESSAGE = "developer.exception.not-found";
+
     private final DeveloperRepository developerRepository;
     private final GameRepository gameRepository;
     private final GameDeveloperXrefRepository gameDeveloperXrefRepository;
@@ -38,7 +42,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         if (developerRepository.existsById(developerDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("developer.exception.entity-exists", new Object[] { developerDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { developerDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -49,7 +53,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     @Override
     public DeveloperDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("developer.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return developerMapper.developerToDeveloperDto(developerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -59,7 +63,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     public Iterable<DeveloperDto> findDevelopersByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -93,7 +97,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         if (!developerRepository.existsById(companyDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("developer.exception.not-found", new Object[] { companyDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { companyDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -113,7 +117,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     public void deleteById(long id) {
         if (!developerRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage("developer.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
