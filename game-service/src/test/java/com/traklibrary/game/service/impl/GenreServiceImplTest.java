@@ -67,8 +67,10 @@ class GenreServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GenreDto genreDto = new GenreDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> genreService.save(new GenreDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> genreService.save(genreDto));
     }
 
     @Test
@@ -188,8 +190,11 @@ class GenreServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GenreSpecification genreSpecification = Mockito.mock(GenreSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> genreService.findAll(Mockito.mock(GenreSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> genreService.findAll(genreSpecification, null));
     }
 
     @Test
@@ -263,8 +268,10 @@ class GenreServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GenreDto genreDto = new GenreDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.update(new GenreDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.update(genreDto));
     }
 
     @Test

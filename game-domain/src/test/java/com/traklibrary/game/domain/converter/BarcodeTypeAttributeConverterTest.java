@@ -35,8 +35,11 @@ class BarcodeTypeAttributeConverterTest {
 
     @Test
     void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+        // Arrange
+        BarcodeTypeAttributeConverter converter = new BarcodeTypeAttributeConverter();
+
         // Assert
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new BarcodeTypeAttributeConverter().convertToEntityAttribute((short)1000));
+        Assertions.assertThrows(IllegalArgumentException.class, () ->converter.convertToEntityAttribute((short)1000));
     }
 
     @Test

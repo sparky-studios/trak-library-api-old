@@ -92,8 +92,10 @@ class GameInfoServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameInfoService.findByGenreId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameInfoService.findByGenreId(0L, pageable));
     }
 
     @Test
@@ -174,8 +176,11 @@ class GameInfoServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GameSpecification gameSpecification = Mockito.mock(GameSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.findAll(Mockito.mock(GameSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.findAll(gameSpecification, null));
     }
 
     @Test
@@ -233,5 +238,4 @@ class GameInfoServiceImplTest {
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .count(Mockito.any());
     }
-
 }

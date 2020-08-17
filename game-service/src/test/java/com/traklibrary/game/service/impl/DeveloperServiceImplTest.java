@@ -190,8 +190,11 @@ class DeveloperServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        DeveloperSpecification developerSpecification = Mockito.mock(DeveloperSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> developerService.findAll(Mockito.mock(DeveloperSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> developerService.findAll(developerSpecification, null));
     }
 
     @Test
@@ -265,8 +268,10 @@ class DeveloperServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        DeveloperDto developerDto = new DeveloperDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.update(new DeveloperDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.update(developerDto));
     }
 
     @Test
@@ -295,8 +300,10 @@ class DeveloperServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.patch(0L, jsonMergePatch));
     }
 
     @Test

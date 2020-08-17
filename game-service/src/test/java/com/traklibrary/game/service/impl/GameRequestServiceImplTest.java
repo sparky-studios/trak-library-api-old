@@ -68,8 +68,10 @@ class GameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameRequestDto gameRequestDto = new GameRequestDto();
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.save(new GameRequestDto()));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.save(gameRequestDto));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -86,8 +88,10 @@ class GameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameRequestDto gameRequestDto = new GameRequestDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameRequestService.save(new GameRequestDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameRequestService.save(gameRequestDto));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -156,8 +160,11 @@ class GameRequestServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GameRequestSpecification gameRequestSpecification = Mockito.mock(GameRequestSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.findAll(Mockito.mock(GameRequestSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameRequestService.findAll(gameRequestSpecification, null));
     }
 
     @Test
@@ -233,8 +240,10 @@ class GameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameRequestDto gameRequestDto = new GameRequestDto();
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.update(new GameRequestDto()));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.update(gameRequestDto));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -251,8 +260,10 @@ class GameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameRequestDto gameRequestDto = new GameRequestDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameRequestService.update(new GameRequestDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameRequestService.update(gameRequestDto));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -286,8 +297,10 @@ class GameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameRequestService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameRequestService.patch(0L, jsonMergePatch));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -307,8 +320,10 @@ class GameRequestServiceImplTest {
         Mockito.when(patchService.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(new GameRequestDto());
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameRequestService.patch(0L, jsonMergePatch));
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }

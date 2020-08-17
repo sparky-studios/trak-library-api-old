@@ -68,8 +68,10 @@ class PlatformServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        PlatformDto platformDto = new PlatformDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> platformService.save(new PlatformDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> platformService.save(platformDto));
     }
 
     @Test
@@ -197,8 +199,11 @@ class PlatformServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        PlatformSpecification platformSpecification = Mockito.mock(PlatformSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> platformService.findAll(Mockito.mock(PlatformSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> platformService.findAll(platformSpecification, null));
     }
 
     @Test
@@ -272,8 +277,10 @@ class PlatformServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        PlatformDto platformDto = new PlatformDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.update(new PlatformDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.update(platformDto));
     }
 
     @Test
@@ -302,8 +309,10 @@ class PlatformServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.patch(0L, jsonMergePatch));
     }
 
     @Test

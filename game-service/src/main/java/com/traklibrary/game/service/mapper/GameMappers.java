@@ -1,7 +1,10 @@
 package com.traklibrary.game.service.mapper;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.mapstruct.factory.Mappers;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public final class GameMappers {
 
     public static final DeveloperMapper DEVELOPER_MAPPER = Mappers.getMapper(DeveloperMapper.class);

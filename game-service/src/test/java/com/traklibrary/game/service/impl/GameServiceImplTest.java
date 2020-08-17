@@ -81,8 +81,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameDto gameDto = new GameDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameService.save(new GameDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameService.save(gameDto));
     }
 
     @Test
@@ -150,8 +152,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByGenreId(0L, pageable));
     }
 
     @Test
@@ -239,8 +243,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPlatformId(0L, pageable));
     }
 
     @Test
@@ -328,8 +334,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByDeveloperId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByDeveloperId(0L, pageable));
     }
 
     @Test
@@ -417,8 +425,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPublisherId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPublisherId(0L, pageable));
     }
 
     @Test
@@ -533,8 +543,11 @@ class GameServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GameSpecification gameSpecification = Mockito.mock(GameSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameService.findAll(Mockito.mock(GameSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameService.findAll(gameSpecification, null));
     }
 
     @Test
@@ -608,8 +621,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameDto gameDto = new GameDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(new GameDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(gameDto));
     }
 
     @Test
@@ -648,8 +663,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.patch(0L, jsonMergePatch));
     }
 
     @Test

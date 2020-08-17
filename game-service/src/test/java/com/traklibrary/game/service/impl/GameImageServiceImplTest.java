@@ -44,8 +44,10 @@ class GameImageServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameImageService.upload(0L, Mockito.mock(MultipartFile.class)));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameImageService.upload(0L, multipartFile));
     }
 
     @Test

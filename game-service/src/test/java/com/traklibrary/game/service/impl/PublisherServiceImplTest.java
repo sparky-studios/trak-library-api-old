@@ -67,8 +67,10 @@ class PublisherServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        PublisherDto publisherDto = new PublisherDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> publisherService.save(new PublisherDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> publisherService.save(publisherDto));
     }
 
     @Test
@@ -188,8 +190,11 @@ class PublisherServiceImplTest {
 
     @Test
     void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        PublisherSpecification publisherSpecification = Mockito.mock(PublisherSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> publisherService.findAll(Mockito.mock(PublisherSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> publisherService.findAll(publisherSpecification, null));
     }
 
     @Test
@@ -263,8 +268,10 @@ class PublisherServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        PublisherDto publisherDto = new PublisherDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.update(new PublisherDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.update(publisherDto));
     }
 
     @Test
@@ -293,8 +300,10 @@ class PublisherServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.patch(0L, jsonMergePatch));
     }
 
     @Test
