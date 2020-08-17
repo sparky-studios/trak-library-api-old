@@ -17,7 +17,7 @@ import java.util.Collection;
 @Service
 public class NotificationServiceSnsImpl implements NotificationService {
 
-    private static final String PUBlISH_FAILED_MESSAGE = "notifications.exception.publish-failed";
+    private static final String PUBLISH_FAILED_MESSAGE = "notifications.exception.publish-failed";
 
     private final MobileDeviceLinkRepository mobileDeviceLinkRepository;
     private final AmazonSNS amazonSNS;
@@ -41,7 +41,7 @@ public class NotificationServiceSnsImpl implements NotificationService {
                 amazonSNS.publish(publishRequest);
             } catch (Exception e) {
                 String errorMessage =
-                        messageSource.getMessage(PUBlISH_FAILED_MESSAGE, new Object[] {mobileDeviceLink.getToken()}, LocaleContextHolder.getLocale());
+                        messageSource.getMessage(PUBLISH_FAILED_MESSAGE, new Object[] {mobileDeviceLink.getToken()}, LocaleContextHolder.getLocale());
 
                 throw new NotificationException(errorMessage, e);
             }

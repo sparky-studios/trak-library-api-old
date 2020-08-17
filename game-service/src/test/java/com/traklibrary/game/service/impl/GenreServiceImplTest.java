@@ -300,8 +300,10 @@ class GenreServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.patch(0L, jsonMergePatch));
     }
 
     @Test

@@ -43,10 +43,11 @@ class PatchServiceImplTest {
                 .thenReturn(Collections.singleton(Mockito.mock(ConstraintViolation.class)));
 
         JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+        GameDto gameDto = new GameDto();
 
         // Assert
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                patchService.patch(jsonMergePatch, new GameDto(), GameDto.class));
+                patchService.patch(jsonMergePatch, gameDto, GameDto.class));
     }
 
     @Test
