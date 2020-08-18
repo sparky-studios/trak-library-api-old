@@ -9,7 +9,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The {@link User} entity represents a record in the user table within the auth database. Its purpose
+ * The {@link User} entity represents a record in the auth_user table within the auth database. Its purpose
  * is to reflect the login information and high-level credentials for each individual user that has signed up to
  * Trak. It should be noted that although password information is provided, it is encrypted with BCrypt before
  * being persisted within the database so is not personally identifiable.
