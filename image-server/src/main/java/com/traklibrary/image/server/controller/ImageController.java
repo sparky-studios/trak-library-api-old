@@ -1,9 +1,9 @@
 package com.traklibrary.image.server.controller;
 
 import com.traklibrary.image.server.annotation.AllowedForAdmin;
+import com.traklibrary.image.server.exception.ApiError;
 import com.traklibrary.image.service.ImageService;
 import com.traklibrary.image.service.exception.ImageFailedException;
-import com.traklibrary.image.server.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;

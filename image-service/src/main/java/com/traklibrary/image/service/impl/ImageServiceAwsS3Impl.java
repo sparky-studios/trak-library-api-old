@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -46,7 +47,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
         }
 
         try {
-            Path path = java.nio.file.Files.createTempFile(folder, filename);
+            Path path = java.nio.file.Files.createTempFile(folder, UUID.randomUUID().toString() + "." + extension);
 
             try (FileOutputStream stream = new FileOutputStream(path.toFile())) {
                 stream.write(content);
