@@ -41,7 +41,7 @@ public class User {
     @Column(name = "verified", nullable = false)
     private boolean verified;
 
-    @Column(name = "verification_code")
+    @Column(name = "verification_code", length = 5)
     private String verificationCode;
 
     @Column(name = "verification_expiry_date")

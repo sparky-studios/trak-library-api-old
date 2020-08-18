@@ -50,16 +50,10 @@
                 <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role" />
             </column>
             <column name="role" type="varchar(30)">
-                <constraints nullable="false"/>
+                <constraints nullable="false" unique="true" />
             </column>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
-
-        <!-- auth_user_role unique constraints -->
-        <addUniqueConstraint
-                tableName="auth_user_role"
-                columnNames="role"
-                constraintName="unq_auth_user_role_role" />
 
         <!-- Create the auth_user_role_xref table -->
         <createTable tableName="auth_user_role_xref">

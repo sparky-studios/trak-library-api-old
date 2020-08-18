@@ -28,7 +28,7 @@ public class UserRole {
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
-    @Column(name = "role", nullable = false, length = 30)
+    @Column(name = "role", nullable = false, unique = true, length = 30)
     private String role;
 
     @EqualsAndHashCode.Exclude
