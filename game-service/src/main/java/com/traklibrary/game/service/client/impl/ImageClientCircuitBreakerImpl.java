@@ -33,8 +33,10 @@ import java.util.Objects;
 @Component
 public class ImageClientCircuitBreakerImpl implements ImageClient {
 
+    private static final String UPLOAD_FAILED_MESSAGE = "game-image.exception.upload-failed";
+
     private final AuthenticationService authenticationService;
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("all")
     private final CircuitBreakerFactory circuitBreakerFactory;
     private final MessageSource messageSource;
     private final RestTemplate restTemplate;
@@ -57,7 +59,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
             stream.write(multipartFile.getBytes());
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("game-image.exception.upload-failed", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new UploadFailedException(errorMessage, e);
         }
@@ -79,7 +81,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
         imageServerCircuitBreaker.run(() ->
                 restTemplate.postForEntity("http://trak-image-server/games", requestEntity, Void.class), throwable -> {
             String errorMessage = messageSource
-                    .getMessage("game-image.exception.upload-failed", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new UploadFailedException(errorMessage, throwable);
         });

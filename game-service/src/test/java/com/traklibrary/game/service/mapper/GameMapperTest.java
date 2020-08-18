@@ -8,19 +8,19 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class GameMapperTest {
+class GameMapperTest {
 
     @Test
-    public void gameToGameDto_withNull_returnsNull() {
+    void gameToGameDto_withNull_returnsNull() {
         // Act
-        GameDto result = GameMapper.INSTANCE.gameToGameDto(null);
+        GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void gameToGameDto_withGame_mapsFields() {
+    void gameToGameDto_withGame_mapsFields() {
         // Arrange
         Game game = new Game();
         game.setId(5L);
@@ -31,7 +31,7 @@ public class GameMapperTest {
         game.setVersion(1L);
 
         // Act
-        GameDto result = GameMapper.INSTANCE.gameToGameDto(game);
+        GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(game);
 
         // Assert
         Assertions.assertEquals(game.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -43,16 +43,16 @@ public class GameMapperTest {
     }
 
     @Test
-    public void gameDtoToGame_withNull_returnsNull() {
+    void gameDtoToGame_withNull_returnsNull() {
         // Act
-        Game result = GameMapper.INSTANCE.gameDtoToGame(null);
+        Game result = GameMappers.GAME_MAPPER.gameDtoToGame(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void gameDtoToGame_withGameDto_mapsFields() {
+    void gameDtoToGame_withGameDto_mapsFields() {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
@@ -63,7 +63,7 @@ public class GameMapperTest {
         gameDto.setVersion(1L);
 
         // Act
-        Game result = GameMapper.INSTANCE.gameDtoToGame(gameDto);
+        Game result = GameMappers.GAME_MAPPER.gameDtoToGame(gameDto);
 
         // Assert
         Assertions.assertEquals(gameDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

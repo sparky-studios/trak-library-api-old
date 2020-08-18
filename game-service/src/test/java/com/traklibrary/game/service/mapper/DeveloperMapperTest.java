@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class DeveloperMapperTest {
+class DeveloperMapperTest {
 
     @Test
-    public void developerToDeveloperDto_withNull_returnsNull() {
+    void developerToDeveloperDto_withNull_returnsNull() {
         // Act
-        DeveloperDto result = DeveloperMapper.INSTANCE.developerToDeveloperDto(null);
+        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void developerToDeveloperDto_withDeveloper_mapsFields() {
+    void developerToDeveloperDto_withDeveloper_mapsFields() {
         // Arrange
         Developer developer = new Developer();
         developer.setId(5L);
@@ -29,7 +29,7 @@ public class DeveloperMapperTest {
         developer.setVersion(1L);
 
         // Act
-        DeveloperDto result = DeveloperMapper.INSTANCE.developerToDeveloperDto(developer);
+        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(developer);
 
         // Assert
         Assertions.assertEquals(developer.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -40,16 +40,16 @@ public class DeveloperMapperTest {
     }
 
     @Test
-    public void developerDtoToDeveloper_withNull_returnsNull() {
+    void developerDtoToDeveloper_withNull_returnsNull() {
         // Act
-        Developer result = DeveloperMapper.INSTANCE.developerDtoToDeveloper(null);
+        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void developerDtoToDeveloper_withDeveloperDto_mapsFields() {
+    void developerDtoToDeveloper_withDeveloperDto_mapsFields() {
         // Arrange
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setId(5L);
@@ -59,7 +59,7 @@ public class DeveloperMapperTest {
         developerDto.setVersion(1L);
 
         // Act
-        Developer result = DeveloperMapper.INSTANCE.developerDtoToDeveloper(developerDto);
+        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(developerDto);
 
         // Assert
         Assertions.assertEquals(developerDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

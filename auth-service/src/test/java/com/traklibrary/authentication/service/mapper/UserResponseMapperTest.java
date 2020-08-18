@@ -5,10 +5,10 @@ import com.traklibrary.authentication.service.dto.UserResponseDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class UserResponseMapperTest {
+class UserResponseMapperTest {
 
     @Test
-    public void userToUserCreationResponseDto_withUser_mapsFields() {
+    void userToUserCreationResponseDto_withUser_mapsFields() {
         // Arrange
         User user = new User();
         user.setId(5L);
@@ -16,7 +16,7 @@ public class UserResponseMapperTest {
         user.setVerified(true);
 
         // Act
-        UserResponseDto result = UserResponseMapper.INSTANCE.userToUserResponseDto(user);
+        UserResponseDto result = AuthMappers.USER_RESPONSE_MAPPER.userToUserResponseDto(user);
 
         // Assert
         Assertions.assertEquals(user.getId(), result.getId(), "The mapped ID does not match the entity.");

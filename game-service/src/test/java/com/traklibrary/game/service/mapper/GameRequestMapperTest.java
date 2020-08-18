@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class GameRequestMapperTest {
+class GameRequestMapperTest {
 
     @Test
-    public void gameRequestToGameRequestDto_withNull_returnsNull() {
+    void gameRequestToGameRequestDto_withNull_returnsNull() {
         // Act
-        GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(null);
+        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
+    void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
         // Arrange
         GameRequest gameRequest = new GameRequest();
         gameRequest.setId(5L);
@@ -30,7 +30,7 @@ public class GameRequestMapperTest {
         gameRequest.setVersion(2L);
 
         // Act
-        GameRequestDto result = GameRequestMapper.INSTANCE.gameRequestToGameRequestDto(gameRequest);
+        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(gameRequest);
 
         // Assert
         Assertions.assertEquals(gameRequest.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -42,16 +42,16 @@ public class GameRequestMapperTest {
     }
 
     @Test
-    public void gameRequestDtoToGameRequest_withNull_returnsNull() {
+    void gameRequestDtoToGameRequest_withNull_returnsNull() {
         // Act
-        GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(null);
+        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void gameRequestDtoToGameRequest_withGameRequestDto_mapsFields() {
+    void gameRequestDtoToGameRequest_withGameRequestDto_mapsFields() {
         // Arrange
         GameRequestDto gameRequestDto = new GameRequestDto();
         gameRequestDto.setId(5L);
@@ -61,7 +61,7 @@ public class GameRequestMapperTest {
         gameRequestDto.setVersion(2L);
 
         // Act
-        GameRequest result = GameRequestMapper.INSTANCE.gameRequestDtoToGameRequest(gameRequestDto);
+        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(gameRequestDto);
 
         // Assert
         Assertions.assertEquals(gameRequestDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

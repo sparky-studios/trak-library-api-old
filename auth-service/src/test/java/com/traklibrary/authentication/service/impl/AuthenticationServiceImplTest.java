@@ -15,13 +15,13 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthenticationServiceImplTest {
+class AuthenticationServiceImplTest {
 
     @InjectMocks
     private AuthenticationServiceImpl authenticationService;
 
     @Test
-    public void isCurrentAuthenticatedUser_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
+    void isCurrentAuthenticatedUser_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
         // Arrange
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -37,7 +37,7 @@ public class AuthenticationServiceImplTest {
     }
 
     @Test
-    public void isCurrentAuthenticatedUser_withAdminRole_returnsTrue() {
+    void isCurrentAuthenticatedUser_withAdminRole_returnsTrue() {
         // Arrange
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
@@ -56,7 +56,7 @@ public class AuthenticationServiceImplTest {
     }
 
     @Test
-    public void isCurrentAuthenticatedUser_withDifferentUser_returnsFalse() {
+    void isCurrentAuthenticatedUser_withDifferentUser_returnsFalse() {
         // Arrange
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
@@ -76,7 +76,7 @@ public class AuthenticationServiceImplTest {
     }
 
     @Test
-    public void isCurrentAuthenticatedUser_withSameUser_returnsTrue() {
+    void isCurrentAuthenticatedUser_withSameUser_returnsTrue() {
         // Arrange
         UsernamePasswordAuthenticationToken token =
                 new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());

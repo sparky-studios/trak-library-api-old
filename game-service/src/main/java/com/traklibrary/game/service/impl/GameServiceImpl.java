@@ -23,6 +23,13 @@ import java.util.stream.StreamSupport;
 @Service
 public class GameServiceImpl implements GameService {
 
+    private static final String ENTITY_EXISTS_MESSAGE = "game.exception.entity-exists";
+    private static final String NOT_FOUND_MESSAGE = "game.exception.not-found";
+    private static final String GENRE_NOT_FOUND_MESSAGE = "genre.exception.not-found";
+    private static final String PLATFORM_NOT_FOUND_MESSAGE = "platform.exception.not-found";
+    private static final String DEVELOPER_NOT_FOUND_MESSAGE = "developer.exception.not-found";
+    private static final String PUBLISHER_NOT_FOUND_MESSAGE = "publisher.exception.not-found";
+
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
     private final GameGenreXrefRepository gameGenreXrefRepository;
@@ -42,7 +49,7 @@ public class GameServiceImpl implements GameService {
 
         if (gameRepository.existsById(gameDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.entity-exists", new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -53,7 +60,7 @@ public class GameServiceImpl implements GameService {
     @Override
     public GameDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("game.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return gameMapper.gameToGameDto(gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -63,7 +70,7 @@ public class GameServiceImpl implements GameService {
     public Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+                    .getMessage(GENRE_NOT_FOUND_MESSAGE, new Object[] { genreId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -77,7 +84,7 @@ public class GameServiceImpl implements GameService {
     public long countGamesByGenreId(long genreId) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+                    .getMessage(GENRE_NOT_FOUND_MESSAGE, new Object[] { genreId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -90,7 +97,7 @@ public class GameServiceImpl implements GameService {
     public Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable) {
         if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
-                    .getMessage("platform.exception.not-found", new Object[] { platformId }, LocaleContextHolder.getLocale());
+                    .getMessage(PLATFORM_NOT_FOUND_MESSAGE, new Object[] { platformId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -104,7 +111,7 @@ public class GameServiceImpl implements GameService {
     public long countGamesByPlatformId(long platformId) {
         if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
-                    .getMessage("platform.exception.not-found", new Object[] { platformId }, LocaleContextHolder.getLocale());
+                    .getMessage(PLATFORM_NOT_FOUND_MESSAGE, new Object[] { platformId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -117,7 +124,7 @@ public class GameServiceImpl implements GameService {
     public Iterable<GameDto> findGamesByDeveloperId(long developerId, Pageable pageable) {
         if (!developerRepository.existsById(developerId)) {
             String errorMessage = messageSource
-                    .getMessage("developer.exception.not-found", new Object[] { developerId }, LocaleContextHolder.getLocale());
+                    .getMessage(DEVELOPER_NOT_FOUND_MESSAGE, new Object[] { developerId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -131,7 +138,7 @@ public class GameServiceImpl implements GameService {
     public long countGamesByDeveloperId(long developerId) {
         if (!developerRepository.existsById(developerId)) {
             String errorMessage = messageSource
-                    .getMessage("developer.exception.not-found", new Object[] { developerId }, LocaleContextHolder.getLocale());
+                    .getMessage(DEVELOPER_NOT_FOUND_MESSAGE, new Object[] { developerId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -144,7 +151,7 @@ public class GameServiceImpl implements GameService {
     public Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable) {
         if (!publisherRepository.existsById(publisherId)) {
             String errorMessage = messageSource
-                    .getMessage("publisher.exception.not-found", new Object[] { publisherId }, LocaleContextHolder.getLocale());
+                    .getMessage(PUBLISHER_NOT_FOUND_MESSAGE, new Object[] { publisherId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -158,7 +165,7 @@ public class GameServiceImpl implements GameService {
     public long countGamesByPublisherId(long publisherId) {
         if (!publisherRepository.existsById(publisherId)) {
             String errorMessage = messageSource
-                    .getMessage("publisher.exception.not-found", new Object[] { publisherId }, LocaleContextHolder.getLocale());
+                    .getMessage(PUBLISHER_NOT_FOUND_MESSAGE, new Object[] { publisherId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -195,7 +202,7 @@ public class GameServiceImpl implements GameService {
 
         if (!gameRepository.existsById(gameDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -215,7 +222,7 @@ public class GameServiceImpl implements GameService {
     public void deleteById(long id) {
         if (!gameRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

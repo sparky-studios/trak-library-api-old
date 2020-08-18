@@ -4,10 +4,10 @@ import com.traklibrary.game.domain.GameUserEntryStatus;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GameUserEntryStatusAttributeConverterTest {
+class GameUserEntryStatusAttributeConverterTest {
 
     @Test
-    public void convertToDatabaseColumn_withNullGameUserEntryStatus_returnsGameUserEntryStatusWishlistId() {
+    void convertToDatabaseColumn_withNullGameUserEntryStatus_returnsGameUserEntryStatusWishlistId() {
         // Act
         Short result = new GameUserEntryStatusAttributeConverter().convertToDatabaseColumn(null);
 
@@ -16,7 +16,7 @@ public class GameUserEntryStatusAttributeConverterTest {
     }
 
     @Test
-    public void convertToDatabaseColumn_withValidGameUserEntryStatus_returnsIdOfGameUserEntryStatus() {
+    void convertToDatabaseColumn_withValidGameUserEntryStatus_returnsIdOfGameUserEntryStatus() {
         // Act
         Short result = new GameUserEntryStatusAttributeConverter().convertToDatabaseColumn(GameUserEntryStatus.COMPLETED);
 
@@ -25,7 +25,7 @@ public class GameUserEntryStatusAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withNullId_returnsGameUserEntryStatusWishList() {
+    void convertToEntityAttribute_withNullId_returnsGameUserEntryStatusWishList() {
         // Act
         GameUserEntryStatus result = new GameUserEntryStatusAttributeConverter().convertToEntityAttribute(null);
 
@@ -34,13 +34,16 @@ public class GameUserEntryStatusAttributeConverterTest {
     }
 
     @Test
-    public void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+    void convertToEntityAttribute_withInvalidId_throwsIllegalArgumentException() {
+        // Arrange
+        GameUserEntryStatusAttributeConverter converter = new GameUserEntryStatusAttributeConverter();
+
         // Assert
-        Assertions.assertThrows(IllegalArgumentException.class, () -> new GameUserEntryStatusAttributeConverter().convertToEntityAttribute((short)1000));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> converter.convertToEntityAttribute((short)1000));
     }
 
     @Test
-    public void convertToEntityAttribute_withValidGameUserEntryStatusId_returnsCorrectGameUserEntryStatus() {
+    void convertToEntityAttribute_withValidGameUserEntryStatusId_returnsCorrectGameUserEntryStatus() {
         // Act
         GameUserEntryStatus result = new GameUserEntryStatusAttributeConverter().convertToEntityAttribute(GameUserEntryStatus.COMPLETED.getId());
 

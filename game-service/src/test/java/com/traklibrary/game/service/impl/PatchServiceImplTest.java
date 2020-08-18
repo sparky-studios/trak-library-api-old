@@ -19,7 +19,7 @@ import javax.validation.Validator;
 import java.util.Collections;
 
 @ExtendWith(MockitoExtension.class)
-public class PatchServiceImplTest {
+class PatchServiceImplTest {
 
     @Mock
     private ObjectMapper objectMapper;
@@ -31,7 +31,7 @@ public class PatchServiceImplTest {
     private PatchServiceImpl patchService;
 
     @Test
-    public void patch_withValueBreakingConstraints_throwsConstraintViolationException() {
+    void patch_withValueBreakingConstraints_throwsConstraintViolationException() {
         // Arrange
         Mockito.when(objectMapper.convertValue(ArgumentMatchers.any(), ArgumentMatchers.eq(JsonValue.class)))
                 .thenReturn(Mockito.mock(JsonValue.class));
@@ -42,13 +42,16 @@ public class PatchServiceImplTest {
         Mockito.when(validator.validate(ArgumentMatchers.any()))
                 .thenReturn(Collections.singleton(Mockito.mock(ConstraintViolation.class)));
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+        GameDto gameDto = new GameDto();
+
         // Assert
         Assertions.assertThrows(ConstraintViolationException.class, () ->
-                patchService.patch(Mockito.mock(JsonMergePatch.class), new GameDto(), GameDto.class));
+                patchService.patch(jsonMergePatch, gameDto, GameDto.class));
     }
 
     @Test
-    public void patch_withValueWithMetConstraints_returnsValue() {
+    void patch_withValueWithMetConstraints_returnsValue() {
         // Arrange
         Mockito.when(objectMapper.convertValue(ArgumentMatchers.any(), ArgumentMatchers.eq(JsonValue.class)))
                 .thenReturn(Mockito.mock(JsonValue.class));

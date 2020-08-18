@@ -5,19 +5,19 @@ import com.traklibrary.game.service.dto.GenreDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GenreMapperTest {
+class GenreMapperTest {
 
     @Test
-    public void genreToGenreDto_withNull_returnsNull() {
+    void genreToGenreDto_withNull_returnsNull() {
         // Act
-        GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(null);
+        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void genreToGenreDto_withGenre_mapsFields() {
+    void genreToGenreDto_withGenre_mapsFields() {
         // Arrange
         Genre genre = new Genre();
         genre.setId(5L);
@@ -26,7 +26,7 @@ public class GenreMapperTest {
         genre.setVersion(1L);
 
         // Act
-        GenreDto result = GenreMapper.INSTANCE.genreToGenreDto(genre);
+        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
 
         // Assert
         Assertions.assertEquals(genre.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -36,16 +36,16 @@ public class GenreMapperTest {
     }
 
     @Test
-    public void genreDtoToGenre_withNull_returnsNull() {
+    void genreDtoToGenre_withNull_returnsNull() {
         // Act
-        Genre result = GenreMapper.INSTANCE.genreDtoToGenre(null);
+        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void genreDtoToGenre_withGenreDto_mapsFields() {
+    void genreDtoToGenre_withGenreDto_mapsFields() {
         // Arrange
         GenreDto genreDto = new GenreDto();
         genreDto.setId(5L);
@@ -54,7 +54,7 @@ public class GenreMapperTest {
         genreDto.setVersion(1L);
 
         // Act
-        Genre result = GenreMapper.INSTANCE.genreDtoToGenre(genreDto);
+        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(genreDto);
 
         // Assert
         Assertions.assertEquals(genreDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

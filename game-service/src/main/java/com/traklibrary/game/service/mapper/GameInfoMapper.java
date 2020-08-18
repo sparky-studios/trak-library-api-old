@@ -7,12 +7,9 @@ import com.traklibrary.game.domain.GamePublisherXref;
 import com.traklibrary.game.service.dto.GameInfoDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface GameInfoMapper {
-
-    GameInfoMapper INSTANCE = Mappers.getMapper(GameInfoMapper.class);
 
     @Mapping(source = "gamePlatformXrefs", target = "platforms")
     @Mapping(source = "gamePublisherXrefs", target = "publishers")

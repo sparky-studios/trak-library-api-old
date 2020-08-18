@@ -61,9 +61,11 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());
 
+                final String userIdName = "userId";
+
                 // Create the authenticated object, which includes the username and the authorities associated with the user.
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
-                auth.setDetails(claims.get("userId"));
+                auth.setDetails(claims.get(userIdName));
 
                 // Authentication the user.
                 SecurityContextHolder.getContext().setAuthentication(auth);
@@ -76,7 +78,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                         .setSubject(username)
                         .claim("authorities", auth.getAuthorities().stream()
                                 .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                        .claim("userId", Long.parseLong(claims.get("userId").toString()))
+                        .claim(userIdName, Long.parseLong(claims.get(userIdName).toString()))
                         .claim("verified", Boolean.parseBoolean(claims.get("verified").toString()))
                         .setIssuedAt(new Date(now))
                         .setExpiration(new Date(now + (15 * 60000))) // 15 minutes.

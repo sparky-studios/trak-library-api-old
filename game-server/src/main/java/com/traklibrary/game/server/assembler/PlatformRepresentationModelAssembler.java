@@ -38,6 +38,6 @@ public class PlatformRepresentationModelAssembler implements SimpleRepresentatio
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<PlatformDto>> resources) {
-        // Needed for implementation purposes, but unused.
+        // Unused. Additional resource links aren't added to collections.
     }
 }

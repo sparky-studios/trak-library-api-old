@@ -25,6 +25,10 @@ import java.util.stream.Collectors;
 @Service
 public class PublisherServiceImpl implements PublisherService {
 
+    private static final String ENTITY_EXISTS_MESSAGE = "publisher.exception.entity-exists";
+    private static final String NOT_FOUND_MESSAGE = "publisher.exception.not-found";
+    private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
+
     private final PublisherRepository publisherRepository;
     private final GameRepository gameRepository;
     private final GamePublisherXrefRepository gamePublisherXrefRepository;
@@ -38,7 +42,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         if (publisherRepository.existsById(publisherDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("publisher.exception.entity-exists", new Object[] { publisherDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { publisherDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -49,7 +53,7 @@ public class PublisherServiceImpl implements PublisherService {
     @Override
     public PublisherDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("publisher.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return publisherMapper.publisherToPublisherDto(publisherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -59,7 +63,7 @@ public class PublisherServiceImpl implements PublisherService {
     public Iterable<PublisherDto> findPublishersByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -93,7 +97,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         if (!publisherRepository.existsById(publisherDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("publisher.exception.not-found", new Object[] { publisherDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { publisherDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -113,7 +117,7 @@ public class PublisherServiceImpl implements PublisherService {
     public void deleteById(long id) {
         if (!publisherRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage("publisher.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

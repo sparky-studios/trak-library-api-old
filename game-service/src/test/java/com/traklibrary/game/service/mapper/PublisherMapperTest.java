@@ -7,19 +7,19 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
 
-public class PublisherMapperTest {
+class PublisherMapperTest {
 
     @Test
-    public void publisherToPublisherDto_withNull_returnsNull() {
+    void publisherToPublisherDto_withNull_returnsNull() {
         // Act
-        PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(null);
+        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void publisherToPublisherDto_withPublisher_mapsFields() {
+    void publisherToPublisherDto_withPublisher_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setId(5L);
@@ -29,7 +29,7 @@ public class PublisherMapperTest {
         publisher.setVersion(1L);
 
         // Act
-        PublisherDto result = PublisherMapper.INSTANCE.publisherToPublisherDto(publisher);
+        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
 
         // Assert
         Assertions.assertEquals(publisher.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -40,16 +40,16 @@ public class PublisherMapperTest {
     }
 
     @Test
-    public void publisherDtoToPublisher_withNull_returnsNull() {
+    void publisherDtoToPublisher_withNull_returnsNull() {
         // Act
-        Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(null);
+        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void publisherDtoToPublisher_withPublisherDto_mapsFields() {
+    void publisherDtoToPublisher_withPublisherDto_mapsFields() {
         // Arrange
         PublisherDto publisherDto = new PublisherDto();
         publisherDto.setId(5L);
@@ -59,7 +59,7 @@ public class PublisherMapperTest {
         publisherDto.setVersion(1L);
 
         // Act
-        Publisher result = PublisherMapper.INSTANCE.publisherDtoToPublisher(publisherDto);
+        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(publisherDto);
 
         // Assert
         Assertions.assertEquals(publisherDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

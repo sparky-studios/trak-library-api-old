@@ -31,6 +31,9 @@ import java.util.Optional;
 @Service
 public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
 
+    private static final String INVALID_USER_MESSAGE = "notifications.exception.invalid-user";
+    private static final String REGISTRATION_FAILED_MESSAGE = "notifications.exception.registration-failed";
+
     @Value("${trak.aws.simple-notification-service.android-arn}")
     private String androidArn;
 
@@ -45,7 +48,7 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
         // Ensure the authenticated user is the one being registered.
         if (!authenticationService.isCurrentAuthenticatedUser(mobileDeviceLinkRegistrationRequestDto.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("notifications.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
@@ -89,7 +92,7 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
             }
 
             String errorMessage =
-                    messageSource.getMessage("notifications.exception.registration-failed", new Object[]{}, LocaleContextHolder.getLocale());
+                    messageSource.getMessage(REGISTRATION_FAILED_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
 
             throw new NotificationException(errorMessage, e);
         }
@@ -121,7 +124,7 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
         // Ensure the authenticated user is the one being unregistered.
         if (!authenticationService.isCurrentAuthenticatedUser(userId)) {
             String errorMessage = messageSource
-                    .getMessage("notifications.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }

@@ -20,6 +20,9 @@ import java.util.Objects;
 @Service
 public class GameInfoServiceImpl implements GameInfoService {
 
+    private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
+    private static final String GENRE_NOT_FOUND_MESSAGE = "genre.exception.not-found";
+
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
     private final GameGenreXrefRepository gameGenreXrefRepository;
@@ -29,7 +32,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     @Override
     public GameInfoDto findByGameId(long gameId) {
         String errorMessage = messageSource
-                .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
         return gameInfoMapper.gameToGameInfoDto(gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -39,7 +42,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     public Iterable<GameInfoDto> findByGenreId(long genreId, Pageable pageable) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+                    .getMessage(GENRE_NOT_FOUND_MESSAGE, new Object[] { genreId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -53,7 +56,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     public long countByGenreId(long genreId) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
-                    .getMessage("genre.exception.not-found", new Object[] { genreId }, LocaleContextHolder.getLocale());
+                    .getMessage(GENRE_NOT_FOUND_MESSAGE, new Object[] { genreId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }

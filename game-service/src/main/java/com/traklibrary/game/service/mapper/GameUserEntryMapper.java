@@ -5,12 +5,9 @@ import com.traklibrary.game.domain.GameUserEntry;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface GameUserEntryMapper {
-
-    GameUserEntryMapper INSTANCE = Mappers.getMapper(GameUserEntryMapper.class);
 
     @Mapping(source = "game.title", target = "gameTitle")
     @Mapping(source = "game.releaseDate", target = "gameReleaseDate")

@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class MobileDeviceLinkServiceSnsImplTest {
+class MobileDeviceLinkServiceSnsImplTest {
 
     @Mock
     private AuthenticationService authenticationService;
@@ -50,18 +50,20 @@ public class MobileDeviceLinkServiceSnsImplTest {
     private MobileDeviceLinkServiceSnsImpl mobileDeviceLinkService;
 
     @Test
-    public void register_withIncorrectUser_throwsInvalidUserException() {
+    void register_withIncorrectUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
 
+        MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
+
         // Assert
         Assertions.assertThrows(InvalidUserException.class,
-                () -> mobileDeviceLinkService.register(new MobileDeviceLinkRegistrationRequestDto()));
+                () -> mobileDeviceLinkService.register(mobileDeviceLinkRegistrationRequestDto));
     }
 
     @Test
-    public void register_withNonExistentMobileDeviceLink_createsEndpointAndMobileDeviceLink() {
+    void register_withNonExistentMobileDeviceLink_createsEndpointAndMobileDeviceLink() {
         // Arrange
         MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
         mobileDeviceLinkRegistrationRequestDto.setToken("token");
@@ -107,7 +109,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void register_withEndpointAttributesThatNeedUpdating_invokesSetEndpointAttributes() {
+    void register_withEndpointAttributesThatNeedUpdating_invokesSetEndpointAttributes() {
         // Arrange
         MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
         mobileDeviceLinkRegistrationRequestDto.setToken("token");
@@ -153,7 +155,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void register_withNotFoundException_recreatedEndpointArn() {
+    void register_withNotFoundException_recreatedEndpointArn() {
         // Arrange
         MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
         mobileDeviceLinkRegistrationRequestDto.setToken("token");
@@ -192,7 +194,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void register_withGenericException_throwsNotificationException() {
+    void register_withGenericException_throwsNotificationException() {
         // Arrange
         MobileDeviceLinkRegistrationRequestDto mobileDeviceLinkRegistrationRequestDto = new MobileDeviceLinkRegistrationRequestDto();
         mobileDeviceLinkRegistrationRequestDto.setToken("token");
@@ -222,7 +224,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void unregister_withIncorrectUser_throwsInvalidUserException() {
+    void unregister_withIncorrectUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -233,7 +235,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void unregister_withNoMobileDeviceLink_throwsEntityNotFoundException() {
+    void unregister_withNoMobileDeviceLink_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -246,7 +248,7 @@ public class MobileDeviceLinkServiceSnsImplTest {
     }
 
     @Test
-    public void unregister_withMobileDeviceLink_deletesAndInvokesEvent() {
+    void unregister_withMobileDeviceLink_deletesAndInvokesEvent() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);

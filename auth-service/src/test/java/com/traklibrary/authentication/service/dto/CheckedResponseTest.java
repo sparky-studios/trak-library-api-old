@@ -3,10 +3,10 @@ package com.traklibrary.authentication.service.dto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class CheckedResponseTest {
+class CheckedResponseTest {
     
     @Test
-    public void constructor_withNoErrorMessage_errorIsFlaggedAsFalse() {
+    void constructor_withNoErrorMessage_errorIsFlaggedAsFalse() {
         // Arrange
         Integer value = 5;
         
@@ -20,7 +20,7 @@ public class CheckedResponseTest {
     }
 
     @Test
-    public void constructor_withEmptyErrorMessage_errorIsFlaggedAsFalse() {
+    void constructor_withEmptyErrorMessage_errorIsFlaggedAsFalse() {
         // Arrange
         Integer value = 5;
 
@@ -34,7 +34,7 @@ public class CheckedResponseTest {
     }
 
     @Test
-    public void constructor_withErrorMessage_errorIsFlaggedAsTrue() {
+    void constructor_withErrorMessage_errorIsFlaggedAsTrue() {
         // Arrange
         Integer value = 5;
         String errorMessage = "error-message";

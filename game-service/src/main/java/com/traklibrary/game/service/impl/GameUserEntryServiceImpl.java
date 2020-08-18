@@ -28,6 +28,11 @@ import java.util.stream.StreamSupport;
 @Service
 public class GameUserEntryServiceImpl implements GameUserEntryService {
 
+    private static final String INVALID_USER_MESSAGE = "game-user-entry.exception.invalid-user";
+    private static final String ENTITY_EXISTS_MESSAGE = "game-user-entry.exception.entity-exists";
+    private static final String NOT_FOUND_MESSAGE = "game-user-entry.exception.not-found";
+    private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
+
     private final GameUserEntryRepository gameUserEntryRepository;
     private final GameRepository gameRepository;
     private final GameUserEntryMapper gameUserEntryMapper;
@@ -41,14 +46,14 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryDto.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
         if (gameUserEntryRepository.existsById(gameUserEntryDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.entity-exists", new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -60,7 +65,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     @Override
     public GameUserEntryDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("game-user-entry.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -70,7 +75,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -84,7 +89,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     public long countGameUserEntriesByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
-                    .getMessage("game.exception.not-found", new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
@@ -113,14 +118,14 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryDto.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
         if (!gameUserEntryRepository.existsById(gameUserEntryDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.not-found", new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -136,7 +141,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(patched.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
@@ -152,14 +157,14 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         if (!gameUserEntry.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntry.get().getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-user-entry.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }

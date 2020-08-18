@@ -5,7 +5,6 @@ import com.traklibrary.authentication.domain.UserRoleXref;
 import com.traklibrary.authentication.service.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.factory.Mappers;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -14,8 +13,6 @@ import java.util.stream.Collectors;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     default UserDto userToUserDto(User user) {
         if (user == null) {

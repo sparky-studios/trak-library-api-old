@@ -7,6 +7,7 @@ import com.traklibrary.game.service.AuthenticationService;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
 import com.traklibrary.game.service.exception.InvalidUserException;
+import com.traklibrary.game.service.mapper.GameMappers;
 import com.traklibrary.game.service.mapper.GameUserEntryMapper;
 import com.traklibrary.game.domain.*;
 import org.junit.jupiter.api.Assertions;
@@ -30,7 +31,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class GameUserEntryServiceImplTest {
+class GameUserEntryServiceImplTest {
 
     @Mock
     private GameUserEntryRepository gameUserEntryRepository;
@@ -39,7 +40,7 @@ public class GameUserEntryServiceImplTest {
     private GameRepository gameRepository;
 
     @Spy
-    private final GameUserEntryMapper gameUserEntryMapper = GameUserEntryMapper.INSTANCE;
+    private final GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -54,7 +55,7 @@ public class GameUserEntryServiceImplTest {
     private GameUserEntryServiceImpl gameUserEntryService;
 
     @Test
-    public void save_withNullGameUserEntryDto_throwsNullPointerException() {
+    void save_withNullGameUserEntryDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.save(null));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
@@ -62,7 +63,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void save_againstDifferentUser_throwsInvalidUserException() {
+    void save_againstDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -70,14 +71,16 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.save(new GameUserEntryDto()));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.save(gameUserEntryDto));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -88,14 +91,17 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameUserEntryService.save(new GameUserEntryDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameUserEntryService.save(gameUserEntryDto));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void save_withNewGameUserEntryDto_savesGameUserEntryDto() {
+    void save_withNewGameUserEntryDto_savesGameUserEntryDto() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -115,7 +121,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -128,7 +134,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findById_withValidGameUserEntry_returnsGameUserEntryDto() {
+    void findById_withValidGameUserEntry_returnsGameUserEntryDto() {
         // Arrange
         Game game = new Game();
         game.setTitle("test-title");
@@ -168,7 +174,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void findGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -176,12 +182,14 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, pageable));
     }
 
     @Test
-    public void findGameUserEntriesByGameId_withNoGameUserEntries_returnsEmptyList() {
+    void findGameUserEntriesByGameId_withNoGameUserEntries_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -201,7 +209,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findGamesByGenreId_withMultipleGames_returnsList() {
+    void findGamesByGenreId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -227,7 +235,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void countGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
+    void countGameUserEntriesByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -240,7 +248,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void countGameUserEntriesByGameId_withGame_invokesGameUserEntryRepository() {
+    void countGameUserEntriesByGameId_withGame_invokesGameUserEntryRepository() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -257,13 +265,16 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GameUserEntrySpecification gameUserEntrySpecification = Mockito.mock(GameUserEntrySpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.findAll(Mockito.mock(GameUserEntrySpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.findAll(gameUserEntrySpecification, null));
     }
 
     @Test
-    public void findAll_withNoGameUserEntries_returnsEmptyList() {
+    void findAll_withNoGameUserEntries_returnsEmptyList() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -280,7 +291,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void findAll_withGameUserEntries_returnsGameUserEntriesAsGameUserEntryDtos() {
+    void findAll_withGameUserEntries_returnsGameUserEntriesAsGameUserEntryDtos() {
         // Arrange
         Page<GameUserEntry> gameUserEntries = new PageImpl<>(Arrays.asList(new GameUserEntry(), new GameUserEntry()));
 
@@ -299,13 +310,13 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void count_withNullGameUserEntrySpecification_throwsNullPointerException() {
+    void count_withNullGameUserEntrySpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.count(null));
     }
 
     @Test
-    public void count_withValidGameUserEntrySpecification_invokesCount() {
+    void count_withValidGameUserEntrySpecification_invokesCount() {
         // Arrange
         Mockito.when(gameUserEntryRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -319,7 +330,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void update_withNullGameUserEntryDto_throwsNullPointerException() {
+    void update_withNullGameUserEntryDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameUserEntryService.update(null));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
@@ -327,7 +338,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void update_againstDifferentUser_throwsInvalidUserException() {
+    void update_againstDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -335,14 +346,16 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.update(new GameUserEntryDto()));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.update(gameUserEntryDto));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -353,14 +366,16 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.update(new GameUserEntryDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.update(gameUserEntryDto));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void update_withExistingGameUserEntryDto_updatesGameUserEntryDto() {
+    void update_withExistingGameUserEntryDto_updatesGameUserEntryDto() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -380,7 +395,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void patch_withNoGameUserEntryMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoGameUserEntryMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -388,14 +403,16 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.patch(0L, jsonMergePatch));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void patch_withValidIdButInvalidUser_throwsInvalidUserException() {
+    void patch_withValidIdButInvalidUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
@@ -409,14 +426,16 @@ public class GameUserEntryServiceImplTest {
         Mockito.when(patchService.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntryDto());
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.patch(0L, jsonMergePatch));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    public void patch_withValidId_saveGameUserEntry() {
+    void patch_withValidId_saveGameUserEntry() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
@@ -436,7 +455,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void deleteById_withNonExistentEntity_throwsEntityNotFoundException() {
+    void deleteById_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -449,7 +468,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void deleteById_withExistingButDifferentUser_throwsInvalidUserException() {
+    void deleteById_withExistingButDifferentUser_throwsInvalidUserException() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
@@ -467,7 +486,7 @@ public class GameUserEntryServiceImplTest {
     }
 
     @Test
-    public void deleteById_withExistingId_invokesDeletion() {
+    void deleteById_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));

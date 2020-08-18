@@ -6,19 +6,19 @@ import com.traklibrary.game.service.dto.GameBarcodeDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class GameBarcodeMapperTest {
+class GameBarcodeMapperTest {
 
     @Test
-    public void gameBarcodeToGameBarcodeDto_withNull_returnsNull() {
+    void gameBarcodeToGameBarcodeDto_withNull_returnsNull() {
         // Act
-        GameBarcodeDto result = GameBarcodeMapper.INSTANCE.gameBarcodeToGameBarcodeDto(null);
+        GameBarcodeDto result = GameMappers.GAME_BARCODE_MAPPER.gameBarcodeToGameBarcodeDto(null);
 
         // Assert
         Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test
-    public void gameBarcodeToGameBarcodeDto_withGameBarcode_mapsFields() {
+    void gameBarcodeToGameBarcodeDto_withGameBarcode_mapsFields() {
         // Arrange
         GameBarcode gameBarcode = new GameBarcode();
         gameBarcode.setId(5L);
@@ -29,7 +29,7 @@ public class GameBarcodeMapperTest {
         gameBarcode.setVersion(8L);
 
         // Act
-        GameBarcodeDto result = GameBarcodeMapper.INSTANCE.gameBarcodeToGameBarcodeDto(gameBarcode);
+        GameBarcodeDto result = GameMappers.GAME_BARCODE_MAPPER.gameBarcodeToGameBarcodeDto(gameBarcode);
 
         // Assert
         Assertions.assertEquals(gameBarcode.getId(), result.getId(), "The mapped ID does not match the entity.");

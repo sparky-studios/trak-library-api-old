@@ -28,6 +28,10 @@ import java.util.Optional;
 @Service
 public class GameRequestServiceImpl implements GameRequestService {
 
+    private static final String INVALID_USER_MESSAGE = "game-request.exception.invalid-user";
+    private static final String ENTITY_EXISTS_MESSAGE = "game-request.exception.entity-exists";
+    private static final String NOT_FOUND_MESSAGE = "game-request.exception.not-found";
+
     private final GameRequestRepository gameRequestRepository;
     private final GameRequestMapper gameRequestMapper;
     private final AuthenticationService authenticationService;
@@ -41,14 +45,14 @@ public class GameRequestServiceImpl implements GameRequestService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameRequestDto.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
         if (gameRequestRepository.existsById(gameRequestDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.entity-exists", new Object[] { gameRequestDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameRequestDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -59,7 +63,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     @Override
     public GameRequestDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage("game-request.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
         return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
@@ -86,14 +90,14 @@ public class GameRequestServiceImpl implements GameRequestService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameRequestDto.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
         if (!gameRequestRepository.existsById(gameRequestDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.not-found", new Object[] { gameRequestDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameRequestDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -130,7 +134,7 @@ public class GameRequestServiceImpl implements GameRequestService {
 
         if (!authenticationService.isCurrentAuthenticatedUser(patched.getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
@@ -145,14 +149,14 @@ public class GameRequestServiceImpl implements GameRequestService {
 
         if (!gameRequest.isPresent()) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.not-found", new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
         if (!authenticationService.isCurrentAuthenticatedUser(gameRequest.get().getUserId())) {
             String errorMessage = messageSource
-                    .getMessage("game-request.exception.invalid-user", new Object[] {}, LocaleContextHolder.getLocale());
+                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }

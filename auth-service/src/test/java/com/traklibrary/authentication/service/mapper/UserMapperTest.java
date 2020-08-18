@@ -10,10 +10,10 @@ import org.junit.jupiter.api.Test;
 import java.time.LocalDateTime;
 import java.util.Collections;
 
-public class UserMapperTest {
+class UserMapperTest {
 
     @Test
-    public void userToUserDto_withUser_mapsFields() {
+    void userToUserDto_withUser_mapsFields() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setId(1L);
@@ -35,7 +35,7 @@ public class UserMapperTest {
         user.setUserRoleXrefs(Collections.singleton(userRoleXref));
 
         // Act
-        UserDto result = UserMapper.INSTANCE.userToUserDto(user);
+        UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
 
         // Assert
         Assertions.assertEquals(user.getId(), result.getId(), "The mapped ID does not match the entity.");
@@ -50,7 +50,7 @@ public class UserMapperTest {
     }
 
     @Test
-    public void userDtoToUser_withUserDto_mapsFields() {
+    void userDtoToUser_withUserDto_mapsFields() {
         // Arrange
         UserDto userDto = new UserDto();
         userDto.setId(5L);
@@ -63,7 +63,7 @@ public class UserMapperTest {
         userDto.setVersion(1L);
 
         // Act
-        User result = UserMapper.INSTANCE.userDtoToUser(userDto);
+        User result = AuthMappers.USER_MAPPER.userDtoToUser(userDto);
 
         // Assert
         Assertions.assertEquals(userDto.getId(), result.getId(), "The mapped ID does not match the DTO.");

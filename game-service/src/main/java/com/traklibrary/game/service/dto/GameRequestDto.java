@@ -4,7 +4,6 @@ import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data

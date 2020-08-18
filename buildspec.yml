@@ -2,7 +2,7 @@ version: 0.2
 
 env:
   parameter-store:
-    COVERALLS_TOKEN: "/trak-api/coveralls-token"
+    SONAR_TOKEN: "/trak-api/sonarcloud-token"
 
 phases:
   install:
@@ -11,15 +11,15 @@ phases:
   pre_build:
     commands:
       - echo [INFO] Cleaning Trak API `date`
-      - mvn clean
+      - mvn clean -Pcoverage
   build:
     commands:
       - echo [INFO] Building Trak API `date`
-      - mvn compile
+      - mvn compile -Pcoverage
   post_build:
     commands:
       - echo [INFO] Running Trak API tests `date`
-      - mvn test jacoco:report coveralls:report -DrepoToken=$COVERALLS_TOKEN
+      - mvn verify sonar:sonar -Pcoverage
       - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 
@@ -32,4 +32,5 @@ artifacts:
     - game-server/target/game-server-1.0-SNAPSHOT.jar
     - gateway-server/target/gateway-server-1.0-SNAPSHOT.jar
     - image-server/target/image-server-1.0-SNAPSHOT.jar
+    - notification-server/target/notification-server-1.0-SNAPSHOT.jar
   discard-paths: yes

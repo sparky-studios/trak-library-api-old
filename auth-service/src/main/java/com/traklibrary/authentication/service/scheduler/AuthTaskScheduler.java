@@ -34,7 +34,7 @@ public class AuthTaskScheduler {
     public void removeExpiredVerificationCodesScheduledTask() {
         // Get the name of the current thread that this scheduled task is running on, for debug purposes.
         String currentThread = Thread.currentThread().getName();
-        log.info("---------- Running scheduled task: Remove expired verification codes on thread: " + currentThread + " ----------");
+        log.info(String.format("---------- Running scheduled task: Remove expired verification codes on thread: %s  ----------", currentThread));
 
         // Retrieve all of the accounts that aren't verified and verification code is older than 24 hours.
         Collection<User> users = userRepository
@@ -50,7 +50,7 @@ public class AuthTaskScheduler {
             userRepository.save(user);
         });
 
-        log.info("---------- Finished scheduled task: Remove expired verification codes on thread: " + currentThread + " ----------");
+        log.info(String.format("---------- Finished scheduled task: Remove expired verification codes on thread: %s ----------", currentThread));
     }
 
     /**
@@ -63,7 +63,7 @@ public class AuthTaskScheduler {
     public void removeExpiredRecoveryTokensScheduledTask() {
         // Get the name of the current thread that this scheduled task is running on, for debug purposes.
         String currentThread = Thread.currentThread().getName();
-        log.info("---------- Running scheduled task: Remove expired recovery tokens on thread: " + currentThread + " ----------");
+        log.info(String.format("---------- Running scheduled task: Remove expired recovery tokens on thread: %s ----------", currentThread));
 
         // Retrieve all of the accounts that have recovery tokens whose expiry date have eclipsed 24 hours..
         Collection<User> users = userRepository
@@ -78,6 +78,6 @@ public class AuthTaskScheduler {
             userRepository.save(user);
         });
 
-        log.info("---------- Finished scheduled task: Remove expired recovery tokens on thread: " + currentThread + " ----------");
+        log.info(String.format("---------- Finished scheduled task: Remove expired recovery tokens on thread: %s ----------", currentThread));
     }
 }

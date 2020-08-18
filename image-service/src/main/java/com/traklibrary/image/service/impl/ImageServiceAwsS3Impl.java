@@ -18,10 +18,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
 public class ImageServiceAwsS3Impl implements ImageService {
+
+    private static final String INVALID_FILE_FORMAT_MESSAGE = "image.exception.invalid-file-format";
+    private static final String UPLOAD_FAILED_MESSAGE = "image.exception.upload-failed";
+    private static final String DOWNLOAD_FAILED_MESSAGE = "image.exception.download-failed";
 
     @Setter
     @Value("${trak.aws.s3.bucket-name}")
@@ -38,11 +43,11 @@ public class ImageServiceAwsS3Impl implements ImageService {
 
         if (!Arrays.asList("png", "jpg", "jpeg").contains(extension)) {
             throw new IllegalArgumentException(messageSource
-                    .getMessage("image.exception.invalid-file-format", new Object[] {}, LocaleContextHolder.getLocale()));
+                    .getMessage(INVALID_FILE_FORMAT_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale()));
         }
 
         try {
-            Path path = java.nio.file.Files.createTempFile(folder, filename);
+            Path path = java.nio.file.Files.createTempFile(folder, UUID.randomUUID().toString() + "." + extension);
 
             try (FileOutputStream stream = new FileOutputStream(path.toFile())) {
                 stream.write(content);
@@ -50,7 +55,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
             }
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.upload-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
+                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }
@@ -63,7 +68,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
             return IOUtils.toByteArray(stream);
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage("image.exception.download-failed", new Object[] {filename}, LocaleContextHolder.getLocale());
+                    .getMessage(DOWNLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());
 
             throw new ImageFailedException(errorMessage, e);
         }

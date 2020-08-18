@@ -6,6 +6,7 @@ import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GameDto;
 import com.traklibrary.game.service.mapper.GameMapper;
 import com.traklibrary.game.domain.*;
+import com.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-public class GameServiceImplTest {
+class GameServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
@@ -57,7 +58,7 @@ public class GameServiceImplTest {
     private PatchService patchService;
 
     @Spy
-    private final GameMapper gameMapper = GameMapper.INSTANCE;
+    private final GameMapper gameMapper = GameMappers.GAME_MAPPER;
 
     @Mock
     private MessageSource messageSource;
@@ -66,13 +67,13 @@ public class GameServiceImplTest {
     private GameServiceImpl gameService;
 
     @Test
-    public void save_withNullGameDto_throwsNullPointerException() {
+    void save_withNullGameDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameService.save(null));
     }
 
     @Test
-    public void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withExistingEntity_throwsEntityExistsException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -80,12 +81,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameDto gameDto = new GameDto();
+
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameService.save(new GameDto()));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameService.save(gameDto));
     }
 
     @Test
-    public void save_withNewGameDto_savesGameDto() {
+    void save_withNewGameDto_savesGameDto() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -102,7 +105,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findById_withEmptyOptional_throwsEntityNotFoundException() {
+    void findById_withEmptyOptional_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -115,7 +118,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findById_withValidGame_returnsGameDto() {
+    void findById_withValidGame_returnsGameDto() {
         // Arrange
         Game game = new Game();
         game.setId(1L);
@@ -141,7 +144,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
+    void findGamesByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -149,12 +152,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByGenreId(0L, pageable));
     }
 
     @Test
-    public void findGamesByGenreId_withNoGames_returnsEmptyList() {
+    void findGamesByGenreId_withNoGames_returnsEmptyList() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -174,7 +179,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByGenreId_withMultipleGames_returnsList() {
+    void findGamesByGenreId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -200,7 +205,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByGenreId_withNonExistentGame_throwsEntityNotFoundException() {
+    void countGamesByGenreId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -213,7 +218,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByGenreId_withGenre_invokesGameGenreXrefRepository() {
+    void countGamesByGenreId_withGenre_invokesGameGenreXrefRepository() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -230,7 +235,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
+    void findGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -238,12 +243,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPlatformId(0L, pageable));
     }
 
     @Test
-    public void findGamesByPlatformId_withNoPlatforms_returnsEmptyList() {
+    void findGamesByPlatformId_withNoPlatforms_returnsEmptyList() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -263,7 +270,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByPlatformId_withMultipleGames_returnsList() {
+    void findGamesByPlatformId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -289,7 +296,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
+    void countGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -302,7 +309,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByPlatformId_withPlatform_invokesGamePlatformXrefRepository() {
+    void countGamesByPlatformId_withPlatform_invokesGamePlatformXrefRepository() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -319,7 +326,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByDeveloperId_withNonExistentDeveloper_throwsEntityNotFoundException() {
+    void findGamesByDeveloperId_withNonExistentDeveloper_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -327,12 +334,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByDeveloperId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByDeveloperId(0L, pageable));
     }
 
     @Test
-    public void findGamesByDeveloperId_withNoDevelopers_returnsEmptyList() {
+    void findGamesByDeveloperId_withNoDevelopers_returnsEmptyList() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -352,7 +361,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByDeveloperId_withMultipleGames_returnsList() {
+    void findGamesByDeveloperId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -378,7 +387,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByDeveloperId_withNonExistentDeveloper_throwsEntityNotFoundException() {
+    void countGamesByDeveloperId_withNonExistentDeveloper_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -391,7 +400,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByDeveloperId_withPlatform_invokesGameDeveloperXrefRepository() {
+    void countGamesByDeveloperId_withPlatform_invokesGameDeveloperXrefRepository() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -408,7 +417,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
+    void findGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -416,12 +425,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        Pageable pageable = Mockito.mock(Pageable.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPublisherId(0L, Mockito.mock(Pageable.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByPublisherId(0L, pageable));
     }
 
     @Test
-    public void findGamesByPublisherId_withNoPublishers_returnsEmptyList() {
+    void findGamesByPublisherId_withNoPublishers_returnsEmptyList() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -441,7 +452,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findGamesByPublisherId_withMultipleGames_returnsList() {
+    void findGamesByPublisherId_withMultipleGames_returnsList() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -467,7 +478,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
+    void countGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -480,7 +491,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void countGamesByPublisherId_withPublisher_invokesGamePublisherXrefRepository() {
+    void countGamesByPublisherId_withPublisher_invokesGamePublisherXrefRepository() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -497,7 +508,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findAll_withNoGamesAndNoPageable_returnsEmptyList() {
+    void findAll_withNoGamesAndNoPageable_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.findAll())
                 .thenReturn(Collections.emptyList());
@@ -514,7 +525,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findAll_withGamesAndNoPageable_returnsListOfGameDtos() {
+    void findAll_withGamesAndNoPageable_returnsListOfGameDtos() {
         // Arrange
         Mockito.when(gameRepository.findAll())
                 .thenReturn(Arrays.asList(new Game(), new Game()));
@@ -531,13 +542,16 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findAll_withNullPageable_throwsNullPointerException() {
+    void findAll_withNullPageable_throwsNullPointerException() {
+        // Arrange
+        GameSpecification gameSpecification = Mockito.mock(GameSpecification.class);
+
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameService.findAll(Mockito.mock(GameSpecification.class), null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameService.findAll(gameSpecification, null));
     }
 
     @Test
-    public void findAll_withNoGames_returnsEmptyList() {
+    void findAll_withNoGames_returnsEmptyList() {
         // Arrange
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
@@ -554,7 +568,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void findAll_withGames_returnsGamesAsGameDtos() {
+    void findAll_withGames_returnsGamesAsGameDtos() {
         // Arrange
         Page<Game> games = new PageImpl<>(Arrays.asList(new Game(), new Game()));
 
@@ -573,13 +587,13 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void count_withNullGameSpecification_throwsNullPointerException() {
+    void count_withNullGameSpecification_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameService.count(null));
     }
 
     @Test
-    public void count_withValidGameSpecification_invokesCount() {
+    void count_withValidGameSpecification_invokesCount() {
         // Arrange
         Mockito.when(gameRepository.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
@@ -593,13 +607,13 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void update_withNullGameDto_throwsNullPointerException() {
+    void update_withNullGameDto_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameService.update(null));
     }
 
     @Test
-    public void update_withNonExistentEntity_throwsEntityNotFoundException() {
+    void update_withNonExistentEntity_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -607,12 +621,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        GameDto gameDto = new GameDto();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(new GameDto()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(gameDto));
     }
 
     @Test
-    public void update_withExistingGameDto_updatesGameDto() {
+    void update_withExistingGameDto_updatesGameDto() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -629,7 +645,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void delete_withNonExistentId_throwsEntityNotFoundException() {
+    void delete_withNonExistentId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(false);
@@ -639,7 +655,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void patch_withNoGameMatchingId_throwsEntityNotFoundException() {
+    void patch_withNoGameMatchingId_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
@@ -647,12 +663,14 @@ public class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
+        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.patch(0L, Mockito.mock(JsonMergePatch.class)));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.patch(0L, jsonMergePatch));
     }
 
     @Test
-    public void patch_withValidId_saveGame() {
+    void patch_withValidId_saveGame() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new Game()));
@@ -672,7 +690,7 @@ public class GameServiceImplTest {
     }
 
     @Test
-    public void delete_withExistingId_invokesDeletion() {
+    void delete_withExistingId_invokesDeletion() {
         // Arrange
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);

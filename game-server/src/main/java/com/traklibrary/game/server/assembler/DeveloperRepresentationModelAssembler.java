@@ -38,6 +38,6 @@ public class DeveloperRepresentationModelAssembler implements SimpleRepresentati
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<DeveloperDto>> resources) {
-
+        // Unused. Additional resource links aren't added to collections.
     }
 }

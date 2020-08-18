@@ -36,6 +36,6 @@ public class GameBarcodeRepresentationModelAssembler implements SimpleRepresenta
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameBarcodeDto>> resources) {
-
+        // Unused. Additional resource links aren't added to collections.
     }
 }

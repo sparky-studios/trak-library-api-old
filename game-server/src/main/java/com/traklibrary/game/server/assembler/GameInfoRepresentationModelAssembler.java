@@ -53,6 +53,6 @@ public class GameInfoRepresentationModelAssembler implements SimpleRepresentatio
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameInfoDto>> resources) {
-
+        // Unused. Additional resource links aren't added to collections.
     }
 }

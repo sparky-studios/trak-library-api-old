@@ -27,7 +27,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     private String password;
 
     private final RestTemplate restTemplate;
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("all")
     private final CircuitBreakerFactory circuitBreakerFactory;
 
     private CircuitBreaker sendVerificationEmailCircuitBreaker;
