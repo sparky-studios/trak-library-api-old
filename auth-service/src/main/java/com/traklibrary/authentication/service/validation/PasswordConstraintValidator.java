@@ -1,6 +1,7 @@
 package com.traklibrary.authentication.service.validation;
 
 import com.google.common.base.Joiner;
+import com.google.common.base.Strings;
 import org.passay.*;
 
 import javax.validation.ConstraintValidator;
@@ -37,7 +38,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
                 new WhitespaceRule()
         ));
 
-        RuleResult ruleResult = passwordValidator.validate(new PasswordData(s));
+        RuleResult ruleResult = passwordValidator.validate(new PasswordData(Strings.isNullOrEmpty(s) ? "" : s));
         if (ruleResult.isValid()) {
             return true;
         }
