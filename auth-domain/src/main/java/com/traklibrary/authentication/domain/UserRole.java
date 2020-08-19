@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -32,10 +33,36 @@ public class UserRole {
     private String role;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userRole", cascade = CascadeType.ALL)
-    private Set<UserRoleXref> userRoleXrefs;
+    @ManyToMany(mappedBy = "userRoles", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<User> users = new HashSet<>();
 
     @Version
     @Column(name = "op_lock_version")
     private Long version;
+
+    /**
+     * Convenience method that is used to add a {@link User} to the {@link UserRole}. As
+     * the relationship between the {@link User} and {@link UserRole} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param user The {@link User} to add to the {@link UserRole}.
+     */
+    public void addUser(User user) {
+        users.add(user);
+        user.getUserRoles().add(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link User} to the {@link UserRole}. As
+     * the relationship between the {@link User} and {@link UserRole} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param user The {@link User} to remove to the {@link UserRole}.
+     */
+    public void removeUser(User user) {
+        users.remove(user);
+        user.getUserRoles().remove(this);
+    }
 }

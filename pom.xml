@@ -39,11 +39,15 @@
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <configuration>
                             <excludes>
+                                <!-- auth-server -->
                                 <exclude>com/traklibrary/authentication/server/adapter/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/annotation/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/exception/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/filter/**/*</exclude>
+                                <!-- auth-service -->
+                                <exclude>com/traklibrary/authentication/service/client/**/*</exclude>
+                                <exclude>com/traklibrary/authentication/service/exception/**/*</exclude>
                             </excludes>
                         </configuration>
                         <executions>

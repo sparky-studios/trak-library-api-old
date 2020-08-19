@@ -137,6 +137,14 @@ class UserTest {
     @Test
     void persist_withValidUserRelationships_mapsRelationships() {
         // Arrange
+        UserRole userRole1 = new UserRole();
+        userRole1.setRole("ROLE_USER_ONE");
+        userRole1 = testEntityManager.persistFlushFind(userRole1);
+
+        UserRole userRole2 = new UserRole();
+        userRole2.setRole("ROLE_USER_TWO");
+        userRole2 = testEntityManager.persistFlushFind(userRole2);
+
         User user = new User();
         user.setUsername("username");
         user.setPassword("password");
@@ -146,32 +154,13 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-
-        UserRole userRole1 = new UserRole();
-        userRole1.setRole("ROLE_USER_ONE");
-        userRole1 = testEntityManager.persistFlushFind(userRole1);
-
-        UserRole userRole2 = new UserRole();
-        userRole2.setRole("ROLE_USER_TWO");
-        userRole2 = testEntityManager.persistFlushFind(userRole2);
-
-        User persistedUser = testEntityManager.persistFlushFind(user);
-
-        UserRoleXref userRoleXref1 = new UserRoleXref();
-        userRoleXref1.setUserId(persistedUser.getId());
-        userRoleXref1.setUserRoleId(userRole1.getId());
-        testEntityManager.persistFlushFind(userRoleXref1);
-
-        UserRoleXref userRoleXref2 = new UserRoleXref();
-        userRoleXref2.setUserId(persistedUser.getId());
-        userRoleXref2.setUserRoleId(userRole2.getId());
-        testEntityManager.persistFlushFind(userRoleXref2);
+        user.addUserRole(userRole1);
+        user.addUserRole(userRole2);
 
         // Act
-        User result = testEntityManager.persistFlushFind(persistedUser);
+        User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getUserRoleXrefs().size()).isEqualTo(2);
-        result.getUserRoleXrefs().forEach(userRoleXref -> Assertions.assertThat(userRoleXref.getUserId()).isEqualTo(result.getId()));
+        Assertions.assertThat(result.getUserRoles().size()).isEqualTo(2);
     }
 }

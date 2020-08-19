@@ -68,10 +68,6 @@ class UserRoleTest {
     @Test
     void persist_withValidUserRoleRelationships_mapsRelationships() {
         // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
-        userRole = testEntityManager.persistFlushFind(userRole);
-
         User user = new User();
         user.setUsername("username");
         user.setPassword("password");
@@ -81,19 +77,16 @@ class UserRoleTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user = testEntityManager.persistAndFlush(user);
 
-        User persistedUser = testEntityManager.persistFlushFind(user);
-
-        UserRoleXref userRoleXref = new UserRoleXref();
-        userRoleXref.setUserId(persistedUser.getId());
-        userRoleXref.setUserRoleId(userRole.getId());
-        testEntityManager.persistFlushFind(userRoleXref);
+        UserRole userRole = new UserRole();
+        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        userRole.addUser(user);
 
         // Act
         UserRole result = testEntityManager.persistFlushFind(userRole);
 
         // Assert
-        Assertions.assertThat(result.getUserRoleXrefs().size()).isEqualTo(1);
-        result.getUserRoleXrefs().forEach(urx -> Assertions.assertThat(userRoleXref.getUserRoleId()).isEqualTo(result.getId()));
+        Assertions.assertThat(result.getUsers().size()).isEqualTo(1);
     }
 }

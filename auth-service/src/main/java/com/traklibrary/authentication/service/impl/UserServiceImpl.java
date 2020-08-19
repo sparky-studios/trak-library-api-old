@@ -2,10 +2,8 @@ package com.traklibrary.authentication.service.impl;
 
 import com.traklibrary.authentication.domain.User;
 import com.traklibrary.authentication.domain.UserRole;
-import com.traklibrary.authentication.domain.UserRoleXref;
 import com.traklibrary.authentication.repository.UserRepository;
 import com.traklibrary.authentication.repository.UserRoleRepository;
-import com.traklibrary.authentication.repository.UserRoleXrefRepository;
 import com.traklibrary.authentication.service.AuthenticationService;
 import com.traklibrary.authentication.service.UserService;
 import com.traklibrary.authentication.service.dto.CheckedResponse;
@@ -52,7 +50,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
-    private final UserRoleXrefRepository userRoleXrefRepository;
     private final UserMapper userMapper;
     private final UserResponseMapper userResponseMapper;
     private final MessageSource messageSource;
@@ -109,15 +106,9 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
+        newUser.addUserRole(userRole.get());
 
         User user = userRepository.save(newUser);
-
-        // Create a user role xref between the user role and the new user.
-        UserRoleXref userRoleXref = new UserRoleXref();
-        userRoleXref.setUserId(user.getId());
-        userRoleXref.setUserRoleId(userRole.get().getId());
-
-        userRoleXrefRepository.save(userRoleXref);
 
         // Dispatch an event to generate the verification token and send the email.
         applicationEventPublisher

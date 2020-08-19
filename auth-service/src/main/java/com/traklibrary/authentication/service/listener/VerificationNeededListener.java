@@ -1,5 +1,6 @@
 package com.traklibrary.authentication.service.listener;
 
+import com.google.common.base.Strings;
 import com.traklibrary.authentication.service.UserService;
 import com.traklibrary.authentication.service.client.EmailClient;
 import com.traklibrary.authentication.service.event.OnVerificationNeededEvent;
@@ -19,7 +20,7 @@ public class VerificationNeededListener implements ApplicationListener<OnVerific
         // Creates and persists a new verification code for the given user.
         String verificationCode = userService.createVerificationCode(onVerificationNeededEvent.getUsername());
         // Only send a new email if a new valid has been created.
-        if (!verificationCode.equals("")) {
+        if (!Strings.isNullOrEmpty(verificationCode)) {
             emailClient.sendVerificationEmail(onVerificationNeededEvent.getEmailAddress(), verificationCode);
         }
     }
