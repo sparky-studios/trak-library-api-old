@@ -45,9 +45,18 @@
                                 <exclude>com/traklibrary/authentication/server/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/exception/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/filter/**/*</exclude>
+                                <exclude>com/traklibbrary/authentication/server/AuthServerApplication.class</exclude>
                                 <!-- auth-service -->
                                 <exclude>com/traklibrary/authentication/service/client/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/service/exception/**/*</exclude>
+                                <!-- config-server -->
+                                <exclude>com/traklibrary/config/server/ConfigServerApplication.class</exclude>
+                                <!-- discovery server -->
+                                <exclude>com/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
+                                <!-- email-server -->
+                                <exclude>com/traklibrary/email/server/adapter/**/*</exclude>
+                                <exclude>com/traklibrary/email/server/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/email/server/EmailServerApplication.class</exclude>
                             </excludes>
                         </configuration>
                         <executions>
