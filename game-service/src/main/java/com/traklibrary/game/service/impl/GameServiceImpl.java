@@ -1,6 +1,5 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.*;
 import com.traklibrary.game.repository.specification.GameSpecification;
 import com.traklibrary.game.service.GameService;
@@ -17,7 +16,6 @@ import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 

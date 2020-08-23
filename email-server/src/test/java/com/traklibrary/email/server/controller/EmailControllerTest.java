@@ -19,7 +19,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Import(EmailController.class)
 @WebMvcTest(controllers = EmailController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class EmailControllerTest {
+class EmailControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
