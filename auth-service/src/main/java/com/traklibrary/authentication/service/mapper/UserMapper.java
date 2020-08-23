@@ -3,6 +3,7 @@ package com.traklibrary.authentication.service.mapper;
 import com.traklibrary.authentication.domain.User;
 import com.traklibrary.authentication.service.dto.UserDto;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -36,5 +37,6 @@ public interface UserMapper {
         return userDto;
     }
 
+    @Mapping(target = "userRoles", ignore = true)
     User userDtoToUser(UserDto userDto);
 }

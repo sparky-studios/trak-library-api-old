@@ -1,30 +1,29 @@
 package com.traklibrary.game.service.mapper;
 
 import com.traklibrary.game.domain.Game;
-import com.traklibrary.game.domain.GameGenreXref;
-import com.traklibrary.game.domain.GamePlatformXref;
-import com.traklibrary.game.domain.GamePublisherXref;
+import com.traklibrary.game.domain.Genre;
+import com.traklibrary.game.domain.Platform;
+import com.traklibrary.game.domain.Publisher;
 import com.traklibrary.game.service.dto.GameInfoDto;
+import com.traklibrary.game.service.dto.GenreDto;
+import com.traklibrary.game.service.dto.PlatformDto;
+import com.traklibrary.game.service.dto.PublisherDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface GameInfoMapper {
 
-    @Mapping(source = "gamePlatformXrefs", target = "platforms")
-    @Mapping(source = "gamePublisherXrefs", target = "publishers")
-    @Mapping(source = "gameGenreXrefs", target = "genres")
     GameInfoDto gameToGameInfoDto(Game game);
 
-    default String gamePlatform(GamePlatformXref gamePlatformXref) {
-        return gamePlatformXref.getPlatform().getName();
+    default PlatformDto platformToPlatformDto(Platform platform) {
+        return GameMappers.PLATFORM_MAPPER.platformToPlatformDto(platform);
     }
 
-    default String gamePublisher(GamePublisherXref gamePublisherXref) {
-        return gamePublisherXref.getPublisher().getName();
+    default PublisherDto publisherToPublisherDto(Publisher publisher) {
+        return GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
     }
 
-    default String gameGenre(GameGenreXref gameGenreXref) {
-        return gameGenreXref.getGenre().getName();
+    default GenreDto genreToGenreDto(Genre genre) {
+        return GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
     }
 }

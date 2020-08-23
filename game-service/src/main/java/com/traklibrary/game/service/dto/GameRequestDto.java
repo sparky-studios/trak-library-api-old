@@ -4,6 +4,7 @@ import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -14,6 +15,9 @@ public class GameRequestDto {
 
     @NotEmpty(message = "{game-request.validation.title.not-empty}")
     private String title;
+
+    @Size(max = 1024, message = "{game-request.validation.description.size}")
+    private String notes;
 
     private boolean completed;
 

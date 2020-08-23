@@ -1,8 +1,9 @@
 package com.traklibrary.game.service.mapper;
 
-import com.traklibrary.game.domain.GamePublisherXref;
 import com.traklibrary.game.domain.GameUserEntry;
+import com.traklibrary.game.domain.Publisher;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
+import com.traklibrary.game.service.dto.PublisherDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -12,14 +13,14 @@ public interface GameUserEntryMapper {
     @Mapping(source = "game.title", target = "gameTitle")
     @Mapping(source = "game.releaseDate", target = "gameReleaseDate")
     @Mapping(source = "platform.name", target = "platformName")
-    @Mapping(source = "game.gamePublisherXrefs", target = "publishers")
+    @Mapping(source = "game.publishers", target = "publishers")
     GameUserEntryDto gameUserEntryToGameUserEntryDto(GameUserEntry gameUserEntry);
 
     @Mapping(target = "game", ignore = true)
     @Mapping(target = "platform", ignore = true)
     GameUserEntry gameUserEntryDtoToGameUserEntry(GameUserEntryDto gameUserEntryDto);
 
-    default String gameUserEntryPublisher(GamePublisherXref gamePublisherXref) {
-        return gamePublisherXref.getPublisher().getName();
+    default PublisherDto publisherToPublisherDto(Publisher publisher) {
+        return GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
     }
 }

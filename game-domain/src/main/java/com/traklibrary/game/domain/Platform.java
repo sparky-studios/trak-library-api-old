@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -27,10 +28,36 @@ public class Platform {
     private LocalDate releaseDate;
 
     @EqualsAndHashCode.Exclude
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "platform", cascade = CascadeType.ALL)
-    private Set<GamePlatformXref> gamePlatformXrefs;
+    @ManyToMany(mappedBy = "platforms", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    private Set<Game> games = new HashSet<>();
 
     @Version
     @Column(name = "op_lock_version")
     private Long version;
+
+    /**
+     * Convenience method that is used to add a {@link Game} to the {@link Platform}. As
+     * the relationship between the {@link Platform} and {@link Game} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param game The {@link Game} to add to the {@link Platform}.
+     */
+    public void addGame(Game game) {
+        games.add(game);
+        game.getPlatforms().add(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link Game} to the {@link Platform}. As
+     * the relationship between the {@link Platform} and {@link Game} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param game The {@link Game} to remove to the {@link Platform}.
+     */
+    public void removeGame(Game game) {
+        games.remove(game);
+        game.getPlatforms().remove(this);
+    }
 }

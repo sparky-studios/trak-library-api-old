@@ -1,7 +1,7 @@
 package com.traklibrary.game.service.impl;
 
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.DeveloperRepository;
-import com.traklibrary.game.repository.GameDeveloperXrefRepository;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.specification.DeveloperSpecification;
 import com.traklibrary.game.service.DeveloperService;
@@ -19,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,7 +32,6 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     private final DeveloperRepository developerRepository;
     private final GameRepository gameRepository;
-    private final GameDeveloperXrefRepository gameDeveloperXrefRepository;
     private final DeveloperMapper developerMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -61,18 +61,19 @@ public class DeveloperServiceImpl implements DeveloperService {
 
     @Override
     public Iterable<DeveloperDto> findDevelopersByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
+        // Get the game as the developers can be lazily loaded from it.
+        Optional<Game> game = gameRepository.findById(gameId);
+
+        if (!game.isPresent()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameDeveloperXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
-                .stream()
-                .map(xref -> developerMapper.developerToDeveloperDto(xref.getDeveloper()))
-                .sorted(Comparator.comparing(DeveloperDto::getName))
+        // Retrieve all associated developers and just convert them to their DTO counterparts.
+        return game.get().getDevelopers().stream()
+                .map(developerMapper::developerToDeveloperDto)
                 .collect(Collectors.toList());
     }
 

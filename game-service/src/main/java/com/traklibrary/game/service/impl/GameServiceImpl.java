@@ -1,5 +1,6 @@
 package com.traklibrary.game.service.impl;
 
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.*;
 import com.traklibrary.game.repository.specification.GameSpecification;
 import com.traklibrary.game.service.GameService;
@@ -16,6 +17,7 @@ import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -32,13 +34,9 @@ public class GameServiceImpl implements GameService {
 
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
-    private final GameGenreXrefRepository gameGenreXrefRepository;
     private final PlatformRepository platformRepository;
-    private final GamePlatformXrefRepository gamePlatformXrefRepository;
     private final DeveloperRepository developerRepository;
-    private final GameDeveloperXrefRepository gameDeveloperXrefRepository;
     private final PublisherRepository publisherRepository;
-    private final GamePublisherXrefRepository gamePublisherXrefRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -75,9 +73,8 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameGenreXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId)), pageable)
-                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+        return gameRepository.findByGenresId(genreId, pageable)
+                .map(gameMapper::gameToGameDto);
     }
 
     @Override
@@ -89,8 +86,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameGenreXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId));
+        return gameRepository.countByGenresId(genreId);
     }
 
     @Override
@@ -102,9 +98,8 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gamePlatformXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId)), pageable)
-                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+        return gameRepository.findByPlatformsId(platformId, pageable)
+                .map(gameMapper::gameToGameDto);
     }
 
     @Override
@@ -116,8 +111,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gamePlatformXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("platformId"), platformId));
+        return gameRepository.countByPlatformsId(platformId);
     }
 
     @Override
@@ -129,9 +123,8 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameDeveloperXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("developerId"), developerId)), pageable)
-                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+        return gameRepository.findByDevelopersId(developerId, pageable)
+                .map(gameMapper::gameToGameDto);
     }
 
     @Override
@@ -143,8 +136,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameDeveloperXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("developerId"), developerId));
+        return gameRepository.countByDevelopersId(developerId);
     }
 
     @Override
@@ -156,9 +148,8 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gamePublisherXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("publisherId"), publisherId)), pageable)
-                .map(xref -> gameMapper.gameToGameDto(xref.getGame()));
+        return gameRepository.findByPublishersId(publisherId, pageable)
+                .map(gameMapper::gameToGameDto);
     }
 
     @Override
@@ -170,8 +161,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gamePublisherXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("publisherId"), publisherId));
+        return gameRepository.countByPublishersId(publisherId);
     }
 
     @Override

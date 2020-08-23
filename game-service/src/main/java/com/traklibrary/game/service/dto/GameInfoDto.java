@@ -23,9 +23,9 @@ public class GameInfoDto {
 
     private Long version;
 
-    private Collection<String> platforms;
+    private Collection<PlatformDto> platforms;
 
-    private Collection<String> publishers;
+    private Collection<PublisherDto> publishers;
 
-    private Collection<String> genres;
+    private Collection<GenreDto> genres;
 }

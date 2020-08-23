@@ -1,8 +1,7 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.domain.GamePublisherXref;
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.domain.Publisher;
-import com.traklibrary.game.repository.GamePublisherXrefRepository;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.PublisherRepository;
 import com.traklibrary.game.repository.specification.PublisherSpecification;
@@ -36,9 +35,6 @@ class PublisherServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
-
-    @Mock
-    private GamePublisherXrefRepository gamePublisherXrefRepository;
 
     @Mock
     private MessageSource messageSource;
@@ -125,8 +121,8 @@ class PublisherServiceImplTest {
     @Test
     void findPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -138,11 +134,8 @@ class PublisherServiceImplTest {
     @Test
     void findPublishersByGameId_withNoPublishers_returnsEmptyList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.<Specification<GamePublisherXref>>any()))
-                .thenReturn(Collections.emptyList());
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new Game()));
 
         // Act
         List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L).spliterator(), false)
@@ -158,23 +151,18 @@ class PublisherServiceImplTest {
     @Test
     void findPublishersByGameId_withMultiplePublishers_returnsList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
         Publisher publisher1 = new Publisher();
         publisher1.setName("publisher-1");
-
-        GamePublisherXref gamePublisherXref1 = new GamePublisherXref();
-        gamePublisherXref1.setPublisher(publisher1);
 
         Publisher publisher2 = new Publisher();
         publisher2.setName("publisher-2");
 
-        GamePublisherXref gamePublisherXref2 = new GamePublisherXref();
-        gamePublisherXref2.setPublisher(publisher2);
+        Game game = new Game();
+        game.addPublisher(publisher1);
+        game.addPublisher(publisher2);
 
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.<Specification<GamePublisherXref>>any()))
-                .thenReturn(Arrays.asList(gamePublisherXref1, gamePublisherXref2));
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
 
         // Act
         List<PublisherDto> result = StreamSupport.stream(publisherService.findPublishersByGameId(0L).spliterator(), false)

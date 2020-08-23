@@ -1,6 +1,6 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.repository.GamePublisherXrefRepository;
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.PublisherRepository;
 import com.traklibrary.game.repository.specification.PublisherSpecification;
@@ -19,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,7 +32,6 @@ public class PublisherServiceImpl implements PublisherService {
 
     private final PublisherRepository publisherRepository;
     private final GameRepository gameRepository;
-    private final GamePublisherXrefRepository gamePublisherXrefRepository;
     private final PublisherMapper publisherMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -61,18 +61,19 @@ public class PublisherServiceImpl implements PublisherService {
 
     @Override
     public Iterable<PublisherDto> findPublishersByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
+        // Get the game as the publishers can be lazily loaded from it.
+        Optional<Game> game = gameRepository.findById(gameId);
+
+        if (!game.isPresent()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gamePublisherXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
-                .stream()
-                .map(xref -> publisherMapper.publisherToPublisherDto(xref.getPublisher()))
-                .sorted(Comparator.comparing(PublisherDto::getName))
+        // Retrieve all associated developers and just convert them to their DTO counterparts.
+        return game.get().getPublishers().stream()
+                .map(publisherMapper::publisherToPublisherDto)
                 .collect(Collectors.toList());
     }
 

@@ -10,6 +10,6 @@ public interface DeveloperMapper {
 
     DeveloperDto developerToDeveloperDto(Developer developer);
 
-    @Mapping(target = "gameDeveloperXrefs", ignore = true)
+    @Mapping(target = "games", ignore = true)
     Developer developerDtoToDeveloper(DeveloperDto developerDto);
 }

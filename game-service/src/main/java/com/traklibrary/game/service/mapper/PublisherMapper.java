@@ -10,6 +10,6 @@ public interface PublisherMapper {
 
     PublisherDto publisherToPublisherDto(Publisher publisher);
 
-    @Mapping(target = "gamePublisherXrefs", ignore = true)
+    @Mapping(target = "games", ignore = true)
     Publisher publisherDtoToPublisher(PublisherDto publisherDto);
 }

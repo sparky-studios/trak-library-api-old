@@ -31,7 +31,7 @@ public class GameUserEntryDto {
     @NotNull(message = "{game-user-entry.validation.status.not-null}")
     private GameUserEntryStatus status;
 
-    private Collection<String> publishers;
+    private Collection<PublisherDto> publishers;
 
     @Min(message = "{game-user-entry.validation.rating.min}", value = 0)
     @Max(message = "{game-user-entry.validation.rating.max}", value = 5)

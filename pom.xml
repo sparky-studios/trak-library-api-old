@@ -57,6 +57,9 @@
                                 <exclude>com/traklibrary/email/server/adapter/**/*</exclude>
                                 <exclude>com/traklibrary/email/server/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/email/server/EmailServerApplication.class</exclude>
+                                <!-- email-service -->
+                                <exclude>com/traklibrary/email/service/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/email/service/exception/**/*</exclude>
                             </excludes>
                         </configuration>
                         <executions>
