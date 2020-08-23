@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Comparator;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;

@@ -60,6 +60,10 @@
                                 <!-- email-service -->
                                 <exclude>com/traklibrary/email/service/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/email/service/exception/**/*</exclude>
+                                <!-- game-service -->
+                                <exclude>com/traklibrary/game/service/client/**/*</exclude>
+                                <exclude>com/traklibrary/game/service/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/game/service/exception/**/*</exclude>
                             </excludes>
                         </configuration>
                         <executions>
