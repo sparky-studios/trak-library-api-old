@@ -60,6 +60,14 @@
                                 <!-- email-service -->
                                 <exclude>com/traklibrary/email/service/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/email/service/exception/**/*</exclude>
+                                <!-- game-server -->
+                                <exclude>com/traklibrary/game/server/adapter/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/annotation/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/assembler/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/converter/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/exception/**/*</exclude>
+                                <exclude>com/traklibrary/game/server/filter/**/*</exclude>
                                 <!-- game-service -->
                                 <exclude>com/traklibrary/game/service/client/**/*</exclude>
                                 <exclude>com/traklibrary/game/service/configuration/**/*</exclude>
