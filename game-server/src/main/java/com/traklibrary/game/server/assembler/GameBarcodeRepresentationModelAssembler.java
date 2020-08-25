@@ -1,5 +1,6 @@
 package com.traklibrary.game.server.assembler;
 
+import com.traklibrary.game.server.controller.GameBarcodeController;
 import com.traklibrary.game.server.controller.GameController;
 import com.traklibrary.game.server.controller.PlatformController;
 import com.traklibrary.game.service.dto.GameBarcodeDto;
@@ -23,6 +24,9 @@ public class GameBarcodeRepresentationModelAssembler implements SimpleRepresenta
         GameBarcodeDto content = resource.getContent();
 
         if (content != null) {
+            resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameBarcodeController.class).findByBarcode(content.getBarcode()))
+                    .withSelfRel());
+
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
 

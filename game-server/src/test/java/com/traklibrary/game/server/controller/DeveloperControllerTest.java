@@ -7,6 +7,7 @@ import com.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.traklibrary.game.server.configuration.TrakHalJsonMediaTypeConfiguration;
 import com.traklibrary.game.server.converter.JsonMergePatchHttpMessageConverter;
 import com.traklibrary.game.server.exception.GlobalExceptionHandler;
+import com.traklibrary.game.server.utils.ResponseVerifier;
 import com.traklibrary.game.service.DeveloperService;
 import com.traklibrary.game.service.GameService;
 import com.traklibrary.game.service.dto.DeveloperDto;
@@ -105,7 +106,8 @@ class DeveloperControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated());
-        verifyDeveloperDtoResponse("", resultActions, developerDto);
+
+        ResponseVerifier.verifyDeveloperDto("", resultActions, developerDto);
     }
 
     @Test
@@ -128,7 +130,8 @@ class DeveloperControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        verifyDeveloperDtoResponse("", resultActions, developerDto);
+
+        ResponseVerifier.verifyDeveloperDto("", resultActions, developerDto);
     }
 
     @Test
@@ -188,9 +191,6 @@ class DeveloperControllerTest {
                 .accept("application/vnd.traklibrary.v1.0.hal+json"));
 
         // Assert
-        verifyGameDtoResponse("_embedded.gameDtoes[0]", resultActions, gameDto1);
-        verifyGameDtoResponse("_embedded.gameDtoes[1]", resultActions, gameDto2);
-
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
@@ -201,6 +201,9 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
+
+        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -233,9 +236,6 @@ class DeveloperControllerTest {
                 .accept("application/vnd.traklibrary.v1.0.hal+json"));
 
         // Assert
-        verifyGameDtoResponse("_embedded.gameDtoes[0]", resultActions, gameDto1);
-        verifyGameDtoResponse("_embedded.gameDtoes[1]", resultActions, gameDto2);
-
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
@@ -246,6 +246,9 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
+
+        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -303,9 +306,6 @@ class DeveloperControllerTest {
                 .accept("application/vnd.traklibrary.v1.0.hal+json"));
 
         // Assert
-        verifyDeveloperDtoResponse("._embedded.developerDtoes[0]", resultActions, developerDto1);
-        verifyDeveloperDtoResponse("._embedded.developerDtoes[1]", resultActions, developerDto2);
-
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
@@ -316,6 +316,9 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
+
+        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[0]", resultActions, developerDto1);
+        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[1]", resultActions, developerDto2);
     }
 
     @Test
@@ -346,9 +349,6 @@ class DeveloperControllerTest {
                 .accept("application/vnd.traklibrary.v1.0.hal+json"));
 
         // Assert
-        verifyDeveloperDtoResponse("._embedded.developerDtoes[0]", resultActions, developerDto1);
-        verifyDeveloperDtoResponse("._embedded.developerDtoes[1]", resultActions, developerDto2);
-
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
@@ -359,6 +359,9 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
+
+        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[0]", resultActions, developerDto1);
+        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[1]", resultActions, developerDto2);
     }
 
     @Test
@@ -401,7 +404,8 @@ class DeveloperControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        verifyDeveloperDtoResponse("", resultActions, developerDto);
+
+        ResponseVerifier.verifyDeveloperDto("", resultActions, developerDto);
     }
 
     @Test
@@ -426,7 +430,8 @@ class DeveloperControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
-        verifyDeveloperDtoResponse("", resultActions, developerDto);
+
+        ResponseVerifier.verifyDeveloperDto("", resultActions, developerDto);
     }
 
     @Test
@@ -442,34 +447,5 @@ class DeveloperControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
-
-    private void verifyDeveloperDtoResponse(String root, ResultActions resultActions, DeveloperDto developerDto) throws Exception {
-        resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)developerDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".name", Matchers.is(developerDto.getName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(developerDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".foundedDate", Matchers.is(developerDto.getFoundedDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)developerDto.getVersion().longValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
-    }
-
-    private void verifyGameDtoResponse(String root, ResultActions resultActions, GameDto gameDto) throws Exception {
-        resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".id", Matchers.is((int)gameDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".title", Matchers.is(gameDto.getTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".description", Matchers.is(gameDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".releaseDate", Matchers.is(gameDto.getReleaseDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".ageRating", Matchers.is(gameDto.getAgeRating().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + ".version", Matchers.is((int)gameDto.getVersion().longValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.self").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.image").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.platforms").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.genres").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.developers").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.publishers").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.entries").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$." + root + "._links.info").exists());
     }
 }

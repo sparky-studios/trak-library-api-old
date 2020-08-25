@@ -5,7 +5,8 @@ import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDate;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "gameInfo")
@@ -23,9 +24,9 @@ public class GameInfoDto {
 
     private Long version;
 
-    private Collection<PlatformDto> platforms;
+    private Set<PlatformDto> platforms = new HashSet<>();
 
-    private Collection<PublisherDto> publishers;
+    private Set<PublisherDto> publishers = new HashSet<>();
 
-    private Collection<GenreDto> genres;
+    private Set<GenreDto> genres = new HashSet<>();
 }
