@@ -127,7 +127,7 @@ class GameControllerTest {
     }
 
     @Test
-    void save_withValidDeveloperDto_returns201AndValidResponse() throws Exception {
+    void save_withValidGameDto_returns201AndValidResponse() throws Exception {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
