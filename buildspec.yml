@@ -19,7 +19,7 @@ phases:
   post_build:
     commands:
       - echo [INFO] Running Trak API tests `date`
-      - mvn verify sonar:sonar -Pcoverage
+      - ./sonar.sh
       - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 
