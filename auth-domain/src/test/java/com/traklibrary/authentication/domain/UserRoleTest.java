@@ -66,27 +66,80 @@ class UserRoleTest {
     }
 
     @Test
-    void persist_withValidUserRoleRelationships_mapsRelationships() {
+    void persist_withValidUserRelationships_mapsRelationships() {
         // Arrange
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword("password");
-        user.setEmailAddress("email@address.com");
-        user.setVerified(true);
-        user.setVerificationCode("12345");
-        user.setVerificationExpiryDate(LocalDateTime.now());
-        user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
-        user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user = testEntityManager.persistAndFlush(user);
+        User user1 = new User();
+        user1.setUsername("username1");
+        user1.setPassword("password");
+        user1.setEmailAddress("user1@traklibrary.com");
+        user1.setVerified(true);
+        user1.setVerificationCode("11111");
+        user1.setVerificationExpiryDate(LocalDateTime.now());
+        user1.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        user1.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user1 = testEntityManager.persistAndFlush(user1);
+
+        User user2 = new User();
+        user2.setUsername("username2");
+        user2.setPassword("password");
+        user2.setEmailAddress("user2@traklibrary.com");
+        user2.setVerified(true);
+        user2.setVerificationCode("11111");
+        user2.setVerificationExpiryDate(LocalDateTime.now());
+        user2.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        user2.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user2 = testEntityManager.persistAndFlush(user2);
 
         UserRole userRole = new UserRole();
         userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
-        userRole.addUser(user);
+        userRole.addUser(user1);
+        userRole.addUser(user2);
+
+        // Act
+        UserRole result = testEntityManager.persistFlushFind(userRole);
+
+        // Assert
+        Assertions.assertThat(result.getUsers().size()).isEqualTo(2);
+    }
+
+    @Test
+    void persist_withValidRemovedUserRelationships_mapsRelationships() {
+        // Arrange
+        User user1 = new User();
+        user1.setUsername("username1");
+        user1.setPassword("password");
+        user1.setEmailAddress("user1@traklibrary.com");
+        user1.setVerified(true);
+        user1.setVerificationCode("11111");
+        user1.setVerificationExpiryDate(LocalDateTime.now());
+        user1.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        user1.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user1 = testEntityManager.persistAndFlush(user1);
+
+        User user2 = new User();
+        user2.setUsername("username2");
+        user2.setPassword("password");
+        user2.setEmailAddress("user2@traklibrary.com");
+        user2.setVerified(true);
+        user2.setVerificationCode("11111");
+        user2.setVerificationExpiryDate(LocalDateTime.now());
+        user2.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        user2.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user2 = testEntityManager.persistAndFlush(user2);
+
+        UserRole userRole = new UserRole();
+        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        userRole.addUser(user1);
+        userRole.addUser(user2);
+        userRole = testEntityManager.persistFlushFind(userRole);
+
+        userRole.removeUser(testEntityManager.find(User.class, user2.getId()));
 
         // Act
         UserRole result = testEntityManager.persistFlushFind(userRole);
 
         // Assert
         Assertions.assertThat(result.getUsers().size()).isEqualTo(1);
+        Assertions.assertThat(result.getUsers().iterator().next()).isEqualTo(user1);
     }
 }

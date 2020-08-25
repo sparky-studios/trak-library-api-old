@@ -31,7 +31,7 @@ public class Game {
     private AgeRating ageRating;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_genre_xref",
             joinColumns = {@JoinColumn(name = "game_id")},
@@ -40,7 +40,7 @@ public class Game {
     private Set<Genre> genres = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_platform_xref",
             joinColumns = {@JoinColumn(name = "game_id")},
@@ -49,7 +49,7 @@ public class Game {
     private Set<Platform> platforms = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_publisher_xref",
             joinColumns = {@JoinColumn(name = "game_id")},
@@ -58,7 +58,7 @@ public class Game {
     private Set<Publisher> publishers = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_developer_xref",
             joinColumns = {@JoinColumn(name = "game_id")},
@@ -143,7 +143,7 @@ public class Game {
      *
      * @param publisher The {@link Publisher} to remove to the {@link Game}.
      */
-    public void removeDeveloper(Publisher publisher) {
+    public void removePublisher(Publisher publisher) {
         publishers.remove(publisher);
         publisher.getGames().remove(this);
     }

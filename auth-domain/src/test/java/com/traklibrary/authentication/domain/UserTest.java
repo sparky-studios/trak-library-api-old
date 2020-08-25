@@ -135,7 +135,7 @@ class UserTest {
     }
 
     @Test
-    void persist_withValidUserRelationships_mapsRelationships() {
+    void persist_withValidUserRoleRelationships_mapsRelationships() {
         // Arrange
         UserRole userRole1 = new UserRole();
         userRole1.setRole("ROLE_USER_ONE");
@@ -162,5 +162,39 @@ class UserTest {
 
         // Assert
         Assertions.assertThat(result.getUserRoles().size()).isEqualTo(2);
+    }
+
+    @Test
+    void persist_withValidRemovedUserRoleRelationships_mapsRelationships() {
+        // Arrange
+        UserRole userRole1 = new UserRole();
+        userRole1.setRole("ROLE_USER_ONE");
+        userRole1 = testEntityManager.persistFlushFind(userRole1);
+
+        UserRole userRole2 = new UserRole();
+        userRole2.setRole("ROLE_USER_TWO");
+        userRole2 = testEntityManager.persistFlushFind(userRole2);
+
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmailAddress("email@address.com");
+        user.setVerified(true);
+        user.setVerificationCode("12345");
+        user.setVerificationExpiryDate(LocalDateTime.now());
+        user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.addUserRole(userRole1);
+        user.addUserRole(userRole2);
+        user = testEntityManager.persistFlushFind(user);
+
+        user.removeUserRole(testEntityManager.find(UserRole.class, userRole2.getId()));
+
+        // Act
+        User result = testEntityManager.persistFlushFind(user);
+
+        // Assert
+        Assertions.assertThat(result.getUserRoles().size()).isEqualTo(1);
+        Assertions.assertThat(result.getUserRoles().iterator().next()).isEqualTo(userRole1);
     }
 }

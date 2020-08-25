@@ -48,6 +48,7 @@
                                 <exclude>com/traklibbrary/authentication/server/AuthServerApplication.class</exclude>
                                 <!-- auth-service -->
                                 <exclude>com/traklibrary/authentication/service/client/**/*</exclude>
+                                <exclude>com/traklibrary/authentication/service/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/service/exception/**/*</exclude>
                                 <!-- config-server -->
                                 <exclude>com/traklibrary/config/server/ConfigServerApplication.class</exclude>

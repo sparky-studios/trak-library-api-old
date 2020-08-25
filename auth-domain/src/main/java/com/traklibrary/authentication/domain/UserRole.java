@@ -33,7 +33,7 @@ public class UserRole {
     private String role;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "userRoles", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
     @Version

@@ -104,4 +104,39 @@ class PlatformTest {
         // Assert
         Assertions.assertThat(result.getGames().size()).isEqualTo(2);
     }
+
+    @Test
+    void persist_withValidRemovedGameRelationships_mapsRelationships() {
+        // Arrange
+        Game game1 = new Game();
+        game1.setTitle("game-title-1");
+        game1.setDescription("game-description-1");
+        game1.setReleaseDate(LocalDate.now());
+        game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game1 = testEntityManager.persistFlushFind(game1);
+
+        Game game2 = new Game();
+        game2.setTitle("game-title-2");
+        game2.setDescription("game-description-2");
+        game2.setReleaseDate(LocalDate.now());
+        game2.setAgeRating(AgeRating.ADULTS_ONLY);
+        game2 = testEntityManager.persistFlushFind(game2);
+
+        Platform platform = new Platform();
+        platform.setName("test-name");
+        platform.setDescription("test-description");
+        platform.setReleaseDate(LocalDate.now());
+        platform.addGame(game1);
+        platform.addGame(game2);
+        platform = testEntityManager.persistFlushFind(platform);
+
+        platform.removeGame(testEntityManager.find(Game.class, game2.getId()));
+
+        // Act
+        Platform result = testEntityManager.persistFlushFind(platform);
+
+        // Assert
+        Assertions.assertThat(result.getGames().size()).isEqualTo(1);
+        Assertions.assertThat(result.getGames().iterator().next()).isEqualTo(game1);
+    }
 }

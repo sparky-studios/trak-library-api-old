@@ -15,7 +15,7 @@ import java.util.Set;
 public class Developer extends Company {
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(mappedBy = "developers", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "developers", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
     private Set<Game> games = new HashSet<>();
 
     /**

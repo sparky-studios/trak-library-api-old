@@ -54,7 +54,7 @@ public class User {
     private LocalDateTime recoveryTokenExpiryDate;
 
     @EqualsAndHashCode.Exclude
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "auth_user_role_xref",
             joinColumns = {@JoinColumn(name = "auth_user_id")},
