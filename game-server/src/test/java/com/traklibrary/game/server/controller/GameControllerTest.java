@@ -265,10 +265,10 @@ class GameControllerTest {
         genreDto1.setVersion(1L);
 
         GenreDto genreDto2 = new GenreDto();
-        genreDto2.setId(1L);
-        genreDto2.setName("test-name-1");
-        genreDto2.setDescription("test-description-1");
-        genreDto2.setVersion(1L);
+        genreDto2.setId(2L);
+        genreDto2.setName("test-name-2");
+        genreDto2.setDescription("test-description-2");
+        genreDto2.setVersion(2L);
 
         Mockito.when(genreService.findGenresByGameId(ArgumentMatchers.anyLong()))
                 .thenReturn(Arrays.asList(genreDto1, genreDto2));
@@ -282,7 +282,7 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[0]", resultActions, genreDto1);
-        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[0]", resultActions, genreDto2);
+        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[1]", resultActions, genreDto2);
     }
 
     @Test

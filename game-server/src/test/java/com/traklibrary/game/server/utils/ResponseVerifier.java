@@ -62,7 +62,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameRequestDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".notes", Matchers.is(gameRequestDto.getNotes())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".completed", Matchers.is(gameRequestDto.isCompleted())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".completedDate", Matchers.is(gameRequestDto.getCompletedDate().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".completedDate").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".userId", Matchers.is((int)gameRequestDto.getUserId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameRequestDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists());

@@ -45,7 +45,7 @@
                                 <exclude>com/traklibrary/authentication/server/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/exception/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/server/filter/**/*</exclude>
-                                <exclude>com/traklibbrary/authentication/server/AuthServerApplication.class</exclude>
+                                <exclude>com/traklibrary/authentication/server/AuthServerApplication.class</exclude>
                                 <!-- auth-service -->
                                 <exclude>com/traklibrary/authentication/service/client/**/*</exclude>
                                 <exclude>com/traklibrary/authentication/service/configuration/**/*</exclude>
@@ -73,6 +73,26 @@
                                 <exclude>com/traklibrary/game/service/client/**/*</exclude>
                                 <exclude>com/traklibrary/game/service/configuration/**/*</exclude>
                                 <exclude>com/traklibrary/game/service/exception/**/*</exclude>
+                                <!-- image-server -->
+                                <exclude>com/traklibrary/image/server/adapter/**/*</exclude>
+                                <exclude>com/traklibrary/image/server/annotation/**/*</exclude>
+                                <exclude>com/traklibrary/image/server/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/image/server/exception/**/*</exclude>
+                                <exclude>com/traklibrary/image/server/filter/**/*</exclude>
+                                <exclude>com/traklibrary/image/server/ImageServerApplication.class</exclude>
+                                <!-- image-service -->
+                                <exclude>com/traklibrary/image/service/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/image/service/exception/**/*</exclude>
+                                <!-- notification-server -->
+                                <exclude>com/traklibrary/notification/server/adapter/**/*</exclude>
+                                <exclude>com/traklibrary/notification/server/annotation/**/*</exclude>
+                                <exclude>com/traklibrary/notification/server/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/notification/server/exception/**/*</exclude>
+                                <exclude>com/traklibrary/notification/server/filter/**/*</exclude>
+                                <exclude>com/traklibrary/notification/server/NotificationServerApplication.class</exclude>
+                                <!-- notification-service -->
+                                <exclude>com/traklibrary/notification/service/configuration/**/*</exclude>
+                                <exclude>com/traklibrary/notification/service/exception/**/*</exclude>
                             </excludes>
                         </configuration>
                         <executions>
