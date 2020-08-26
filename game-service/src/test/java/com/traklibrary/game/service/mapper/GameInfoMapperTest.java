@@ -22,6 +22,15 @@ class GameInfoMapperTest {
     @Test
     void gameToGameInfoDto_withGame_mapsFields() {
         // Arrange
+        Genre genre = new Genre();
+        genre.setName("test-genre");
+
+        Platform platform = new Platform();
+        platform.setName("test-platform");
+
+        Publisher publisher = new Publisher();
+        publisher.setName("test-publisher");
+
         Game game = new Game();
         game.setId(5L);
         game.setTitle("test-title");
@@ -29,30 +38,9 @@ class GameInfoMapperTest {
         game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.TEEN);
         game.setVersion(5L);
-
-        Genre genre = new Genre();
-        genre.setName("test-genre");
-
-        GameGenreXref gameGenreXref = new GameGenreXref();
-        gameGenreXref.setGenre(genre);
-
-        game.setGameGenreXrefs(Collections.singleton(gameGenreXref));
-
-        Platform platform = new Platform();
-        platform.setName("test-platform");
-
-        GamePlatformXref gamePlatformXref = new GamePlatformXref();
-        gamePlatformXref.setPlatform(platform);
-
-        game.setGamePlatformXrefs(Collections.singleton(gamePlatformXref));
-
-        Publisher publisher = new Publisher();
-        publisher.setName("test-publisher");
-
-        GamePublisherXref gamePublisherXref = new GamePublisherXref();
-        gamePublisherXref.setPublisher(publisher);
-
-        game.setGamePublisherXrefs(Collections.singleton(gamePublisherXref));
+        game.addGenre(genre);
+        game.addPlatform(platform);
+        game.addPublisher(publisher);
 
         // Act
         GameInfoDto result = GameMappers.GAME_INFO_MAPPER.gameToGameInfoDto(game);
@@ -64,8 +52,8 @@ class GameInfoMapperTest {
         Assertions.assertEquals(game.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
         Assertions.assertEquals(game.getAgeRating(), result.getAgeRating(), "The mapped age rating does not match the entity.");
         Assertions.assertEquals(game.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
-        Assertions.assertEquals(genre.getName(), result.getGenres().iterator().next(), "The mapped genres does not match the entity.");
-        Assertions.assertEquals(platform.getName(), result.getPlatforms().iterator().next(), "The mapped platforms does not match the entity.");
-        Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next(), "The mapped publishers does not match the entity.");
+        Assertions.assertEquals(1, result.getGenres().size(), "Incorrect number of mapped genres.");
+        Assertions.assertEquals(1, result.getPlatforms().size(), "Incorrect number of mapped platforms.");
+        Assertions.assertEquals(1, result.getPublishers().size(), "Incorrect number of mapped publishers.");
     }
 }

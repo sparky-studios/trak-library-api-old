@@ -44,7 +44,7 @@
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-circuitbreaker-spring-retry</artifactId>
+            <artifactId>spring-cloud-starter-circuitbreaker-resilience4j</artifactId>
             <version>0.0.1.BUILD-SNAPSHOT</version>
         </dependency>
         <dependency>

@@ -1,8 +1,8 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.domain.GameGenreXref;
+import com.traklibrary.game.domain.Developer;
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.domain.Genre;
-import com.traklibrary.game.repository.GameGenreXrefRepository;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.GenreRepository;
 import com.traklibrary.game.repository.specification.GenreSpecification;
@@ -36,9 +36,6 @@ class GenreServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
-
-    @Mock
-    private GameGenreXrefRepository gameGenreXrefRepository;
 
     @Spy
     private final GenreMapper genreMapper = GameMappers.GENRE_MAPPER;
@@ -131,8 +128,8 @@ class GenreServiceImplTest {
     @Test
     void findGenresByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -144,11 +141,8 @@ class GenreServiceImplTest {
     @Test
     void findGenresByGameId_withNoGenres_returnsEmptyList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.<Specification<GameGenreXref>>any()))
-                .thenReturn(Collections.emptyList());
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new Game()));
 
         // Act
         List<GenreDto> result = StreamSupport.stream(genreService.findGenresByGameId(0L).spliterator(), false)
@@ -161,31 +155,26 @@ class GenreServiceImplTest {
     @Test
     void findGenresByGameId_withGenres_returnsGenreDtoList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
         Genre genre1 = new Genre();
-        genre1.setName("name-1");
-
-        GameGenreXref gameGenreXref1 = new GameGenreXref();
-        gameGenreXref1.setGenre(genre1);
+        genre1.setName("genre-1");
 
         Genre genre2 = new Genre();
-        genre2.setName("name-2");
+        genre2.setName("genre-2");
 
-        GameGenreXref gameGenreXref2 = new GameGenreXref();
-        gameGenreXref2.setGenre(genre2);
+        Game game = new Game();
+        game.addGenre(genre1);
+        game.addGenre(genre2);
 
-        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.<Specification<GameGenreXref>>any()))
-                .thenReturn(Arrays.asList(gameGenreXref1, gameGenreXref2));
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
 
         // Act
         List<GenreDto> result = StreamSupport.stream(genreService.findGenresByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
-        Assertions.assertFalse(result.isEmpty(), "The result should be not be empty if they're game genre xrefs.");
-        Assertions.assertEquals(2, result.size(), "There should be only two genres if there are two xrefs");
+        Assertions.assertFalse(result.isEmpty(), "The result should be not be empty if they're game genres.");
+        Assertions.assertEquals(2, result.size(), "There should be only two genres.");
     }
 
     @Test

@@ -25,13 +25,10 @@ class GameUserEntryMapperTest {
         Publisher publisher = new Publisher();
         publisher.setName("publisher-name");
 
-        GamePublisherXref gamePublisherXref = new GamePublisherXref();
-        gamePublisherXref.setPublisher(publisher);
-
         Game game = new Game();
         game.setTitle("test-title");
         game.setReleaseDate(LocalDate.now());
-        game.setGamePublisherXrefs(Collections.singleton(gamePublisherXref));
+        game.addPublisher(publisher);
 
         Platform platform = new Platform();
         platform.setName("test-name");
@@ -56,7 +53,7 @@ class GameUserEntryMapperTest {
         Assertions.assertEquals(gameUserEntry.getGame().getReleaseDate(), result.getGameReleaseDate(), "The mapped game release date does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatform().getName(), result.getPlatformName(), "The mapped platform name does not match the entity.");
-        Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next(), "The mapped publisher does not match the entity.");
+        Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next().getName(), "The mapped publisher does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");

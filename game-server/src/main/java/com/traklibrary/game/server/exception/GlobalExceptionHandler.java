@@ -16,6 +16,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import javax.persistence.EntityExistsException;
@@ -72,6 +73,37 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
+        log.error("Constraint violation", ex);
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+
+        apiError.getSubErrors().addAll(ex.getConstraintViolations()
+                .stream()
+                .map(c -> new ApiValidationError(c.getRootBeanClass().getSimpleName(), c.getPropertyPath().toString(), c.getInvalidValue().toString(), c.getMessage()))
+                .collect(Collectors.toList()));
+
+        return ResponseEntity
+                .badRequest()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(apiError);
+    }
+
+    @Override
+    @NonNull
+    protected ResponseEntity<Object> handleMissingServletRequestPart(@NonNull MissingServletRequestPartException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
+        log.error("Missing request part", ex);
+
+        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
     @Override
     @NonNull
     protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
@@ -100,24 +132,5 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .collect(Collectors.toList()));
 
         return new ResponseEntity<>(apiError, headers, status);
-    }
-
-    @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
-        log.error("Constraint violation", ex);
-
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
-
-        apiError.getSubErrors().addAll(ex.getConstraintViolations()
-                .stream()
-                .map(c -> new ApiValidationError(c.getRootBeanClass().getSimpleName(), c.getPropertyPath().toString(), c.getInvalidValue().toString(), c.getMessage()))
-                .collect(Collectors.toList()));
-
-        return ResponseEntity
-                .badRequest()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(apiError);
     }
 }

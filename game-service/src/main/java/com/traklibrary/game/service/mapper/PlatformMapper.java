@@ -10,6 +10,6 @@ public interface PlatformMapper {
 
     PlatformDto platformToPlatformDto(Platform platform);
 
-    @Mapping(target = "gamePlatformXrefs", ignore = true)
+    @Mapping(target = "games", ignore = true)
     Platform platformDtoToPlatform(PlatformDto platformDto);
 }

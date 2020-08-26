@@ -1,6 +1,7 @@
 version: 0.2
 
 env:
+  shell: bash
   parameter-store:
     SONAR_TOKEN: "/trak-api/sonarcloud-token"
 
@@ -19,7 +20,15 @@ phases:
   post_build:
     commands:
       - echo [INFO] Running Trak API tests `date`
-      - mvn verify sonar:sonar -Pcoverage
+      - |
+        branch_name=$CODEBUILD_SOURCE_VERSION
+        if [[ "$branch_name" == pr/* ]] ;
+        then
+        	pull_request_number="${branch_name:3}"
+        	mvn verify sonar:sonar -Pcoverage -Dsonar.pullrequest.provider=Github -Dsonar.pullrequest.github.repository=sparky-studios/trak-api -Dsonar.pullrequest.key=$pull_request_number -Dsonar.pullrequest.branch=$CODEBUILD_WEBHOOK_HEAD_REF
+        else
+        	mvn verify sonar:sonar -Pcoverage
+        fi
       - echo [INFO] Packaging Trak API `date`
       - mvn package -DskipTests
 

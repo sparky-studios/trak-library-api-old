@@ -10,6 +10,6 @@ public interface GenreMapper {
 
     GenreDto genreToGenreDto(Genre genre);
 
-    @Mapping(target = "gameGenreXrefs", ignore = true)
+    @Mapping(target = "games", ignore = true)
     Genre genreDtoToGenre(GenreDto gameDto);
 }

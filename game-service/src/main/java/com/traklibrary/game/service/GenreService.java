@@ -1,7 +1,6 @@
 package com.traklibrary.game.service;
 
 import com.traklibrary.game.domain.Game;
-import com.traklibrary.game.domain.GameGenreXref;
 import com.traklibrary.game.domain.Genre;
 import com.traklibrary.game.repository.specification.GenreSpecification;
 import com.traklibrary.game.service.dto.GenreDto;

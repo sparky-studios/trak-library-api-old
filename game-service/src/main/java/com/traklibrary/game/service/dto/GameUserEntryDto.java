@@ -8,6 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Data
@@ -31,7 +32,7 @@ public class GameUserEntryDto {
     @NotNull(message = "{game-user-entry.validation.status.not-null}")
     private GameUserEntryStatus status;
 
-    private Collection<String> publishers;
+    private Collection<PublisherDto> publishers = new ArrayList<>();
 
     @Min(message = "{game-user-entry.validation.rating.min}", value = 0)
     @Max(message = "{game-user-entry.validation.rating.max}", value = 5)

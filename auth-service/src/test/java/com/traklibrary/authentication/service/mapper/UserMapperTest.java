@@ -2,7 +2,6 @@ package com.traklibrary.authentication.service.mapper;
 
 import com.traklibrary.authentication.domain.User;
 import com.traklibrary.authentication.domain.UserRole;
-import com.traklibrary.authentication.domain.UserRoleXref;
 import com.traklibrary.authentication.service.dto.UserDto;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ class UserMapperTest {
         userRole.setRole("ROLE_TEST");
         userRole.setVersion(3L);
 
-        UserRoleXref userRoleXref = new UserRoleXref();
-        userRoleXref.setUserRole(userRole);
 
         User user = new User();
         user.setId(5L);
@@ -32,7 +29,7 @@ class UserMapperTest {
         user.setVerificationCode("123AB");
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setVersion(1L);
-        user.setUserRoleXrefs(Collections.singleton(userRoleXref));
+        user.addUserRole(userRole);
 
         // Act
         UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
@@ -45,7 +42,7 @@ class UserMapperTest {
         Assertions.assertEquals(user.isVerified(), result.isVerified(), "The mapped verified state does not match the entity.");
         Assertions.assertEquals(user.getVerificationCode(), result.getVerificationCode(), "The mapped verification code state does not match the entity.");
         Assertions.assertEquals(user.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
-        Assertions.assertEquals(user.getUserRoleXrefs().iterator().next().getUserRole().getRole(),
+        Assertions.assertEquals(user.getUserRoles().iterator().next().getRole(),
                 result.getAuthorities().iterator().next().getAuthority(), "The mapped authority does not match the entity.");
     }
 

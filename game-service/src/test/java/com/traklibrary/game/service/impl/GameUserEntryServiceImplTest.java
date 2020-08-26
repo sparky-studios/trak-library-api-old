@@ -214,12 +214,6 @@ class GameUserEntryServiceImplTest {
         Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GameGenreXref gameGenreXref1 = new GameGenreXref();
-        gameGenreXref1.setGame(new Game());
-
-        GameGenreXref gameGenreXref2 = new GameGenreXref();
-        gameGenreXref2.setGame(new Game());
-
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(Arrays.asList(new GameUserEntry(), new GameUserEntry())));
 

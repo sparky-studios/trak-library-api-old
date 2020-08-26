@@ -1,6 +1,6 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.repository.GameGenreXrefRepository;
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.GenreRepository;
 import com.traklibrary.game.repository.specification.GenreSpecification;
@@ -19,6 +19,7 @@ import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Comparator;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -31,7 +32,6 @@ public class GenreServiceImpl implements GenreService {
 
     private final GenreRepository genreRepository;
     private final GameRepository gameRepository;
-    private final GameGenreXrefRepository gameGenreXrefRepository;
     private final GenreMapper genreMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -61,17 +61,19 @@ public class GenreServiceImpl implements GenreService {
 
     @Override
     public Iterable<GenreDto> findGenresByGameId(long gameId) {
-        if (!gameRepository.existsById(gameId)) {
+        // Get the game as the developers can be lazily loaded from it.
+        Optional<Game> game = gameRepository.findById(gameId);
+
+        if (!game.isPresent()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameGenreXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)))
+        return game.get().getGenres()
                 .stream()
-                .map(xref -> genreMapper.genreToGenreDto(xref.getGenre()))
+                .map(genreMapper::genreToGenreDto)
                 .sorted(Comparator.comparing(GenreDto::getName))
                 .collect(Collectors.toList());
     }

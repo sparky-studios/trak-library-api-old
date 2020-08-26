@@ -2,10 +2,8 @@ package com.traklibrary.authentication.service.impl;
 
 import com.traklibrary.authentication.domain.User;
 import com.traklibrary.authentication.domain.UserRole;
-import com.traklibrary.authentication.domain.UserRoleXref;
 import com.traklibrary.authentication.repository.UserRepository;
 import com.traklibrary.authentication.repository.UserRoleRepository;
-import com.traklibrary.authentication.repository.UserRoleXrefRepository;
 import com.traklibrary.authentication.service.AuthenticationService;
 import com.traklibrary.authentication.service.dto.CheckedResponse;
 import com.traklibrary.authentication.service.dto.RecoveryRequestDto;
@@ -36,9 +34,6 @@ class UserServiceImplTest {
 
     @Mock
     private UserRoleRepository userRoleRepository;
-
-    @Mock
-    private UserRoleXrefRepository userRoleXrefRepository;
 
     @Mock
     private PasswordEncoder passwordEncoder;
@@ -185,9 +180,6 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(user);
 
-        Mockito.when(userRoleXrefRepository.save(ArgumentMatchers.any()))
-                .thenReturn(new UserRoleXref());
-
         Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString()))
                 .thenReturn("password");
 
@@ -205,9 +197,6 @@ class UserServiceImplTest {
         Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
-                .save(ArgumentMatchers.any());
-
-        Mockito.verify(userRoleXrefRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
         Mockito.verify(applicationEventPublisher)

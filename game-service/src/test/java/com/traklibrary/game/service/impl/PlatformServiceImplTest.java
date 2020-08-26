@@ -1,8 +1,8 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.domain.GamePlatformXref;
+import com.traklibrary.game.domain.Developer;
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.domain.Platform;
-import com.traklibrary.game.repository.GamePlatformXrefRepository;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.PlatformRepository;
 import com.traklibrary.game.repository.specification.PlatformSpecification;
@@ -37,9 +37,6 @@ class PlatformServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
-
-    @Mock
-    private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Spy
     private final PlatformMapper platformMapper = GameMappers.PLATFORM_MAPPER;
@@ -134,8 +131,8 @@ class PlatformServiceImplTest {
     @Test
     void findPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
@@ -147,11 +144,8 @@ class PlatformServiceImplTest {
     @Test
     void findPlatformsByGameId_withNoPlatforms_returnsEmptyList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.<Specification<GamePlatformXref>>any()))
-                .thenReturn(Collections.emptyList());
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new Game()));
 
         // Act
         List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L).spliterator(), false)
@@ -167,23 +161,18 @@ class PlatformServiceImplTest {
     @Test
     void findPlatformsByGameId_withPlatforms_returnsList() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
         Platform platform1 = new Platform();
         platform1.setName("platform-1");
-
-        GamePlatformXref gamePlatformXref1 = new GamePlatformXref();
-        gamePlatformXref1.setPlatform(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("platform-2");
 
-        GamePlatformXref gamePlatformXref2 = new GamePlatformXref();
-        gamePlatformXref2.setPlatform(platform2);
+        Game game = new Game();
+        game.addPlatform(platform1);
+        game.addPlatform(platform2);
 
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.<Specification<GamePlatformXref>>any()))
-                .thenReturn(Arrays.asList(gamePlatformXref1, gamePlatformXref2));
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
 
         // Act
         List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L).spliterator(), false)
@@ -191,7 +180,7 @@ class PlatformServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
-        Assertions.assertEquals(2, result.size(), "There should be only two platforms if there are two xrefs");
+        Assertions.assertEquals(2, result.size(), "There should be only two platforms.");
 
         Mockito.verify(platformMapper, Mockito.atMost(2))
                 .platformToPlatformDto(ArgumentMatchers.any());

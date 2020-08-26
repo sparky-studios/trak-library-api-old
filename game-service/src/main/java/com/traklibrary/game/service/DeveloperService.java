@@ -2,7 +2,6 @@ package com.traklibrary.game.service;
 
 import com.traklibrary.game.domain.Developer;
 import com.traklibrary.game.domain.Game;
-import com.traklibrary.game.domain.GameDeveloperXref;
 import com.traklibrary.game.repository.specification.DeveloperSpecification;
 import com.traklibrary.game.service.dto.DeveloperDto;
 import org.springframework.data.domain.Pageable;

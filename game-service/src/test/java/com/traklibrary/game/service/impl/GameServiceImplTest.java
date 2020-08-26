@@ -1,11 +1,11 @@
 package com.traklibrary.game.service.impl;
 
+import com.traklibrary.game.domain.Game;
 import com.traklibrary.game.repository.*;
 import com.traklibrary.game.repository.specification.GameSpecification;
 import com.traklibrary.game.service.PatchService;
 import com.traklibrary.game.service.dto.GameDto;
 import com.traklibrary.game.service.mapper.GameMapper;
-import com.traklibrary.game.domain.*;
 import com.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -34,25 +34,13 @@ class GameServiceImplTest {
     private GenreRepository genreRepository;
 
     @Mock
-    private GameGenreXrefRepository gameGenreXrefRepository;
-
-    @Mock
     private PlatformRepository platformRepository;
-
-    @Mock
-    private GamePlatformXrefRepository gamePlatformXrefRepository;
 
     @Mock
     private DeveloperRepository developerRepository;
 
     @Mock
-    private GameDeveloperXrefRepository gameDeveloperXrefRepository;
-
-    @Mock
     private PublisherRepository publisherRepository;
-
-    @Mock
-    private GamePublisherXrefRepository gamePublisherXrefRepository;
 
     @Mock
     private PatchService patchService;
@@ -164,7 +152,7 @@ class GameServiceImplTest {
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRepository.findByGenresId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
         // Act
@@ -184,14 +172,8 @@ class GameServiceImplTest {
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GameGenreXref gameGenreXref1 = new GameGenreXref();
-        gameGenreXref1.setGame(new Game());
-
-        GameGenreXref gameGenreXref2 = new GameGenreXref();
-        gameGenreXref2.setGame(new Game());
-
-        Mockito.when(gameGenreXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gameGenreXref1, gameGenreXref2)));
+        Mockito.when(gameRepository.findByGenresId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
 
         // Act
         List<GameDto> result = StreamSupport.stream(gameService.findGamesByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
@@ -223,15 +205,15 @@ class GameServiceImplTest {
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameGenreXrefRepository.count(ArgumentMatchers.any()))
+        Mockito.when(gameRepository.countByGenresId(ArgumentMatchers.anyLong()))
                 .thenReturn(0L);
 
         // Act
         gameService.countGamesByGenreId(0L);
 
         // Assert
-        Mockito.verify(gameGenreXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .countByGenresId(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -255,7 +237,7 @@ class GameServiceImplTest {
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRepository.findByPlatformsId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
         // Act
@@ -275,14 +257,8 @@ class GameServiceImplTest {
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GamePlatformXref gamePlatformXref1 = new GamePlatformXref();
-        gamePlatformXref1.setGame(new Game());
-
-        GamePlatformXref gamePlatformXref2 = new GamePlatformXref();
-        gamePlatformXref2.setGame(new Game());
-
-        Mockito.when(gamePlatformXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gamePlatformXref1, gamePlatformXref2)));
+        Mockito.when(gameRepository.findByPlatformsId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
 
         // Act
         List<GameDto> result = StreamSupport.stream(gameService.findGamesByPlatformId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
@@ -314,15 +290,15 @@ class GameServiceImplTest {
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePlatformXrefRepository.count(ArgumentMatchers.any()))
+        Mockito.when(gameRepository.countByPlatformsId(ArgumentMatchers.anyLong()))
                 .thenReturn(0L);
 
         // Act
         gameService.countGamesByPlatformId(0L);
 
         // Assert
-        Mockito.verify(gamePlatformXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .countByPlatformsId(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -346,7 +322,7 @@ class GameServiceImplTest {
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRepository.findByDevelopersId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
         // Act
@@ -366,14 +342,8 @@ class GameServiceImplTest {
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GameDeveloperXref gameDeveloperXref1 = new GameDeveloperXref();
-        gameDeveloperXref1.setGame(new Game());
-
-        GameDeveloperXref gameDeveloperXref2 = new GameDeveloperXref();
-        gameDeveloperXref2.setGame(new Game());
-
-        Mockito.when(gameDeveloperXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gameDeveloperXref1, gameDeveloperXref2)));
+        Mockito.when(gameRepository.findByDevelopersId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
 
         // Act
         List<GameDto> result = StreamSupport.stream(gameService.findGamesByDeveloperId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
@@ -400,20 +370,20 @@ class GameServiceImplTest {
     }
 
     @Test
-    void countGamesByDeveloperId_withPlatform_invokesGameDeveloperXrefRepository() {
+    void countGamesByDeveloperId_withDeveloper_invokesGameDeveloperXrefRepository() {
         // Arrange
         Mockito.when(developerRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameDeveloperXrefRepository.count(ArgumentMatchers.any()))
+        Mockito.when(gameRepository.countByDevelopersId(ArgumentMatchers.anyLong()))
                 .thenReturn(0L);
 
         // Act
         gameService.countGamesByDeveloperId(0L);
 
         // Assert
-        Mockito.verify(gameDeveloperXrefRepository, Mockito.atMostOnce())
-                .count(ArgumentMatchers.any());
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .countByDevelopersId(ArgumentMatchers.anyLong());
     }
 
     @Test
@@ -437,7 +407,7 @@ class GameServiceImplTest {
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
+        Mockito.when(gameRepository.findByPublishersId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(Page.empty());
 
         // Act
@@ -457,14 +427,8 @@ class GameServiceImplTest {
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        GamePublisherXref gamePublisherXref1 = new GamePublisherXref();
-        gamePublisherXref1.setGame(new Game());
-
-        GamePublisherXref gamePublisherXref2 = new GamePublisherXref();
-        gamePublisherXref1.setGame(new Game());
-
-        Mockito.when(gamePublisherXrefRepository.findAll(ArgumentMatchers.any(), ArgumentMatchers.any(Pageable.class)))
-                .thenReturn(new PageImpl<>(Arrays.asList(gamePublisherXref1, gamePublisherXref2)));
+        Mockito.when(gameRepository.findByPublishersId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
 
         // Act
         List<GameDto> result = StreamSupport.stream(gameService.findGamesByPublisherId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
@@ -496,14 +460,14 @@ class GameServiceImplTest {
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gamePublisherXrefRepository.count(ArgumentMatchers.any()))
+        Mockito.when(gameRepository.countByPublishersId(ArgumentMatchers.anyLong()))
                 .thenReturn(0L);
 
         // Act
         gameService.countGamesByPublisherId(0L);
 
         // Assert
-        Mockito.verify(gamePublisherXrefRepository, Mockito.atMostOnce())
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .count(ArgumentMatchers.any());
     }
 

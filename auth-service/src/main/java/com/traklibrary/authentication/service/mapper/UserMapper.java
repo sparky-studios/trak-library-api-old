@@ -1,7 +1,6 @@
 package com.traklibrary.authentication.service.mapper;
 
 import com.traklibrary.authentication.domain.User;
-import com.traklibrary.authentication.domain.UserRoleXref;
 import com.traklibrary.authentication.service.dto.UserDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -19,9 +18,8 @@ public interface UserMapper {
             return null;
         }
 
-        List<GrantedAuthority> authorities = user.getUserRoleXrefs()
+        List<GrantedAuthority> authorities = user.getUserRoles()
                 .stream()
-                .map(UserRoleXref::getUserRole)
                 .map(userRole -> new SimpleGrantedAuthority(userRole.getRole()))
                 .collect(Collectors.toList());
 
@@ -39,6 +37,6 @@ public interface UserMapper {
         return userDto;
     }
 
-    @Mapping(target = "userRoleXrefs", ignore = true)
+    @Mapping(target = "userRoles", ignore = true)
     User userDtoToUser(UserDto userDto);
 }

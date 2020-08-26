@@ -5,6 +5,7 @@ import com.traklibrary.game.repository.GameRequestRepository;
 import com.traklibrary.game.repository.specification.GameRequestSpecification;
 import com.traklibrary.game.service.AuthenticationService;
 import com.traklibrary.game.service.PatchService;
+import com.traklibrary.game.service.client.NotificationClient;
 import com.traklibrary.game.service.dto.GameRequestDto;
 import com.traklibrary.game.service.exception.InvalidUserException;
 import com.traklibrary.game.service.mapper.GameMappers;
@@ -47,6 +48,9 @@ class GameRequestServiceImplTest {
 
     @Mock
     private PatchService patchService;
+
+    @Mock
+    private NotificationClient notificationClient;
 
     @InjectMocks
     private GameRequestServiceImpl gameRequestService;
@@ -286,6 +290,46 @@ class GameRequestServiceImplTest {
         // Assert
         Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void complete_withCompletedGameRequest_doesntSaveOrSendNotification() {
+        // Arrange
+        GameRequestDto gameRequestDto = new GameRequestDto();
+        gameRequestDto.setCompleted(true);
+
+        // Act
+        gameRequestService.complete(gameRequestDto);
+
+        // Assert
+        Mockito.verify(gameRequestRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+
+        Mockito.verify(notificationClient, Mockito.never())
+                .send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+    }
+
+    @Test
+    void complete_withNonCompletedGameRequest_savesAndSendsNotification() {
+        // Arrange
+        Mockito.when(gameRequestRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameRequest());
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.doNothing()
+                .when(notificationClient).send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+
+        // Act
+        gameRequestService.complete(new GameRequestDto());
+
+        // Assert
+        Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+
+        Mockito.verify(notificationClient, Mockito.atMostOnce())
+                .send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
     }
 
     @Test

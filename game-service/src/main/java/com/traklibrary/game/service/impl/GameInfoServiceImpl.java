@@ -1,6 +1,5 @@
 package com.traklibrary.game.service.impl;
 
-import com.traklibrary.game.repository.GameGenreXrefRepository;
 import com.traklibrary.game.repository.GameRepository;
 import com.traklibrary.game.repository.GenreRepository;
 import com.traklibrary.game.repository.specification.GameSpecification;
@@ -25,7 +24,6 @@ public class GameInfoServiceImpl implements GameInfoService {
 
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
-    private final GameGenreXrefRepository gameGenreXrefRepository;
     private final GameInfoMapper gameInfoMapper;
     private final MessageSource messageSource;
 
@@ -47,9 +45,8 @@ public class GameInfoServiceImpl implements GameInfoService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameGenreXrefRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId)), pageable)
-                .map(xref -> gameInfoMapper.gameToGameInfoDto(xref.getGame()));
+        return gameRepository.findByGenresId(genreId, pageable)
+                .map(gameInfoMapper::gameToGameInfoDto);
     }
 
     @Override
@@ -61,8 +58,7 @@ public class GameInfoServiceImpl implements GameInfoService {
             throw new EntityNotFoundException((errorMessage));
         }
 
-        return gameGenreXrefRepository
-                .count((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("genreId"), genreId));
+        return gameRepository.countByGenresId(genreId);
     }
 
     @Override

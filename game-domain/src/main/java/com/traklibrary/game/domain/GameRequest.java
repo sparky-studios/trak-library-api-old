@@ -18,6 +18,9 @@ public class GameRequest {
     @Column(name = "title", nullable = false)
     private String title;
 
+    @Column(name = "notes", length = 1024)
+    private String notes;
+
     @Column(name = "completed", nullable = false)
     private boolean completed;
 
