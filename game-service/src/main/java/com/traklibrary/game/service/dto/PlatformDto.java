@@ -1,5 +1,7 @@
 package com.traklibrary.game.service.dto;
 
+import com.google.common.collect.ComparisonChain;
+import com.google.common.collect.Ordering;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -9,7 +11,7 @@ import java.time.LocalDate;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "platform")
-public class PlatformDto {
+public class PlatformDto implements Comparable<PlatformDto> {
 
     private long id;
 
@@ -22,4 +24,26 @@ public class PlatformDto {
     private LocalDate releaseDate;
 
     private Long version;
+
+    /**
+     * Used for comparison between two {@link PlatformDto} objects. It's used
+     * internally whenever a {@link PlatformDto} is the type within a list which
+     * supported inserted sort, such as a {@link java.util.TreeSet}.
+     *
+     * The order in which {@link PlatformDto} instances are sorted are by {@link PlatformDto#name},
+     * {@link PlatformDto#releaseDate} and finally {@link PlatformDto#id}.
+     *
+     * @param other The other {@link PlatformDto} instance to compare against.
+     *
+     * @return  a negative integer, zero, or a positive integer as this {@link PlatformDto}
+     *          is less than, equal to, or greater than the specified object.
+     */
+    @Override
+    public int compareTo(PlatformDto other) {
+        return ComparisonChain.start()
+                .compare(name, other.name, Ordering.natural().nullsLast())
+                .compare(releaseDate, other.releaseDate, Ordering.natural().nullsLast())
+                .compare(id, other.id)
+                .result();
+    }
 }

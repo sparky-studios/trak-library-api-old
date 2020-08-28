@@ -3,7 +3,6 @@ package com.traklibrary.game.service.mapper;
 import com.traklibrary.game.domain.GameUserEntry;
 import com.traklibrary.game.domain.Publisher;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
-import com.traklibrary.game.service.dto.PublisherDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -20,7 +19,7 @@ public interface GameUserEntryMapper {
     @Mapping(target = "platform", ignore = true)
     GameUserEntry gameUserEntryDtoToGameUserEntry(GameUserEntryDto gameUserEntryDto);
 
-    default PublisherDto publisherToPublisherDto(Publisher publisher) {
-        return GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
+    default String publisherToPublisherName(Publisher publisher) {
+        return publisher.getName();
     }
 }

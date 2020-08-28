@@ -196,8 +196,8 @@ class GameRequestControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameRequestDto("._embedded.gameRequestDtoes[0]", resultActions, gameRequestDto1);
-        ResponseVerifier.verifyGameRequestDto("._embedded.gameRequestDtoes[1]", resultActions, gameRequestDto2);
+        ResponseVerifier.verifyGameRequestDto("._embedded.data[0]", resultActions, gameRequestDto1);
+        ResponseVerifier.verifyGameRequestDto("._embedded.data[1]", resultActions, gameRequestDto2);
     }
 
     @Test
@@ -243,8 +243,8 @@ class GameRequestControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameRequestDto("._embedded.gameRequestDtoes[0]", resultActions, gameRequestDto1);
-        ResponseVerifier.verifyGameRequestDto("._embedded.gameRequestDtoes[1]", resultActions, gameRequestDto2);
+        ResponseVerifier.verifyGameRequestDto("._embedded.data[0]", resultActions, gameRequestDto1);
+        ResponseVerifier.verifyGameRequestDto("._embedded.data[1]", resultActions, gameRequestDto2);
     }
 
     @Test
