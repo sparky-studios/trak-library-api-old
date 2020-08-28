@@ -20,7 +20,7 @@ public interface GameUserEntryMapper {
     @Mapping(target = "platform", ignore = true)
     GameUserEntry gameUserEntryDtoToGameUserEntry(GameUserEntryDto gameUserEntryDto);
 
-    default PublisherDto publisherToPublisherDto(Publisher publisher) {
-        return GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
+    default String publisherToPublisherName(Publisher publisher) {
+        return publisher.getName();
     }
 }

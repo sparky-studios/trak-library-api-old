@@ -32,7 +32,7 @@ public class GameUserEntryDto {
     @NotNull(message = "{game-user-entry.validation.status.not-null}")
     private GameUserEntryStatus status;
 
-    private Collection<PublisherDto> publishers = new ArrayList<>();
+    private Collection<String> publishers = new ArrayList<>();
 
     @Min(message = "{game-user-entry.validation.rating.min}", value = 0)
     @Max(message = "{game-user-entry.validation.rating.max}", value = 5)

@@ -202,8 +202,8 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -247,8 +247,8 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -317,8 +317,8 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[0]", resultActions, developerDto1);
-        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[1]", resultActions, developerDto2);
+        ResponseVerifier.verifyDeveloperDto("._embedded.data[0]", resultActions, developerDto1);
+        ResponseVerifier.verifyDeveloperDto("._embedded.data[1]", resultActions, developerDto2);
     }
 
     @Test
@@ -360,8 +360,8 @@ class DeveloperControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[0]", resultActions, developerDto1);
-        ResponseVerifier.verifyDeveloperDto("._embedded.developerDtoes[1]", resultActions, developerDto2);
+        ResponseVerifier.verifyDeveloperDto("._embedded.data[0]", resultActions, developerDto1);
+        ResponseVerifier.verifyDeveloperDto("._embedded.data[1]", resultActions, developerDto2);
     }
 
     @Test

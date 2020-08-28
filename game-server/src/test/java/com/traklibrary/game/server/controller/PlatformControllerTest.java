@@ -201,8 +201,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -246,8 +246,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -316,8 +316,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyPlatformDto("._embedded.platformDtoes[0]", resultActions, platformDto1);
-        ResponseVerifier.verifyPlatformDto("._embedded.platformDtoes[1]", resultActions, platformDto2);
+        ResponseVerifier.verifyPlatformDto("._embedded.data[0]", resultActions, platformDto1);
+        ResponseVerifier.verifyPlatformDto("._embedded.data[1]", resultActions, platformDto2);
     }
 
     @Test
@@ -359,8 +359,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyPlatformDto("._embedded.platformDtoes[0]", resultActions, platformDto1);
-        ResponseVerifier.verifyPlatformDto("._embedded.platformDtoes[1]", resultActions, platformDto2);
+        ResponseVerifier.verifyPlatformDto("._embedded.data[0]", resultActions, platformDto1);
+        ResponseVerifier.verifyPlatformDto("._embedded.data[1]", resultActions, platformDto2);
     }
 
     @Test

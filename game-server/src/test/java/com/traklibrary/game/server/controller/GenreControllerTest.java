@@ -212,8 +212,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -257,8 +257,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -329,8 +329,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameInfoDto("._embedded.gameInfoDtoes[0]", resultActions, gameInfoDto1);
-        ResponseVerifier.verifyGameInfoDto("._embedded.gameInfoDtoes[1]", resultActions, gameInfoDto2);
+        ResponseVerifier.verifyGameInfoDto("._embedded.data[0]", resultActions, gameInfoDto1);
+        ResponseVerifier.verifyGameInfoDto("._embedded.data[1]", resultActions, gameInfoDto2);
     }
 
     @Test
@@ -374,8 +374,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameInfoDto("._embedded.gameInfoDtoes[0]", resultActions, gameInfoDto1);
-        ResponseVerifier.verifyGameInfoDto("._embedded.gameInfoDtoes[1]", resultActions, gameInfoDto2);
+        ResponseVerifier.verifyGameInfoDto("._embedded.data[0]", resultActions, gameInfoDto1);
+        ResponseVerifier.verifyGameInfoDto("._embedded.data[1]", resultActions, gameInfoDto2);
     }
 
     @Test
@@ -442,8 +442,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[0]", resultActions, genreDto1);
-        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[1]", resultActions, genreDto2);
+        ResponseVerifier.verifyGenreDto("._embedded.data[0]", resultActions, genreDto1);
+        ResponseVerifier.verifyGenreDto("._embedded.data[1]", resultActions, genreDto2);
     }
 
     @Test
@@ -483,8 +483,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[0]", resultActions, genreDto1);
-        ResponseVerifier.verifyGenreDto("._embedded.genreDtoes[1]", resultActions, genreDto2);
+        ResponseVerifier.verifyGenreDto("._embedded.data[0]", resultActions, genreDto1);
+        ResponseVerifier.verifyGenreDto("._embedded.data[1]", resultActions, genreDto2);
     }
 
     @Test

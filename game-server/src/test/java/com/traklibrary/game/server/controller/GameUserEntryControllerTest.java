@@ -209,8 +209,8 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.gameUserEntryDtoes[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.gameUserEntryDtoes[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
     }
 
     @Test
@@ -262,8 +262,8 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.gameUserEntryDtoes[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.gameUserEntryDtoes[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
     }
 
     @Test

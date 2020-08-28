@@ -202,8 +202,8 @@ class PublisherControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -247,8 +247,8 @@ class PublisherControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[0]", resultActions, gameDto1);
-        ResponseVerifier.verifyGameDto("._embedded.gameDtoes[1]", resultActions, gameDto2);
+        ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
+        ResponseVerifier.verifyGameDto("._embedded.data[1]", resultActions, gameDto2);
     }
 
     @Test
@@ -317,8 +317,8 @@ class PublisherControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyPublisherDto("._embedded.publisherDtoes[0]", resultActions, publisherDto1);
-        ResponseVerifier.verifyPublisherDto("._embedded.publisherDtoes[1]", resultActions, publisherDto2);
+        ResponseVerifier.verifyPublisherDto("._embedded.data[0]", resultActions, publisherDto1);
+        ResponseVerifier.verifyPublisherDto("._embedded.data[1]", resultActions, publisherDto2);
     }
 
     @Test
@@ -360,8 +360,8 @@ class PublisherControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyPublisherDto("._embedded.publisherDtoes[0]", resultActions, publisherDto1);
-        ResponseVerifier.verifyPublisherDto("._embedded.publisherDtoes[1]", resultActions, publisherDto2);
+        ResponseVerifier.verifyPublisherDto("._embedded.data[0]", resultActions, publisherDto1);
+        ResponseVerifier.verifyPublisherDto("._embedded.data[1]", resultActions, publisherDto2);
     }
 
     @Test
