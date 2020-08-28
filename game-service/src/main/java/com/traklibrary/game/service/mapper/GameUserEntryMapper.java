@@ -3,7 +3,6 @@ package com.traklibrary.game.service.mapper;
 import com.traklibrary.game.domain.GameUserEntry;
 import com.traklibrary.game.domain.Publisher;
 import com.traklibrary.game.service.dto.GameUserEntryDto;
-import com.traklibrary.game.service.dto.PublisherDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 

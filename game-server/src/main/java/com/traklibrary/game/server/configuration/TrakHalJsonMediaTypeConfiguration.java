@@ -9,7 +9,6 @@ import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.hateoas.client.LinkDiscoverer;
@@ -20,7 +19,6 @@ import org.springframework.hateoas.mediatype.hal.HalConfiguration;
 import org.springframework.hateoas.mediatype.hal.HalLinkDiscoverer;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.LinkRelationProvider;
-import org.springframework.hateoas.server.core.EvoInflectorLinkRelationProvider;
 import org.springframework.http.MediaType;
 
 import java.util.List;

@@ -124,6 +124,6 @@ class PlatformDtoTest {
         int result = platformDto.compareTo(comparison);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0);
+        Assertions.assertThat(result).isZero();
     }
 }

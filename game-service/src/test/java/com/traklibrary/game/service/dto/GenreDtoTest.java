@@ -74,6 +74,6 @@ class GenreDtoTest {
         int result = genreDto.compareTo(comparison);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0);
+        Assertions.assertThat(result).isZero();
     }
 }
