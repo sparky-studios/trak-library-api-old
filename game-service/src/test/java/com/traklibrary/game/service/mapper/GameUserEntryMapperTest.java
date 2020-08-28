@@ -32,7 +32,7 @@ class GameUserEntryMapperTest {
 
         Platform platform = new Platform();
         platform.setName("test-name");
-d1
+
         GameUserEntry gameUserEntry = new GameUserEntry();
         gameUserEntry.setId(5L);
         gameUserEntry.setGameId(6L);
