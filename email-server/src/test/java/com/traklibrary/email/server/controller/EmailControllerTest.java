@@ -86,4 +86,34 @@ class EmailControllerTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
+
+    @Test
+    void sendChangePasswordEmail_withMissingParameters_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.0+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void sendChangePasswordEmail_withParameters_returns200AndValidResponse() throws Exception {
+        // Arrange
+        Mockito.doNothing().when(emailService)
+                .sendChangePasswordEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
+                .param("email-address", "test@traklibrary.com")
+                .param("recovery-token", "1234A")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.0+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
 }

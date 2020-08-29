@@ -6,10 +6,8 @@ import com.traklibrary.authentication.repository.UserRepository;
 import com.traklibrary.authentication.repository.UserRoleRepository;
 import com.traklibrary.authentication.service.AuthenticationService;
 import com.traklibrary.authentication.service.UserService;
-import com.traklibrary.authentication.service.dto.CheckedResponse;
-import com.traklibrary.authentication.service.dto.RecoveryRequestDto;
-import com.traklibrary.authentication.service.dto.RegistrationRequestDto;
-import com.traklibrary.authentication.service.dto.UserResponseDto;
+import com.traklibrary.authentication.service.dto.*;
+import com.traklibrary.authentication.service.event.OnChangePasswordEvent;
 import com.traklibrary.authentication.service.event.OnVerificationNeededEvent;
 import com.traklibrary.authentication.service.event.OnRecoveryNeededEvent;
 import com.traklibrary.authentication.service.exception.InvalidUserException;
@@ -245,6 +243,42 @@ public class UserServiceImpl implements UserService {
             applicationEventPublisher
                     .publishEvent(new OnRecoveryNeededEvent(this, user.getEmailAddress(), user.getUsername()));
         }
+    }
+
+    @Override
+    public void requestChangePassword(String username) {
+        // Get the authenticated user associated with the given username. It'll throw an exception if they're
+        // not authenticated.
+        User user = getUserFromUsername(username);
+
+        // Publish a change password event to send an email.
+        applicationEventPublisher
+                .publishEvent(new OnChangePasswordEvent(this, user.getEmailAddress(), username));
+    }
+
+    @Override
+    public CheckedResponse<Boolean> changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+        // Get the authenticated user associated with the given username. It'll throw an exception if they're
+        // not authenticated.
+        User user = getUserFromUsername(changePasswordRequestDto.getUsername());
+
+        // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
+        if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(changePasswordRequestDto.getRecoveryToken())) {
+            String errorMessage = messageSource
+                    .getMessage(INCORRECT_RECOVERY_TOKEN_MESSAGE, new Object[]{changePasswordRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
+
+            return new CheckedResponse<>(false, errorMessage);
+        }
+
+        // Reset was successful, remove any recovery information and change their password.
+        user.setRecoveryToken(null);
+        user.setRecoveryTokenExpiryDate(null);
+        user.setPassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
+
+        userRepository.save(user);
+
+        // No need to re-verify, just return the new information.
+        return new CheckedResponse<>(true);
     }
 
     private User getUserFromUsername(String username) {

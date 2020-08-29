@@ -130,4 +130,37 @@ public class UserController {
     public void requestRecovery(@RequestParam("email-address") String emailAddress) {
         userService.requestRecovery(emailAddress);
     }
+
+    /**
+     * End-point that is used when a user first requests that they wish to change the password of their account. This end-point will not
+     * change their password, instead this will send an email to the email address associated with their account containing a recovery token
+     * that will have to be entered alongside the new password they want when requesting for it to be changed.
+     *
+     * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
+     * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
+     *
+     * @param username The name of the username to send the change password email to.
+     */
+    @AllowedForUser
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PutMapping("/{username}/request-change-password")
+    public void requestChangePassword(@PathVariable String username) {
+        userService.requestChangePassword(username);
+    }
+
+    /**
+     * End-point that is used when a user wants to change their password. When the user wishes to change their password, they must send
+     * their current username and their recovery token, which should have been emailed to their account when the {@link UserController#requestChangePassword(String)}
+     * was invoked. Without this second layer of authentication, the user cannot their their password.
+     *
+     * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
+     * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
+     *
+     * @param changePasswordRequestDto The DTO that contains the user's new requested password and the emailed recovery token.
+     */
+    @AllowedForUser
+    @PutMapping("/change-password")
+    public CheckedResponse<Boolean> changePassword(@Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        return userService.changePassword(changePasswordRequestDto);
+    }
 }

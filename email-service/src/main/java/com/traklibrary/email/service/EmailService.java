@@ -44,4 +44,18 @@ public interface EmailService {
      * @param recoveryToken The randomly generated recovery token to attach to the email.
      */
     void sendRecoveryEmail(String emailAddress, String recoveryToken);
+
+    /**
+     * Given an email address and a password, this method will dispatch a change password email
+     * to the specified address using the email provider defined within the {@link EmailService}
+     * implementation. If any errors occur when dispatching an email, an {@link EmailFailedException}
+     * will be thrown and the information will be returned to the API callee.
+     *
+     * It should be noted, that no validation needs to occur with any {@link EmailService}
+     * implementation, validation of the fields should occur at the controller level.
+     *
+     * @param emailAddress The email address to send the change password email to.
+     * @param recoveryToken The randomly generated recovery token to attach to the email.
+     */
+    void sendChangePasswordEmail(String emailAddress, String recoveryToken);
 }

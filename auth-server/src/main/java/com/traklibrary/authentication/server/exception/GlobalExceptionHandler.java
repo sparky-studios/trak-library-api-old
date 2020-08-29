@@ -1,6 +1,7 @@
 package com.traklibrary.authentication.server.exception;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -31,6 +32,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
@@ -41,6 +43,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -52,6 +55,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         return new ResponseEntity<>(apiError, headers, status);
     }
@@ -63,6 +67,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         // Stream through each sub-error and add all of them to the response.
         apiError.getSubErrors().addAll(ex.getBindingResult().getFieldErrors()
@@ -79,6 +84,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setMessage(ex.getMessage());
+        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
 
         apiError.getSubErrors().addAll(ex.getConstraintViolations()
                 .stream()

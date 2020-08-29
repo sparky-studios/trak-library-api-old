@@ -1,11 +1,9 @@
 package com.traklibrary.authentication.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.traklibrary.authentication.server.exception.GlobalExceptionHandler;
 import com.traklibrary.authentication.service.UserService;
-import com.traklibrary.authentication.service.dto.CheckedResponse;
-import com.traklibrary.authentication.service.dto.RecoveryRequestDto;
-import com.traklibrary.authentication.service.dto.RegistrationRequestDto;
-import com.traklibrary.authentication.service.dto.UserResponseDto;
+import com.traklibrary.authentication.service.dto.*;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -16,13 +14,16 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@Import(UserController.class)
+import java.util.Collections;
+
+@Import({UserController.class, GlobalExceptionHandler.class})
 @WebMvcTest(controllers = UserController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
 class UserControllerTest {
@@ -49,7 +50,12 @@ class UserControllerTest {
 
         // Assert
         resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.debugMessage").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subErrors").exists());
     }
 
     @Test
@@ -203,5 +209,63 @@ class UserControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    void requestChangePassword_withValidData_returns204() throws Exception {
+        // Arrange
+        Mockito.doNothing().when(userService)
+                .requestChangePassword(ArgumentMatchers.anyString());
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/trakuser/request-change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.0+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
+    }
+
+    @Test
+    void changePassword_withInvalidChangePasswordRequestDto_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.0+json")
+                .content(objectMapper.writeValueAsString(new ChangePasswordRequestDto())));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.debugMessage").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subErrors").exists());
+    }
+
+    @Test
+    void changePassword_withValidChangePasswordRequest_returns200AndValidResponse() throws Exception {
+        // Arrange
+        ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
+        changePasswordRequestDto.setRecoveryToken(String.join("", Collections.nCopies(30, "t")));
+        changePasswordRequestDto.setUsername("trakuser");
+        changePasswordRequestDto.setNewPassword("Password123");
+
+        Mockito.when(userService.changePassword(ArgumentMatchers.any()))
+                .thenReturn(new CheckedResponse<>(true));
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.0+json")
+                .content(objectMapper.writeValueAsString(changePasswordRequestDto)));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data", Matchers.is(true)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage", Matchers.emptyOrNullString()));
     }
 }
