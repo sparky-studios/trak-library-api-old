@@ -26,6 +26,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
 
     private static final String VERIFICATION_SUBJECT = "email.verification.subject";
     private static final String RECOVERY_SUBJECT = "email.recovery.subject";
+    private static final String CHANGE_PASSWORD_SUBJECT = "email.change-password.subject";
 
     @Setter
     @Value("${trak.aws.simple-email-service.from-address}")
@@ -65,6 +66,22 @@ public class EmailServiceThymeleafImpl implements EmailService {
             javaMailSender.send(getMimeMessage(emailDto, "recovery-template"));
         } catch (Exception e) {
             throw new EmailFailedException("Failed to send recovery email.", e);
+        }
+    }
+
+    @Override
+    public void sendChangePasswordEmail(String emailAddress, String recoveryToken) {
+        // Create the Email template and all the data it needs before sending.
+        EmailDto emailDto = new EmailDto();
+        emailDto.setFrom(fromAddress);
+        emailDto.setTo(emailAddress);
+        emailDto.setSubject(messageSource.getMessage(CHANGE_PASSWORD_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
+        emailDto.setData(Collections.singletonMap("recoveryToken", recoveryToken));
+
+        try {
+            javaMailSender.send(getMimeMessage(emailDto, "change-password-template"));
+        } catch (Exception e) {
+            throw new EmailFailedException("Failed to send change password email.", e);
         }
     }
 

@@ -32,23 +32,20 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
 
     private CircuitBreaker sendVerificationEmailCircuitBreaker;
     private CircuitBreaker sendRecoveryEmailCircuitBreaker;
+    private CircuitBreaker sendChangePasswordEmailCircuitBreaker;
 
     @PostConstruct
     private void postConstruct() {
         sendVerificationEmailCircuitBreaker = circuitBreakerFactory.create("send-verification-email");
         sendRecoveryEmailCircuitBreaker = circuitBreakerFactory.create("send-recovery-email");
+        sendChangePasswordEmailCircuitBreaker = circuitBreakerFactory.create("send-change-password-email");
     }
 
     @Override
     public void sendVerificationEmail(String emailAddress, String verificationCode) {
         String url = "http://trak-email-server/verification?email-address={emailAddress}&verification-code={verificationCode}";
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(username, password);
-        headers.set(HttpHeaders.ACCEPT, "application/vnd.traklibrary.v1.0+json");
-        headers.setContentType(MediaType.APPLICATION_JSON);
-
-        sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(headers), Void.class, emailAddress, verificationCode), throwable -> {
+        sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(getHeaders()), Void.class, emailAddress, verificationCode), throwable -> {
             log.error("failed to send verification email", throwable);
             return null;
         });
@@ -58,14 +55,28 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     public void sendRecoveryEmail(String emailAddress, String recoveryToken) {
         String url = "http://trak-email-server/recovery?email-address={emailAddress}&recovery-token={recoveryToken}";
 
+        sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(getHeaders()), Void.class, emailAddress, recoveryToken), throwable -> {
+            log.error("failed to send account recovery email", throwable);
+            return null;
+        });
+    }
+
+    @Override
+    public void sendChangePasswordEmail(String emailAddress, String recoveryToken) {
+        String url = "http://trak-email-server/change-password?email-address={emailAddress}&recovery-token={recoveryToken}";
+
+        sendChangePasswordEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(getHeaders()), Void.class, emailAddress, recoveryToken), throwable -> {
+            log.error("failed to send change password email", throwable);
+            return null;
+        });
+    }
+
+    private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(username, password);
         headers.set(HttpHeaders.ACCEPT, "application/vnd.traklibrary.v1.0+json");
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(headers), Void.class, emailAddress, recoveryToken), throwable -> {
-            log.error("failed to send account recovery email", throwable);
-            return null;
-        });
+        return headers;
     }
 }

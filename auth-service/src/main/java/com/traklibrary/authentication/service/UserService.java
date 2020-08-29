@@ -1,9 +1,6 @@
 package com.traklibrary.authentication.service;
 
-import com.traklibrary.authentication.service.dto.CheckedResponse;
-import com.traklibrary.authentication.service.dto.RecoveryRequestDto;
-import com.traklibrary.authentication.service.dto.RegistrationRequestDto;
-import com.traklibrary.authentication.service.dto.UserResponseDto;
+import com.traklibrary.authentication.service.dto.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
@@ -23,4 +20,8 @@ public interface UserService extends UserDetailsService {
     void reverify(String username);
 
     void requestRecovery(String emailAddress);
+
+    void requestChangePassword(String username);
+
+    CheckedResponse<Boolean> changePassword(ChangePasswordRequestDto changePasswordRequestDto);
 }

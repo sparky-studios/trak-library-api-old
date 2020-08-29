@@ -116,4 +116,47 @@ class EmailServiceThymeleafImplTest {
         Mockito.verify(javaMailSender, Mockito.atMostOnce())
                 .send(ArgumentMatchers.any(MimeMessage.class));
     }
+
+    @Test
+    void sendChangePasswordEmail_withFailingToSend_throwsEmailFailedException() {
+        // Arrange
+        emailService.setFromAddress("from@traklibrary.com");
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(javaMailSender.createMimeMessage())
+                .thenReturn(Mockito.mock(MimeMessage.class));
+
+        Mockito.when(templateEngine.process(ArgumentMatchers.eq("change-password-template"), ArgumentMatchers.any(IContext.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendChangePasswordEmail("", ""));
+    }
+
+    @Test
+    void sendChangePasswordEmail_withNoIssues_sendsEmail() {
+        // Arrange
+        emailService.setFromAddress("from@traklibrary.com");
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(javaMailSender.createMimeMessage())
+                .thenReturn(Mockito.mock(MimeMessage.class));
+
+        Mockito.when(templateEngine.process(ArgumentMatchers.eq("change-password-template"), ArgumentMatchers.any(IContext.class)))
+                .thenReturn("");
+
+        Mockito.doNothing()
+                .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
+
+        // Act
+        emailService.sendChangePasswordEmail("email.address@test.com", "12345");
+
+        // Assert
+        Mockito.verify(javaMailSender, Mockito.atMostOnce())
+                .send(ArgumentMatchers.any(MimeMessage.class));
+    }
 }
