@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -22,6 +23,7 @@ public class GameBarcodeServiceImpl implements GameBarcodeService {
     private final GameBarcodeMapper gameBarcodeMapper;
 
     @Override
+    @Transactional(readOnly = true)
     public GameBarcodeDto findByBarcode(String barcode) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { barcode }, LocaleContextHolder.getLocale());

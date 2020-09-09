@@ -16,6 +16,7 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -40,6 +41,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     private final NotificationClient notificationClient;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameRequestDto save(GameRequestDto gameRequestDto) {
         Objects.requireNonNull(gameRequestDto);
 
@@ -61,6 +63,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GameRequestDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -70,6 +73,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameRequestDto> findAll(GameRequestSpecification gameRequestSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -78,6 +82,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(GameRequestSpecification gameRequestSpecification) {
         Objects.requireNonNull(gameRequestSpecification);
 
@@ -85,6 +90,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameRequestDto update(GameRequestDto gameRequestDto) {
         Objects.requireNonNull(gameRequestDto);
 
@@ -128,6 +134,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameRequestDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         GameRequestDto patched = patchService.patch(jsonMergePatch, findById(id), GameRequestDto.class);
@@ -144,6 +151,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         Optional<GameRequest> gameRequest = gameRequestRepository.findById(id);
 

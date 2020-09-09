@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -36,6 +37,7 @@ public class PublisherServiceImpl implements PublisherService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PublisherDto save(PublisherDto publisherDto) {
         Objects.requireNonNull(publisherDto);
 
@@ -50,6 +52,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PublisherDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -59,6 +62,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<PublisherDto> findPublishersByGameId(long gameId) {
         // Get the game as the publishers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
@@ -77,6 +81,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<PublisherDto> findAll(PublisherSpecification publisherSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -85,6 +90,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(PublisherSpecification publisherSpecification) {
         Objects.requireNonNull(publisherSpecification);
 
@@ -92,6 +98,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PublisherDto update(PublisherDto publisherDto) {
         Objects.requireNonNull(publisherDto);
 
@@ -106,6 +113,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PublisherDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         PublisherDto patched = patchService.patch(jsonMergePatch, findById(id), PublisherDto.class);
@@ -114,6 +122,7 @@ public class PublisherServiceImpl implements PublisherService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         if (!publisherRepository.existsById(id)) {
             String errorMessage = messageSource

@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -36,6 +37,7 @@ public class PlatformServiceImpl implements PlatformService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PlatformDto save(PlatformDto platformDto) {
         Objects.requireNonNull(platformDto);
 
@@ -50,6 +52,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PlatformDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -59,6 +62,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<PlatformDto> findPlatformsByGameId(long gameId) {
         // Get the game as the platforms can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
@@ -77,6 +81,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<PlatformDto> findAll(PlatformSpecification platformSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -85,6 +90,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(PlatformSpecification platformSpecification) {
         Objects.requireNonNull(platformSpecification);
 
@@ -92,6 +98,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PlatformDto update(PlatformDto platformDto) {
         Objects.requireNonNull(platformDto);
 
@@ -106,6 +113,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public PlatformDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         PlatformDto patched = patchService.patch(jsonMergePatch, findById(id), PlatformDto.class);
@@ -114,6 +122,7 @@ public class PlatformServiceImpl implements PlatformService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         if (!platformRepository.existsById(id)) {
             String errorMessage = messageSource

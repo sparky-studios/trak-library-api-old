@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -37,6 +38,7 @@ public class GenreServiceImpl implements GenreService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GenreDto save(GenreDto genreDto) {
         Objects.requireNonNull(genreDto);
 
@@ -51,6 +53,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GenreDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -60,6 +63,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GenreDto> findGenresByGameId(long gameId) {
         // Get the game as the developers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
@@ -79,6 +83,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GenreDto> findAll(GenreSpecification genreSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -87,6 +92,7 @@ public class GenreServiceImpl implements GenreService {
 }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(GenreSpecification genreSpecification) {
         Objects.requireNonNull(genreSpecification);
 
@@ -94,6 +100,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GenreDto update(GenreDto genreDto) {
         Objects.requireNonNull(genreDto);
 
@@ -108,6 +115,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GenreDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         GenreDto patched = patchService.patch(jsonMergePatch, findById(id), GenreDto.class);
@@ -116,6 +124,7 @@ public class GenreServiceImpl implements GenreService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         if (!genreRepository.existsById(id)) {
             String errorMessage = messageSource

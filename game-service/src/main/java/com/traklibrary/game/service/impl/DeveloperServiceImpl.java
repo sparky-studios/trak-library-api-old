@@ -13,6 +13,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -36,6 +37,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeveloperDto save(DeveloperDto developerDto) {
         Objects.requireNonNull(developerDto);
 
@@ -50,6 +52,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public DeveloperDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -59,6 +62,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<DeveloperDto> findDevelopersByGameId(long gameId) {
         // Get the game as the developers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
@@ -77,6 +81,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<DeveloperDto> findAll(DeveloperSpecification developerSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -85,6 +90,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(DeveloperSpecification developerSpecification) {
         Objects.requireNonNull(developerSpecification);
 
@@ -92,6 +98,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeveloperDto update(DeveloperDto companyDto) {
         Objects.requireNonNull(companyDto);
 
@@ -106,6 +113,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeveloperDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         DeveloperDto patched = patchService.patch(jsonMergePatch, findById(id), DeveloperDto.class);
@@ -114,6 +122,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         if (!developerRepository.existsById(id)) {
             String errorMessage = messageSource

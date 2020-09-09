@@ -74,7 +74,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     private HttpHeaders getHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.setBasicAuth(username, password);
-        headers.set(HttpHeaders.ACCEPT, "application/vnd.traklibrary.v1.0+json");
+        headers.set(HttpHeaders.ACCEPT, "application/vnd.traklibrary.v1+json");
         headers.setContentType(MediaType.APPLICATION_JSON);
 
         return headers;

@@ -53,6 +53,7 @@ public class GameImageServiceImpl implements GameImageService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public ImageDataDto download(long gameId) {
         Optional<GameImage> gameImage = gameImageRepository.findByGameId(gameId);
 

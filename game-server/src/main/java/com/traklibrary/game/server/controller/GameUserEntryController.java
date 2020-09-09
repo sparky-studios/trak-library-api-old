@@ -27,7 +27,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/entries", produces = "application/vnd.traklibrary.v1.0.hal+json")
+@RequestMapping(value = "/entries", produces = "application/vnd.traklibrary.v1.hal+json")
 public class GameUserEntryController {
 
     private final GameUserEntryService gameUserEntryService;

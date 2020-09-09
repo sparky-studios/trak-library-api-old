@@ -119,7 +119,6 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
     }
 
     @Override
-    @Transactional
     public void unregister(long userId, String deviceGuid) {
         // Ensure the authenticated user is the one being unregistered.
         if (!authenticationService.isCurrentAuthenticatedUser(userId)) {

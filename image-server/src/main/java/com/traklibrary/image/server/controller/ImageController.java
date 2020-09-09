@@ -26,7 +26,7 @@ import java.io.IOException;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/", produces = "application/vnd.traklibrary.v1.0+json")
+@RequestMapping(value = "/", produces = "application/vnd.traklibrary.v1+json")
 public class ImageController {
 
     private final ImageService imageService;

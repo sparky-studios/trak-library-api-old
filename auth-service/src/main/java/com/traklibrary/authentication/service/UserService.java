@@ -23,5 +23,7 @@ public interface UserService extends UserDetailsService {
 
     void requestChangePassword(String username);
 
-    CheckedResponse<Boolean> changePassword(ChangePasswordRequestDto changePasswordRequestDto);
+    CheckedResponse<Boolean> changePassword(String username, ChangePasswordRequestDto changePasswordRequestDto);
+
+    CheckedResponse<Boolean> changeEmailAddress(String username, String emailAddress);
 }

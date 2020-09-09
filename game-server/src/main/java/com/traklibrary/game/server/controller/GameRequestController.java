@@ -40,7 +40,7 @@ import java.util.stream.StreamSupport;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/requests", produces = "application/vnd.traklibrary.v1.0.hal+json")
+@RequestMapping(value = "/requests", produces = "application/vnd.traklibrary.v1.hal+json")
 public class GameRequestController {
 
     private final GameRequestService gameRequestService;

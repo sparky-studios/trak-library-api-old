@@ -36,7 +36,7 @@ public class ImageControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/games")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -60,7 +60,7 @@ public class ImageControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/games")
                 .file(file)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions

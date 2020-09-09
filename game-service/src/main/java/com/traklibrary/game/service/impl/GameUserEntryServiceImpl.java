@@ -15,6 +15,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -41,6 +42,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameUserEntryDto save(GameUserEntryDto gameUserEntryDto) {
         Objects.requireNonNull(gameUserEntryDto);
 
@@ -63,6 +65,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GameUserEntryDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -72,6 +75,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
@@ -86,6 +90,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGameUserEntriesByGameId(long gameId) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
@@ -99,6 +104,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameUserEntryDto> findAll(GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable) {
         return StreamSupport.stream(gameUserEntryRepository.findAll(gameUserEntrySpecification, pageable).spliterator(), false)
                 .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto)
@@ -106,6 +112,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(GameUserEntrySpecification gameUserEntrySpecification) {
         Objects.requireNonNull(gameUserEntrySpecification);
 
@@ -113,6 +120,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameUserEntryDto update(GameUserEntryDto gameUserEntryDto) {
         Objects.requireNonNull(gameUserEntryDto);
 
@@ -135,6 +143,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameUserEntryDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         GameUserEntryDto patched = patchService.patch(jsonMergePatch, findById(id), GameUserEntryDto.class);
@@ -152,6 +161,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         Optional<GameUserEntry> gameUserEntry = gameUserEntryRepository.findById(id);
 

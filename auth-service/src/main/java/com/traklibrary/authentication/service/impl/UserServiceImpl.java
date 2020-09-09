@@ -43,6 +43,7 @@ public class UserServiceImpl implements UserService {
     private static final String USER_ROLE_XREF_NOT_FOUND_MESSAGE = "user-role-xref.exception.not-found";
     private static final String NOT_EXISTENT_USERNAME_MESSAGE = "user.error.non-existent-username";
     private static final String INCORRECT_RECOVERY_TOKEN_MESSAGE = "user.error.incorrect-recovery-token";
+    private static final String SAME_EMAIL_ADDRESS_MESSAGE = "user.error.same-email-address";
     private static final String INCORRECT_VERIFICATION_CODE_MESSAGE = "user.error.incorrect-verification-code";
     private static final String INVALID_USER_MESSAGE = "user.exception.invalid-user";
 
@@ -116,6 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CheckedResponse<UserResponseDto> update(RecoveryRequestDto recoveryRequestDto) {
         Optional<User> optionalUser = userRepository.findByUsername(recoveryRequestDto.getUsername());
 
@@ -152,6 +154,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createVerificationCode(String username) {
         User user = userRepository.findByUsername(username)
                 .orElse(null);
@@ -176,6 +179,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public String createRecoveryToken(String username) {
         User user = userRepository.findByUsername(username)
                 .orElse(null);
@@ -224,6 +228,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void reverify(String username) {
         User user = getUserFromUsername(username);
 
@@ -233,6 +238,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void requestRecovery(String emailAddress) {
         Optional<User> optionalUser = userRepository.findByEmailAddress(emailAddress);
         // The user has an email address registered with the system, process the reset request.
@@ -246,6 +252,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void requestChangePassword(String username) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
@@ -257,10 +264,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public CheckedResponse<Boolean> changePassword(ChangePasswordRequestDto changePasswordRequestDto) {
+    @Transactional(rollbackFor = Exception.class)
+    public CheckedResponse<Boolean> changePassword(String username, ChangePasswordRequestDto changePasswordRequestDto) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        User user = getUserFromUsername(changePasswordRequestDto.getUsername());
+        User user = getUserFromUsername(username);
 
         // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
         if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(changePasswordRequestDto.getRecoveryToken())) {
@@ -278,6 +286,31 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
 
         // No need to re-verify, just return the new information.
+        return new CheckedResponse<>(true);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public CheckedResponse<Boolean> changeEmailAddress(String username, String emailAddress) {
+        // Get the authenticated user associated with the given username. It'll throw an exception if they're
+        // not authenticated.
+        User user = getUserFromUsername(username);
+
+        if (user.getEmailAddress().equals(emailAddress)) {
+            String errorMessage = messageSource
+                    .getMessage(SAME_EMAIL_ADDRESS_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
+
+            return new CheckedResponse<>(false, errorMessage);
+        }
+
+        // Update the user with the new email and persist it.
+        user.setEmailAddress(emailAddress);
+        userRepository.save(user);
+
+        // Will need to re-generate the verification email as the users information has changed.
+        applicationEventPublisher
+                .publishEvent(new OnVerificationNeededEvent(this, username, emailAddress));
+
         return new CheckedResponse<>(true);
     }
 

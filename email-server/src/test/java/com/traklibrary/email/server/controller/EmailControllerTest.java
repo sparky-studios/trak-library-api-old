@@ -32,7 +32,7 @@ class EmailControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/verification")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -50,7 +50,7 @@ class EmailControllerTest {
                 .param("email-address", "test@traklibrary.com")
                 .param("verification-code", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -62,7 +62,7 @@ class EmailControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/recovery")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -80,7 +80,7 @@ class EmailControllerTest {
                 .param("email-address", "test@traklibrary.com")
                 .param("recovery-token", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -92,7 +92,7 @@ class EmailControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -110,7 +110,7 @@ class EmailControllerTest {
                 .param("email-address", "test@traklibrary.com")
                 .param("recovery-token", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/vnd.traklibrary.v1.0+json")
+@RequestMapping(value = "/users", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/vnd.traklibrary.v1+json")
 public class UserController {
 
     private final UserService userService;
@@ -156,11 +156,34 @@ public class UserController {
      * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
      * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
      *
+     * @param username The username of the {@link com.traklibrary.authentication.domain.User} to change the password for.
      * @param changePasswordRequestDto The DTO that contains the user's new requested password and the emailed recovery token.
+     *
+     * @return A {@link CheckedResponse} specifying if the password change was successful.
      */
     @AllowedForUser
-    @PutMapping("/change-password")
-    public CheckedResponse<Boolean> changePassword(@Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
-        return userService.changePassword(changePasswordRequestDto);
+    @PutMapping("{username}/change-password")
+    public CheckedResponse<Boolean> changePassword(@PathVariable String username, @Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        return userService.changePassword(username, changePasswordRequestDto);
+    }
+
+    /**
+     * End-point that is used when a {@link com.traklibrary.authentication.domain.User} wants to their change their email address.
+     * When a {@link com.traklibrary.authentication.domain.User} chooses to change their email address, it will first check to ensure
+     * the account they're selecting exists, before changing the email address and dispatching a new verification email so the user
+     * can re-verify their account.
+     *
+     * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
+     * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
+     *
+     * @param username The username of the {@link com.traklibrary.authentication.domain.User} to change the email address for.
+     * @param changeEmailAddressRequestDto The DTO that contains the user's new requested email address.
+     *
+     * @return A {@link CheckedResponse} specifying if the email change was successful.
+     */
+    @AllowedForUser
+    @PutMapping("/{username}/change-email-address")
+    public CheckedResponse<Boolean> changeEmailAddress(@PathVariable String username, @Validated @RequestBody ChangeEmailAddressRequestDto changeEmailAddressRequestDto) {
+        return userService.changeEmailAddress(username, changeEmailAddressRequestDto.getEmailAddress());
     }
 }
