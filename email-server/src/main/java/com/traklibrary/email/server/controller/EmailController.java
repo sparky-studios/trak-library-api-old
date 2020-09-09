@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/vnd.traklibrary.v1.0+json")
+@RequestMapping(value = "/", consumes = MediaType.APPLICATION_JSON_VALUE, produces = "application/vnd.traklibrary.v1+json")
 public class EmailController {
 
     private final EmailService emailService;

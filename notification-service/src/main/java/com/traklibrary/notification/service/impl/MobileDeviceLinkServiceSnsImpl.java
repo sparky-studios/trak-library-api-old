@@ -18,7 +18,6 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
@@ -119,7 +118,6 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
     }
 
     @Override
-    @Transactional
     public void unregister(long userId, String deviceGuid) {
         // Ensure the authenticated user is the one being unregistered.
         if (!authenticationService.isCurrentAuthenticatedUser(userId)) {

@@ -60,7 +60,7 @@ public class GameUserEntryControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
 
         // Assert
@@ -94,7 +94,7 @@ public class GameUserEntryControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(gameUserEntryDto)));
 
         // Assert
@@ -124,7 +124,7 @@ public class GameUserEntryControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -144,7 +144,7 @@ public class GameUserEntryControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -195,7 +195,7 @@ public class GameUserEntryControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -248,7 +248,7 @@ public class GameUserEntryControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -271,7 +271,7 @@ public class GameUserEntryControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
 
         // Assert
@@ -305,7 +305,7 @@ public class GameUserEntryControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(gameUserEntryDto)));
 
         // Assert
@@ -336,7 +336,7 @@ public class GameUserEntryControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/entries/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content("{ \"gameTitle\": \"test-title-2\" }"));
 
         // Assert
@@ -354,7 +354,7 @@ public class GameUserEntryControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/entries/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions

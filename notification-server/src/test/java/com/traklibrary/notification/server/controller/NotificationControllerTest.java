@@ -46,7 +46,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(new MobileDeviceLinkRegistrationRequestDto())));
 
         // Assert
@@ -73,7 +73,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(mobileDeviceLinkRegistrationRequestDto)));
 
         // Assert
@@ -87,7 +87,7 @@ class NotificationControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("device-guid", "device-guid")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -104,7 +104,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("user-id", "1")
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -126,7 +126,7 @@ class NotificationControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("user-id", "1")
                 .param("device-guid", "device-guid")
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -140,7 +140,7 @@ class NotificationControllerTest {
                 .param("title", "title")
                 .param("content", "content")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -159,7 +159,7 @@ class NotificationControllerTest {
                 .param("user-id", "1")
                 .param("content", "content")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -178,7 +178,7 @@ class NotificationControllerTest {
                 .param("user-id", "1")
                 .param("title", "title")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -202,7 +202,7 @@ class NotificationControllerTest {
                 .param("title", "title")
                 .param("content", "content")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions

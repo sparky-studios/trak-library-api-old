@@ -34,7 +34,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/genres", produces = "application/vnd.traklibrary.v1.0.hal+json")
+@RequestMapping(value = "/genres", produces = "application/vnd.traklibrary.v1.hal+json")
 public class GenreController {
 
     private final GenreService genreService;

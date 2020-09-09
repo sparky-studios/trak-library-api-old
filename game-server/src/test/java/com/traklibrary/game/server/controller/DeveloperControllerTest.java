@@ -71,7 +71,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new DeveloperDto())));
 
         // Assert
@@ -100,7 +100,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(developerDto)));
 
         // Assert
@@ -125,7 +125,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -145,7 +145,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -188,7 +188,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -233,7 +233,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -262,7 +262,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -303,7 +303,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -346,7 +346,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -369,7 +369,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new DeveloperDto())));
 
         // Assert
@@ -398,7 +398,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(developerDto)));
 
         // Assert
@@ -424,7 +424,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/developers/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content("{ \"name\": \"test-name\" }"));
 
         // Assert
@@ -442,7 +442,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/developers/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions

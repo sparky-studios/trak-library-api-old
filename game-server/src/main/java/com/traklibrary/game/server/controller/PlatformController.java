@@ -31,7 +31,7 @@ import java.util.stream.StreamSupport;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/platforms", produces = "application/vnd.traklibrary.v1.0.hal+json")
+@RequestMapping(value = "/platforms", produces = "application/vnd.traklibrary.v1.hal+json")
 public class PlatformController {
 
     private final PlatformService platformService;

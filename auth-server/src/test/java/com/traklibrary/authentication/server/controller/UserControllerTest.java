@@ -45,7 +45,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(registrationRequestDto)));
 
         // Assert
@@ -77,7 +77,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(registrationRequestDto)));
 
         // Assert
@@ -97,7 +97,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(recoveryRequestDto)));
 
         // Assert
@@ -124,7 +124,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(recoveryRequestDto)));
 
         // Assert
@@ -141,7 +141,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/verify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -158,7 +158,7 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/verify")
                 .param("verification-code", "12345")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -175,7 +175,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/reverify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -187,7 +187,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/recover")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -204,7 +204,7 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/recover")
                 .param("email-address", "test@traklibrary.com")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -220,7 +220,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/trakuser/request-change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json"));
+                .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
         resultActions
@@ -230,9 +230,9 @@ class UserControllerTest {
     @Test
     void changePassword_withInvalidChangePasswordRequestDto_returns400() throws Exception {
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/change-password")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(new ChangePasswordRequestDto())));
 
         // Assert
@@ -250,17 +250,56 @@ class UserControllerTest {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
         changePasswordRequestDto.setRecoveryToken(String.join("", Collections.nCopies(30, "t")));
-        changePasswordRequestDto.setUsername("trakuser");
         changePasswordRequestDto.setNewPassword("Password123");
 
-        Mockito.when(userService.changePassword(ArgumentMatchers.any()))
+        Mockito.when(userService.changePassword(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(new CheckedResponse<>(true));
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/change-password")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0+json")
+                .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(changePasswordRequestDto)));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data", Matchers.is(true)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage", Matchers.emptyOrNullString()));
+    }
+
+    @Test
+    void changeEmailAddress_withInvalidChangeEmailAddressRequestDto_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-email-address")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(new ChangeEmailAddressRequestDto())));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.debugMessage").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.subErrors").exists());
+    }
+
+    @Test
+    void changeEmailAddress_withValidChangeEmailAddressRequest_returns200AndValidResponse() throws Exception {
+        // Arrange
+        ChangeEmailAddressRequestDto changeEmailAddressRequestDto = new ChangeEmailAddressRequestDto();
+        changeEmailAddressRequestDto.setEmailAddress("test@traklibrary.com");
+
+        Mockito.when(userService.changeEmailAddress(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(new CheckedResponse<>(true));
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-email-address")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(changeEmailAddressRequestDto)));
 
         // Assert
         resultActions

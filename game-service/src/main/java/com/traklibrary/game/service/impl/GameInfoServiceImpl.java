@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
@@ -28,6 +29,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     private final MessageSource messageSource;
 
     @Override
+    @Transactional(readOnly = true)
     public GameInfoDto findByGameId(long gameId) {
         String errorMessage = messageSource
                 .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -37,6 +39,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameInfoDto> findByGenreId(long genreId, Pageable pageable) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
@@ -50,6 +53,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countByGenreId(long genreId) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
@@ -62,6 +66,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameInfoDto> findAll(GameSpecification gameSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -70,6 +75,7 @@ public class GameInfoServiceImpl implements GameInfoService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(GameSpecification gameSpecification) {
         Objects.requireNonNull(gameSpecification);
 

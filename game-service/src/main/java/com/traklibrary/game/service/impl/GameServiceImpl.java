@@ -11,6 +11,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
@@ -40,6 +41,7 @@ public class GameServiceImpl implements GameService {
     private final PatchService patchService;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto save(GameDto gameDto) {
         Objects.requireNonNull(gameDto);
 
@@ -54,6 +56,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GameDto findById(long id) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -63,6 +66,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByGenreId(long genreId, Pageable pageable) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
@@ -76,6 +80,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGamesByGenreId(long genreId) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
@@ -88,6 +93,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable) {
         if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
@@ -101,6 +107,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGamesByPlatformId(long platformId) {
         if (!platformRepository.existsById(platformId)) {
             String errorMessage = messageSource
@@ -113,6 +120,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByDeveloperId(long developerId, Pageable pageable) {
         if (!developerRepository.existsById(developerId)) {
             String errorMessage = messageSource
@@ -126,6 +134,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGamesByDeveloperId(long developerId) {
         if (!developerRepository.existsById(developerId)) {
             String errorMessage = messageSource
@@ -138,6 +147,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable) {
         if (!publisherRepository.existsById(publisherId)) {
             String errorMessage = messageSource
@@ -151,6 +161,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGamesByPublisherId(long publisherId) {
         if (!publisherRepository.existsById(publisherId)) {
             String errorMessage = messageSource
@@ -163,6 +174,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findAll() {
         return StreamSupport.stream(gameRepository.findAll().spliterator(), false)
                 .map(gameMapper::gameToGameDto)
@@ -170,6 +182,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findAll(GameSpecification gameSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
@@ -178,6 +191,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long count(GameSpecification gameSpecification) {
         Objects.requireNonNull(gameSpecification);
 
@@ -185,6 +199,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto update(GameDto gameDto) {
         Objects.requireNonNull(gameDto);
 
@@ -199,6 +214,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto patch(long id, JsonMergePatch jsonMergePatch) {
         // Set the new Java object with the patch information.
         GameDto patched = patchService.patch(jsonMergePatch, findById(id), GameDto.class);
@@ -207,6 +223,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void deleteById(long id) {
         if (!gameRepository.existsById(id)) {
             String errorMessage = messageSource

@@ -83,7 +83,7 @@ public class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
 
         // Assert
@@ -111,7 +111,7 @@ public class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(genreDto)));
 
         // Assert
@@ -135,7 +135,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -155,7 +155,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -198,7 +198,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -243,7 +243,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -272,7 +272,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/game-infos")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -315,7 +315,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/game-infos")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -360,7 +360,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/game-infos?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -389,7 +389,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -428,7 +428,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -469,7 +469,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -492,7 +492,7 @@ public class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GenreDto())));
 
         // Assert
@@ -520,7 +520,7 @@ public class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(genreDto)));
 
         // Assert
@@ -545,7 +545,7 @@ public class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/genres/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content("{ \"name\": \"test-name-2\" }"));
 
         // Assert
@@ -563,7 +563,7 @@ public class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/genres/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions

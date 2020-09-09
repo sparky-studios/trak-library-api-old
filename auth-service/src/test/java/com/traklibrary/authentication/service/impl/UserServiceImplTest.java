@@ -8,6 +8,7 @@ import com.traklibrary.authentication.service.AuthenticationService;
 import com.traklibrary.authentication.service.dto.*;
 import com.traklibrary.authentication.service.event.OnChangePasswordEvent;
 import com.traklibrary.authentication.service.event.OnRecoveryNeededEvent;
+import com.traklibrary.authentication.service.event.OnVerificationNeededEvent;
 import com.traklibrary.authentication.service.exception.InvalidUserException;
 import com.traklibrary.authentication.service.mapper.UserResponseMapper;
 import com.traklibrary.authentication.service.mapper.UserMapper;
@@ -676,20 +677,18 @@ class UserServiceImplTest {
     void changePassword_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setUsername("username");
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.changePassword(changePasswordRequestDto));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.changePassword("username", changePasswordRequestDto));
     }
 
     @Test
     void changePassword_withDifferentUser_throwsInvalidUserException() {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setUsername("username");
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -701,14 +700,13 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.changePassword(changePasswordRequestDto));
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.changePassword("username", changePasswordRequestDto));
     }
 
     @Test
     void changePassword_withNullUserRecoveryToken_returnsFalseCheckedResponse() {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setUsername("username");
 
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
@@ -720,7 +718,7 @@ class UserServiceImplTest {
                 .thenReturn("error");
 
         // Act
-        CheckedResponse<Boolean> result = userService.changePassword(changePasswordRequestDto);
+        CheckedResponse<Boolean> result = userService.changePassword("username", changePasswordRequestDto);
 
         // Assert
         Assertions.assertFalse(result.getData(), "The response should be false if the user recovery token is null.");
@@ -735,7 +733,6 @@ class UserServiceImplTest {
     void changePassword_withNonMatchingRecoveryToken_returnsFalseCheckedResponse() {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setUsername("username");
         changePasswordRequestDto.setRecoveryToken("token1");
 
         User user = new User();
@@ -751,7 +748,7 @@ class UserServiceImplTest {
                 .thenReturn("error");
 
         // Act
-        CheckedResponse<Boolean> result = userService.changePassword(changePasswordRequestDto);
+        CheckedResponse<Boolean> result = userService.changePassword("username", changePasswordRequestDto);
 
         // Assert
         Assertions.assertFalse(result.getData(), "The response should be false if the recovery tokens don't match.");
@@ -766,7 +763,6 @@ class UserServiceImplTest {
     void changePassword_withMatchingRecoveryTokens_returnsTrueCheckedResponse() {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setUsername("username");
         changePasswordRequestDto.setRecoveryToken("token");
 
         User user = new User();
@@ -782,7 +778,7 @@ class UserServiceImplTest {
                 .thenReturn(null);
 
         // Act
-        CheckedResponse<Boolean> result = userService.changePassword(changePasswordRequestDto);
+        CheckedResponse<Boolean> result = userService.changePassword("username", changePasswordRequestDto);
 
         // Assert
         Assertions.assertTrue(result.getData(), "The response should be true if the user's password was successfully changed.");
@@ -794,5 +790,94 @@ class UserServiceImplTest {
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void changeEmailAddress_withNoMatchingUser_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.changeEmailAddress("username", "test@traklibrary.com"));
+    }
+
+    @Test
+    void changeEmailAddress_withDifferentUser_throwsInvalidUserException() {
+        // Arrange
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(new User()));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(InvalidUserException.class, () -> userService.changeEmailAddress("username", "test@traklibrary.com"));
+    }
+
+    @Test
+    void changeEmailAddress_withMatchingEmailAddress_returnsFalseCheckedResponse() {
+        // Arrange
+        User user = new User();
+        user.setEmailAddress("test@traklibrary.com");
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("error");
+
+        // Act
+        CheckedResponse<Boolean> result = userService.changeEmailAddress("username", user.getEmailAddress());
+
+        // Assert
+        Assertions.assertFalse(result.getData(), "The response should be false if email addresses match.");
+        Assertions.assertTrue(result.isError(), "There should be errors if the email addresses match.");
+        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+
+        Mockito.verify(userRepository, Mockito.never())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void changeEmailAddress_withNonMatchingEmailAddressAndValidUser_returnsTrueCheckedResponse() {
+        // Arrange
+        User user = Mockito.spy(User.class);
+        user.setEmailAddress("email.address");
+
+        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(user));
+
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(user);
+
+        Mockito.doNothing()
+                .when(applicationEventPublisher).publishEvent(ArgumentMatchers.any(OnVerificationNeededEvent.class));
+
+        // Act
+        CheckedResponse<Boolean> result = userService.changeEmailAddress("username", "test@traklibrary.com");
+
+        // Assert
+        Assertions.assertTrue(result.getData(), "The response should be true if the user's email address was successfully changed.");
+        Assertions.assertFalse(result.isError(), "There should be no errors for a successful email address change.");
+        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successful email address change.");
+
+        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
+                .publishEvent(ArgumentMatchers.any(OnVerificationNeededEvent.class));
+
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+
+        Mockito.verify(user, Mockito.atMost(2))
+                .setEmailAddress(ArgumentMatchers.anyString());
     }
 }

@@ -59,7 +59,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GameRequestDto())));
 
         // Assert
@@ -90,7 +90,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(gameRequestDto)));
 
         // Assert
@@ -117,7 +117,7 @@ class GameRequestControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/requests/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -137,7 +137,7 @@ class GameRequestControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/requests")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -182,7 +182,7 @@ class GameRequestControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/requests")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -229,7 +229,7 @@ class GameRequestControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/requests?page=2")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -252,7 +252,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(new GameRequestDto())));
 
         // Assert
@@ -283,7 +283,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/requests")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content(objectMapper.writeValueAsString(gameRequestDto)));
 
         // Assert
@@ -314,7 +314,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/requests/1/complete")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
@@ -339,7 +339,7 @@ class GameRequestControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/requests/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.0.hal+json")
+                .accept("application/vnd.traklibrary.v1.hal+json")
                 .content("{ \"title\": \"test-title-2\" }"));
 
         // Assert
@@ -357,7 +357,7 @@ class GameRequestControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/requests/1")
-                .accept("application/vnd.traklibrary.v1.0.hal+json"));
+                .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions

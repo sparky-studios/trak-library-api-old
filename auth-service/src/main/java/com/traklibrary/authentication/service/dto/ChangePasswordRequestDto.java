@@ -9,9 +9,6 @@ import javax.validation.constraints.Size;
 @Data
 public class ChangePasswordRequestDto {
 
-    @NotEmpty(message = "{change-password-request.validation.username.not-empty}")
-    private String username;
-
     @NotEmpty(message = "{change-password-request.validation.recovery-token.not-empty}")
     @Size(min = 30, max = 30, message = "{change-password-request.validation.recovery-token.size}")
     private String recoveryToken;

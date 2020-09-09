@@ -62,6 +62,6 @@ public class TrakHalJsonMediaTypeConfiguration implements HypermediaMappingInfor
 
     @Override
     public List<MediaType> getMediaTypes() {
-        return MediaType.parseMediaTypes("application/vnd.traklibrary.v1.0.hal+json");
+        return MediaType.parseMediaTypes("application/vnd.traklibrary.v1.hal+json");
     }
 }
