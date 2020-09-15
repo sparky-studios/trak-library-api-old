@@ -1,0 +1,104 @@
+version: '3.3'
+services:
+  db:
+    container_name: traklibrary-db
+    image: postgres:9.6
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - trak-db-data:/var/lib/postgresql/data
+      - ./scripts/db:/docker-entrypoint-initdb.d
+    ports:
+      - 5433:5432
+    networks:
+      - trak-network
+
+  auth-server:
+    volumes:
+      - ./logs:/app/logs
+    command: ["-m", "512m"]
+    environment:
+      - spring.profiles.active=development
+    depends_on:
+      - db
+      - discovery-server
+      - config-server
+    ports:
+      - 8081:8080
+      - 5005:5005
+
+  config-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    ports:
+      - 8888:8888
+      - 5006:5005
+
+  discovery-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    ports:
+      - 8761:8761
+      - 5007:5005
+
+  email-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    ports:
+      - 8082:8080
+      - 5008:5005
+
+  game-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    depends_on:
+      - db
+      - discovery-server
+      - config-server
+    ports:
+      - 8083:8080
+      - 5009:5005
+
+  gateway-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    ports:
+      - 8080:8080
+      - 5010:5005
+
+  image-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    ports:
+      - 8084:8080
+      - 5011:5005
+
+  notification-server:
+    volumes:
+      - ./logs:/app/logs
+    environment:
+      - spring.profiles.active=development
+    depends_on:
+      - db
+      - discovery-server
+      - config-server
+    ports:
+      - 8085:8080
+      - 5012:5005
+
+volumes:
+  trak-db-data:

@@ -1,0 +1,120 @@
+version: "3.3"
+services:
+  auth-server:
+    build:
+      context: ./auth-server
+    container_name: traklibrary-auth-server
+    image: sparkystudios/traklibrary-auth-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+  config-server:
+    build:
+      context: ./config-server
+    container_name: traklibrary-config-server
+    image: sparkystudios/traklibrary-config-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.server.git.password=${CONFIG_SERVER_GIT_PASSWORD}
+      - spring.cloud.config.server.git.username=${CONFIG_SERVER_GIT_USERNAME}
+      - spring.security.user.name=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.security.user.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+    networks:
+      - trak-network
+
+  discovery-server:
+    build:
+      context: ./discovery-server
+    container_name: traklibrary-discovery-server
+    image: sparkystudios/traklibrary-discovery-server:latest
+    command: ["-m", "512m"]
+    networks:
+      - trak-network
+
+  email-server:
+    build:
+      context: ./email-server
+    container_name: traklibrary-email-server
+    image: sparkystudios/traklibrary-email-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+  game-server:
+    build:
+      context: ./game-server
+    container_name: traklibrary-game-server
+    image: sparkystudios/traklibrary-game-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+  gateway-server:
+    build:
+      context: ./gateway-server
+    container_name: traklibrary-gateway-server
+    image: sparkystudios/traklibrary-gateway-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+  image-server:
+    build:
+      context: ./image-server
+    container_name: traklibrary-image-server
+    image: sparkystudios/traklibrary-image-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+  notification-server:
+    build:
+      context: ./notification-server
+    container_name: traklibrary-notification-server
+    image: sparkystudios/traklibrary-notification-server:latest
+    command: ["-m", "512m"]
+    environment:
+      - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
+      - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+    depends_on:
+      - discovery-server
+      - config-server
+    networks:
+      - trak-network
+
+networks:
+  trak-network:
+    driver: bridge
