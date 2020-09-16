@@ -13,7 +13,7 @@
 
     <groupId>com.traklibrary</groupId>
     <artifactId>trak-api</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-SNAPSHOT</version>
     <name>Trak API</name>
     <packaging>pom</packaging>
 
@@ -23,6 +23,68 @@
             <activation>
                 <activeByDefault>true</activeByDefault>
             </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-maven-plugin</artifactId>
+                            <configuration>
+                                <excludeDevtools>false</excludeDevtools>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>com.spotify</groupId>
+                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>build</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <repository>sparkystudios/${project.build.finalName}</repository>
+                                <buildArgs>
+                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</DEBUG_ARGS>
+                                </buildArgs>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>production</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.springframework.boot</groupId>
+                            <artifactId>spring-boot-maven-plugin</artifactId>
+                        </plugin>
+                        <plugin>
+                            <groupId>com.spotify</groupId>
+                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>build</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <repository>sparkystudios/${project.build.finalName}</repository>
+                                <tag>${project.version}</tag>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
         </profile>
         <profile>
             <id>coverage</id>
@@ -137,8 +199,6 @@
         <org.sonarsource.scanner.maven.version>3.7.0.1746</org.sonarsource.scanner.maven.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
         <org.springframework.cloud.version>Hoxton.SR3</org.springframework.cloud.version>
-        <!-- Plugin versions -->
-        <org.apache.maven.plugins.compiler.version>3.8.1</org.apache.maven.plugins.compiler.version>
         <!-- Used to specify parameters for sonarcloud analysis. -->
         <aggregate.report.dir>report-aggregator/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
@@ -277,28 +337,35 @@
     </dependencyManagement>
 
     <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.mapstruct</groupId>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <version>${org.mapstruct.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.projectlombok</groupId>
+                            <artifactId>lombok</artifactId>
+                            <version>${org.projectlombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                </configuration>
+            </plugin>
+        </plugins>
+
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-compiler-plugin</artifactId>
-                    <version>${org.apache.maven.plugins.compiler.version}</version>
-                    <configuration>
-                        <source>1.8</source>
-                        <target>1.8</target>
-                        <annotationProcessorPaths>
-                            <path>
-                                <groupId>org.mapstruct</groupId>
-                                <artifactId>mapstruct-processor</artifactId>
-                                <version>${org.mapstruct.version}</version>
-                            </path>
-                            <path>
-                                <groupId>org.projectlombok</groupId>
-                                <artifactId>lombok</artifactId>
-                                <version>${org.projectlombok.version}</version>
-                            </path>
-                        </annotationProcessorPaths>
-                    </configuration>
+                    <groupId>org.jacoco</groupId>
+                    <artifactId>jacoco-maven-plugin</artifactId>
+                    <version>${org.jacoco.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
@@ -306,9 +373,13 @@
                     <version>${org.sonarsource.scanner.maven.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jacoco</groupId>
-                    <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${org.jacoco.version}</version>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+                <plugin>
+                    <groupId>com.spotify</groupId>
+                    <artifactId>dockerfile-maven-plugin</artifactId>
+                    <version>1.4.10</version>
                 </plugin>
             </plugins>
         </pluginManagement>
