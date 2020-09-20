@@ -1,4 +1,4 @@
-# Trak API
+# Trak Library API
 
 <!-- Project shields -->
 [![Build Status][codebuild-badge]][codebuild-url]

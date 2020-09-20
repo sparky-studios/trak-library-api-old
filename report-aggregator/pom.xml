@@ -4,108 +4,108 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.traklibrary</groupId>
+        <groupId>com.sparkystudios.traklibrary</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.traklibrary.report</groupId>
+    <groupId>com.sparkystudios.traklibrary.report</groupId>
     <artifactId>report-aggregator</artifactId>
-    <name>Trak API Report Aggregator</name>
+    <name>Trak Library API Report Aggregator</name>
 
     <dependencies>
         <dependency>
-            <groupId>com.traklibrary.authentication</groupId>
+            <groupId>com.sparkystudios.traklibrary.authentication</groupId>
             <artifactId>auth-domain</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.authentication</groupId>
+            <groupId>com.sparkystudios.traklibrary.authentication</groupId>
             <artifactId>auth-repository</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.authentication</groupId>
+            <groupId>com.sparkystudios.traklibrary.authentication</groupId>
             <artifactId>auth-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.authentication</groupId>
+            <groupId>com.sparkystudios.traklibrary.authentication</groupId>
             <artifactId>auth-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.config</groupId>
+            <groupId>com.sparkystudios.traklibrary.config</groupId>
             <artifactId>config-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.discovery</groupId>
+            <groupId>com.sparkystudios.traklibrary.discovery</groupId>
             <artifactId>discovery-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.email</groupId>
+            <groupId>com.sparkystudios.traklibrary.email</groupId>
             <artifactId>email-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.email</groupId>
+            <groupId>com.sparkystudios.traklibrary.email</groupId>
             <artifactId>email-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.game</groupId>
+            <groupId>com.sparkystudios.traklibrary.game</groupId>
             <artifactId>game-domain</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.game</groupId>
+            <groupId>com.sparkystudios.traklibrary.game</groupId>
             <artifactId>game-repository</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.game</groupId>
+            <groupId>com.sparkystudios.traklibrary.game</groupId>
             <artifactId>game-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.game</groupId>
+            <groupId>com.sparkystudios.traklibrary.game</groupId>
             <artifactId>game-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.gateway</groupId>
+            <groupId>com.sparkystudios.traklibrary.gateway</groupId>
             <artifactId>gateway-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.image</groupId>
+            <groupId>com.sparkystudios.traklibrary.image</groupId>
             <artifactId>image-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.image</groupId>
+            <groupId>com.sparkystudios.traklibrary.image</groupId>
             <artifactId>image-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-domain</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-repository</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-server</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>

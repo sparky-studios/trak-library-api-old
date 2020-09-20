@@ -4,24 +4,20 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.traklibrary</groupId>
+        <groupId>com.sparkystudios.traklibrary</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.traklibrary.game</groupId>
+    <groupId>com.sparkystudios.traklibrary.game</groupId>
     <artifactId>game-server</artifactId>
-    <name>Trak API Game Server</name>
+    <name>Trak Library API Game Server</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -53,7 +49,7 @@
         </dependency>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.traklibrary.game</groupId>
+            <groupId>com.sparkystudios.traklibrary.game</groupId>
             <artifactId>game-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>

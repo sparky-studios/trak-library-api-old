@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.traklibrary</groupId>
+        <groupId>com.sparkystudios.traklibrary</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.traklibrary.authentication</groupId>
+    <groupId>com.sparkystudios.traklibrary.authentication</groupId>
     <artifactId>auth-server</artifactId>
-    <name>Trak API Authentication Server</name>
+    <name>Trak Library API Authentication Server</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
@@ -21,6 +21,10 @@
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -36,8 +40,13 @@
         </dependency>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.traklibrary.authentication</groupId>
+            <groupId>com.sparkystudios.traklibrary.authentication</groupId>
             <artifactId>auth-service</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sparkystudios.traklibrary.security</groupId>
+            <artifactId>security</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>
     </dependencies>

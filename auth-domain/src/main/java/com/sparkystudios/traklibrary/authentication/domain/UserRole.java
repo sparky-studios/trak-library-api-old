@@ -1,0 +1,68 @@
+package com.sparkystudios.traklibrary.authentication.domain;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * The {@link UserRole} entity is used to represent all of the different user roles that can be assigned to a
+ * user. These {@link UserRole}'s can only be accessed and manipulated by a user with administrator access.
+ * A {@link User} does not have direct access to a {@link UserRole}, this table only represents the roles that
+ * are available to users, the connection between the two tables is done via {@link UserRole} entities.
+ *
+ * The purpose of {@link UserRole}'s to represent the level of access that each {@link User} will have to the
+ * system, most commonly they will only be a basic user, however others may be granted elevated or administrator
+ * access to the system.
+ *
+ * @author Sparky Studios.
+ */
+@Data
+@Entity
+@Table(name = "auth_user_role")
+public class UserRole {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", unique = true, nullable = false, updatable = false)
+    private long id;
+
+    @Column(name = "role", nullable = false, unique = true, length = 30)
+    private String role;
+
+    @EqualsAndHashCode.Exclude
+    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
+    private Set<User> users = new HashSet<>();
+
+    @Version
+    @Column(name = "op_lock_version")
+    private Long version;
+
+    /**
+     * Convenience method that is used to add a {@link User} to the {@link UserRole}. As
+     * the relationship between the {@link User} and {@link UserRole} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param user The {@link User} to add to the {@link UserRole}.
+     */
+    public void addUser(User user) {
+        users.add(user);
+        user.getUserRoles().add(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link User} to the {@link UserRole}. As
+     * the relationship between the {@link User} and {@link UserRole} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param user The {@link User} to remove to the {@link UserRole}.
+     */
+    public void removeUser(User user) {
+        users.remove(user);
+        user.getUserRoles().remove(this);
+    }
+}
