@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.traklibrary</groupId>
+        <groupId>com.sparkystudios.traklibrary</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.traklibrary.notification</groupId>
+    <groupId>com.sparkystudios.traklibrary.notification</groupId>
     <artifactId>notification-server</artifactId>
-    <name>Trak API Notification Server</name>
+    <name>Trak Library API Notification Server</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
@@ -19,8 +19,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>io.jsonwebtoken</groupId>
-            <artifactId>jjwt</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -36,7 +36,7 @@
         </dependency>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-service</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>

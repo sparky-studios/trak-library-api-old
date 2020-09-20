@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>trak-api</artifactId>
-        <groupId>com.traklibrary</groupId>
+        <groupId>com.sparkystudios.traklibrary</groupId>
         <version>0.1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.traklibrary.notification</groupId>
+    <groupId>com.sparkystudios.traklibrary.notification</groupId>
     <artifactId>notification-repository</artifactId>
-    <name>Trak API Notification Repository</name>
+    <name>Trak Library API Notification Repository</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
@@ -20,7 +20,7 @@
     <dependencies>
         <!-- Local dependencies -->
         <dependency>
-            <groupId>com.traklibrary.notification</groupId>
+            <groupId>com.sparkystudios.traklibrary.notification</groupId>
             <artifactId>notification-domain</artifactId>
             <version>0.1.0-SNAPSHOT</version>
         </dependency>

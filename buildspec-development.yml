@@ -11,15 +11,15 @@ phases:
       java: openjdk8
   pre_build:
     commands:
-      - echo [INFO] Cleaning Trak API `date`
+      - echo [INFO] Cleaning Trak Library API `date`
       - mvn clean -Pcoverage
   build:
     commands:
-      - echo [INFO] Building Trak API `date`
+      - echo [INFO] Building Trak Library API `date`
       - mvn compile -Pcoverage
   post_build:
     commands:
-      - echo [INFO] Running Trak API tests `date`
+      - echo [INFO] Running Trak Library API tests `date`
       - |
         branch_name=$CODEBUILD_SOURCE_VERSION
         if [[ "$branch_name" == pr/* ]] ;
