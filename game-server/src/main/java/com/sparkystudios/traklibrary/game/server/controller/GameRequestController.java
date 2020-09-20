@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
  * the {@link GameRequestService} into HATEOAS responses. All mappings on this controller therefore produce a {@link MediaTypes#HAL_JSON}
  * response.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @RequiredArgsConstructor

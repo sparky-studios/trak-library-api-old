@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
  * Unlike the similar email-service, all notification functionality can be accessed by any user with user credentials. No
  * elevated privileges are needed.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @RequiredArgsConstructor

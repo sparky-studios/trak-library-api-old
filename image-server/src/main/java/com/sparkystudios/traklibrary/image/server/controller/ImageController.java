@@ -21,7 +21,7 @@ import java.io.IOException;
  * and which image provider to utilize. It should be noted that to reach any of these end-points within this controller, the user
  * must have a valid authentication token.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @RequiredArgsConstructor

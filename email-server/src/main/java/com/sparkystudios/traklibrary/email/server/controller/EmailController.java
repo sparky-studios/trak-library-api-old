@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * email provider to utilize. It should be noted that to reach any of these end-points within this controller, the user
  * must have a valid JWT token and the email address that the email is being sent to must be within the system.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @RequiredArgsConstructor

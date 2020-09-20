@@ -12,7 +12,7 @@ import com.sparkystudios.traklibrary.email.service.impl.EmailServiceThymeleafImp
  * For an implementation, refer to the {@link EmailServiceThymeleafImpl}
  * which utilizes thymeleaf for the email template and AWS Simple Email Service as the email provider.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 public interface EmailService {

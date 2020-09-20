@@ -13,7 +13,7 @@ import com.sparkystudios.traklibrary.image.service.impl.ImageServiceAwsS3Impl;
  * For an implementation, refer to the {@link ImageServiceAwsS3Impl}
  * which utilizes AWS S3 buckets as the method of storing and downloading images within a shared context.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 public interface ImageService {

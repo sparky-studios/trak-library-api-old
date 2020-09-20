@@ -14,7 +14,7 @@ import java.util.Collection;
  * The {@link AuthTaskScheduler} is a simple component class that is used to contain any methods that
  * are scheduled for execution at particular points during the life-time of the auth server.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @Slf4j

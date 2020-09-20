@@ -10,7 +10,7 @@ import lombok.Data;
  * and their verification status, which can be used to ensure that verification occurs before normal user
  * interaction can occur.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @Data

@@ -18,7 +18,7 @@ import java.util.List;
  * it is only for internal processing only and to break any direct relation between the domain layer and Spring
  * Security.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios.
  */
 @Data

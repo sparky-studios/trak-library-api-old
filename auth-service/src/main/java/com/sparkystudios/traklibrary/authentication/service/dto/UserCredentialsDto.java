@@ -9,7 +9,7 @@ import lombok.Data;
  * and the password of the associated user. Unlike other DTO's within the API, no validation is done on this DTO, the reason for this
  * is the fact that if credentials are incorrect, authentication will not occur and no JWT will be returned.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @Data

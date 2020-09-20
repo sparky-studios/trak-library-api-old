@@ -12,7 +12,7 @@ import com.sparkystudios.traklibrary.game.service.dto.GameBarcodeDto;
  * The {@link GameBarcodeService} still follows the practise in that it will not catch or handle exceptions thrown by the persistence layer,
  * instead it will wrap them in a more reasonable response and propagate the exception to the callee.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 public interface GameBarcodeService {

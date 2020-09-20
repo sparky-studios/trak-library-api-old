@@ -14,7 +14,7 @@ import java.util.Arrays;
  * this validator. The validator will ensure that the password field is between 8 and 30 letters, contains at
  * least one upper-case character, at least one lower-case character, at least one number and no whitespace.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 public class PasswordConstraintValidator implements ConstraintValidator<ValidPassword, String> {

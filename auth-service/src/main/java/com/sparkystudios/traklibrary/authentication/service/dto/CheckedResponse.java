@@ -14,7 +14,7 @@ import lombok.Setter;
  *
  * @param <T> The response type of the checked response.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @Data

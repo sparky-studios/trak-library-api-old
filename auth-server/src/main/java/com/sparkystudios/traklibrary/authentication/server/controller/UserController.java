@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
  * to create new users. It should be noted that the controller itself contains very little logic, the logic is contained within the
  * {@link UserService}.
  *
- * @since 1.0.0
+ * @since 0.1.0
  * @author Sparky Studios
  */
 @RequiredArgsConstructor
