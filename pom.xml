@@ -155,6 +155,11 @@
                                 <!-- notification-service -->
                                 <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
                                 <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
+                                <!-- security -->
+                                <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
                             </excludes>
                         </configuration>
                         <executions>

@@ -11,6 +11,15 @@ import java.time.LocalDateTime;
 class UserMapperTest {
 
     @Test
+    void userToUserDto_withNull_returnsNull() {
+        // Act
+        UserDto result = AuthMappers.USER_MAPPER.userToUserDto(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+    }
+
+    @Test
     void userToUserDto_withUser_mapsFields() {
         // Arrange
         UserRole userRole = new UserRole();
@@ -43,6 +52,15 @@ class UserMapperTest {
         Assertions.assertEquals(user.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
         Assertions.assertEquals(user.getUserRoles().iterator().next().getRole(),
                 result.getAuthorities().iterator().next().getAuthority(), "The mapped authority does not match the entity.");
+    }
+
+    @Test
+    void userDtoToUser_withNull_returnsNull() {
+        // Act
+        User result = AuthMappers.USER_MAPPER.userDtoToUser(null);
+
+        // Assert
+        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
     }
 
     @Test

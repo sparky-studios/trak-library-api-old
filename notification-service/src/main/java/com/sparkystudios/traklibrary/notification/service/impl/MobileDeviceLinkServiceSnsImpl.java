@@ -81,14 +81,10 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
                 amazonSNS.setEndpointAttributes(attributesRequest);
             }
         } catch (NotFoundException nfe) {
-            if (log.isInfoEnabled()) {
-                log.info("Changes found. Creating new AWS endpoint.");
-            }
+            log.info("Changes found. Creating new AWS endpoint.");
             endpointArn = createEndpoint(mobileDeviceLinkRegistrationRequestDto);
         } catch (@SuppressWarnings({"squid:S2221"}) Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to retrieve AWS endpoint attributes.", e);
-            }
+            log.error("Failed to retrieve AWS endpoint attributes.", e);
 
             String errorMessage =
                     messageSource.getMessage(REGISTRATION_FAILED_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
