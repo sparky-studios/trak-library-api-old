@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
@@ -48,7 +49,10 @@ public class PlatformServiceImpl implements PlatformService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return platformMapper.platformToPlatformDto(platformRepository.save(platformMapper.platformDtoToPlatform(platformDto)));
+        Platform platform = platformMapper.platformDtoToPlatform(platformDto);
+        platform.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setPlatform(platform));
+
+        return platformMapper.platformToPlatformDto(platformRepository.save(platform));
     }
 
     @Override

@@ -21,8 +21,6 @@ public class GameUserEntryDto {
 
     private String gameTitle;
 
-    private LocalDate gameReleaseDate;
-
     private long platformId;
 
     private String platformName;

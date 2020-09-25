@@ -1,11 +1,11 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -16,7 +16,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;

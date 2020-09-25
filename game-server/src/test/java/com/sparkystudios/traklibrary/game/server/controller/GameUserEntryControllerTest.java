@@ -80,7 +80,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setId(1L);
         gameUserEntryDto.setGameId(1L);
         gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto.setPlatformId(1L);
         gameUserEntryDto.setPlatformName("platform-name");
         gameUserEntryDto.setUserId(1L);
@@ -111,7 +110,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setId(1L);
         gameUserEntryDto.setGameId(1L);
         gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto.setPlatformId(1L);
         gameUserEntryDto.setPlatformName("platform-name");
         gameUserEntryDto.setUserId(1L);
@@ -167,7 +165,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto1.setPlatformId(1L);
         gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
@@ -179,7 +176,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto2.setPlatformId(2L);
         gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
@@ -220,7 +216,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto1.setPlatformId(1L);
         gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
@@ -232,7 +227,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto2.setPlatformId(2L);
         gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
@@ -291,7 +285,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setId(1L);
         gameUserEntryDto.setGameId(1L);
         gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto.setPlatformId(1L);
         gameUserEntryDto.setPlatformName("platform-name");
         gameUserEntryDto.setUserId(1L);
@@ -322,7 +315,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setId(1L);
         gameUserEntryDto.setGameId(1L);
         gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto.setPlatformId(1L);
         gameUserEntryDto.setPlatformName("platform-name");
         gameUserEntryDto.setUserId(1L);

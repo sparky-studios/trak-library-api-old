@@ -1,8 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForModerator;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.PlatformRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.exception.ApiError;
@@ -10,6 +8,8 @@ import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PlatformService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;

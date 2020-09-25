@@ -3,9 +3,9 @@ package com.sparkystudios.traklibrary.game.service.impl;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GenreRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
-import com.sparkystudios.traklibrary.game.service.GameInfoService;
-import com.sparkystudios.traklibrary.game.service.dto.GameInfoDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameInfoMapper;
+import com.sparkystudios.traklibrary.game.service.GameDetailsService;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
+import com.sparkystudios.traklibrary.game.service.mapper.GameDetailsMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -18,29 +18,29 @@ import java.util.Objects;
 
 @RequiredArgsConstructor
 @Service
-public class GameInfoServiceImpl implements GameInfoService {
+public class GameDetailsServiceImpl implements GameDetailsService {
 
     private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
     private static final String GENRE_NOT_FOUND_MESSAGE = "genre.exception.not-found";
 
     private final GameRepository gameRepository;
     private final GenreRepository genreRepository;
-    private final GameInfoMapper gameInfoMapper;
+    private final GameDetailsMapper gameDetailsMapper;
     private final MessageSource messageSource;
 
     @Override
     @Transactional(readOnly = true)
-    public GameInfoDto findByGameId(long gameId) {
+    public GameDetailsDto findByGameId(long gameId) {
         String errorMessage = messageSource
                 .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
-        return gameInfoMapper.gameToGameInfoDto(gameRepository.findById(gameId)
+        return gameDetailsMapper.gameToGameDetailsDto(gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<GameInfoDto> findByGenreId(long genreId, Pageable pageable) {
+    public Iterable<GameDetailsDto> findByGenreId(long genreId, Pageable pageable) {
         if (!genreRepository.existsById(genreId)) {
             String errorMessage = messageSource
                     .getMessage(GENRE_NOT_FOUND_MESSAGE, new Object[] { genreId }, LocaleContextHolder.getLocale());
@@ -49,7 +49,7 @@ public class GameInfoServiceImpl implements GameInfoService {
         }
 
         return gameRepository.findByGenresId(genreId, pageable)
-                .map(gameInfoMapper::gameToGameInfoDto);
+                .map(gameDetailsMapper::gameToGameDetailsDto);
     }
 
     @Override
@@ -67,11 +67,11 @@ public class GameInfoServiceImpl implements GameInfoService {
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<GameInfoDto> findAll(GameSpecification gameSpecification, Pageable pageable) {
+    public Iterable<GameDetailsDto> findAll(GameSpecification gameSpecification, Pageable pageable) {
         Objects.requireNonNull(pageable);
 
         return gameRepository.findAll(gameSpecification, pageable)
-                .map(gameInfoMapper::gameToGameInfoDto);
+                .map(gameDetailsMapper::gameToGameDetailsDto);
     }
 
     @Override

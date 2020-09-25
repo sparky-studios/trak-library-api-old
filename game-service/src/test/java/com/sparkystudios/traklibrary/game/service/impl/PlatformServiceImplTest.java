@@ -6,7 +6,10 @@ import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
+import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
+import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.PlatformMapper;
 import org.junit.jupiter.api.Assertions;
@@ -81,8 +84,12 @@ class PlatformServiceImplTest {
         Mockito.when(platformRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Platform());
 
+        PlatformDto platformDto = new PlatformDto();
+        platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
+        platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
+
         // Act
-        platformService.save(new PlatformDto());
+        platformService.save(platformDto);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
@@ -109,7 +116,6 @@ class PlatformServiceImplTest {
         platform.setId(1L);
         platform.setName("test-name");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform.setVersion(1L);
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
@@ -125,7 +131,6 @@ class PlatformServiceImplTest {
         Assertions.assertEquals(platform.getId(), result.getId(), "The ID does match the entity.");
         Assertions.assertEquals(platform.getName(), result.getName(), "The name does match the entity.");
         Assertions.assertEquals(platform.getDescription(), result.getDescription(), "The description does match the entity.");
-        Assertions.assertEquals(platform.getReleaseDate(), result.getReleaseDate(), "The release date does match the entity.");
         Assertions.assertEquals(platform.getVersion(), result.getVersion(), "The version does match the entity.");
     }
 

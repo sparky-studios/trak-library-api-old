@@ -19,7 +19,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
-            <column name="release_date" type="date"/>
             <column name="age_rating" type="smallint" defaultValueNumeric="5">
                 <constraints nullable="false"/>
             </column>
@@ -86,7 +85,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
-            <column name="release_date" type="date"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -350,7 +348,67 @@
                 referencedTableName="platform"
                 referencedColumnNames="id" />
 
+        <!-- game_release_date table -->
+        <createTable tableName="game_release_date">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_release_date" />
+            </column>
+            <column name="game_id" type="bigint" />
+            <column name="region" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="release_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_release_date foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_release_date"
+                baseColumnNames="game_id"
+                constraintName="fk_game_release_date_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+
+        <!-- game_release_date unique constraints -->
+        <addUniqueConstraint
+                tableName="game_release_date"
+                columnNames="game_id,region"
+                constraintName="unq_game_release_date_game_id_region" />
+
+        <!-- platform_release_date table -->
+        <createTable tableName="platform_release_date">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_platform_release_date" />
+            </column>
+            <column name="platform_id" type="bigint" />
+            <column name="region" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="release_date" type="date">
+                <constraints nullable="false"/>
+            </column>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- platform_release_date foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="platform_release_date"
+                baseColumnNames="platform_id"
+                constraintName="fk_platform_release_date_platform_id"
+                referencedTableName="platform"
+                referencedColumnNames="id" />
+
+        <!-- platform_release_date unique constraints -->
+        <addUniqueConstraint
+                tableName="platform_release_date"
+                columnNames="platform_id,region"
+                constraintName="unq_platform_release_date_platform_id_region" />
+
         <rollback>
+            <dropTable tableName="platform_release_date" />
+            <dropTable tableName="game_release_date" />
             <dropTable tableName="game_barcode" />
             <dropTable tableName="game_image" />
             <dropTable tableName="game_developer_xref" />

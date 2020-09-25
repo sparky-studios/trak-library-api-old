@@ -49,7 +49,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addDeveloper(developer);
         gameRepository.save(game1);
@@ -57,7 +56,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addDeveloper(developer);
         gameRepository.save(game2);
@@ -90,7 +88,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addDeveloper(developer);
         gameRepository.save(game1);
@@ -98,7 +95,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addDeveloper(developer);
         gameRepository.save(game2);
@@ -131,7 +127,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addPublisher(publisher);
         gameRepository.save(game1);
@@ -139,7 +134,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addPublisher(publisher);
         gameRepository.save(game2);
@@ -172,7 +166,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addPublisher(publisher);
         gameRepository.save(game1);
@@ -180,7 +173,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addPublisher(publisher);
         gameRepository.save(game2);
@@ -212,7 +204,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addGenre(genre);
         gameRepository.save(game1);
@@ -220,7 +211,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addGenre(genre);
         gameRepository.save(game2);
@@ -252,7 +242,6 @@ class GameRepositoryTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addGenre(genre);
         gameRepository.save(game1);
@@ -260,7 +249,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addGenre(genre);
         gameRepository.save(game2);
@@ -288,13 +276,11 @@ class GameRepositoryTest {
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = platformRepository.save(platform);
 
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addPlatform(platform);
         gameRepository.save(game1);
@@ -302,7 +288,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addPlatform(platform);
         gameRepository.save(game2);
@@ -329,13 +314,11 @@ class GameRepositoryTest {
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = platformRepository.save(platform);
 
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setReleaseDate(LocalDate.now());
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.addPlatform(platform);
         gameRepository.save(game1);
@@ -343,7 +326,6 @@ class GameRepositoryTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setReleaseDate(LocalDate.now());
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.addPlatform(platform);
         gameRepository.save(game2);

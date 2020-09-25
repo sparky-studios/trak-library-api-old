@@ -169,7 +169,6 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -177,7 +176,6 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPublisherId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -214,7 +212,6 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -222,7 +219,6 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPublisherId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

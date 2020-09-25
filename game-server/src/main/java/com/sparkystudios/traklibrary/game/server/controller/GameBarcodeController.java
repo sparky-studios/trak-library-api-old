@@ -1,12 +1,12 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.domain.GameBarcode;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.game.server.assembler.GameBarcodeRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameBarcodeService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.GameBarcodeDto;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;

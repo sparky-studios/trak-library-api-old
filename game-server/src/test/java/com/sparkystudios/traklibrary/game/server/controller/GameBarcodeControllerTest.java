@@ -71,7 +71,7 @@ class GameBarcodeControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.barcodeType", Matchers.is(gameBarcodeDto.getBarcodeType().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.game").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$._links.gameInfo").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.gameDetails").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.platform").exists());
     }
 }

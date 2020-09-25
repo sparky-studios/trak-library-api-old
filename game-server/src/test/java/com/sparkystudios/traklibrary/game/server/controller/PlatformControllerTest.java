@@ -91,7 +91,6 @@ public class PlatformControllerTest {
         platformDto.setId(1L);
         platformDto.setName("test-name-1");
         platformDto.setDescription("test-description-1");
-        platformDto.setReleaseDate(LocalDate.now());
         platformDto.setVersion(1L);
 
         Mockito.when(platformService.save(ArgumentMatchers.any()))
@@ -117,7 +116,6 @@ public class PlatformControllerTest {
         platformDto.setId(1L);
         platformDto.setName("test-name-1");
         platformDto.setDescription("test-description-1");
-        platformDto.setReleaseDate(LocalDate.now());
         platformDto.setVersion(1L);
 
         Mockito.when(platformService.findById(ArgumentMatchers.anyLong()))
@@ -169,7 +167,6 @@ public class PlatformControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -177,7 +174,6 @@ public class PlatformControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPlatformId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -214,7 +210,6 @@ public class PlatformControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -222,7 +217,6 @@ public class PlatformControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPlatformId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -285,14 +279,12 @@ public class PlatformControllerTest {
         platformDto1.setId(1L);
         platformDto1.setName("test-name-1");
         platformDto1.setDescription("test-description-1");
-        platformDto1.setReleaseDate(LocalDate.now());
         platformDto1.setVersion(1L);
 
         PlatformDto platformDto2 = new PlatformDto();
         platformDto2.setId(2L);
         platformDto2.setName("test-name-2");
         platformDto2.setDescription("test-description-2");
-        platformDto2.setReleaseDate(LocalDate.now());
         platformDto2.setVersion(2L);
 
         Mockito.when(platformService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -328,14 +320,12 @@ public class PlatformControllerTest {
         platformDto1.setId(1L);
         platformDto1.setName("test-name-1");
         platformDto1.setDescription("test-description-1");
-        platformDto1.setReleaseDate(LocalDate.now());
         platformDto1.setVersion(1L);
 
         PlatformDto platformDto2 = new PlatformDto();
         platformDto2.setId(2L);
         platformDto2.setName("test-name-2");
         platformDto2.setDescription("test-description-2");
-        platformDto2.setReleaseDate(LocalDate.now());
         platformDto2.setVersion(2L);
 
         Mockito.when(platformService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -389,7 +379,6 @@ public class PlatformControllerTest {
         platformDto.setId(1L);
         platformDto.setName("test-name-1");
         platformDto.setDescription("test-description-1");
-        platformDto.setReleaseDate(LocalDate.now());
         platformDto.setVersion(1L);
 
         Mockito.when(platformService.update(ArgumentMatchers.any()))
@@ -415,7 +404,6 @@ public class PlatformControllerTest {
         platformDto.setId(1L);
         platformDto.setName("test-name-1");
         platformDto.setDescription("test-description-1");
-        platformDto.setReleaseDate(LocalDate.now());
         platformDto.setVersion(1L);
 
         Mockito.when(platformService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

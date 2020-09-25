@@ -5,6 +5,7 @@ import com.sparkystudios.traklibrary.game.repository.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMapper;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
@@ -84,8 +85,12 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
+        GameDto gameDto = new GameDto();
+        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+
         // Act
-        gameService.save(new GameDto());
+        gameService.save(gameDto);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
@@ -127,7 +132,6 @@ class GameServiceImplTest {
         Assertions.assertEquals(game.getId(), result.getId(), "The ID does match the entity.");
         Assertions.assertEquals(game.getTitle(), result.getTitle(), "The title does match the entity.");
         Assertions.assertEquals(game.getDescription(), result.getDescription(), "The description does match the entity.");
-        Assertions.assertEquals(game.getReleaseDate(), result.getReleaseDate(), "The release date does match the entity.");
         Assertions.assertEquals(game.getVersion(), result.getVersion(), "The version does match the entity.");
     }
 

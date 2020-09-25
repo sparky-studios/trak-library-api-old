@@ -4,21 +4,18 @@ import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDate;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Data
-@Relation(collectionRelation = "data", itemRelation = "gameInfo")
-public class GameInfoDto {
+@Relation(collectionRelation = "data", itemRelation = "gameDetails")
+public class GameDetailsDto {
 
     private long id;
 
     private String title;
 
     private String description;
-
-    private LocalDate releaseDate;
 
     private AgeRating ageRating;
 
@@ -29,4 +26,6 @@ public class GameInfoDto {
     private Set<PublisherDto> publishers = new TreeSet<>();
 
     private Set<GenreDto> genres = new TreeSet<>();
+
+    private Set<GameReleaseDateDto> releaseDates = new TreeSet<>();
 }

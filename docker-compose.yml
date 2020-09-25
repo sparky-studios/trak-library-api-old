@@ -12,6 +12,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -28,6 +29,7 @@ services:
       - spring.security.user.password=${CONFIG_SERVER_SECURITY_PASSWORD}
     depends_on:
       - discovery-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -52,6 +54,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -67,6 +70,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -82,6 +86,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -97,6 +102,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 
@@ -112,6 +118,7 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    restart: on-failure
     networks:
       - trak-network
 

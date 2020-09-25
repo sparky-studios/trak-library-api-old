@@ -1,12 +1,12 @@
 package com.sparkystudios.traklibrary.notification.server.controller;
 
 import com.sparkystudios.traklibrary.notification.domain.MobileDeviceLink;
-import com.sparkystudios.traklibrary.notification.server.annotation.AllowedForAdmin;
-import com.sparkystudios.traklibrary.notification.server.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.notification.server.exception.ApiError;
 import com.sparkystudios.traklibrary.notification.service.MobileDeviceLinkService;
 import com.sparkystudios.traklibrary.notification.service.NotificationService;
 import com.sparkystudios.traklibrary.notification.service.dto.MobileDeviceLinkRegistrationRequestDto;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
