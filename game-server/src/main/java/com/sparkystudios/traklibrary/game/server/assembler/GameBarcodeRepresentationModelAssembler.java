@@ -30,8 +30,8 @@ public class GameBarcodeRepresentationModelAssembler implements SimpleRepresenta
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
 
-            resource.add(linkTo(methodOn(GameController.class).findGameInfoByGameId(content.getGameId()))
-                    .withRel("gameInfo"));
+            resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
+                    .withRel("gameDetails"));
 
             resource.add(linkTo(methodOn(PlatformController.class).findById(content.getPlatformId()))
                     .withRel("platform"));

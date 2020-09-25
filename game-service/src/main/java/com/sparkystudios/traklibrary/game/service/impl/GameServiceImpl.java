@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
+import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.repository.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.GameService;
@@ -52,7 +53,11 @@ public class GameServiceImpl implements GameService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return gameMapper.gameToGameDto(gameRepository.save(gameMapper.gameDtoToGame(gameDto)));
+        Game game = gameMapper.gameDtoToGame(gameDto);
+        game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
+
+        // We need to retrieve the game by the new ID as we want the release dates joined to the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
     }
 
     @Override

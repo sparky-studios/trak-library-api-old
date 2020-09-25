@@ -1,18 +1,18 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.GenreSpecification;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForModerator;
-import com.sparkystudios.traklibrary.game.server.annotation.AllowedForUser;
-import com.sparkystudios.traklibrary.game.server.assembler.GameInfoRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.exception.ApiError;
-import com.sparkystudios.traklibrary.game.service.GameInfoService;
+import com.sparkystudios.traklibrary.game.service.GameDetailsService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.GenreService;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameInfoDto;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -39,10 +39,10 @@ public class GenreController {
 
     private final GenreService genreService;
     private final GameService gameService;
-    private final GameInfoService gameInfoService;
+    private final GameDetailsService gameDetailsService;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
-    private final GameInfoRepresentationModelAssembler gameInfoRepresentationModelAssembler;
+    private final GameDetailsRepresentationModelAssembler gameDetailsRepresentationModelAssembler;
 
     /**
      * End-point that will attempt to save the given {@link GenreDto} request body to the underlying
@@ -115,37 +115,37 @@ public class GenreController {
     }
 
     /**
-     * End-point that will retrieve a {@link PagedModel} of {@link GameInfoDto}s that have a link to the specified
+     * End-point that will retrieve a {@link PagedModel} of {@link GameDetailsDto}s that have a link to the specified
      * {@link GenreDto}. If the ID doesn't match an existing {@link GenreDto}, then an {@link ApiError} will be
      * returned with additional error details. If the {@link GenreDto} exists but has no associated
-     * {@link GameInfoDto}'s, then an empty {@link PagedModel} will be returned.
+     * {@link GameDetailsDto}'s, then an empty {@link PagedModel} will be returned.
      *
-     * @param id The ID of the {@link GenreDto} to retrieve associated {@link GameInfoDto}'s for.
+     * @param id The ID of the {@link GenreDto} to retrieve associated {@link GameDetailsDto}'s for.
      * @param pageable The size and ordering of the page to retrieve.
-     * @param pagedResourcesAssembler The assembler used to convert the {@link GameInfoDto}'s to a HATEOAS page.
+     * @param pagedResourcesAssembler The assembler used to convert the {@link GameDetailsDto}'s to a HATEOAS page.
      *
-     * @return A {@link PagedModel} of {@link GameInfoDto}'s that are associated with the given {@link GenreDto}.
+     * @return A {@link PagedModel} of {@link GameDetailsDto}'s that are associated with the given {@link GenreDto}.
      */
     @AllowedForUser
-    @GetMapping("/{id}/game-infos")
-    public PagedModel<EntityModel<GameInfoDto>> findGameInfosByGenreId(@PathVariable long id,
-                                                                       @PageableDefault Pageable pageable,
-                                                                       PagedResourcesAssembler<GameInfoDto> pagedResourcesAssembler) {
+    @GetMapping("/{id}/games/details")
+    public PagedModel<EntityModel<GameDetailsDto>> findGameDetailsByGenreId(@PathVariable long id,
+                                                                            @PageableDefault Pageable pageable,
+                                                                            PagedResourcesAssembler<GameDetailsDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
         Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
-        List<GameInfoDto> gameInfoDtos = StreamSupport.stream(gameInfoService.findByGenreId(id, pageable).spliterator(), false)
+        List<GameDetailsDto> gameDetailsDtos = StreamSupport.stream(gameDetailsService.findByGenreId(id, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Get the total number of entities that match the given criteria, dis-regarding page sizing.
-        long count = gameInfoService.countByGenreId(id);
+        long count = gameDetailsService.countByGenreId(id);
 
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler
-                .toModel(new PageImpl<>(gameInfoDtos, pageable, count), gameInfoRepresentationModelAssembler, link);
+                .toModel(new PageImpl<>(gameDetailsDtos, pageable, count), gameDetailsRepresentationModelAssembler, link);
     }
 
     /**

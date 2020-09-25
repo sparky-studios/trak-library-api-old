@@ -49,7 +49,7 @@ class GameControllerTest {
     private GameService gameService;
 
     @MockBean
-    private GameInfoService gameInfoService;
+    private GameDetailsService gameDetailsService;
 
     @MockBean
     private GenreService genreService;
@@ -78,8 +78,8 @@ class GameControllerTest {
         }
 
         @Bean
-        public GameInfoRepresentationModelAssembler gameInfoRepresentationModelAssembler() {
-            return new GameInfoRepresentationModelAssembler(null);
+        public GameDetailsRepresentationModelAssembler gameDetailsRepresentationModelAssembler() {
+            return new GameDetailsRepresentationModelAssembler(null);
         }
 
         @Bean
@@ -133,7 +133,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setReleaseDate(LocalDate.now());
         gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setVersion(1L);
 
@@ -196,7 +195,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setReleaseDate(LocalDate.now());
         gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setVersion(1L);
 
@@ -215,28 +213,27 @@ class GameControllerTest {
     }
 
     @Test
-    void findGameInfoById_withValidId_return200AndValidResponse() throws Exception {
+    void findGameDetailsById_withValidId_return200AndValidResponse() throws Exception {
         // Arrange
-        GameInfoDto gameInfoDto = new GameInfoDto();
-        gameInfoDto.setId(1L);
-        gameInfoDto.setTitle("test-title-1");
-        gameInfoDto.setDescription("test-description-1");
-        gameInfoDto.setReleaseDate(LocalDate.now());
-        gameInfoDto.setAgeRating(AgeRating.MATURE);
-        gameInfoDto.setVersion(1L);
+        GameDetailsDto gameDetailsDto = new GameDetailsDto();
+        gameDetailsDto.setId(1L);
+        gameDetailsDto.setTitle("test-title-1");
+        gameDetailsDto.setDescription("test-description-1");
+        gameDetailsDto.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto.setVersion(1L);
 
-        Mockito.when(gameInfoService.findByGameId(ArgumentMatchers.anyLong()))
-                .thenReturn(gameInfoDto);
+        Mockito.when(gameDetailsService.findByGameId(ArgumentMatchers.anyLong()))
+                .thenReturn(gameDetailsDto);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/info")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/details")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        ResponseVerifier.verifyGameInfoDto("", resultActions, gameInfoDto);
+        ResponseVerifier.verifyGameDetailsDto("", resultActions, gameDetailsDto);
     }
 
     @Test
@@ -308,14 +305,12 @@ class GameControllerTest {
         platformDto1.setId(1L);
         platformDto1.setName("test-name-1");
         platformDto1.setDescription("test-description-1");
-        platformDto1.setReleaseDate(LocalDate.now());
         platformDto1.setVersion(1L);
 
         PlatformDto platformDto2 = new PlatformDto();
         platformDto2.setId(2L);
         platformDto2.setName("test-name-2");
         platformDto2.setDescription("test-description-2");
-        platformDto2.setReleaseDate(LocalDate.now());
         platformDto2.setVersion(2L);
 
         Mockito.when(platformService.findPlatformsByGameId(ArgumentMatchers.anyLong()))
@@ -463,7 +458,6 @@ class GameControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto1.setPlatformId(1L);
         gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
@@ -475,7 +469,6 @@ class GameControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto2.setPlatformId(2L);
         gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
@@ -516,7 +509,6 @@ class GameControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto1.setPlatformId(1L);
         gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
@@ -528,7 +520,6 @@ class GameControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setGameReleaseDate(LocalDate.now());
         gameUserEntryDto2.setPlatformId(2L);
         gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
@@ -615,7 +606,6 @@ class GameControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setAgeRating(AgeRating.MATURE);
         gameDto1.setVersion(1L);
 
@@ -623,7 +613,6 @@ class GameControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setAgeRating(AgeRating.MATURE);
         gameDto2.setVersion(2L);
 
@@ -660,7 +649,6 @@ class GameControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setReleaseDate(LocalDate.now());
         gameDto1.setAgeRating(AgeRating.MATURE);
         gameDto1.setVersion(1L);
 
@@ -668,7 +656,6 @@ class GameControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setReleaseDate(LocalDate.now());
         gameDto2.setAgeRating(AgeRating.MATURE);
         gameDto2.setVersion(2L);
 
@@ -699,16 +686,16 @@ class GameControllerTest {
     }
 
     @Test
-    void findAllGameInfo_withNoData_returns200AndEmptyPagedResponse() throws Exception {
+    void findAllGameDetails_withNoData_returns200AndEmptyPagedResponse() throws Exception {
         // Arrange
-        Mockito.when(gameInfoService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        Mockito.when(gameDetailsService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
 
-        Mockito.when(gameInfoService.count(ArgumentMatchers.any()))
+        Mockito.when(gameDetailsService.count(ArgumentMatchers.any()))
                 .thenReturn(0L);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/info")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/details")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -726,32 +713,30 @@ class GameControllerTest {
     }
 
     @Test
-    void findAllGameInfo_withSmallData_returns200AndValidPagedResponseWithNoPageLinks() throws Exception {
+    void findAllGameDetails_withSmallData_returns200AndValidPagedResponseWithNoPageLinks() throws Exception {
         // Arrange
-        GameInfoDto gameInfoDto1 = new GameInfoDto();
-        gameInfoDto1.setId(1L);
-        gameInfoDto1.setTitle("test-title-1");
-        gameInfoDto1.setDescription("test-description-1");
-        gameInfoDto1.setReleaseDate(LocalDate.now());
-        gameInfoDto1.setAgeRating(AgeRating.MATURE);
-        gameInfoDto1.setVersion(1L);
+        GameDetailsDto gameDetailsDto1 = new GameDetailsDto();
+        gameDetailsDto1.setId(1L);
+        gameDetailsDto1.setTitle("test-title-1");
+        gameDetailsDto1.setDescription("test-description-1");
+        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto1.setVersion(1L);
 
-        GameInfoDto gameInfoDto2 = new GameInfoDto();
-        gameInfoDto2.setId(2L);
-        gameInfoDto2.setTitle("test-title-2");
-        gameInfoDto2.setDescription("test-description-2");
-        gameInfoDto2.setReleaseDate(LocalDate.now());
-        gameInfoDto2.setAgeRating(AgeRating.MATURE);
-        gameInfoDto2.setVersion(2L);
+        GameDetailsDto gameDetailsDto2 = new GameDetailsDto();
+        gameDetailsDto2.setId(2L);
+        gameDetailsDto2.setTitle("test-title-2");
+        gameDetailsDto2.setDescription("test-description-2");
+        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameInfoService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(Arrays.asList(gameInfoDto1, gameInfoDto2));
+        Mockito.when(gameDetailsService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(Arrays.asList(gameDetailsDto1, gameDetailsDto2));
 
         Mockito.when(gameService.count(ArgumentMatchers.any()))
                 .thenReturn(2L);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/info")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/details")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -766,37 +751,35 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameInfoDto("._embedded.data[0]", resultActions, gameInfoDto1);
-        ResponseVerifier.verifyGameInfoDto("._embedded.data[1]", resultActions, gameInfoDto2);
+        ResponseVerifier.verifyGameDetailsDto("._embedded.data[0]", resultActions, gameDetailsDto1);
+        ResponseVerifier.verifyGameDetailsDto("._embedded.data[1]", resultActions, gameDetailsDto2);
     }
 
     @Test
-    void findAllGameInfo_withData_returns200AndValidPagedResponseWithPageLinks() throws Exception {
+    void findAllGameDetails_withData_returns200AndValidPagedResponseWithPageLinks() throws Exception {
         // Arrange
-        GameInfoDto gameInfoDto1 = new GameInfoDto();
-        gameInfoDto1.setId(1L);
-        gameInfoDto1.setTitle("test-title-1");
-        gameInfoDto1.setDescription("test-description-1");
-        gameInfoDto1.setReleaseDate(LocalDate.now());
-        gameInfoDto1.setAgeRating(AgeRating.MATURE);
-        gameInfoDto1.setVersion(1L);
+        GameDetailsDto gameDetailsDto1 = new GameDetailsDto();
+        gameDetailsDto1.setId(1L);
+        gameDetailsDto1.setTitle("test-title-1");
+        gameDetailsDto1.setDescription("test-description-1");
+        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto1.setVersion(1L);
 
-        GameInfoDto gameInfoDto2 = new GameInfoDto();
-        gameInfoDto2.setId(2L);
-        gameInfoDto2.setTitle("test-title-2");
-        gameInfoDto2.setDescription("test-description-2");
-        gameInfoDto2.setReleaseDate(LocalDate.now());
-        gameInfoDto2.setAgeRating(AgeRating.MATURE);
-        gameInfoDto2.setVersion(2L);
+        GameDetailsDto gameDetailsDto2 = new GameDetailsDto();
+        gameDetailsDto2.setId(2L);
+        gameDetailsDto2.setTitle("test-title-2");
+        gameDetailsDto2.setDescription("test-description-2");
+        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameInfoService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(Arrays.asList(gameInfoDto1, gameInfoDto2));
+        Mockito.when(gameDetailsService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
+                .thenReturn(Arrays.asList(gameDetailsDto1, gameDetailsDto2));
 
-        Mockito.when(gameInfoService.count(ArgumentMatchers.any()))
+        Mockito.when(gameDetailsService.count(ArgumentMatchers.any()))
                 .thenReturn(100L);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/info?page=2")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/details?page=2")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -811,8 +794,8 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameInfoDto("._embedded.data[0]", resultActions, gameInfoDto1);
-        ResponseVerifier.verifyGameInfoDto("._embedded.data[1]", resultActions, gameInfoDto2);
+        ResponseVerifier.verifyGameDetailsDto("._embedded.data[0]", resultActions, gameDetailsDto1);
+        ResponseVerifier.verifyGameDetailsDto("._embedded.data[1]", resultActions, gameDetailsDto2);
     }
 
     @Test
@@ -840,7 +823,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setReleaseDate(LocalDate.now());
         gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setVersion(1L);
 
@@ -867,7 +849,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setReleaseDate(LocalDate.now());
         gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setVersion(1L);
 

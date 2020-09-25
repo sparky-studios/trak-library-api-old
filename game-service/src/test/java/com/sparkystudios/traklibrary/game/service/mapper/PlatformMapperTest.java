@@ -1,8 +1,11 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
+import com.sparkystudios.traklibrary.game.domain.GameRegion;
 import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.domain.PlatformReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
-import org.junit.jupiter.api.Assertions;
+import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -15,28 +18,33 @@ class PlatformMapperTest {
         PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
     void platformToPlatformDto_withPlatform_mapsFields() {
         // Arrange
+        PlatformReleaseDate platformReleaseDate = new PlatformReleaseDate();
+        platformReleaseDate.setRegion(GameRegion.PAL);
+        platformReleaseDate.setReleaseDate(LocalDate.now());
+        platformReleaseDate.setVersion(1L);
+
         Platform platform = new Platform();
         platform.setId(5L);
         platform.setName("test-name");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform.setVersion(1L);
+        platform.addReleaseDate(platformReleaseDate);
 
         // Act
         PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(platform);
 
         // Assert
-        Assertions.assertEquals(platform.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(platform.getName(), result.getName(), "The mapped title does not match the entity.");
-        Assertions.assertEquals(platform.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
-        Assertions.assertEquals(platform.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
-        Assertions.assertEquals(platform.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(platform.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(platform.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(platform.getDescription());
+        Assertions.assertThat(result.getVersion()).isEqualTo(platform.getVersion());
+        Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }
 
     @Test
@@ -45,27 +53,32 @@ class PlatformMapperTest {
         Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
     void platformToPlatformDto_withPlatformDto_mapsFields() {
         // Arrange
+        PlatformReleaseDateDto platformReleaseDateDto = new PlatformReleaseDateDto();
+        platformReleaseDateDto.setRegion(GameRegion.PAL);
+        platformReleaseDateDto.setReleaseDate(LocalDate.now());
+        platformReleaseDateDto.setVersion(1L);
+
         PlatformDto platformDto = new PlatformDto();
         platformDto.setId(5L);
         platformDto.setName("test-name");
         platformDto.setDescription("test-description");
-        platformDto.setReleaseDate(LocalDate.now());
         platformDto.setVersion(1L);
+        platformDto.getReleaseDates().add(platformReleaseDateDto);
 
         // Act
         Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(platformDto);
 
         // Assert
-        Assertions.assertEquals(platformDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(platformDto.getName(), result.getName(), "The mapped title does not match the DTO.");
-        Assertions.assertEquals(platformDto.getDescription(), result.getDescription(), "The mapped description does not match the DTO.");
-        Assertions.assertEquals(platformDto.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the DTO.");
-        Assertions.assertEquals(platformDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(platformDto.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(platformDto.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(platformDto.getDescription());
+        Assertions.assertThat(result.getVersion()).isEqualTo(platformDto.getVersion());
+        Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }
 }

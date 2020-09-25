@@ -4,9 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Entity
@@ -23,9 +23,6 @@ public class Game {
 
     @Column(name = "description", length = 4096)
     private String description;
-
-    @Column(name = "release_date")
-    private LocalDate releaseDate;
 
     @Column(name = "age_rating", nullable = false)
     private AgeRating ageRating;
@@ -65,6 +62,10 @@ public class Game {
             inverseJoinColumns = {@JoinColumn(name = "developer_id")}
     )
     private Set<Developer> developers = new HashSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<GameReleaseDate> releaseDates = new TreeSet<>();
 
     @Version
     @Column(name = "op_lock_version")
@@ -172,5 +173,31 @@ public class Game {
     public void removeDeveloper(Developer developer) {
         developers.remove(developer);
         developer.getGames().remove(this);
+    }
+
+    /**
+     * Convenience method that is used to add a {@link GameReleaseDate} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link GameReleaseDate} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param gameReleaseDate The {@link GameReleaseDate} to add to the {@link Game}.
+     */
+    public void addReleaseDate(GameReleaseDate gameReleaseDate) {
+        releaseDates.add(gameReleaseDate);
+        gameReleaseDate.setGame(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link GameReleaseDate} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link GameReleaseDate} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param gameReleaseDate The {@link GameReleaseDate} to remove from the {@link Game}.
+     */
+    public void removeReleaseDate(GameReleaseDate gameReleaseDate) {
+        releaseDates.remove(gameReleaseDate);
+        gameReleaseDate.setGame(null);
     }
 }

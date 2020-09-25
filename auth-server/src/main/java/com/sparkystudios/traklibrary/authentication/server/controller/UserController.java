@@ -2,11 +2,11 @@ package com.sparkystudios.traklibrary.authentication.server.controller;
 
 import com.sparkystudios.traklibrary.authentication.domain.User;
 import com.sparkystudios.traklibrary.authentication.domain.UserRole;
-import com.sparkystudios.traklibrary.authentication.server.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.authentication.server.exception.ApiError;
 import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
 import com.sparkystudios.traklibrary.authentication.service.validation.ValidPassword;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

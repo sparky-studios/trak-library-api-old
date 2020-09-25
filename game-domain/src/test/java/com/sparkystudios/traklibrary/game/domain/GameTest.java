@@ -8,7 +8,9 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.TreeSet;
 
 @DataJpaTest
 class GameTest {
@@ -22,7 +24,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle(null);
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
 
         // Assert
@@ -36,7 +37,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle(String.join("", Collections.nCopies(300, "t")));
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
 
         // Assert
@@ -50,7 +50,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription(String.join("", Collections.nCopies(5000, "t")));
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
 
         // Assert
@@ -64,7 +63,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(null);
 
         // Assert
@@ -78,7 +76,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.MATURE);
 
         // Act
@@ -88,7 +85,6 @@ class GameTest {
         Assertions.assertThat(result.getId()).isGreaterThan(0L);
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
-        Assertions.assertThat(result.getReleaseDate()).isEqualTo(game.getReleaseDate());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
@@ -109,7 +105,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addGenre(genre1);
         game.addGenre(genre2);
@@ -137,7 +132,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addGenre(genre1);
         game.addGenre(genre2);
@@ -159,19 +153,16 @@ class GameTest {
         Platform platform1 = new Platform();
         platform1.setName("test-name-1");
         platform1.setDescription("test-description-1");
-        platform1.setReleaseDate(LocalDate.now());
         platform1 = testEntityManager.persistFlushFind(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("test-name-2");
         platform2.setDescription("test-description-2");
-        platform2.setReleaseDate(LocalDate.now());
         platform2 = testEntityManager.persistFlushFind(platform2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addPlatform(platform1);
         game.addPlatform(platform2);
@@ -189,19 +180,16 @@ class GameTest {
         Platform platform1 = new Platform();
         platform1.setName("test-name-1");
         platform1.setDescription("test-description-1");
-        platform1.setReleaseDate(LocalDate.now());
         platform1 = testEntityManager.persistFlushFind(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("test-name-2");
         platform2.setDescription("test-description-2");
-        platform2.setReleaseDate(LocalDate.now());
         platform2 = testEntityManager.persistFlushFind(platform2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addPlatform(platform1);
         game.addPlatform(platform2);
@@ -235,7 +223,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addPublisher(publisher1);
         game.addPublisher(publisher2);
@@ -265,7 +252,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addPublisher(publisher1);
         game.addPublisher(publisher2);
@@ -299,7 +285,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addDeveloper(developer1);
         game.addDeveloper(developer2);
@@ -329,7 +314,6 @@ class GameTest {
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.addDeveloper(developer1);
         game.addDeveloper(developer1);
@@ -343,5 +327,76 @@ class GameTest {
         // Assert
         Assertions.assertThat(result.getDevelopers().size()).isEqualTo(1);
         Assertions.assertThat(result.getDevelopers().iterator().next()).isEqualTo(developer1);
+    }
+
+    @Test
+    void persist_withValidGameReleaseDateRelationships_mapsRelationships() {
+        // Arrange
+        GameReleaseDate gameReleaseDate1 = new GameReleaseDate();
+        gameReleaseDate1.setRegion(GameRegion.NORTH_AMERICA);
+        gameReleaseDate1.setReleaseDate(LocalDate.now());
+        gameReleaseDate1 = testEntityManager.persistAndFlush(gameReleaseDate1);
+
+        GameReleaseDate gameReleaseDate2 = new GameReleaseDate();
+        gameReleaseDate2.setRegion(GameRegion.PAL);
+        gameReleaseDate2.setReleaseDate(LocalDate.now());
+        gameReleaseDate2 = testEntityManager.persistAndFlush(gameReleaseDate2);
+
+        GameReleaseDate gameReleaseDate3 = new GameReleaseDate();
+        gameReleaseDate3.setRegion(GameRegion.JAPAN);
+        gameReleaseDate3.setReleaseDate(LocalDate.now());
+        gameReleaseDate3 = testEntityManager.persistAndFlush(gameReleaseDate3);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.addReleaseDate(gameReleaseDate1);
+        game.addReleaseDate(gameReleaseDate2);
+        game.addReleaseDate(gameReleaseDate3);
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(3);
+        Assertions.assertThat(result.getReleaseDates())
+                .isEqualTo(new TreeSet<>(Arrays.asList(gameReleaseDate1, gameReleaseDate2, gameReleaseDate3)));
+    }
+
+    @Test
+    void persist_withValidRemovedGameReleaseDateRelationships_mapsRelationships() {
+        // Arrange
+        GameReleaseDate gameReleaseDate1 = new GameReleaseDate();
+        gameReleaseDate1.setRegion(GameRegion.NORTH_AMERICA);
+        gameReleaseDate1.setReleaseDate(LocalDate.now());
+
+        GameReleaseDate gameReleaseDate2 = new GameReleaseDate();
+        gameReleaseDate2.setRegion(GameRegion.PAL);
+        gameReleaseDate2.setReleaseDate(LocalDate.now());
+
+        GameReleaseDate gameReleaseDate3 = new GameReleaseDate();
+        gameReleaseDate3.setRegion(GameRegion.JAPAN);
+        gameReleaseDate3.setReleaseDate(LocalDate.now());
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.addReleaseDate(gameReleaseDate1);
+        game.addReleaseDate(gameReleaseDate2);
+        game.addReleaseDate(gameReleaseDate3);
+        game = testEntityManager.persistFlushFind(game);
+
+        game.removeReleaseDate(testEntityManager.find(GameReleaseDate.class, gameReleaseDate1.getId()));
+        game.removeReleaseDate(testEntityManager.find(GameReleaseDate.class, gameReleaseDate2.getId()));
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(1);
+        Assertions.assertThat(result.getReleaseDates().iterator().next())
+                .isEqualTo(gameReleaseDate3);
     }
 }

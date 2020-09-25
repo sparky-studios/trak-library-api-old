@@ -10,7 +10,6 @@ import org.mapstruct.Mapping;
 public interface GameUserEntryMapper {
 
     @Mapping(source = "game.title", target = "gameTitle")
-    @Mapping(source = "game.releaseDate", target = "gameReleaseDate")
     @Mapping(source = "platform.name", target = "platformName")
     @Mapping(source = "game.publishers", target = "publishers")
     GameUserEntryDto gameUserEntryToGameUserEntryDto(GameUserEntry gameUserEntry);

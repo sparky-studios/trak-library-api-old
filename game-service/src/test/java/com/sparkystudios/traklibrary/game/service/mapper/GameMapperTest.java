@@ -2,8 +2,11 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.GameRegion;
+import com.sparkystudios.traklibrary.game.domain.GameReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import org.junit.jupiter.api.Assertions;
+import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -16,61 +19,71 @@ class GameMapperTest {
         GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
     void gameToGameDto_withGame_mapsFields() {
         // Arrange
+        GameReleaseDate gameReleaseDate = new GameReleaseDate();
+        gameReleaseDate.setRegion(GameRegion.PAL);
+        gameReleaseDate.setReleaseDate(LocalDate.now());
+        gameReleaseDate.setVersion(1L);
+
         Game game = new Game();
         game.setId(5L);
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.ADULTS_ONLY);
         game.setVersion(1L);
+        game.addReleaseDate(gameReleaseDate);
 
         // Act
         GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(game);
 
         // Assert
-        Assertions.assertEquals(game.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(game.getTitle(), result.getTitle(), "The mapped title does not match the entity.");
-        Assertions.assertEquals(game.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
-        Assertions.assertEquals(game.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
-        Assertions.assertEquals(game.getAgeRating(), result.getAgeRating(), "The mapped age rating does not match the entity.");
-        Assertions.assertEquals(game.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(game.getId());
+        Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
+        Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
+        Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
+        Assertions.assertThat(result.getVersion()).isEqualTo(game.getVersion());
+        Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }
 
     @Test
     void gameDtoToGame_withNull_returnsNull() {
-        // Act
+        // Act`
         Game result = GameMappers.GAME_MAPPER.gameDtoToGame(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
     void gameDtoToGame_withGameDto_mapsFields() {
         // Arrange
+        GameReleaseDateDto gameReleaseDateDto = new GameReleaseDateDto();
+        gameReleaseDateDto.setRegion(GameRegion.PAL);
+        gameReleaseDateDto.setReleaseDate(LocalDate.now());
+        gameReleaseDateDto.setVersion(1L);
+
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setReleaseDate(LocalDate.now());
         gameDto.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         gameDto.setVersion(1L);
+        gameDto.getReleaseDates().add(gameReleaseDateDto);
 
         // Act
         Game result = GameMappers.GAME_MAPPER.gameDtoToGame(gameDto);
 
         // Assert
-        Assertions.assertEquals(gameDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(gameDto.getTitle(), result.getTitle(), "The mapped title does not match the DTO.");
-        Assertions.assertEquals(gameDto.getDescription(), result.getDescription(), "The mapped description does not match the DTO.");
-        Assertions.assertEquals(gameDto.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the DTO.");
-        Assertions.assertEquals(gameDto.getAgeRating(), result.getAgeRating(), "The mapped age rating does not match the DTO.");
-        Assertions.assertEquals(gameDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameDto.getId());
+        Assertions.assertThat(result.getTitle()).isEqualTo(gameDto.getTitle());
+        Assertions.assertThat(result.getDescription()).isEqualTo(gameDto.getDescription());
+        Assertions.assertThat(result.getAgeRating()).isEqualTo(gameDto.getAgeRating());
+        Assertions.assertThat(result.getVersion()).isEqualTo(gameDto.getVersion());
+        Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }
 }

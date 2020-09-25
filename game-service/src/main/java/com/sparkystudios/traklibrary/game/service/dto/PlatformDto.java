@@ -7,7 +7,8 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "platform")
@@ -21,9 +22,9 @@ public class PlatformDto implements Comparable<PlatformDto> {
     @Size(max = 4096, message = "{platform.validation.description.size}")
     private String description;
 
-    private LocalDate releaseDate;
-
     private Long version;
+
+    private Set<PlatformReleaseDateDto> releaseDates = new TreeSet<>();
 
     /**
      * Used for comparison between two {@link PlatformDto} objects. It's used
@@ -31,7 +32,7 @@ public class PlatformDto implements Comparable<PlatformDto> {
      * supported inserted sort, such as a {@link java.util.TreeSet}.
      *
      * The order in which {@link PlatformDto} instances are sorted are by {@link PlatformDto#name},
-     * {@link PlatformDto#releaseDate} and finally {@link PlatformDto#id}.
+     * and the {@link PlatformDto#id}.
      *
      * @param other The other {@link PlatformDto} instance to compare against.
      *
@@ -42,7 +43,6 @@ public class PlatformDto implements Comparable<PlatformDto> {
     public int compareTo(PlatformDto other) {
         return ComparisonChain.start()
                 .compare(name, other.name, Ordering.natural().nullsLast())
-                .compare(releaseDate, other.releaseDate, Ordering.natural().nullsLast())
                 .compare(id, other.id)
                 .result();
     }

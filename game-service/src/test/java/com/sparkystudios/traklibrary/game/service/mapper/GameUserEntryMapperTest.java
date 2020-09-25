@@ -26,7 +26,6 @@ class GameUserEntryMapperTest {
 
         Game game = new Game();
         game.setTitle("test-title");
-        game.setReleaseDate(LocalDate.now());
         game.addPublisher(publisher);
 
         Platform platform = new Platform();
@@ -49,7 +48,6 @@ class GameUserEntryMapperTest {
         Assertions.assertEquals(gameUserEntry.getId(), result.getId(), "The mapped ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getGameId(), result.getGameId(), "The mapped game ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getGame().getTitle(), result.getGameTitle(), "The mapped game title does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getGame().getReleaseDate(), result.getGameReleaseDate(), "The mapped game release date does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the entity.");
         Assertions.assertEquals(gameUserEntry.getPlatform().getName(), result.getPlatformName(), "The mapped platform name does not match the entity.");
         Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next(), "The mapped publisher does not match the entity.");

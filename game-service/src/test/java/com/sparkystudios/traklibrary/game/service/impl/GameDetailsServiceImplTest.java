@@ -4,8 +4,8 @@ import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GenreRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
-import com.sparkystudios.traklibrary.game.service.dto.GameInfoDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameInfoMapper;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
+import com.sparkystudios.traklibrary.game.service.mapper.GameDetailsMapper;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-class GameInfoServiceImplTest {
+class GameDetailsServiceImplTest {
 
     @Mock
     private GameRepository gameRepository;
@@ -35,13 +35,13 @@ class GameInfoServiceImplTest {
     private GenreRepository genreRepository;
 
     @Spy
-    private final GameInfoMapper gameInfoMapper = GameMappers.GAME_INFO_MAPPER;
+    private final GameDetailsMapper gameDetailsMapper = GameMappers.GAME_INFO_MAPPER;
 
     @Mock
     private MessageSource messageSource;
 
     @InjectMocks
-    private GameInfoServiceImpl gameInfoService;
+    private GameDetailsServiceImpl gameDetailsService;
 
     @Test
     void findByGameId_withEmptyOptional_throwsEntityNotFoundException() {
@@ -53,11 +53,11 @@ class GameInfoServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameInfoService.findByGameId(0L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameDetailsService.findByGameId(0L));
     }
 
     @Test
-    void findByGameId_withValidGame_returnsGameInfoDto() {
+    void findByGameId_withValidGame_returnsGameDetailsDto() {
         // Arrange
         Game game = new Game();
         game.setId(1L);
@@ -72,7 +72,7 @@ class GameInfoServiceImplTest {
                 .thenReturn(Optional.of(game));
 
         // Act
-        GameInfoDto result = gameInfoService.findByGameId(0L);
+        GameDetailsDto result = gameDetailsService.findByGameId(0L);
 
         // Assert
         Assertions.assertNotNull(result);
@@ -90,7 +90,7 @@ class GameInfoServiceImplTest {
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameInfoService.findByGenreId(0L, pageable));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameDetailsService.findByGenreId(0L, pageable));
     }
 
     @Test
@@ -103,14 +103,14 @@ class GameInfoServiceImplTest {
                 .thenReturn(Page.empty());
 
         // Act
-        List<GameInfoDto> result = StreamSupport.stream(gameInfoService.findByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameDetailsDto> result = StreamSupport.stream(gameDetailsService.findByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
-        Mockito.verify(gameInfoMapper, Mockito.never())
-                .gameToGameInfoDto(ArgumentMatchers.any());
+        Mockito.verify(gameDetailsMapper, Mockito.never())
+                .gameToGameDetailsDto(ArgumentMatchers.any());
     }
 
     @Test
@@ -124,14 +124,14 @@ class GameInfoServiceImplTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
 
         // Act
-        List<GameInfoDto> result = StreamSupport.stream(gameInfoService.findByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameDetailsDto> result = StreamSupport.stream(gameDetailsService.findByGenreId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
-        Mockito.verify(gameInfoMapper, Mockito.atMost(2))
-                .gameToGameInfoDto(ArgumentMatchers.any());
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .gameToGameDetailsDto(ArgumentMatchers.any());
     }
 
     @Test
@@ -144,7 +144,7 @@ class GameInfoServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameInfoService.countByGenreId(0L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameDetailsService.countByGenreId(0L));
     }
 
     @Test
@@ -157,7 +157,7 @@ class GameInfoServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameInfoService.countByGenreId(0L);
+        gameDetailsService.countByGenreId(0L);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
@@ -170,7 +170,7 @@ class GameInfoServiceImplTest {
         GameSpecification gameSpecification = Mockito.mock(GameSpecification.class);
 
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.findAll(gameSpecification, null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameDetailsService.findAll(gameSpecification, null));
     }
 
     @Test
@@ -183,7 +183,7 @@ class GameInfoServiceImplTest {
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Act
-        List<GameInfoDto> result = StreamSupport.stream(gameInfoService.findAll(gameSpecification, pageable).spliterator(), false)
+        List<GameDetailsDto> result = StreamSupport.stream(gameDetailsService.findAll(gameSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -191,7 +191,7 @@ class GameInfoServiceImplTest {
     }
 
     @Test
-    void findAll_withGames_returnsGamesAsGameInfoDtos() {
+    void findAll_withGames_returnsGamesAsGameDetailsDtos() {
         // Arrange
         Page<Game> games = new PageImpl<>(Arrays.asList(new Game(), new Game()));
 
@@ -202,7 +202,7 @@ class GameInfoServiceImplTest {
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Act
-        List<GameInfoDto> result = StreamSupport.stream(gameInfoService.findAll(gameSpecification, pageable).spliterator(), false)
+        List<GameDetailsDto> result = StreamSupport.stream(gameDetailsService.findAll(gameSpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -212,20 +212,20 @@ class GameInfoServiceImplTest {
     @Test
     void count_withNullGameSpecification_throwsNullPointerException() {
         // Assert
-        Assertions.assertThrows(NullPointerException.class, () -> gameInfoService.count(null));
+        Assertions.assertThrows(NullPointerException.class, () -> gameDetailsService.count(null));
     }
 
     @Test
     void count_withValidGameSpecification_invokesCount() {
         // Arrange
-        Mockito.when(gameRepository.count(ArgumentMatchers.any()))
+        Mockito.when(gameRepository.count(ArgumentMatchers.any(GameSpecification.class)))
                 .thenReturn(0L);
 
         // Act
-        gameInfoService.count(Mockito.mock(GameSpecification.class));
+        gameDetailsService.count(Mockito.mock(GameSpecification.class));
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
-                .count(Mockito.any());
+                .count(Mockito.any(GameSpecification.class));
     }
 }

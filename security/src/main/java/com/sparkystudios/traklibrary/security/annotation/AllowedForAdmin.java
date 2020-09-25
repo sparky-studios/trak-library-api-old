@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.game.server.annotation;
+package com.sparkystudios.traklibrary.security.annotation;
 
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize("isAuthenticated() and hasRole('MODERATOR')")
-public @interface AllowedForModerator {
+@PreAuthorize("isAuthenticated() and hasRole('ADMIN')")
+public @interface AllowedForAdmin {
 }

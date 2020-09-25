@@ -23,9 +23,9 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameDto.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDate", Matchers.is(gameDto.getReleaseDate().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".ageRating", Matchers.is(gameDto.getAgeRating().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDates").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platforms").exists())
@@ -36,17 +36,17 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.info").exists());
     }
 
-    public static void verifyGameInfoDto(String root, ResultActions resultActions, GameInfoDto gameInfoDto) throws Exception {
+    public static void verifyGameDetailsDto(String root, ResultActions resultActions, GameDetailsDto gameDetailsDto) throws Exception {
         resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameInfoDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameInfoDto.getTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameInfoDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDate", Matchers.is(gameInfoDto.getReleaseDate().toString())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".ageRating", Matchers.is(gameInfoDto.getAgeRating().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameInfoDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int) gameDetailsDto.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDetailsDto.getTitle())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDetailsDto.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".ageRating", Matchers.is(gameDetailsDto.getAgeRating().name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int) gameDetailsDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platforms").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".publishers").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDates").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platforms").exists())
@@ -73,7 +73,6 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameUserEntryDto.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameId", Matchers.is((int)gameUserEntryDto.getGameId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameTitle", Matchers.is(gameUserEntryDto.getGameTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameReleaseDate", Matchers.is(gameUserEntryDto.getGameReleaseDate().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platformId", Matchers.is((int)gameUserEntryDto.getPlatformId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platformName", Matchers.is(gameUserEntryDto.getPlatformName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".userId", Matchers.is((int)gameUserEntryDto.getUserId())))
@@ -82,7 +81,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".rating", Matchers.is((int)gameUserEntryDto.getRating())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameUserEntryDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.game").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.gameInfo").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.gameDetails").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platform").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists());
     }
@@ -95,7 +94,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)genreDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.gameInfos").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.gameDetails").exists());
     }
 
     public static void verifyPlatformDto(String root, ResultActions resultActions, PlatformDto platformDto) throws Exception {
@@ -103,8 +102,8 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)platformDto.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".name", Matchers.is(platformDto.getName())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(platformDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDate", Matchers.is(platformDto.getReleaseDate().toString())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)platformDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDates").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
     }

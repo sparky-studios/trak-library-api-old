@@ -21,7 +21,6 @@ class GameBarcodeTest {
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -40,7 +39,6 @@ class GameBarcodeTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
@@ -60,14 +58,12 @@ class GameBarcodeTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -87,14 +83,12 @@ class GameBarcodeTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -114,14 +108,12 @@ class GameBarcodeTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setReleaseDate(LocalDate.now());
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
-        platform.setReleaseDate(LocalDate.now());
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();

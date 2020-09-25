@@ -9,8 +9,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 @And({
         @Spec(path = "id", spec = Equal.class),
-        @Spec(path = "name", spec = Like.class),
-        @Spec(path = "releaseDate", params = "release-date", spec = Equal.class)
+        @Spec(path = "name", spec = Like.class)
 })
 public interface PlatformSpecification extends Specification<Platform> {
 }

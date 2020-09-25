@@ -1,7 +1,7 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
-import com.sparkystudios.traklibrary.game.service.dto.GameInfoDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,17 +18,17 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RequiredArgsConstructor
 @Component
-public class GameInfoRepresentationModelAssembler implements SimpleRepresentationModelAssembler<GameInfoDto> {
+public class GameDetailsRepresentationModelAssembler implements SimpleRepresentationModelAssembler<GameDetailsDto> {
 
     private final PagedResourcesAssembler<GameUserEntryDto> gameUserEntryDtoPagedResourcesAssembler;
 
     @Override
-    public void addLinks(EntityModel<GameInfoDto> resource) {
-        GameInfoDto content = resource.getContent();
+    public void addLinks(EntityModel<GameDetailsDto> resource) {
+        GameDetailsDto content = resource.getContent();
 
         // Only add content if a valid model has been provided.
         if (content != null) {
-            resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findGameInfoByGameId(content.getId()))
+            resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getId()))
                     .withSelfRel());
 
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getId()))
@@ -52,7 +52,7 @@ public class GameInfoRepresentationModelAssembler implements SimpleRepresentatio
     }
 
     @Override
-    public void addLinks(@NonNull CollectionModel<EntityModel<GameInfoDto>> resources) {
+    public void addLinks(@NonNull CollectionModel<EntityModel<GameDetailsDto>> resources) {
         // Unused. Additional resource links aren't added to collections.
     }
 }
