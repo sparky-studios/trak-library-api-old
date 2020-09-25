@@ -7,7 +7,6 @@ import org.springframework.hateoas.server.core.Relation;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 

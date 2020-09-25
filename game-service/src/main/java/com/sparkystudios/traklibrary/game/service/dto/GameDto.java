@@ -7,8 +7,6 @@ import org.springframework.hateoas.server.core.Relation;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.time.LocalDate;
-import java.util.Set;
 import java.util.TreeSet;
 
 @Data
