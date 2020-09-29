@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -92,6 +93,8 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setCreatedAt(LocalDateTime.now());
+        developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
 
         Mockito.when(developerService.save(ArgumentMatchers.any()))
@@ -118,6 +121,8 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setCreatedAt(LocalDateTime.now());
+        developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
 
         Mockito.when(developerService.findById(ArgumentMatchers.anyLong()))
@@ -169,6 +174,8 @@ class DeveloperControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setCreatedAt(LocalDateTime.now());
+        gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -176,6 +183,8 @@ class DeveloperControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setCreatedAt(LocalDateTime.now());
+        gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByDeveloperId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -212,6 +221,8 @@ class DeveloperControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setCreatedAt(LocalDateTime.now());
+        gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -219,6 +230,8 @@ class DeveloperControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setCreatedAt(LocalDateTime.now());
+        gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByDeveloperId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -282,6 +295,8 @@ class DeveloperControllerTest {
         developerDto1.setName("test-developer-1");
         developerDto1.setDescription("test-description-1");
         developerDto1.setFoundedDate(LocalDate.now());
+        developerDto1.setCreatedAt(LocalDateTime.now());
+        developerDto1.setUpdatedAt(LocalDateTime.now());
         developerDto1.setVersion(1L);
 
         DeveloperDto developerDto2 = new DeveloperDto();
@@ -289,6 +304,8 @@ class DeveloperControllerTest {
         developerDto2.setName("test-developer-2");
         developerDto2.setDescription("test-description-2");
         developerDto2.setFoundedDate(LocalDate.now());
+        developerDto2.setCreatedAt(LocalDateTime.now());
+        developerDto2.setUpdatedAt(LocalDateTime.now());
         developerDto2.setVersion(2L);
 
         Mockito.when(developerService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -325,6 +342,8 @@ class DeveloperControllerTest {
         developerDto1.setName("test-developer-1");
         developerDto1.setDescription("test-description-1");
         developerDto1.setFoundedDate(LocalDate.now());
+        developerDto1.setCreatedAt(LocalDateTime.now());
+        developerDto1.setUpdatedAt(LocalDateTime.now());
         developerDto1.setVersion(1L);
 
         DeveloperDto developerDto2 = new DeveloperDto();
@@ -332,6 +351,8 @@ class DeveloperControllerTest {
         developerDto2.setName("test-developer-2");
         developerDto2.setDescription("test-description-2");
         developerDto2.setFoundedDate(LocalDate.now());
+        developerDto2.setCreatedAt(LocalDateTime.now());
+        developerDto2.setUpdatedAt(LocalDateTime.now());
         developerDto2.setVersion(2L);
 
         Mockito.when(developerService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -386,6 +407,8 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setCreatedAt(LocalDateTime.now());
+        developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
 
         Mockito.when(developerService.update(ArgumentMatchers.any()))
@@ -412,6 +435,8 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setCreatedAt(LocalDateTime.now());
+        developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
 
         Mockito.when(developerService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

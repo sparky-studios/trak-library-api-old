@@ -60,7 +60,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .claim("userId", ((UserDto)auth.getPrincipal()).getId())
                 .claim("verified", ((UserDto)auth.getPrincipal()).isVerified())
                 .setIssuedAt(new Date(now))
-                .setExpiration(new Date(now + (15 * 60000))) // 15 minutes.
+                .setExpiration(new Date(now + jwtConfig.getExpiryTime()))
                 .signWith(SignatureAlgorithm.HS512, jwtConfig.getSecretKey().getBytes())
                 .compact();
 

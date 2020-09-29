@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -92,6 +93,8 @@ class PublisherControllerTest {
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
         publisherDto.setVersion(1L);
 
         Mockito.when(publisherService.save(ArgumentMatchers.any()))
@@ -118,6 +121,8 @@ class PublisherControllerTest {
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
         publisherDto.setVersion(1L);
 
         Mockito.when(publisherService.findById(ArgumentMatchers.anyLong()))
@@ -169,6 +174,8 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setCreatedAt(LocalDateTime.now());
+        gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -176,6 +183,8 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setCreatedAt(LocalDateTime.now());
+        gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPublisherId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -212,6 +221,8 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setCreatedAt(LocalDateTime.now());
+        gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
 
         GameDto gameDto2 = new GameDto();
@@ -219,6 +230,8 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setCreatedAt(LocalDateTime.now());
+        gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
 
         Mockito.when(gameService.findGamesByPublisherId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
@@ -282,6 +295,8 @@ class PublisherControllerTest {
         publisherDto1.setName("test-publisher-1");
         publisherDto1.setDescription("test-description-1");
         publisherDto1.setFoundedDate(LocalDate.now());
+        publisherDto1.setCreatedAt(LocalDateTime.now());
+        publisherDto1.setUpdatedAt(LocalDateTime.now());
         publisherDto1.setVersion(1L);
 
         PublisherDto publisherDto2 = new PublisherDto();
@@ -289,6 +304,8 @@ class PublisherControllerTest {
         publisherDto2.setName("test-publisher-2");
         publisherDto2.setDescription("test-description-2");
         publisherDto2.setFoundedDate(LocalDate.now());
+        publisherDto2.setCreatedAt(LocalDateTime.now());
+        publisherDto2.setUpdatedAt(LocalDateTime.now());
         publisherDto2.setVersion(2L);
 
         Mockito.when(publisherService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -325,6 +342,8 @@ class PublisherControllerTest {
         publisherDto1.setName("test-publisher-1");
         publisherDto1.setDescription("test-description-1");
         publisherDto1.setFoundedDate(LocalDate.now());
+        publisherDto1.setCreatedAt(LocalDateTime.now());
+        publisherDto1.setUpdatedAt(LocalDateTime.now());
         publisherDto1.setVersion(1L);
 
         PublisherDto publisherDto2 = new PublisherDto();
@@ -332,6 +351,8 @@ class PublisherControllerTest {
         publisherDto2.setName("test-publisher-2");
         publisherDto2.setDescription("test-description-2");
         publisherDto2.setFoundedDate(LocalDate.now());
+        publisherDto2.setCreatedAt(LocalDateTime.now());
+        publisherDto2.setUpdatedAt(LocalDateTime.now());
         publisherDto2.setVersion(2L);
 
         Mockito.when(publisherService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -386,6 +407,8 @@ class PublisherControllerTest {
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
         publisherDto.setVersion(1L);
 
         Mockito.when(publisherService.update(ArgumentMatchers.any()))
@@ -412,6 +435,8 @@ class PublisherControllerTest {
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
         publisherDto.setVersion(1L);
 
         Mockito.when(publisherService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

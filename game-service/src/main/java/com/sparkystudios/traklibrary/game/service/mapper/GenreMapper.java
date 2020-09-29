@@ -11,5 +11,7 @@ public interface GenreMapper {
     GenreDto genreToGenreDto(Genre genre);
 
     @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Genre genreDtoToGenre(GenreDto gameDto);
 }

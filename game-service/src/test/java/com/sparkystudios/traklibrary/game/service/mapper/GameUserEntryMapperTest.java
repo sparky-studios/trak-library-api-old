@@ -2,10 +2,10 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class GameUserEntryMapperTest {
 
@@ -15,7 +15,7 @@ class GameUserEntryMapperTest {
         GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -40,20 +40,23 @@ class GameUserEntryMapperTest {
         gameUserEntry.setUserId(8L);
         gameUserEntry.setStatus(GameUserEntryStatus.DROPPED);
         gameUserEntry.setRating((short)5);
+        gameUserEntry.setCreatedAt(LocalDateTime.now());
+        gameUserEntry.setUpdatedAt(LocalDateTime.now());
 
         // Act
         GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(gameUserEntry);
 
         // Assert
-        Assertions.assertEquals(gameUserEntry.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getGameId(), result.getGameId(), "The mapped game ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getGame().getTitle(), result.getGameTitle(), "The mapped game title does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getPlatform().getName(), result.getPlatformName(), "The mapped platform name does not match the entity.");
-        Assertions.assertEquals(publisher.getName(), result.getPublishers().iterator().next(), "The mapped publisher does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getStatus(), result.getStatus(), "The mapped status does not match the entity.");
-        Assertions.assertEquals(gameUserEntry.getRating(), result.getRating(), "The mapped rating does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameUserEntry.getId());
+        Assertions.assertThat(result.getGameId()).isEqualTo(gameUserEntry.getGameId());
+        Assertions.assertThat(result.getGameTitle()).isEqualTo(game.getTitle());
+        Assertions.assertThat(result.getPlatformId()).isEqualTo(gameUserEntry.getPlatformId());
+        Assertions.assertThat(result.getPlatformName()).isEqualTo(platform.getName());
+        Assertions.assertThat(result.getUserId()).isEqualTo(gameUserEntry.getUserId());
+        Assertions.assertThat(result.getStatus()).isEqualTo(gameUserEntry.getStatus());
+        Assertions.assertThat(result.getRating()).isEqualTo(gameUserEntry.getRating());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(gameUserEntry.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(gameUserEntry.getUpdatedAt());
     }
 
     @Test
@@ -62,7 +65,7 @@ class GameUserEntryMapperTest {
         GameUserEntry result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryDtoToGameUserEntry(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -75,16 +78,20 @@ class GameUserEntryMapperTest {
         gameUserEntryDto.setUserId(8L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.DROPPED);
         gameUserEntryDto.setRating((short)5);
+        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
 
         // Act
         GameUserEntry result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryDtoToGameUserEntry(gameUserEntryDto);
 
         // Assert
-        Assertions.assertEquals(gameUserEntryDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(gameUserEntryDto.getGameId(), result.getGameId(), "The mapped game ID does not match the DTO.");
-        Assertions.assertEquals(gameUserEntryDto.getPlatformId(), result.getPlatformId(), "The mapped platform ID does not match the DTO.");
-        Assertions.assertEquals(gameUserEntryDto.getUserId(), result.getUserId(), "The mapped user ID does not match the DTO.");
-        Assertions.assertEquals(gameUserEntryDto.getStatus(), result.getStatus(), "The mapped status does not match the DTO.");
-        Assertions.assertEquals(gameUserEntryDto.getRating(), result.getRating(), "The mapped rating does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameUserEntryDto.getId());
+        Assertions.assertThat(result.getGameId()).isEqualTo(gameUserEntryDto.getGameId());
+        Assertions.assertThat(result.getPlatformId()).isEqualTo(gameUserEntryDto.getPlatformId());
+        Assertions.assertThat(result.getUserId()).isEqualTo(gameUserEntryDto.getUserId());
+        Assertions.assertThat(result.getStatus()).isEqualTo(gameUserEntryDto.getStatus());
+        Assertions.assertThat(result.getRating()).isEqualTo(gameUserEntryDto.getRating());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
     }
 }

@@ -4,6 +4,8 @@ import com.sparkystudios.traklibrary.game.domain.BarcodeType;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
+import java.time.LocalDateTime;
+
 @Data
 @Relation(collectionRelation = "data", itemRelation = "game-barcode")
 public class GameBarcodeDto {
@@ -17,6 +19,10 @@ public class GameBarcodeDto {
     private String barcode;
 
     private BarcodeType barcodeType;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private long version;
 }

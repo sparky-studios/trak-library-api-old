@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,6 +24,10 @@ public class PlatformDto implements Comparable<PlatformDto> {
     private String description;
 
     private Long version;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Set<PlatformReleaseDateDto> releaseDates = new TreeSet<>();
 

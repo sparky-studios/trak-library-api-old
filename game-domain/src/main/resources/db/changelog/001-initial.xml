@@ -22,6 +22,13 @@
             <column name="age_rating" type="smallint" defaultValueNumeric="5">
                 <constraints nullable="false"/>
             </column>
+            <column name="game_modes" type="bigint" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -34,6 +41,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -85,6 +96,10 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -141,6 +156,10 @@
             <column name="rating" type="smallint" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -180,6 +199,10 @@
             <column name="user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -195,6 +218,10 @@
             <column name="founded_date" type="date">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -297,6 +324,10 @@
             <column name="filename" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -331,6 +362,10 @@
             <column name="barcode_type" type="smallint" defaultValueNumeric="0">
                 <constraints nullable="false" />
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -360,6 +395,10 @@
             <column name="release_date" type="date">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -389,6 +428,10 @@
             <column name="release_date" type="date">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 

@@ -29,6 +29,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -85,6 +86,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setUserId(1L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto.setRating((short)4);
+        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto.setVersion(1L);
 
         Mockito.when(gameUserEntryService.save(ArgumentMatchers.any()))
@@ -115,6 +118,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setUserId(1L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto.setRating((short)4);
+        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto.setVersion(1L);
 
         Mockito.when(gameUserEntryService.findById(ArgumentMatchers.anyLong()))
@@ -170,6 +175,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
+        gameUserEntryDto1.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto1.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto1.setVersion(1L);
 
         GameUserEntryDto gameUserEntryDto2 = new GameUserEntryDto();
@@ -181,6 +188,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
+        gameUserEntryDto2.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto2.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto2.setVersion(2L);
 
         Mockito.when(gameUserEntryService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -221,6 +230,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
+        gameUserEntryDto1.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto1.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto1.setVersion(1L);
 
         GameUserEntryDto gameUserEntryDto2 = new GameUserEntryDto();
@@ -232,6 +243,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
+        gameUserEntryDto2.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto2.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto2.setVersion(2L);
 
         Mockito.when(gameUserEntryService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -290,6 +303,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setUserId(1L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto.setRating((short)4);
+        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto.setVersion(1L);
 
         Mockito.when(gameUserEntryService.update(ArgumentMatchers.any()))
@@ -320,6 +335,8 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setUserId(1L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto.setRating((short)4);
+        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
+        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto.setVersion(1L);
 
         Mockito.when(gameUserEntryService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

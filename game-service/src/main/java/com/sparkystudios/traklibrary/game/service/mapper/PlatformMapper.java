@@ -13,6 +13,8 @@ public interface PlatformMapper {
     PlatformDto platformToPlatformDto(Platform platform);
 
     @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Platform platformDtoToPlatform(PlatformDto platformDto);
 
     default PlatformReleaseDateDto platformReleaseDateToPlatformReleaseDateDto(PlatformReleaseDate platformReleaseDate) {

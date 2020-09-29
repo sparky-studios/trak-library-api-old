@@ -110,6 +110,8 @@ class MobileDeviceLinkTest {
         Assertions.assertThat(result.getDeviceGuid()).isEqualTo(mobileDeviceLink.getDeviceGuid());
         Assertions.assertThat(result.getLinkedDate()).isEqualTo(mobileDeviceLink.getLinkedDate());
         Assertions.assertThat(result.getToken()).isEqualTo(mobileDeviceLink.getToken());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getEndpointArn()).isEqualTo(mobileDeviceLink.getEndpointArn());
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }

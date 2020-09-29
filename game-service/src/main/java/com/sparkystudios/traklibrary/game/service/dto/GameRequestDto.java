@@ -25,5 +25,9 @@ public class GameRequestDto {
 
     private long userId;
 
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
     private Long version;
 }

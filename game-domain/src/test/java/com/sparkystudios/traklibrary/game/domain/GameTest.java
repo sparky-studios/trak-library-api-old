@@ -77,6 +77,8 @@ class GameTest {
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.getGameModes().add(GameMode.SINGLE_PLAYER);
+        game.getGameModes().add(GameMode.MULTI_PLAYER);
 
         // Act
         Game result = testEntityManager.persistFlushFind(game);
@@ -86,6 +88,9 @@ class GameTest {
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
+        Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 

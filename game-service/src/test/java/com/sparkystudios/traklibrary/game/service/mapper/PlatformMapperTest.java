@@ -9,6 +9,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class PlatformMapperTest {
 
@@ -33,6 +34,8 @@ class PlatformMapperTest {
         platform.setId(5L);
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setCreatedAt(LocalDateTime.now());
+        platform.setUpdatedAt(LocalDateTime.now());
         platform.setVersion(1L);
         platform.addReleaseDate(platformReleaseDate);
 
@@ -43,6 +46,8 @@ class PlatformMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(platform.getId());
         Assertions.assertThat(result.getName()).isEqualTo(platform.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(platform.getDescription());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(platform.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(platform.getUpdatedAt());
         Assertions.assertThat(result.getVersion()).isEqualTo(platform.getVersion());
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }
@@ -68,6 +73,8 @@ class PlatformMapperTest {
         platformDto.setId(5L);
         platformDto.setName("test-name");
         platformDto.setDescription("test-description");
+        platformDto.setCreatedAt(LocalDateTime.now());
+        platformDto.setUpdatedAt(LocalDateTime.now());
         platformDto.setVersion(1L);
         platformDto.getReleaseDates().add(platformReleaseDateDto);
 
@@ -78,6 +85,8 @@ class PlatformMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(platformDto.getId());
         Assertions.assertThat(result.getName()).isEqualTo(platformDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(platformDto.getDescription());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(platformDto.getVersion());
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
     }

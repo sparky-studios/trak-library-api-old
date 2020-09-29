@@ -3,10 +3,11 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 import com.sparkystudios.traklibrary.game.domain.GameRegion;
 import com.sparkystudios.traklibrary.game.domain.PlatformReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class PlatformReleaseDateMapperTest {
 
@@ -16,7 +17,7 @@ class PlatformReleaseDateMapperTest {
         PlatformReleaseDateDto result = GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateToPlatformReleaseDateDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -25,16 +26,19 @@ class PlatformReleaseDateMapperTest {
         PlatformReleaseDate platformReleaseDate = new PlatformReleaseDate();
         platformReleaseDate.setRegion(GameRegion.JAPAN);
         platformReleaseDate.setReleaseDate(LocalDate.now());
+        platformReleaseDate.setCreatedAt(LocalDateTime.now());
+        platformReleaseDate.setUpdatedAt(LocalDateTime.now());
         platformReleaseDate.setVersion(2L);
 
         // Act
         PlatformReleaseDateDto result = GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateToPlatformReleaseDateDto(platformReleaseDate);
 
         // Assert
-        Assertions.assertEquals(platformReleaseDate.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(platformReleaseDate.getRegion(), result.getRegion(), "The mapped region does not match the entity.");
-        Assertions.assertEquals(platformReleaseDate.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
-        Assertions.assertEquals(platformReleaseDate.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(platformReleaseDate.getId());
+        Assertions.assertThat(result.getRegion()).isEqualTo(platformReleaseDate.getRegion());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(platformReleaseDate.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(platformReleaseDate.getUpdatedAt());
+        Assertions.assertThat(result.getVersion()).isEqualTo(platformReleaseDate.getVersion());
     }
 
     @Test
@@ -43,7 +47,7 @@ class PlatformReleaseDateMapperTest {
         PlatformReleaseDate result = GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateDtoToPlatformReleaseDate(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -52,15 +56,18 @@ class PlatformReleaseDateMapperTest {
         PlatformReleaseDateDto platformReleaseDateDto = new PlatformReleaseDateDto();
         platformReleaseDateDto.setRegion(GameRegion.JAPAN);
         platformReleaseDateDto.setReleaseDate(LocalDate.now());
+        platformReleaseDateDto.setCreatedAt(LocalDateTime.now());
+        platformReleaseDateDto.setUpdatedAt(LocalDateTime.now());
         platformReleaseDateDto.setVersion(2L);
 
         // Act
         PlatformReleaseDate result = GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateDtoToPlatformReleaseDate(platformReleaseDateDto);
 
         // Assert
-        Assertions.assertEquals(platformReleaseDateDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(platformReleaseDateDto.getRegion(), result.getRegion(), "The mapped region does not match the DTO.");
-        Assertions.assertEquals(platformReleaseDateDto.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the DTO.");
-        Assertions.assertEquals(platformReleaseDateDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(platformReleaseDateDto.getId());
+        Assertions.assertThat(result.getRegion()).isEqualTo(platformReleaseDateDto.getRegion());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getVersion()).isEqualTo(platformReleaseDateDto.getVersion());
     }
 }

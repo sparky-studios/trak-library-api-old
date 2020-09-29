@@ -82,6 +82,8 @@ class GameRequestControllerTest {
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(1L);
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setVersion(1L);
 
         Mockito.when(gameRequestService.save(ArgumentMatchers.any()))
@@ -110,6 +112,8 @@ class GameRequestControllerTest {
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(1L);
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setVersion(1L);
 
         Mockito.when(gameRequestService.findById(ArgumentMatchers.anyLong()))
@@ -163,6 +167,8 @@ class GameRequestControllerTest {
         gameRequestDto1.setCompleted(true);
         gameRequestDto1.setCompletedDate(LocalDateTime.now());
         gameRequestDto1.setUserId(1L);
+        gameRequestDto1.setCreatedAt(LocalDateTime.now());
+        gameRequestDto1.setUpdatedAt(LocalDateTime.now());
         gameRequestDto1.setVersion(1L);
 
         GameRequestDto gameRequestDto2 = new GameRequestDto();
@@ -172,6 +178,8 @@ class GameRequestControllerTest {
         gameRequestDto2.setCompleted(true);
         gameRequestDto2.setCompletedDate(LocalDateTime.now());
         gameRequestDto2.setUserId(2L);
+        gameRequestDto2.setCreatedAt(LocalDateTime.now());
+        gameRequestDto2.setUpdatedAt(LocalDateTime.now());
         gameRequestDto2.setVersion(2L);
 
         Mockito.when(gameRequestService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -210,6 +218,8 @@ class GameRequestControllerTest {
         gameRequestDto1.setCompleted(true);
         gameRequestDto1.setCompletedDate(LocalDateTime.now());
         gameRequestDto1.setUserId(1L);
+        gameRequestDto1.setCreatedAt(LocalDateTime.now());
+        gameRequestDto1.setUpdatedAt(LocalDateTime.now());
         gameRequestDto1.setVersion(1L);
 
         GameRequestDto gameRequestDto2 = new GameRequestDto();
@@ -219,6 +229,8 @@ class GameRequestControllerTest {
         gameRequestDto2.setCompleted(true);
         gameRequestDto2.setCompletedDate(LocalDateTime.now());
         gameRequestDto2.setUserId(2L);
+        gameRequestDto2.setCreatedAt(LocalDateTime.now());
+        gameRequestDto2.setUpdatedAt(LocalDateTime.now());
         gameRequestDto2.setVersion(2L);
 
         Mockito.when(gameRequestService.findAll(ArgumentMatchers.any(), ArgumentMatchers.any()))
@@ -275,6 +287,8 @@ class GameRequestControllerTest {
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(1L);
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setVersion(1L);
 
         Mockito.when(gameRequestService.update(ArgumentMatchers.any()))
@@ -303,6 +317,8 @@ class GameRequestControllerTest {
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(1L);
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setVersion(1L);
 
         Mockito.when(gameRequestService.findById(ArgumentMatchers.anyLong()))
@@ -331,6 +347,8 @@ class GameRequestControllerTest {
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
         gameRequestDto.setUserId(1L);
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setVersion(1L);
 
         Mockito.when(gameRequestService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))

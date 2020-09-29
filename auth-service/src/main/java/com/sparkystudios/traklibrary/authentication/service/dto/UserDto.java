@@ -34,6 +34,8 @@ public class UserDto implements UserDetails {
     private LocalDateTime verificationExpiryDate;
     private String recoveryToken;
     private String recoveryTokenExpiryDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Long version;
 
     @Override

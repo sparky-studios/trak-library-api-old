@@ -1,12 +1,16 @@
 package com.sparkystudios.traklibrary.notification.domain;
 
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "mobile_device_link")
 public class MobileDeviceLink {
 
@@ -29,6 +33,14 @@ public class MobileDeviceLink {
 
     @Column(name = "endpoint_arn", nullable = false, unique = true)
     private String endpointArn;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "op_lock_version")

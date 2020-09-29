@@ -16,6 +16,8 @@ public interface GameUserEntryMapper {
 
     @Mapping(target = "game", ignore = true)
     @Mapping(target = "platform", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     GameUserEntry gameUserEntryDtoToGameUserEntry(GameUserEntryDto gameUserEntryDto);
 
     default String publisherToPublisherName(Publisher publisher) {
