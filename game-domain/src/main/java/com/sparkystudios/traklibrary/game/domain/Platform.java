@@ -2,14 +2,19 @@ package com.sparkystudios.traklibrary.game.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "platform")
 public class Platform {
 
@@ -31,6 +36,14 @@ public class Platform {
     @EqualsAndHashCode.Exclude
     @OneToMany(mappedBy = "platform", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PlatformReleaseDate> releaseDates = new TreeSet<>();
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "op_lock_version")

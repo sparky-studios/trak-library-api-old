@@ -3,10 +3,11 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 import com.sparkystudios.traklibrary.game.domain.GameRegion;
 import com.sparkystudios.traklibrary.game.domain.GameReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class GameReleaseDateMapperTest {
 
@@ -16,7 +17,7 @@ class GameReleaseDateMapperTest {
         GameReleaseDateDto result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -25,16 +26,19 @@ class GameReleaseDateMapperTest {
         GameReleaseDate gameReleaseDate = new GameReleaseDate();
         gameReleaseDate.setRegion(GameRegion.JAPAN);
         gameReleaseDate.setReleaseDate(LocalDate.now());
+        gameReleaseDate.setCreatedAt(LocalDateTime.now());
+        gameReleaseDate.setUpdatedAt(LocalDateTime.now());
         gameReleaseDate.setVersion(2L);
 
         // Act
         GameReleaseDateDto result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(gameReleaseDate);
 
         // Assert
-        Assertions.assertEquals(gameReleaseDate.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(gameReleaseDate.getRegion(), result.getRegion(), "The mapped region does not match the entity.");
-        Assertions.assertEquals(gameReleaseDate.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the entity.");
-        Assertions.assertEquals(gameReleaseDate.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameReleaseDate.getId());
+        Assertions.assertThat(result.getRegion()).isEqualTo(gameReleaseDate.getRegion());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(gameReleaseDate.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(gameReleaseDate.getUpdatedAt());
+        Assertions.assertThat(result.getVersion()).isEqualTo(gameReleaseDate.getVersion());
     }
 
     @Test
@@ -43,7 +47,7 @@ class GameReleaseDateMapperTest {
         GameReleaseDate result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateDtoToGameReleaseDate(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -58,9 +62,10 @@ class GameReleaseDateMapperTest {
         GameReleaseDate result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateDtoToGameReleaseDate(gameReleaseDateDto);
 
         // Assert
-        Assertions.assertEquals(gameReleaseDateDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(gameReleaseDateDto.getRegion(), result.getRegion(), "The mapped region does not match the DTO.");
-        Assertions.assertEquals(gameReleaseDateDto.getReleaseDate(), result.getReleaseDate(), "The mapped release date does not match the DTO.");
-        Assertions.assertEquals(gameReleaseDateDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameReleaseDateDto.getId());
+        Assertions.assertThat(result.getRegion()).isEqualTo(gameReleaseDateDto.getRegion());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getVersion()).isEqualTo(gameReleaseDateDto.getVersion());
     }
 }

@@ -24,6 +24,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.time.LocalDateTime;
+
 @Import({GameBarcodeController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = GameBarcodeController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
@@ -53,6 +55,9 @@ class GameBarcodeControllerTest {
         gameBarcodeDto.setPlatformId(3L);
         gameBarcodeDto.setBarcode("barcode");
         gameBarcodeDto.setBarcodeType(BarcodeType.UPC_A);
+        gameBarcodeDto.setCreatedAt(LocalDateTime.now());
+        gameBarcodeDto.setUpdatedAt(LocalDateTime.now());
+        gameBarcodeDto.setVersion(1L);
 
         Mockito.when(gameBarcodeService.findByBarcode(ArgumentMatchers.anyString()))
                 .thenReturn(gameBarcodeDto);

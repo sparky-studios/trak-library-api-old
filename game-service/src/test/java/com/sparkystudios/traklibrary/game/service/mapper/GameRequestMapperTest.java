@@ -2,7 +2,7 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.GameRequest;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ class GameRequestMapperTest {
         GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -26,6 +26,8 @@ class GameRequestMapperTest {
         gameRequest.setTitle("test-game-request");
         gameRequest.setCompleted(true);
         gameRequest.setCompletedDate(LocalDateTime.now());
+        gameRequest.setCreatedAt(LocalDateTime.now());
+        gameRequest.setUpdatedAt(LocalDateTime.now());
         gameRequest.setUserId(3L);
         gameRequest.setVersion(2L);
 
@@ -33,12 +35,14 @@ class GameRequestMapperTest {
         GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(gameRequest);
 
         // Assert
-        Assertions.assertEquals(gameRequest.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(gameRequest.getTitle(), result.getTitle(), "The mapped title does not match the entity.");
-        Assertions.assertEquals(gameRequest.isCompleted(), result.isCompleted(), "The mapped completed does not match the entity.");
-        Assertions.assertEquals(gameRequest.getCompletedDate(), result.getCompletedDate(), "The mapped completed date does not match the entity.");
-        Assertions.assertEquals(gameRequest.getUserId(), result.getUserId(), "The mapped user ID does not match the entity.");
-        Assertions.assertEquals(gameRequest.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameRequest.getId());
+        Assertions.assertThat(result.getTitle()).isEqualTo(gameRequest.getTitle());
+        Assertions.assertThat(result.isCompleted()).isEqualTo(gameRequest.isCompleted());
+        Assertions.assertThat(result.getCompletedDate()).isEqualTo(gameRequest.getCompletedDate());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(gameRequest.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(gameRequest.getUpdatedAt());
+        Assertions.assertThat(result.getUserId()).isEqualTo(gameRequest.getUserId());
+        Assertions.assertThat(result.getVersion()).isEqualTo(gameRequest.getVersion());
     }
 
     @Test
@@ -47,7 +51,7 @@ class GameRequestMapperTest {
         GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -57,6 +61,8 @@ class GameRequestMapperTest {
         gameRequestDto.setId(5L);
         gameRequestDto.setCompleted(true);
         gameRequestDto.setCompletedDate(LocalDateTime.now());
+        gameRequestDto.setCreatedAt(LocalDateTime.now());
+        gameRequestDto.setUpdatedAt(LocalDateTime.now());
         gameRequestDto.setUserId(3L);
         gameRequestDto.setVersion(2L);
 
@@ -64,11 +70,13 @@ class GameRequestMapperTest {
         GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(gameRequestDto);
 
         // Assert
-        Assertions.assertEquals(gameRequestDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(gameRequestDto.getTitle(), result.getTitle(), "The mapped title does not match the DTO.");
-        Assertions.assertEquals(gameRequestDto.isCompleted(), result.isCompleted(), "The mapped completed does not match the DTO.");
-        Assertions.assertEquals(gameRequestDto.getCompletedDate(), result.getCompletedDate(), "The mapped completed date does not match the DTO.");
-        Assertions.assertEquals(gameRequestDto.getUserId(), result.getUserId(), "The mapped user ID does not match the DTO.");
-        Assertions.assertEquals(gameRequestDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(gameRequestDto.getId());
+        Assertions.assertThat(result.getTitle()).isEqualTo(gameRequestDto.getTitle());
+        Assertions.assertThat(result.isCompleted()).isEqualTo(gameRequestDto.isCompleted());
+        Assertions.assertThat(result.getCompletedDate()).isEqualTo(gameRequestDto.getCompletedDate());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getUserId()).isEqualTo(gameRequestDto.getUserId());
+        Assertions.assertThat(result.getVersion()).isEqualTo(gameRequestDto.getVersion());
     }
 }

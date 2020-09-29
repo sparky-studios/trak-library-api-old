@@ -2,10 +2,11 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.Publisher;
 import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 class PublisherMapperTest {
 
@@ -15,7 +16,7 @@ class PublisherMapperTest {
         PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -26,17 +27,21 @@ class PublisherMapperTest {
         publisher.setName("test-name");
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setCreatedAt(LocalDateTime.now());
+        publisher.setUpdatedAt(LocalDateTime.now());
         publisher.setVersion(1L);
 
         // Act
         PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
 
         // Assert
-        Assertions.assertEquals(publisher.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(publisher.getName(), result.getName(), "The mapped name does not match the entity.");
-        Assertions.assertEquals(publisher.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
-        Assertions.assertEquals(publisher.getFoundedDate(), result.getFoundedDate(), "The mapped founded date does not match the entity.");
-        Assertions.assertEquals(publisher.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(publisher.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(publisher.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(publisher.getDescription());
+        Assertions.assertThat(result.getFoundedDate()).isEqualTo(publisher.getFoundedDate());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(publisher.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(publisher.getUpdatedAt());
+        Assertions.assertThat(result.getVersion()).isEqualTo(publisher.getVersion());
     }
 
     @Test
@@ -45,7 +50,7 @@ class PublisherMapperTest {
         Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -56,16 +61,20 @@ class PublisherMapperTest {
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
         publisherDto.setVersion(1L);
 
         // Act
         Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(publisherDto);
 
         // Assert
-        Assertions.assertEquals(publisherDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(publisherDto.getName(), result.getName(), "The mapped name does not match the DTO.");
-        Assertions.assertEquals(publisherDto.getDescription(), result.getDescription(), "The mapped description does not match the DTO.");
-        Assertions.assertEquals(publisherDto.getFoundedDate(), result.getFoundedDate(), "The mapped founded date does not match the DTO.");
-        Assertions.assertEquals(publisherDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(publisherDto.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(publisherDto.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(publisherDto.getDescription());
+        Assertions.assertThat(result.getFoundedDate()).isEqualTo(publisherDto.getFoundedDate());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getVersion()).isEqualTo(publisherDto.getVersion());
     }
 }

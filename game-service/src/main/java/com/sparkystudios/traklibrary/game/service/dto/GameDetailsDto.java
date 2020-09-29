@@ -4,6 +4,7 @@ import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -18,6 +19,10 @@ public class GameDetailsDto {
     private String description;
 
     private AgeRating ageRating;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Long version;
 

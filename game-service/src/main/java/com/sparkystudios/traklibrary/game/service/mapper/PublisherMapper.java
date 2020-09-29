@@ -11,5 +11,7 @@ public interface PublisherMapper {
     PublisherDto publisherToPublisherDto(Publisher publisher);
 
     @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Publisher publisherDtoToPublisher(PublisherDto publisherDto);
 }

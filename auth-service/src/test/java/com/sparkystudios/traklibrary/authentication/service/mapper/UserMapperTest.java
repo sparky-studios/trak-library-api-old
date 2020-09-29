@@ -3,7 +3,7 @@ package com.sparkystudios.traklibrary.authentication.service.mapper;
 import com.sparkystudios.traklibrary.authentication.domain.User;
 import com.sparkystudios.traklibrary.authentication.domain.UserRole;
 import com.sparkystudios.traklibrary.authentication.service.dto.UserDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ class UserMapperTest {
         UserDto result = AuthMappers.USER_MAPPER.userToUserDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -27,7 +27,6 @@ class UserMapperTest {
         userRole.setRole("ROLE_TEST");
         userRole.setVersion(3L);
 
-
         User user = new User();
         user.setId(5L);
         user.setUsername("username");
@@ -36,6 +35,8 @@ class UserMapperTest {
         user.setVerified(true);
         user.setVerificationCode("123AB");
         user.setVerificationExpiryDate(LocalDateTime.now());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
         user.setVersion(1L);
         user.addUserRole(userRole);
 
@@ -43,15 +44,17 @@ class UserMapperTest {
         UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
 
         // Assert
-        Assertions.assertEquals(user.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(user.getUsername(), result.getUsername(), "The mapped username does not match the entity.");
-        Assertions.assertEquals(user.getEmailAddress(), result.getEmailAddress(), "The mapped email address does not match the entity.");
-        Assertions.assertEquals(user.getPassword(), result.getPassword(), "The mapped password does not match the entity.");
-        Assertions.assertEquals(user.isVerified(), result.isVerified(), "The mapped verified state does not match the entity.");
-        Assertions.assertEquals(user.getVerificationCode(), result.getVerificationCode(), "The mapped verification code state does not match the entity.");
-        Assertions.assertEquals(user.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
-        Assertions.assertEquals(user.getUserRoles().iterator().next().getRole(),
-                result.getAuthorities().iterator().next().getAuthority(), "The mapped authority does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(user.getId());
+        Assertions.assertThat(result.getUsername()).isEqualTo(user.getUsername());
+        Assertions.assertThat(result.getEmailAddress()).isEqualTo(user.getEmailAddress());
+        Assertions.assertThat(result.getPassword()).isEqualTo(user.getPassword());
+        Assertions.assertThat(result.isVerified()).isEqualTo(user.isVerified());
+        Assertions.assertThat(result.getVerificationCode()).isEqualTo(user.getVerificationCode());
+        Assertions.assertThat(result.getVerificationExpiryDate()).isEqualTo(user.getVerificationExpiryDate());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(user.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(user.getUpdatedAt());
+        Assertions.assertThat(result.getVersion()).isEqualTo(user.getVersion());
+        Assertions.assertThat(result.getAuthorities().iterator().next().getAuthority()).isEqualTo(user.getUserRoles().iterator().next().getRole());
     }
 
     @Test
@@ -60,7 +63,7 @@ class UserMapperTest {
         User result = AuthMappers.USER_MAPPER.userDtoToUser(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -74,18 +77,23 @@ class UserMapperTest {
         userDto.setVerified(true);
         userDto.setVerificationCode("123AB");
         userDto.setVerificationExpiryDate(LocalDateTime.now());
+        userDto.setCreatedAt(LocalDateTime.now());
+        userDto.setUpdatedAt(LocalDateTime.now());
         userDto.setVersion(1L);
 
         // Act
         User result = AuthMappers.USER_MAPPER.userDtoToUser(userDto);
 
         // Assert
-        Assertions.assertEquals(userDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(userDto.getEmailAddress(), result.getEmailAddress(), "The mapped email address does not match the DTO.");
-        Assertions.assertEquals(userDto.getUsername(), result.getUsername(), "The mapped username does not match the DTO.");
-        Assertions.assertEquals(userDto.getPassword(), result.getPassword(), "The mapped password does not match the DTO.");
-        Assertions.assertEquals(userDto.isVerified(), result.isVerified(), "The mapped verified state does not match the DTO.");
-        Assertions.assertEquals(userDto.getVerificationCode(), result.getVerificationCode(), "The mapped verification code state does not match the DTO.");
-        Assertions.assertEquals(userDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(userDto.getId());
+        Assertions.assertThat(result.getUsername()).isEqualTo(userDto.getUsername());
+        Assertions.assertThat(result.getEmailAddress()).isEqualTo(userDto.getEmailAddress());
+        Assertions.assertThat(result.getPassword()).isEqualTo(userDto.getPassword());
+        Assertions.assertThat(result.isVerified()).isEqualTo(userDto.isVerified());
+        Assertions.assertThat(result.getVerificationCode()).isEqualTo(userDto.getVerificationCode());
+        Assertions.assertThat(result.getVerificationExpiryDate()).isEqualTo(userDto.getVerificationExpiryDate());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getVersion()).isEqualTo(userDto.getVersion());
     }
 }

@@ -62,6 +62,8 @@ class UserRoleTest {
         // Assert
         Assertions.assertThat(result.getId()).isGreaterThan(0L);
         Assertions.assertThat(result.getRole()).isEqualTo(userRole.getRole());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 

@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -34,6 +35,10 @@ public class GameUserEntryDto {
     @Min(message = "{game-user-entry.validation.rating.min}", value = 0)
     @Max(message = "{game-user-entry.validation.rating.max}", value = 5)
     private short rating;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Long version;
 }

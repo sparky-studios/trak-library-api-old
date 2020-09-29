@@ -31,6 +31,10 @@
             <column name="verification_expiry_date" type="datetime"/>
             <column name="recovery_token" type="varchar(30)"/>
             <column name="recovery_token_expiry_date" type="datetime"/>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
@@ -52,6 +56,10 @@
             <column name="role" type="varchar(30)">
                 <constraints nullable="false" unique="true" />
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 

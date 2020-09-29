@@ -7,6 +7,7 @@ import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "genre")
@@ -19,6 +20,10 @@ public class GenreDto implements Comparable<GenreDto> {
 
     @Size(max = 4096, message = "{genre.validation.description.size}")
     private String description;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Long version;
 

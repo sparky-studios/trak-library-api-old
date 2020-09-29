@@ -16,6 +16,8 @@ public interface GameMapper {
     @Mapping(target = "genres", ignore = true)
     @Mapping(target = "platforms", ignore = true)
     @Mapping(target = "publishers", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Game gameDtoToGame(GameDto gameDto);
 
     default GameReleaseDateDto gameReleaseDateToGameReleaseDateDto(GameReleaseDate gameReleaseDate) {

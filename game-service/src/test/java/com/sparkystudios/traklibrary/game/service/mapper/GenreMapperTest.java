@@ -2,8 +2,10 @@ package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.Genre;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import java.time.LocalDateTime;
 
 class GenreMapperTest {
 
@@ -13,7 +15,7 @@ class GenreMapperTest {
         GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -23,16 +25,20 @@ class GenreMapperTest {
         genre.setId(5L);
         genre.setName("test-name");
         genre.setDescription("test-description");
+        genre.setCreatedAt(LocalDateTime.now());
+        genre.setUpdatedAt(LocalDateTime.now());
         genre.setVersion(1L);
 
         // Act
         GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
 
         // Assert
-        Assertions.assertEquals(genre.getId(), result.getId(), "The mapped ID does not match the entity.");
-        Assertions.assertEquals(genre.getName(), result.getName(), "The mapped title does not match the entity.");
-        Assertions.assertEquals(genre.getDescription(), result.getDescription(), "The mapped description does not match the entity.");
-        Assertions.assertEquals(genre.getVersion(), result.getVersion(), "The mapped version does not match the entity.");
+        Assertions.assertThat(result.getId()).isEqualTo(genre.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(genre.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(genre.getDescription());
+        Assertions.assertThat(result.getCreatedAt()).isEqualTo(genre.getCreatedAt());
+        Assertions.assertThat(result.getUpdatedAt()).isEqualTo(genre.getUpdatedAt());
+        Assertions.assertThat(result.getVersion()).isEqualTo(genre.getVersion());
     }
 
     @Test
@@ -41,7 +47,7 @@ class GenreMapperTest {
         Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(null);
 
         // Assert
-        Assertions.assertNull(result, "The result should be null if the argument passed in is null.");
+        Assertions.assertThat(result).isNull();
     }
 
     @Test
@@ -51,15 +57,19 @@ class GenreMapperTest {
         genreDto.setId(5L);
         genreDto.setName("test-name");
         genreDto.setDescription("test-description");
+        genreDto.setCreatedAt(LocalDateTime.now());
+        genreDto.setUpdatedAt(LocalDateTime.now());
         genreDto.setVersion(1L);
 
         // Act
         Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(genreDto);
 
         // Assert
-        Assertions.assertEquals(genreDto.getId(), result.getId(), "The mapped ID does not match the DTO.");
-        Assertions.assertEquals(genreDto.getName(), result.getName(), "The mapped title does not match the DTO.");
-        Assertions.assertEquals(genreDto.getDescription(), result.getDescription(), "The mapped description does not match the DTO.");
-        Assertions.assertEquals(genreDto.getVersion(), result.getVersion(), "The mapped version does not match the DTO.");
+        Assertions.assertThat(result.getId()).isEqualTo(genreDto.getId());
+        Assertions.assertThat(result.getName()).isEqualTo(genreDto.getName());
+        Assertions.assertThat(result.getDescription()).isEqualTo(genreDto.getDescription());
+        Assertions.assertThat(result.getCreatedAt()).isNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNull();
+        Assertions.assertThat(result.getVersion()).isEqualTo(genreDto.getVersion());
     }
 }

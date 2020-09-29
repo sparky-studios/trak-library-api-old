@@ -30,6 +30,10 @@
             <column name="endpoint_arn" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 

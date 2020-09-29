@@ -4,12 +4,17 @@ import com.google.common.collect.ComparisonChain;
 import com.google.common.collect.Ordering;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "game_release_date")
 public class GameReleaseDate implements Comparable<GameReleaseDate> {
 
@@ -28,6 +33,14 @@ public class GameReleaseDate implements Comparable<GameReleaseDate> {
 
     @Column(name = "release_date")
     private LocalDate releaseDate;
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "op_lock_version")

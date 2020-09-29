@@ -131,6 +131,8 @@ class UserTest {
         Assertions.assertThat(result.getVerificationExpiryDate()).isEqualTo(user.getVerificationExpiryDate());
         Assertions.assertThat(result.getRecoveryToken()).isEqualTo(user.getRecoveryToken());
         Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualTo(user.getRecoveryTokenExpiryDate());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 

@@ -7,6 +7,7 @@ import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class GameReleaseDateDto implements Comparable<GameReleaseDateDto> {
@@ -17,6 +18,10 @@ public class GameReleaseDateDto implements Comparable<GameReleaseDateDto> {
     private GameRegion region;
 
     private LocalDate releaseDate;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
 
     private Long version;
 

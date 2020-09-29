@@ -11,5 +11,7 @@ public interface DeveloperMapper {
     DeveloperDto developerToDeveloperDto(Developer developer);
 
     @Mapping(target = "games", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     Developer developerDtoToDeveloper(DeveloperDto developerDto);
 }

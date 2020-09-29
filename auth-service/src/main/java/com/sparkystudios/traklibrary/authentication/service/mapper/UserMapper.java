@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +32,8 @@ public interface UserMapper {
         userDto.setVerified(user.isVerified());
         userDto.setVerificationCode(user.getVerificationCode());
         userDto.setVerificationExpiryDate(user.getVerificationExpiryDate());
+        userDto.setCreatedAt(user.getCreatedAt());
+        userDto.setUpdatedAt(user.getUpdatedAt());
         userDto.setVersion(user.getVersion());
         userDto.setAuthorities(authorities);
 
@@ -38,5 +41,7 @@ public interface UserMapper {
     }
 
     @Mapping(target = "userRoles", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     User userDtoToUser(UserDto userDto);
 }

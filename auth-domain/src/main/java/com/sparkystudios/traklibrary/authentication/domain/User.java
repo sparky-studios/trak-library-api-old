@@ -2,6 +2,9 @@ package com.sparkystudios.traklibrary.authentication.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -21,6 +24,7 @@ import java.util.Set;
  */
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "auth_user")
 public class User {
 
@@ -61,6 +65,14 @@ public class User {
             inverseJoinColumns = {@JoinColumn(name = "auth_user_role_id")}
     )
     private Set<UserRole> userRoles = new HashSet<>();
+
+    @Column(name = "created_at", nullable = false, updatable = false)
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
     @Version
     @Column(name = "op_lock_version")
