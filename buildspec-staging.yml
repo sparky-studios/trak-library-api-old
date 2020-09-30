@@ -32,5 +32,5 @@ phases:
         if [[ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ]] ;
         then
           mvn verify sonar:sonar -Pcoverage -Dsonar.branch.name=staging
+          mvn dockerfile:push -Ddockerfile.username=$DOCKER_USERNAME -Ddockerfile.password=$DOCKER_PASSWORD
         fi
-      - mvn dockerfile:push -Ddockerfile.username=$DOCKER_USERNAME -Ddockerfile.password=$DOCKER_PASSWORD
