@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.notification.server.exception;
+package com.sparkystudios.traklibrary.security.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+public
 class ApiValidationError implements ApiSubError {
 
     private String object;

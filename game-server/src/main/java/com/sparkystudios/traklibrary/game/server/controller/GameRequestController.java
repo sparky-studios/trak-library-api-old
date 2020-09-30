@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.GameRequestSpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRequestRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameRequestService;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;

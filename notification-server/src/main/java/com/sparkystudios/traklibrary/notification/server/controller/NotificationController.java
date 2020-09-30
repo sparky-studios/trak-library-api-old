@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.notification.server.controller;
 
 import com.sparkystudios.traklibrary.notification.domain.MobileDeviceLink;
-import com.sparkystudios.traklibrary.notification.server.exception.ApiError;
 import com.sparkystudios.traklibrary.notification.service.MobileDeviceLinkService;
 import com.sparkystudios.traklibrary.notification.service.NotificationService;
 import com.sparkystudios.traklibrary.notification.service.dto.MobileDeviceLinkRegistrationRequestDto;

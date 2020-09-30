@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.authentication.server.exception;
+package com.sparkystudios.traklibrary.security.exception;
 
 import lombok.AccessLevel;
 import lombok.Data;
@@ -15,11 +15,10 @@ public class ApiError {
     private HttpStatus status;
     @Setter(AccessLevel.NONE)
     private LocalDateTime time;
-    private String message;
-    private String debugMessage;
+    private String error;
 
     @Setter(AccessLevel.NONE)
-    private Collection<ApiSubError> subErrors = new ArrayList<>();
+    private Collection<ApiSubError> details = new ArrayList<>();
 
     private ApiError() {
         time = LocalDateTime.now();

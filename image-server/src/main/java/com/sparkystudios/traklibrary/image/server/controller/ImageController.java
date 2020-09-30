@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.image.server.controller;
 
 import com.sparkystudios.traklibrary.image.server.annotation.AllowedForAdmin;
-import com.sparkystudios.traklibrary.image.server.exception.ApiError;
 import com.sparkystudios.traklibrary.image.service.ImageService;
 import com.sparkystudios.traklibrary.image.service.exception.ImageFailedException;
 import lombok.RequiredArgsConstructor;

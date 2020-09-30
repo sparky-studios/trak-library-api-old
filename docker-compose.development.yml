@@ -16,9 +16,10 @@ services:
       - trak-network
 
   auth-server:
+    build:
+      context: ./auth-server
     volumes:
       - ./logs:/app/logs
-    command: ["-m", "512m"]
     environment:
       - spring.profiles.active=development
     depends_on:
@@ -30,6 +31,8 @@ services:
       - 5005:5005
 
   config-server:
+    build:
+      context: ./config-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -39,6 +42,8 @@ services:
       - 5006:5005
 
   discovery-server:
+    build:
+      context: ./discovery-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -48,6 +53,8 @@ services:
       - 5007:5005
 
   email-server:
+    build:
+      context: ./email-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -57,6 +64,8 @@ services:
       - 5008:5005
 
   game-server:
+    build:
+      context: ./game-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -70,6 +79,8 @@ services:
       - 5009:5005
 
   gateway-server:
+    build:
+      context: ./gateway-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -79,6 +90,8 @@ services:
       - 5010:5005
 
   image-server:
+    build:
+      context: ./image-server
     volumes:
       - ./logs:/app/logs
     environment:
@@ -88,6 +101,8 @@ services:
       - 5011:5005
 
   notification-server:
+    build:
+      context: ./notification-server
     volumes:
       - ./logs:/app/logs
     environment:

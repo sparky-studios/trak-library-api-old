@@ -3,7 +3,6 @@ package com.sparkystudios.traklibrary.game.server.controller;
 import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.*;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.*;
 import com.sparkystudios.traklibrary.game.service.dto.*;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;

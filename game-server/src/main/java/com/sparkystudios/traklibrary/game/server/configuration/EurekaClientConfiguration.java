@@ -13,7 +13,7 @@ import org.springframework.web.filter.ForwardedHeaderFilter;
  *
  * @author Sparky Studios
  */
-@Profile({ "development", "production" })
+@Profile({ "development", "staging", "production" })
 @Configuration
 @EnableEurekaClient
 public class EurekaClientConfiguration {

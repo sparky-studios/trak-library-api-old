@@ -69,9 +69,8 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.debugMessage").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.subErrors").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
     }
 
     @Test
@@ -286,9 +285,8 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isBadRequest())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.message").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.debugMessage").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.subErrors").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
     }
 
     @Test

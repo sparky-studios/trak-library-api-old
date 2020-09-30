@@ -4,7 +4,6 @@ import com.sparkystudios.traklibrary.game.repository.specification.GenreSpecific
 import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameDetailsService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.GenreService;

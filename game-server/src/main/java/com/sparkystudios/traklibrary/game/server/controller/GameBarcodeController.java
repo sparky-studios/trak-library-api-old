@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.domain.GameBarcode;
 import com.sparkystudios.traklibrary.game.server.assembler.GameBarcodeRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameBarcodeService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.GameBarcodeDto;

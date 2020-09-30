@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.authentication.server.controller;
 
 import com.sparkystudios.traklibrary.authentication.domain.User;
 import com.sparkystudios.traklibrary.authentication.domain.UserRole;
-import com.sparkystudios.traklibrary.authentication.server.exception.ApiError;
 import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
 import com.sparkystudios.traklibrary.authentication.service.validation.ValidPassword;

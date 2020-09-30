@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.image.server.exception;
+package com.sparkystudios.traklibrary.security.exception;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

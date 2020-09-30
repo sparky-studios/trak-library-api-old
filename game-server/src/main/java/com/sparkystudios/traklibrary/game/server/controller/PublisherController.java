@@ -4,7 +4,6 @@ import com.sparkystudios.traklibrary.game.repository.specification.DeveloperSpec
 import com.sparkystudios.traklibrary.game.repository.specification.PublisherSpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PublisherService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;

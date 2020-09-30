@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.web.filter.ForwardedHeaderFilter;
 
-@Profile({ "development", "production" })
+@Profile({ "development", "staging", "production" })
 @Configuration
 @EnableEurekaClient
 public class EurekaClientConfiguration {

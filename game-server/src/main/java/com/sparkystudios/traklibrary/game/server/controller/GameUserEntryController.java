@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.exception.ApiError;
 import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;

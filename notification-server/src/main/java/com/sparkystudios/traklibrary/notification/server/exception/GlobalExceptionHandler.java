@@ -1,8 +1,9 @@
 package com.sparkystudios.traklibrary.notification.server.exception;
 
 import com.sparkystudios.traklibrary.notification.service.exception.NotificationException;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
+import com.sparkystudios.traklibrary.security.exception.ApiValidationError;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -33,8 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Entity not found", ex);
 
         ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
     }
@@ -44,8 +44,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Entity exists", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -55,8 +54,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Notification error", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
     }
@@ -67,8 +65,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("HTTP message not readable", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, headers, status);
     }
@@ -79,11 +76,10 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Method argument not valid", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         // Stream through each sub-error and add all of them to the response.
-        apiError.getSubErrors().addAll(ex.getBindingResult().getFieldErrors()
+        apiError.getDetails().addAll(ex.getBindingResult().getFieldErrors()
                 .stream()
                 .map(fe -> new ApiValidationError(fe.getObjectName(), fe.getField(), fe.getRejectedValue(), fe.getDefaultMessage()))
                 .collect(Collectors.toList()));
@@ -97,8 +93,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Missing request parameter", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, headers, status);
     }
@@ -108,10 +103,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         log.error("Constraint violation", ex);
 
         ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
-        apiError.setMessage(ex.getMessage());
-        apiError.setDebugMessage(ExceptionUtils.getStackTrace(ex));
+        apiError.setError(ex.getMessage());
 
-        apiError.getSubErrors().addAll(ex.getConstraintViolations()
+        apiError.getDetails().addAll(ex.getConstraintViolations()
                 .stream()
                 .map(c -> new ApiValidationError(c.getRootBeanClass().getSimpleName(), c.getPropertyPath().toString(), c.getInvalidValue().toString(), c.getMessage()))
                 .collect(Collectors.toList()));

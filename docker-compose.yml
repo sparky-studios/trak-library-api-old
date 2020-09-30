@@ -1,8 +1,6 @@
 version: "3.3"
 services:
   auth-server:
-    build:
-      context: ./auth-server
     container_name: traklibrary-auth-server
     image: sparkystudios/traklibrary-auth-server:latest
     command: ["-m", "512m"]
@@ -17,8 +15,6 @@ services:
       - trak-network
 
   config-server:
-    build:
-      context: ./config-server
     container_name: traklibrary-config-server
     image: sparkystudios/traklibrary-config-server:latest
     command: ["-m", "512m"]
@@ -34,8 +30,6 @@ services:
       - trak-network
 
   discovery-server:
-    build:
-      context: ./discovery-server
     container_name: traklibrary-discovery-server
     image: sparkystudios/traklibrary-discovery-server:latest
     command: ["-m", "512m"]
@@ -43,8 +37,6 @@ services:
       - trak-network
 
   email-server:
-    build:
-      context: ./email-server
     container_name: traklibrary-email-server
     image: sparkystudios/traklibrary-email-server:latest
     command: ["-m", "512m"]
@@ -59,8 +51,6 @@ services:
       - trak-network
 
   game-server:
-    build:
-      context: ./game-server
     container_name: traklibrary-game-server
     image: sparkystudios/traklibrary-game-server:latest
     command: ["-m", "512m"]
@@ -75,8 +65,6 @@ services:
       - trak-network
 
   gateway-server:
-    build:
-      context: ./gateway-server
     container_name: traklibrary-gateway-server
     image: sparkystudios/traklibrary-gateway-server:latest
     command: ["-m", "512m"]
@@ -91,8 +79,6 @@ services:
       - trak-network
 
   image-server:
-    build:
-      context: ./image-server
     container_name: traklibrary-image-server
     image: sparkystudios/traklibrary-image-server:latest
     command: ["-m", "512m"]
@@ -107,8 +93,6 @@ services:
       - trak-network
 
   notification-server:
-    build:
-      context: ./notification-server
     container_name: traklibrary-notification-server
     image: sparkystudios/traklibrary-notification-server:latest
     command: ["-m", "512m"]
