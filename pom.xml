@@ -58,6 +58,12 @@
         </profile>
         <profile>
             <id>staging</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>sparky-studios</sonar.organization>
+                <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
+                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -85,6 +91,69 @@
                         <plugin>
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
+                            <configuration>
+                                <excludes>
+                                    <!-- auth-server -->
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
+                                    <!-- auth-service -->
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
+                                    <!-- config-server -->
+                                    <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
+                                    <!-- discovery server -->
+                                    <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
+                                    <!-- email-server -->
+                                    <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
+                                    <!-- email-service -->
+                                    <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
+                                    <!-- game-server -->
+                                    <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
+                                    <!-- game-service -->
+                                    <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
+                                    <!-- image-server -->
+                                    <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
+                                    <!-- image-service -->
+                                    <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
+                                    <!-- notification-server -->
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
+                                    <!-- notification-service -->
+                                    <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
+                                    <!-- security -->
+                                    <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
+                                </excludes>
+                            </configuration>
                             <executions>
                                 <execution>
                                     <id>prepare-agent</id>
@@ -106,6 +175,12 @@
         </profile>
         <profile>
             <id>production</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>sparky-studios</sonar.organization>
+                <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
+                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+            </properties>
             <build>
                 <pluginManagement>
                     <plugins>
@@ -133,6 +208,69 @@
                         <plugin>
                             <groupId>org.jacoco</groupId>
                             <artifactId>jacoco-maven-plugin</artifactId>
+                            <configuration>
+                                <excludes>
+                                    <!-- auth-server -->
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
+                                    <!-- auth-service -->
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
+                                    <!-- config-server -->
+                                    <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
+                                    <!-- discovery server -->
+                                    <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
+                                    <!-- email-server -->
+                                    <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
+                                    <!-- email-service -->
+                                    <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
+                                    <!-- game-server -->
+                                    <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
+                                    <!-- game-service -->
+                                    <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
+                                    <!-- image-server -->
+                                    <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
+                                    <!-- image-service -->
+                                    <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
+                                    <!-- notification-server -->
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
+                                    <!-- notification-service -->
+                                    <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
+                                    <!-- security -->
+                                    <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
+                                    <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
+                                </excludes>
+                            </configuration>
                             <executions>
                                 <execution>
                                     <id>prepare-agent</id>
@@ -154,11 +292,80 @@
         </profile>
         <profile>
             <id>coverage</id>
+            <properties>
+                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+                <sonar.organization>sparky-studios</sonar.organization>
+                <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
+                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
+            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <!-- auth-server -->
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
+                                <!-- auth-service -->
+                                <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
+                                <!-- config-server -->
+                                <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
+                                <!-- discovery server -->
+                                <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
+                                <!-- email-server -->
+                                <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
+                                <!-- email-service -->
+                                <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
+                                <!-- game-server -->
+                                <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
+                                <!-- game-service -->
+                                <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
+                                <!-- image-server -->
+                                <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
+                                <!-- image-service -->
+                                <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
+                                <!-- notification-server -->
+                                <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
+                                <!-- notification-service -->
+                                <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
+                                <!-- security -->
+                                <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
+                                <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
+                            </excludes>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -186,11 +393,6 @@
         <!-- Dependency versions -->
         <!-- AWS versions -->
         <com.amazonaws.version>1.11.772</com.amazonaws.version>
-        <!-- Code coverage properties -->
-        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <sonar.organization>sparky-studios</sonar.organization>
-        <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
-        <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
@@ -374,69 +576,6 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${org.jacoco.version}</version>
-                    <configuration>
-                        <excludes>
-                            <!-- auth-server -->
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
-                            <!-- auth-service -->
-                            <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
-                            <!-- config-server -->
-                            <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
-                            <!-- discovery server -->
-                            <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
-                            <!-- email-server -->
-                            <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
-                            <!-- email-service -->
-                            <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
-                            <!-- game-server -->
-                            <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
-                            <!-- game-service -->
-                            <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
-                            <!-- image-server -->
-                            <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
-                            <!-- image-service -->
-                            <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
-                            <!-- notification-server -->
-                            <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
-                            <!-- notification-service -->
-                            <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
-                            <!-- security -->
-                            <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
-                        </excludes>
-                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
