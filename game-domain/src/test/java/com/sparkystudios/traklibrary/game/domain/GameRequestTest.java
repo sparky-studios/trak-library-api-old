@@ -79,7 +79,7 @@ class GameRequestTest {
         Assertions.assertThat(result.getTitle()).isEqualTo(gameRequest.getTitle());
         Assertions.assertThat(result.getNotes()).isEqualTo(gameRequest.getNotes());
         Assertions.assertThat(result.isCompleted()).isTrue();
-        Assertions.assertThat(result.getCompletedDate()).isEqualTo(gameRequest.getCompletedDate());
+        Assertions.assertThat(result.getCompletedDate()).isEqualToIgnoringNanos(gameRequest.getCompletedDate());
         Assertions.assertThat(result.getUserId()).isEqualTo(gameRequest.getUserId());
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }

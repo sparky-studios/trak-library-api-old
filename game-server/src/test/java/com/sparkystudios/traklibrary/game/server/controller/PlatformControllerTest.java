@@ -39,7 +39,7 @@ import java.util.Collections;
 @Import({PlatformController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = PlatformController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class PlatformControllerTest {
+class PlatformControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

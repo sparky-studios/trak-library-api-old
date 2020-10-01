@@ -1,32 +1,73 @@
 version: '3.3'
 services:
   auth-server:
+    image: sparkystudios/traklibrary-auth-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8081:8080
     environment:
       - spring.profiles.active=staging
+
   config-server:
+    image: sparkystudios/traklibrary-config-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8888:8888
     environment:
       - spring.profiles.active=staging
 
   discovery-server:
+    image: sparkystudios/traklibrary-discovery-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8761:8761
     environment:
       - spring.profiles.active=staging
 
   email-server:
+    image: sparkystudios/traklibrary-email-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8082:8080
     environment:
       - spring.profiles.active=staging
 
   game-server:
+    image: sparkystudios/traklibrary-game-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8083:8080
     environment:
       - spring.profiles.active=staging
 
   gateway-server:
+    image: sparkystudios/traklibrary-gateway-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8080:8080
     environment:
       - spring.profiles.active=staging
 
   image-server:
+    image: sparkystudios/traklibrary-image-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8084:8080
     environment:
       - spring.profiles.active=staging
 
   notification-server:
+    image: sparkystudios/traklibrary-notification-server:${TRAKLIBRARY_VERSION}
+    volumes:
+      - ./logs:/app/logs
+    ports:
+      - 8085:8080
     environment:
       - spring.profiles.active=staging

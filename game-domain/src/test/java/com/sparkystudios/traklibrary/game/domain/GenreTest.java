@@ -114,6 +114,6 @@ class GenreTest {
 
         // Assert
         Assertions.assertThat(result.getGames().size()).isEqualTo(1);
-        Assertions.assertThat(result.getGames().iterator().next()).isEqualTo(game1);
+        Assertions.assertThat(result.getGames().iterator().next().getId()).isEqualTo(game1.getId());
     }
 }

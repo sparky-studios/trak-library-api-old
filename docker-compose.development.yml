@@ -16,6 +16,7 @@ services:
       - trak-network
 
   auth-server:
+    image: sparkystudios/traklibrary-auth-server:latest
     build:
       context: ./auth-server
     volumes:
@@ -31,6 +32,7 @@ services:
       - 5005:5005
 
   config-server:
+    image: sparkystudios/traklibrary-config-server:latest
     build:
       context: ./config-server
     volumes:
@@ -42,6 +44,7 @@ services:
       - 5006:5005
 
   discovery-server:
+    image: sparkystudios/traklibrary-discovery-server:latest
     build:
       context: ./discovery-server
     volumes:
@@ -53,6 +56,7 @@ services:
       - 5007:5005
 
   email-server:
+    image: sparkystudios/traklibrary-email-server:latest
     build:
       context: ./email-server
     volumes:
@@ -64,6 +68,7 @@ services:
       - 5008:5005
 
   game-server:
+    image: sparkystudios/traklibrary-game-server:latest
     build:
       context: ./game-server
     volumes:
@@ -79,6 +84,7 @@ services:
       - 5009:5005
 
   gateway-server:
+    image: sparkystudios/traklibrary-gateway-server:latest
     build:
       context: ./gateway-server
     volumes:
@@ -90,6 +96,7 @@ services:
       - 5010:5005
 
   image-server:
+    image: sparkystudios/traklibrary-image-server:latest
     build:
       context: ./image-server
     volumes:
@@ -101,6 +108,7 @@ services:
       - 5011:5005
 
   notification-server:
+    image: sparkystudios/traklibrary-notification-server:latest
     build:
       context: ./notification-server
     volumes:
