@@ -47,13 +47,17 @@ class GameReleaseDateTest {
         game.addReleaseDate(gameReleaseDate);
 
         // Act
-        GameReleaseDate result = testEntityManager.persistFlushFind(game).getReleaseDates().iterator().next();
+        game = testEntityManager.persistFlushFind(game);
+        GameReleaseDate result = game.getReleaseDates().iterator().next();
 
         // Assert
         Assertions.assertThat(result.getId()).isGreaterThan(0L);
-        Assertions.assertThat(result.getGame()).isEqualTo(game);
+        Assertions.assertThat(result.getGame().getId())
+                .isEqualTo(game.getId());
         Assertions.assertThat(result.getRegion()).isEqualTo(gameReleaseDate.getRegion());
         Assertions.assertThat(result.getReleaseDate()).isEqualTo(gameReleaseDate.getReleaseDate());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }

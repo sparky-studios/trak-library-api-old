@@ -10,7 +10,9 @@ import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @DataJpaTest
 class GameTest {
@@ -149,7 +151,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getGenres().size()).isEqualTo(1);
-        Assertions.assertThat(result.getGenres().iterator().next()).isEqualTo(genre1);
+        Assertions.assertThat(result.getGenres().iterator().next().getId())
+                .isEqualTo(genre1.getId());
     }
 
     @Test
@@ -207,7 +210,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getPlatforms().size()).isEqualTo(1);
-        Assertions.assertThat(result.getPlatforms().iterator().next()).isEqualTo(platform1);
+        Assertions.assertThat(result.getPlatforms().iterator().next().getId())
+                .isEqualTo(platform1.getId());
     }
 
     @Test
@@ -269,7 +273,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getPublishers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getPublishers().iterator().next()).isEqualTo(publisher1);
+        Assertions.assertThat(result.getPublishers().iterator().next().getId())
+                .isEqualTo(publisher1.getId());
     }
 
     @Test
@@ -331,7 +336,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getDevelopers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getDevelopers().iterator().next()).isEqualTo(developer1);
+        Assertions.assertThat(result.getDevelopers().iterator().next().getId())
+                .isEqualTo(developer1.getId());
     }
 
     @Test
@@ -365,8 +371,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(3);
-        Assertions.assertThat(result.getReleaseDates())
-                .isEqualTo(new TreeSet<>(Arrays.asList(gameReleaseDate1, gameReleaseDate2, gameReleaseDate3)));
+        Assertions.assertThat(result.getReleaseDates().stream().map(GameReleaseDate::getId).sorted().collect(Collectors.toList()))
+                .isEqualTo(List.of(gameReleaseDate1.getId(), gameReleaseDate2.getId(), gameReleaseDate3.getId()));
     }
 
     @Test
@@ -401,7 +407,7 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(1);
-        Assertions.assertThat(result.getReleaseDates().iterator().next())
-                .isEqualTo(gameReleaseDate3);
+        Assertions.assertThat(result.getReleaseDates().iterator().next().getId())
+                .isEqualTo(gameReleaseDate3.getId());
     }
 }

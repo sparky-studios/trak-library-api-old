@@ -135,6 +135,8 @@ class GameBarcodeTest {
                 .isEqualTo(result.getPlatform().getId());
         Assertions.assertThat(result.getBarcode()).isEqualTo(result.getBarcode());
         Assertions.assertThat(result.getBarcodeType()).isEqualTo(result.getBarcodeType());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }

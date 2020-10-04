@@ -48,6 +48,8 @@ class GameImageTest {
         Assertions.assertThat(result.getGame().getId())
                 .isEqualTo(result.getGame().getId());
         Assertions.assertThat(result.getFilename()).isEqualTo(gameImage.getFilename());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }
