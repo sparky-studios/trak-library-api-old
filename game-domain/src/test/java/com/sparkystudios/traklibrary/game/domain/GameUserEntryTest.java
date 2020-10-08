@@ -107,12 +107,14 @@ class GameUserEntryTest {
         // Assert
         Assertions.assertThat(result.getId()).isGreaterThan(0L);
         Assertions.assertThat(result.getGameId()).isEqualTo(gameUserEntry.getGameId());
-        Assertions.assertThat(result.getGame()).isEqualTo(game);
+        Assertions.assertThat(result.getGame().getId()).isEqualTo(game.getId());
         Assertions.assertThat(result.getPlatformId()).isEqualTo(gameUserEntry.getPlatformId());
-        Assertions.assertThat(result.getPlatform()).isEqualTo(platform);
+        Assertions.assertThat(result.getPlatform().getId()).isEqualTo(platform.getId());
         Assertions.assertThat(result.getUserId()).isEqualTo(gameUserEntry.getUserId());
         Assertions.assertThat(result.getStatus()).isEqualTo(gameUserEntry.getStatus());
         Assertions.assertThat(result.getRating()).isEqualTo(gameUserEntry.getRating());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }

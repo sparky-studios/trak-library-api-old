@@ -128,11 +128,15 @@ class GameBarcodeTest {
         // Assert
         Assertions.assertThat(result.getId()).isGreaterThan(0L);
         Assertions.assertThat(result.getGameId()).isEqualTo(game.getId());
-        Assertions.assertThat(result.getGame()).isEqualTo(result.getGame());
+        Assertions.assertThat(result.getGame().getId())
+                .isEqualTo(result.getGame().getId());
         Assertions.assertThat(result.getPlatformId()).isEqualTo(platform.getId());
-        Assertions.assertThat(result.getPlatform()).isEqualTo(result.getPlatform());
+        Assertions.assertThat(result.getPlatform().getId())
+                .isEqualTo(result.getPlatform().getId());
         Assertions.assertThat(result.getBarcode()).isEqualTo(result.getBarcode());
         Assertions.assertThat(result.getBarcodeType()).isEqualTo(result.getBarcodeType());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }

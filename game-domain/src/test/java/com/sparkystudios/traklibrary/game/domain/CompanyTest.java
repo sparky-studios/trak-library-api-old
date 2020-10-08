@@ -84,6 +84,8 @@ class CompanyTest {
         Assertions.assertThat(result.getName()).isEqualTo(company.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(company.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(company.getFoundedDate());
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
     }
 }

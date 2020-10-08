@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.game.domain;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -24,6 +25,7 @@ public class GameImage {
     private long gameId;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_id", updatable = false, insertable = false)
     private Game game;

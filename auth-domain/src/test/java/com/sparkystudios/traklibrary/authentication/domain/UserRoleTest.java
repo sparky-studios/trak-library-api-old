@@ -142,6 +142,7 @@ class UserRoleTest {
 
         // Assert
         Assertions.assertThat(result.getUsers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getUsers().iterator().next()).isEqualTo(user1);
+        Assertions.assertThat(result.getUsers().iterator().next().getId())
+                .isEqualTo(user1.getId());
     }
 }
