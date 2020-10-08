@@ -1,11 +1,11 @@
-FROM fabric8/java-alpine-openjdk8-jdk
+FROM fabric8/java-alpine-openjdk11-jdk
 
-LABEL maintainer="Sparky Studios <benjamin.carter.dev@gmail.com>"
+LABEL maintainer="Sparky Studios <development@traklibrary.com>"
 
 WORKDIR app
 
 # Copy the jar file into the docker container.
-ARG jar=target/*.jar
+ARG jar=target/traklibrary-discovery-server.jar
 COPY ${jar} discovery-server.jar
 
 # Additional debug arguments provided by the maven build.
