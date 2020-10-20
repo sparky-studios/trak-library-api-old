@@ -1,6 +1,6 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
-import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.GameService;
@@ -11,12 +11,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Collection;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -98,6 +100,48 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public GameDto saveGenresForGameId(long id, @NonNull Collection<Long> genreIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Clear all existing genres before updating them with the new ID's provided.
+        game.getGenres().clear();
+
+        // Get all of the matching genres for the ID's provided.
+        Iterable<Genre> genres = genreRepository.findAllById(genreIds);
+
+        // Add all the genres within the collection.
+        genres.forEach(game::addGenre);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public GameDto updateGenresForGameId(long id, @NonNull Collection<Long> genreIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Get all of the matching genres for the ID's provided.
+        Iterable<Genre> genres = genreRepository.findAllById(genreIds);
+
+        // Add all the genres within the collection.
+        genres.forEach(game::addGenre);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByPlatformId(long platformId, Pageable pageable) {
         if (!platformRepository.existsById(platformId)) {
@@ -122,6 +166,47 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.countByPlatformsId(platformId);
+    }
+
+    @Override
+    public GameDto savePlatformsForGameId(long id, @NonNull Collection<Long> platformsIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Clear all existing platforms before updating them with the new ID's provided.
+        game.getPlatforms().clear();
+
+        // Get all of the matching genres for the ID's provided.
+        Iterable<Platform> platforms = platformRepository.findAllById(platformsIds);
+
+        // Add all the platforms within the collection.
+        platforms.forEach(game::addPlatform);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
+    public GameDto updatePlatformsForGameId(long id, @NonNull Collection<Long> platformIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Get all of the matching platforms for the ID's provided.
+        Iterable<Platform> platforms = platformRepository.findAllById(platformIds);
+
+        // Add all the platforms within the collection.
+        platforms.forEach(game::addPlatform);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
     }
 
     @Override
@@ -152,6 +237,47 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    public GameDto saveDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Clear all existing developers before updating them with the new ID's provided.
+        game.getDevelopers().clear();
+
+        // Get all of the matching developers for the ID's provided.
+        Iterable<Developer> developers = developerRepository.findAllById(developerId);
+
+        // Add all the developers within the collection.
+        developers.forEach(game::addDeveloper);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
+    public GameDto updateDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Get all of the matching developers for the ID's provided.
+        Iterable<Developer> developers = developerRepository.findAllById(developerId);
+
+        // Add all the developers within the collection.
+        developers.forEach(game::addDeveloper);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByPublisherId(long publisherId, Pageable pageable) {
         if (!publisherRepository.existsById(publisherId)) {
@@ -176,6 +302,47 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.countByPublishersId(publisherId);
+    }
+
+    @Override
+    public GameDto savePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Clear all existing developers before updating them with the new ID's provided.
+        game.getDevelopers().clear();
+
+        // Get all of the matching publishers for the ID's provided.
+        Iterable<Publisher> publishers = publisherRepository.findAllById(publisherIds);
+
+        // Add all the publishers within the collection.
+        publishers.forEach(game::addPublisher);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
+    public GameDto updatePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+
+        // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
+        Game game = gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage));
+
+        // Get all of the matching publishers for the ID's provided.
+        Iterable<Publisher> publishers = publisherRepository.findAllById(publisherIds);
+
+        // Add all the publishers within the collection.
+        publishers.forEach(game::addPublisher);
+
+        // Save the game and return the result.
+        return gameMapper.gameToGameDto(gameRepository.save(game));
     }
 
     @Override
@@ -215,7 +382,10 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return gameMapper.gameToGameDto(gameRepository.save(gameMapper.gameDtoToGame(gameDto)));
+        Game game = gameMapper.gameDtoToGame(gameDto);
+        game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
+
+        return gameMapper.gameToGameDto(gameRepository.save(game));
     }
 
     @Override

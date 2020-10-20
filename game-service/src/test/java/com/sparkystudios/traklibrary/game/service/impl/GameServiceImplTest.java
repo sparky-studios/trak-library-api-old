@@ -1,13 +1,12 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
-import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
+import com.sparkystudios.traklibrary.game.service.mapper.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -218,6 +217,88 @@ class GameServiceImplTest {
     }
 
     @Test
+    void saveGenresForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateGenresForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void saveGenresForGameId_withGame_savesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Genre(), new Genre()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.updateGenresForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addGenre(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void updateGenresForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateGenresForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void updateGenresForGameId_withGame_updatesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Genre(), new Genre()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.updateGenresForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addGenre(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
     void findGamesByPlatformId_withNonExistentPlatform_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(platformRepository.existsById(ArgumentMatchers.anyLong()))
@@ -300,6 +381,88 @@ class GameServiceImplTest {
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .countByPlatformsId(ArgumentMatchers.anyLong());
+    }
+
+    @Test
+    void savePlatformsForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePlatformsForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void savePlatformsForGameId_withGame_savesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Platform(), new Platform()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.savePlatformsForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addPlatform(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void updatePlatformsForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePlatformsForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void updatePlatformsForGameId_withGame_updatesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Platform(), new Platform()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.updatePlatformsForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addPlatform(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
@@ -388,6 +551,88 @@ class GameServiceImplTest {
     }
 
     @Test
+    void saveDevelopersForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.saveDevelopersForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void saveDevelopersForGameId_withGame_savesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(developerRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Developer(), new Developer()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.saveDevelopersForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addDeveloper(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void updateDevelopersForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateDevelopersForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void updateDevelopersForGameId_withGame_updatesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(developerRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Developer(), new Developer()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.updateDevelopersForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addDeveloper(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
     void findGamesByPublisherId_withNonExistentPublisher_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(publisherRepository.existsById(ArgumentMatchers.anyLong()))
@@ -470,6 +715,88 @@ class GameServiceImplTest {
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .count(ArgumentMatchers.any());
+    }
+
+    @Test
+    void savePublishersForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePublishersForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void savePublishersForGameId_withGame_savesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(publisherRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Publisher(), new Publisher()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.savePublishersForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addPublisher(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void updatePublishersForGameId_withNonExistentGame_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePublishersForGameId(0L, Collections.emptyList()));
+    }
+
+    @Test
+    void updatePublishersForGameId_withGame_updatesGame() {
+        // Arrange
+        Game game = Mockito.spy(Game.class);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(publisherRepository.findAllById(ArgumentMatchers.anyIterable()))
+                .thenReturn(List.of(new Publisher(), new Publisher()));
+
+        Mockito.when(gameRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
+        // Act
+        gameService.updatePublishersForGameId(0L, List.of(0L, 1L));
+
+        // Assert
+        Mockito.verify(game, Mockito.times(2))
+                .addPublisher(ArgumentMatchers.any());
+
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
@@ -601,8 +928,12 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
+        GameDto gameDto = new GameDto();
+        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+
         // Act
-        gameService.update(new GameDto());
+        gameService.update(gameDto);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())

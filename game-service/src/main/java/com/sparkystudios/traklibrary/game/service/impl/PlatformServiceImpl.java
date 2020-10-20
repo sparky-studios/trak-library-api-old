@@ -71,7 +71,7 @@ public class PlatformServiceImpl implements PlatformService {
         // Get the game as the platforms can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
 
-        if (!game.isPresent()) {
+        if (game.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
@@ -113,7 +113,10 @@ public class PlatformServiceImpl implements PlatformService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return platformMapper.platformToPlatformDto(platformRepository.save(platformMapper.platformDtoToPlatform(platformDto)));
+        Platform platform = platformMapper.platformDtoToPlatform(platformDto);
+        platform.getReleaseDates().forEach(platformReleaseDate -> platformReleaseDate.setPlatform(platform));
+
+        return platformMapper.platformToPlatformDto(platformRepository.save(platform));
     }
 
     @Override

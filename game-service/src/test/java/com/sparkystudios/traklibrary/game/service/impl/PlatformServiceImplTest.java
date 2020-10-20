@@ -284,8 +284,12 @@ class PlatformServiceImplTest {
         Mockito.when(platformRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Platform());
 
+        PlatformDto platformDto = new PlatformDto();
+        platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
+        platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
+
         // Act
-        platformService.update(new PlatformDto());
+        platformService.update(platformDto);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())

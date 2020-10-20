@@ -8,8 +8,8 @@
 [![LinkedIn][linkedin-badge]][linkedin-url]
 
 <!-- Links and images -->
-[codebuild-badge]: https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoibDN4eUZpaXhQMkFQbmtEekdiZVZCSWM5aGFER2tRbVl2V2E4UEpvN29YTm5XUlMxTkovOXZxY2pmdnJwd0dHWkl4RzNrdE9URjFjOVVlcnp0dEFZRC9FPSIsIml2UGFyYW1ldGVyU3BlYyI6ImNPa1M1STRwOWJ5R251aGciLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop
-[codebuild-url]: https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/projects/trak-api-development/history?region=eu-west-2&builds-state=%7B%22f%22%3A%7B%22text%22%3A%22%22%7D%2C%22s%22%3A%7B%7D%2C%22n%22%3A20%2C%22i%22%3A0%7D
+[codebuild-badge]: https://codebuild.eu-west-2.amazonaws.com/badges?uuid=eyJlbmNyeXB0ZWREYXRhIjoiZ3pQU2srenU4Mm5Fb2E4MGM4cnFyWDErQW1iMFBhc2dNakdaaG1oVTllRndwbERXZlg5QmJ2UjJaVlVKUElqZzNBd3JWZTA0L2RuS2k1cHZQN3pKdkxvPSIsIml2UGFyYW1ldGVyU3BlYyI6IklEMk5pOEdZT2JqVzBoSmgiLCJtYXRlcmlhbFNldFNlcmlhbCI6MX0%3D&branch=develop
+[codebuild-url]: https://eu-west-2.console.aws.amazon.com/codesuite/codebuild/885890504135/projects/trak-api-development
 [sonarcloud-quality-gate-badge]: https://sonarcloud.io/api/project_badges/measure?project=sparky-studios_trak-api&metric=alert_status
 [sonarcloud-code-coverage-badge]: https://sonarcloud.io/api/project_badges/measure?project=sparky-studios_trak-api&metric=coverage
 [sonarcloud-url]: https://sonarcloud.io/dashboard?id=sparky-studios_trak-api

@@ -8,6 +8,7 @@ import com.sparkystudios.traklibrary.game.service.dto.*;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageImpl;
@@ -24,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -146,6 +148,46 @@ public class GameController {
     }
 
     /**
+     * End-point that can be used to associate a {@link Collection} of {@link GenreDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link GenreDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will remove all existing {@link GenreDto} associations and replace with the
+     * ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link GenreDto}'s with.
+     * @param genreIds A {@link Collection} of {@link GenreDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link GenreDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PutMapping(value = "/{id}/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> saveGenresForGameId(@PathVariable long id, @RequestBody Collection<Long> genreIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.saveGenresForGameId(id, genreIds));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link GenreDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link GenreDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will only update the {@link GameDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link GenreDto}'s with.
+     * @param genreIds A {@link Collection} of {@link GenreDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link GenreDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PostMapping(value = "/{id}/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> updateGenresForGameId(@PathVariable long id, @RequestBody Collection<Long> genreIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.updateGenresForGameId(id, genreIds));
+    }
+
+    /**
      * End-point that will retrieve a {@link CollectionModel} of {@link PlatformDto}s that are directly associated
      * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
      * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
@@ -159,6 +201,46 @@ public class GameController {
     @GetMapping("/{id}/platforms")
     public CollectionModel<EntityModel<PlatformDto>> findPlatformsByGameId(@PathVariable long id) {
         return platformRepresentationModelAssembler.toCollectionModel(platformService.findPlatformsByGameId(id));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link PlatformDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link PlatformDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will remove all existing {@link PlatformDto} associations and replace with the
+     * ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PlatformDto}'s with.
+     * @param platformIds A {@link Collection} of {@link PlatformDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PlatformDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PutMapping(value = "/{id}/platforms", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> savePlatformsForGameId(@PathVariable long id, @RequestBody Collection<Long> platformIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.savePlatformsForGameId(id, platformIds));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link PlatformDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link PlatformDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will only update the {@link PlatformDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PlatformDto}'s with.
+     * @param platformIds A {@link Collection} of {@link PlatformDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PlatformDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PostMapping(value = "/{id}/platforms", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> updatePlatformsForGameId(@PathVariable long id, @RequestBody Collection<Long> platformIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.updatePlatformsForGameId(id, platformIds));
     }
 
     /**
@@ -178,6 +260,46 @@ public class GameController {
     }
 
     /**
+     * End-point that can be used to associate a {@link Collection} of {@link DeveloperDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link DeveloperDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will remove all existing {@link DeveloperDto} associations and replace with the
+     * ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link DeveloperDto}'s with.
+     * @param developerIds A {@link Collection} of {@link DeveloperDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link DeveloperDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PutMapping(value = "/{id}/developers", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> saveDevelopersForGameId(@PathVariable long id, @RequestBody Collection<Long> developerIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.saveDevelopersForGameId(id, developerIds));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link DeveloperDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link DeveloperDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will only update the {@link DeveloperDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link DeveloperDto}'s with.
+     * @param developerIds A {@link Collection} of {@link DeveloperDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link DeveloperDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PostMapping(value = "/{id}/developers", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> updateDevelopersForGameId(@PathVariable long id, @RequestBody Collection<Long> developerIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.updateDevelopersForGameId(id, developerIds));
+    }
+
+    /**
      * End-point that will retrieve a {@link CollectionModel} of {@link PublisherDto}s that are directly associated
      * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
      * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
@@ -191,6 +313,46 @@ public class GameController {
     @GetMapping("/{id}/publishers")
     public CollectionModel<EntityModel<PublisherDto>> findPublishersByGameId(@PathVariable long id) {
         return publisherRepresentationModelAssembler.toCollectionModel(publisherService.findPublishersByGameId(id));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link PublisherDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link PublisherDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will remove all existing {@link PublisherDto} associations and replace with the
+     * ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PublisherDto}'s with.
+     * @param publisherIds A {@link Collection} of {@link PublisherDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PublisherDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PutMapping(value = "/{id}/publishers", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> savePublishersForGameId(@PathVariable long id, @RequestBody Collection<Long> publisherIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.savePublishersForGameId(id, publisherIds));
+    }
+
+    /**
+     * End-point that can be used to associate a {@link Collection} of {@link PublisherDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an {@link ApiError}
+     * will be returned with additional error details. If any of the {@link PublisherDto} ID's don't currently exist within the
+     * database, then an association will not be created.
+     *
+     * It should be noted, that this method will only update the {@link PublisherDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PublisherDto}'s with.
+     * @param publisherIds A {@link Collection} of {@link PublisherDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PublisherDto} ID's have been associated with.
+     */
+    @AllowedForModerator
+    @PostMapping(value = "/{id}/publishers", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public EntityModel<GameDto> updatePublishersForGameId(@PathVariable long id, @RequestBody Collection<Long> publisherIds) {
+        return gameRepresentationModelAssembler.toModel(gameService.updatePublishersForGameId(id, publisherIds));
     }
 
     @AllowedForUser
