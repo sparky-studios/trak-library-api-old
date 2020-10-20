@@ -225,8 +225,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateGenresForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.saveGenresForGameId(0L, ids));
     }
 
     @Test
@@ -247,7 +249,7 @@ class GameServiceImplTest {
                 .thenReturn(new Game());
 
         // Act
-        gameService.updateGenresForGameId(0L, List.of(0L, 1L));
+        gameService.saveGenresForGameId(0L, List.of(0L, 1L));
 
         // Assert
         Mockito.verify(game, Mockito.times(2))
@@ -266,8 +268,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateGenresForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateGenresForGameId(0L, ids));
     }
 
     @Test
@@ -392,8 +396,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePlatformsForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePlatformsForGameId(0L, ids));
     }
 
     @Test
@@ -433,8 +439,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePlatformsForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePlatformsForGameId(0L, ids));
     }
 
     @Test
@@ -559,8 +567,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.saveDevelopersForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.saveDevelopersForGameId(0L, ids));
     }
 
     @Test
@@ -600,8 +610,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateDevelopersForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updateDevelopersForGameId(0L, ids));
     }
 
     @Test
@@ -726,8 +738,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePublishersForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.savePublishersForGameId(0L, ids));
     }
 
     @Test
@@ -767,8 +781,10 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
+        Collection<Long> ids = Collections.emptyList();
+
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePublishersForGameId(0L, Collections.emptyList()));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.updatePublishersForGameId(0L, ids));
     }
 
     @Test

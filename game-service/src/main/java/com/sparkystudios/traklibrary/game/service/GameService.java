@@ -3,7 +3,6 @@ package com.sparkystudios.traklibrary.game.service;
 import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.dto.*;
-import com.sparkystudios.traklibrary.security.exception.ApiError;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
