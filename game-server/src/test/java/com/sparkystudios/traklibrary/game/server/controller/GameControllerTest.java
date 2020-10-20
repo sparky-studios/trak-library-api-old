@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Import({GameController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = GameController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
@@ -292,6 +293,88 @@ class GameControllerTest {
     }
 
     @Test
+    void saveGenresForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void saveGenresForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.saveGenresForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
+    void updateGenresForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void updateGenresForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.updateGenresForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/genres")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
     void findPlatformsById_withNoData_returns200AndEmptyCollection() throws Exception {
         // Arrange
         Mockito.when(platformService.findPlatformsByGameId(ArgumentMatchers.anyLong()))
@@ -339,6 +422,88 @@ class GameControllerTest {
 
         ResponseVerifier.verifyPlatformDto("._embedded.data[0]", resultActions, platformDto1);
         ResponseVerifier.verifyPlatformDto("._embedded.data[1]", resultActions, platformDto2);
+    }
+
+    @Test
+    void savePlatformsForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/platforms")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void savePlatformsForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.savePlatformsForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/platforms")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
+    void updatePlatformsForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/platforms")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void updatePlatformsForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.updatePlatformsForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/platforms")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
     }
 
     @Test
@@ -394,6 +559,88 @@ class GameControllerTest {
     }
 
     @Test
+    void saveDevelopersForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/developers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void saveDevelopersForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.saveDevelopersForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/developers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
+    void updateDevelopersForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/developers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void updateDevelopersForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.updateDevelopersForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/developers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
     void findPublishersById_withNoData_returns200AndEmptyCollection() throws Exception {
         // Arrange
         Mockito.when(developerService.findDevelopersByGameId(ArgumentMatchers.anyLong()))
@@ -443,6 +690,89 @@ class GameControllerTest {
 
         ResponseVerifier.verifyPublisherDto("._embedded.data[0]", resultActions, publisherDto1);
         ResponseVerifier.verifyPublisherDto("._embedded.data[1]", resultActions, publisherDto2);
+    }
+
+
+    @Test
+    void savePublishersForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/publishers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void savePublishersForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.savePublishersForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/1/publishers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
+    void updatePublishersForGameId_withNoBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/publishers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void updatePublishersForGameId_withBody_returns200AndValidResponse() throws Exception {
+        // Arrange
+        GameDto gameDto = new GameDto();
+        gameDto.setId(5L);
+        gameDto.setTitle("test-title");
+        gameDto.setDescription("test-description");
+        gameDto.setAgeRating(AgeRating.MATURE);
+        gameDto.setCreatedAt(LocalDateTime.now());
+        gameDto.setUpdatedAt(LocalDateTime.now());
+        gameDto.setVersion(1L);
+
+        Mockito.when(gameService.updatePublishersForGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.anyCollection()))
+                .thenReturn(gameDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/1/publishers")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1.hal+json")
+                .content(objectMapper.writeValueAsString(List.of(0L, 1L))));
+
+        // Assert
+        ResponseVerifier.verifyGameDto("", resultActions, gameDto);
     }
 
     @Test
