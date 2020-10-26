@@ -38,7 +38,7 @@ import java.util.Collections;
 @Import({FranchiseController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = FranchiseController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class FranchiseControllerTest {
+class FranchiseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

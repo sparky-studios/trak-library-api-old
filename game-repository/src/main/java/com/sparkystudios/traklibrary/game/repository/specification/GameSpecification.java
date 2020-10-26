@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.repository.specification;
 
 import com.sparkystudios.traklibrary.game.domain.Game;
 import net.kaczmarzyk.spring.data.jpa.domain.Equal;
-import net.kaczmarzyk.spring.data.jpa.domain.LikeIgnoreCase;
 import net.kaczmarzyk.spring.data.jpa.domain.StartingWithIgnoreCase;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.And;
 import net.kaczmarzyk.spring.data.jpa.web.annotation.Spec;

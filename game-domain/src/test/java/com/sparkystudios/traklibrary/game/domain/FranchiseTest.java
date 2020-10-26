@@ -73,7 +73,7 @@ class FranchiseTest {
         Franchise result = testEntityManager.persistFlushFind(franchise);
 
         // Assert
-        Assertions.assertThat(result.getGames().size()).isEqualTo(2);
+        Assertions.assertThat(result.getGames()).hasSize(2);
         Assertions.assertThat(result.getGames().stream().map(Game::getId).collect(Collectors.toList()))
                 .isEqualTo(List.of(game1.getId(), game2.getId()));
     }
