@@ -35,16 +35,21 @@ class GameDetailsMapperTest {
         gameReleaseDate.setReleaseDate(LocalDate.now());
         gameReleaseDate.setVersion(1L);
 
+        Franchise franchise = new Franchise();
+        franchise.setTitle("franchise-title");
+
         Game game = new Game();
         game.setId(5L);
         game.setTitle("test-title");
         game.setDescription("sure is a description.");
         game.setAgeRating(AgeRating.TEEN);
+        game.setFranchiseId(5L);
         game.setVersion(5L);
         game.addGenre(genre);
         game.addPlatform(platform);
         game.addPublisher(publisher);
         game.addReleaseDate(gameReleaseDate);
+        game.setFranchise(franchise);
 
         // Act
         GameDetailsDto result = GameMappers.GAME_INFO_MAPPER.gameToGameDetailsDto(game);
@@ -54,10 +59,12 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
+        Assertions.assertThat(result.getFranchiseId()).isEqualTo(game.getFranchiseId());
         Assertions.assertThat(result.getVersion()).isEqualTo(game.getVersion());
         Assertions.assertThat(result.getGenres()).hasSize(1);
         Assertions.assertThat(result.getPlatforms()).hasSize(1);
         Assertions.assertThat(result.getPublishers()).hasSize(1);
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
+        Assertions.assertThat(result.getFranchise().getTitle()).isEqualTo(franchise.getTitle());
     }
 }

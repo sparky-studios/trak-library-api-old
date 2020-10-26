@@ -25,6 +25,7 @@
             <column name="game_modes" type="bigint" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
+            <column name="franchise_id" type="bigint" />
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -449,7 +450,31 @@
                 columnNames="platform_id,region"
                 constraintName="unq_platform_release_date_platform_id_region" />
 
+        <createTable tableName="franchise">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_franchise" />
+            </column>
+            <column name="title" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(4096)"/>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game"
+                baseColumnNames="franchise_id"
+                constraintName="fk_game_franchise_id"
+                referencedTableName="franchise"
+                referencedColumnNames="id" />
+
         <rollback>
+            <dropTable tableName="franchise" />
             <dropTable tableName="platform_release_date" />
             <dropTable tableName="game_release_date" />
             <dropTable tableName="game_barcode" />

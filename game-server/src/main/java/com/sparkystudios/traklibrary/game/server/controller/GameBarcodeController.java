@@ -6,6 +6,7 @@ import com.sparkystudios.traklibrary.game.service.GameBarcodeService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.GameBarcodeDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;

@@ -32,6 +32,7 @@ public class GameServiceImpl implements GameService {
     private static final String GENRE_NOT_FOUND_MESSAGE = "genre.exception.not-found";
     private static final String PLATFORM_NOT_FOUND_MESSAGE = "platform.exception.not-found";
     private static final String DEVELOPER_NOT_FOUND_MESSAGE = "developer.exception.not-found";
+    private static final String FRANCHISE_NOT_FOUND_MESSAGE = "franchise.exception.not-found";
     private static final String PUBLISHER_NOT_FOUND_MESSAGE = "publisher.exception.not-found";
 
     private final GameRepository gameRepository;
@@ -39,6 +40,7 @@ public class GameServiceImpl implements GameService {
     private final PlatformRepository platformRepository;
     private final DeveloperRepository developerRepository;
     private final PublisherRepository publisherRepository;
+    private final FranchiseRepository franchiseRepository;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
@@ -343,6 +345,31 @@ public class GameServiceImpl implements GameService {
 
         // Save the game and return the result.
         return gameMapper.gameToGameDto(gameRepository.save(game));
+    }
+
+    @Override
+    public Iterable<GameDto> findGamesByFranchiseId(long franchiseId, Pageable pageable) {
+        if (!franchiseRepository.existsById(franchiseId)) {
+            String errorMessage = messageSource
+                    .getMessage(FRANCHISE_NOT_FOUND_MESSAGE, new Object[] { franchiseId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameRepository.findByFranchiseId(franchiseId, pageable)
+                .map(gameMapper::gameToGameDto);
+    }
+
+    @Override
+    public long countGamesByFranchiseId(long franchiseId) {
+        if (!franchiseRepository.existsById(franchiseId)) {
+            String errorMessage = messageSource
+                    .getMessage(FRANCHISE_NOT_FOUND_MESSAGE, new Object[] { franchiseId }, LocaleContextHolder.getLocale());
+
+            throw new EntityNotFoundException((errorMessage));
+        }
+
+        return gameRepository.countByFranchiseId(franchiseId);
     }
 
     @Override

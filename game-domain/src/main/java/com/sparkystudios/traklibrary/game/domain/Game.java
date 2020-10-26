@@ -1,9 +1,7 @@
 package com.sparkystudios.traklibrary.game.domain;
 
 import com.sparkystudios.traklibrary.game.domain.converter.GameModeAttributeConverter;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -83,6 +81,15 @@ public class Game {
     @Convert(converter = GameModeAttributeConverter.class)
     @Column(name = "game_modes", nullable = false)
     private Set<GameMode> gameModes = EnumSet.noneOf(GameMode.class);
+
+    @Column(name = "franchise_id")
+    private Long franchiseId;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "franchise_id", insertable = false, updatable = false)
+    private Franchise franchise;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

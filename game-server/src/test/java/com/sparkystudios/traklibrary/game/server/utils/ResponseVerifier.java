@@ -20,6 +20,18 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
     }
 
+    public static void verifyFranchiseDto(String root, ResultActions resultActions, FranchiseDto franchiseDto) throws Exception {
+        resultActions
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)franchiseDto.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(franchiseDto.getTitle())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(franchiseDto.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)franchiseDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
+    }
+
     public static void verifyGameDto(String root, ResultActions resultActions, GameDto gameDto) throws Exception {
         resultActions
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameDto.getId())))

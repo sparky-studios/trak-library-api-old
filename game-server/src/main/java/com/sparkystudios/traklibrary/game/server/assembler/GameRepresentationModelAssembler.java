@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
+import com.sparkystudios.traklibrary.game.server.controller.FranchiseController;
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
@@ -51,6 +52,11 @@ public class GameRepresentationModelAssembler implements SimpleRepresentationMod
 
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getId()))
                     .withRel("info"));
+
+            if (content.getFranchiseId() != null) {
+                resource.add(linkTo(methodOn(FranchiseController.class).findById(content.getFranchiseId()))
+                        .withRel("franchise"));
+            }
         }
     }
 

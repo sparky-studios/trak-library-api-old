@@ -34,8 +34,8 @@
                             </configuration>
                         </plugin>
                         <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <executions>
                                 <execution>
                                     <id>default</id>
@@ -46,9 +46,13 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                    </image>
+                                </images>
                                 <buildArgs>
-                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</DEBUG_ARGS>
+                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</DEBUG_ARGS>
                                 </buildArgs>
                             </configuration>
                         </plugin>
@@ -84,8 +88,8 @@
                             </executions>
                         </plugin>
                         <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <executions>
                                 <execution>
                                     <id>default</id>
@@ -96,8 +100,21 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
-                                <tag>${project.version}</tag>
+                                <pushRegistry>sparkystudios/${project.build.finalName}</pushRegistry>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                        <build>
+                                            <contextDir>${project.basedir}</contextDir>
+                                            <tags>
+                                                <tag>${project.version}</tag>
+                                            </tags>
+                                        </build>
+                                    </image>
+                                </images>
+                                <buildArgs>
+                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</DEBUG_ARGS>
+                                </buildArgs>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -130,23 +147,6 @@
                                     </goals>
                                 </execution>
                             </executions>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <id>default</id>
-                                    <phase>package</phase>
-                                    <goals>
-                                        <goal>build</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                            <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
-                                <tag>${project.version}</tag>
-                            </configuration>
                         </plugin>
                     </plugins>
                 </pluginManagement>
@@ -196,11 +196,13 @@
         <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
+        <io.fabric8.version>0.33.0</io.fabric8.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <javax.json.version>1.1.4</javax.json.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <net.kaczmarzyk.specification.version>2.1.1</net.kaczmarzyk.specification.version>
         <org.apache.httpcomponents.version>4.5.3</org.apache.httpcomponents.version>
+        <org.apache.maven.plugins.version>3.8.1</org.apache.maven.plugins.version>
         <org.assertj.version>3.16.1</org.assertj.version>
         <org.jacoco.version>0.8.5</org.jacoco.version>
         <org.glassfish.javax.json.version>1.1.4</org.glassfish.javax.json.version>
@@ -361,7 +363,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>${org.apache.maven.plugins.version}</version>
                 <configuration>
                     <source>11</source>
                     <target>11</target>
@@ -461,9 +463,9 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
                 <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>dockerfile-maven-plugin</artifactId>
-                    <version>1.4.10</version>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${io.fabric8.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

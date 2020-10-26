@@ -410,4 +410,26 @@ class GameTest {
         Assertions.assertThat(result.getReleaseDates().iterator().next().getId())
                 .isEqualTo(gameReleaseDate3.getId());
     }
+
+    @Test
+    void persist_withValidFranchiseRelationship_mapsRelationship() {
+        // Arrange
+        Franchise franchise = new Franchise();
+        franchise.setTitle("test-franchise");
+        franchise.setDescription("test-franchise-description");
+        franchise = testEntityManager.persistFlushFind(franchise);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setFranchiseId(franchise.getId());
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getFranchise()).isEqualTo(franchise);
+        Assertions.assertThat(result.getFranchiseId()).isEqualTo(franchise.getId());
+    }
 }
