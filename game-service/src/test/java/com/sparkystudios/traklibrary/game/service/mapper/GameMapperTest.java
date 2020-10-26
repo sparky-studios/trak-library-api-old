@@ -34,6 +34,7 @@ class GameMapperTest {
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.ADULTS_ONLY);
         game.getGameModes().add(GameMode.MULTI_PLAYER);
+        game.setFranchiseId(5L);
         game.setCreatedAt(LocalDateTime.now());
         game.setUpdatedAt(LocalDateTime.now());
         game.setVersion(1L);
@@ -48,6 +49,7 @@ class GameMapperTest {
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
+        Assertions.assertThat(result.getFranchiseId()).isEqualTo(game.getFranchiseId());
         Assertions.assertThat(result.getCreatedAt()).isEqualTo(game.getCreatedAt());
         Assertions.assertThat(result.getUpdatedAt()).isEqualTo(game.getUpdatedAt());
         Assertions.assertThat(result.getVersion()).isEqualTo(game.getVersion());
@@ -77,6 +79,7 @@ class GameMapperTest {
         gameDto.setDescription("test-description");
         gameDto.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         gameDto.getGameModes().add(GameMode.MULTI_PLAYER);
+        gameDto.setFranchiseId(5L);
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
@@ -91,6 +94,7 @@ class GameMapperTest {
         Assertions.assertThat(result.getDescription()).isEqualTo(gameDto.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(gameDto.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(gameDto.getGameModes());
+        Assertions.assertThat(result.getFranchiseId()).isEqualTo(gameDto.getFranchiseId());
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(gameDto.getVersion());

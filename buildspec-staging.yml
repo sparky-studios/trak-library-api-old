@@ -33,4 +33,3 @@ phases:
         then
           mvn verify sonar:sonar -Pstaging -Dsonar.branch.name=staging
         fi
-      - mvn dockerfile:push -Ddockerfile.username=$DOCKER_USERNAME -Ddockerfile.password=$DOCKER_PASSWORD

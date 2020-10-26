@@ -43,6 +43,9 @@ class GameServiceImplTest {
     private PublisherRepository publisherRepository;
 
     @Mock
+    private FranchiseRepository franchiseRepository;
+
+    @Mock
     private PatchService patchService;
 
     @Spy
@@ -813,6 +816,91 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void findGamesByFranchiseId_withNonExistentFranchise_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(franchiseRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Pageable pageable = Mockito.mock(Pageable.class);
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findGamesByFranchiseId(0L, pageable));
+    }
+
+    @Test
+    void findGamesByFranchiseId_withNoGames_returnsEmptyList() {
+        // Arrange
+        Mockito.when(franchiseRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameRepository.findByFranchiseId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(Page.empty());
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByFranchiseId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    void findGamesByFranchiseId_withMultipleGames_returnsList() {
+        // Arrange
+        Mockito.when(franchiseRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameRepository.findByFranchiseId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Arrays.asList(new Game(), new Game())));
+
+        // Act
+        List<GameDto> result = StreamSupport.stream(gameService.findGamesByFranchiseId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+                .collect(Collectors.toList());
+
+        // Assert
+        Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .gameToGameDto(ArgumentMatchers.any());
+    }
+
+    @Test
+    void countGamesByFranchiseId_withNonExistentFranchise_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(franchiseRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.countGamesByFranchiseId(0L));
+    }
+
+    @Test
+    void countGamesByFranchiseId_withFranchise_invokesGameRepository() {
+        // Arrange
+        Mockito.when(franchiseRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameRepository.countByFranchiseId(ArgumentMatchers.anyLong()))
+                .thenReturn(0L);
+
+        // Act
+        gameService.countGamesByFranchiseId(0L);
+
+        // Assert
+        Mockito.verify(gameRepository, Mockito.atMostOnce())
+                .countByFranchiseId(ArgumentMatchers.anyLong());
     }
 
     @Test

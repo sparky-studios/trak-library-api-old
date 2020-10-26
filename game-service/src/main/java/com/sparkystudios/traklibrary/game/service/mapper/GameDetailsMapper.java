@@ -24,4 +24,8 @@ public interface GameDetailsMapper {
     default GameReleaseDateDto gameReleaseDateToGameReleaseDateDto(GameReleaseDate gameReleaseDate) {
         return GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(gameReleaseDate);
     }
+
+    default FranchiseDto franchiseToFranchiseDto(Franchise franchise) {
+        return GameMappers.FRANCHISE_MAPPER.franchiseToFranchiseDto(franchise);
+    }
 }

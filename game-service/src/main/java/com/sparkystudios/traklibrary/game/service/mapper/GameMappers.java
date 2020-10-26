@@ -9,6 +9,8 @@ public final class GameMappers {
 
     public static final DeveloperMapper DEVELOPER_MAPPER = Mappers.getMapper(DeveloperMapper.class);
 
+    public static final FranchiseMapper FRANCHISE_MAPPER = Mappers.getMapper(FranchiseMapper.class);
+
     public static final GameBarcodeMapper GAME_BARCODE_MAPPER = Mappers.getMapper(GameBarcodeMapper.class);
 
     public static final GameDetailsMapper GAME_INFO_MAPPER = Mappers.getMapper(GameDetailsMapper.class);

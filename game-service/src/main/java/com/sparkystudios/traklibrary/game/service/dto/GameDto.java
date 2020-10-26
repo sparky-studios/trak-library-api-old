@@ -30,6 +30,8 @@ public class GameDto {
 
     private Set<GameMode> gameModes = EnumSet.noneOf(GameMode.class);
 
+    private Long franchiseId;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

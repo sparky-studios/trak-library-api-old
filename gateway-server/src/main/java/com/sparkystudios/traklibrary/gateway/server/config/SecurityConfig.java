@@ -38,13 +38,13 @@ public class SecurityConfig {
         protected void configure(HttpSecurity http) throws Exception {
             http
                     .requestMatchers()
-                    .antMatchers("/api/auth/**", "/api/games/**", "/api/images/**", "/api/notifications/**")
+                    .antMatchers("/auth/**", "/games/**", "/images/**", "/notifications/**")
                     .and()
                     .authorizeRequests()
-                    .antMatchers(HttpMethod.POST, "/api/auth", "/api/auth/users").permitAll()
-                    .antMatchers(HttpMethod.PUT, "/api/auth/users", "/api/auth/users/recover").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/images/**").permitAll()
-                    .antMatchers(HttpMethod.GET, "/api/games/**/image").permitAll()
+                    .antMatchers(HttpMethod.POST, "/auth", "/auth/users").permitAll()
+                    .antMatchers(HttpMethod.PUT, "/auth/users", "/auth/users/recover").permitAll()
+                    .antMatchers(HttpMethod.GET, "/images/**").permitAll()
+                    .antMatchers(HttpMethod.GET, "/games/**/image").permitAll()
                     .anyRequest()
                     .authenticated()
                     .and()
@@ -78,7 +78,7 @@ public class SecurityConfig {
         @Override
         protected void configure(HttpSecurity http) throws Exception {
             http
-                    .antMatcher("/api/emails/**")
+                    .antMatcher("/emails/**")
                     .authorizeRequests()
                     .anyRequest()
                     .authenticated()

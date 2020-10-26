@@ -271,6 +271,29 @@ public interface GameService {
     GameDto updatePublishersForGameId(long id, @NonNull Collection<Long> publisherIds);
 
     /**
+     * Given the ID of a {@link Franchise}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
+     * the given {@link FranchiseDto}. If the ID provided does not map to any {@link FranchiseDto}, a {@link javax.persistence.EntityNotFoundException}
+     * will be thrown. If there are no {@link Game}s associated with the {@link FranchiseDto}, an empty {@link Iterable} will be returned.
+     *
+     * @param franchiseId The ID of the {@link Franchise} to retrieve {@link Game} entries for.
+     * @param pageable The amount of data and the page to return.
+     *
+     * @return A page of {@link GameDto}s that are mapped with the given {@link Franchise} entity.
+     */
+    Iterable<GameDto> findGamesByFranchiseId(long franchiseId, Pageable pageable);
+
+    /**
+     * Given the ID of a {@link Franchise}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Franchise}. If the ID provided does not map to any {@link Franchise}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param franchiseId The ID of the {@link Franchise} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Franchise}.
+     */
+    long countGamesByFranchiseId(long franchiseId);
+
+    /**
      * Retrieves all of the {@link Game} entities stored within the persistence layer. This method should not be used within a live
      * environment, as the amount of data may cause buffer overflows and bring down the server. It should only be used within a test
      * environment and even then, with hesitancy.

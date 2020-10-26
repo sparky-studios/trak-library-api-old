@@ -24,6 +24,8 @@ public class GameDetailsDto {
 
     private LocalDateTime updatedAt;
 
+    private Long franchiseId;
+
     private Long version;
 
     private Set<PlatformDto> platforms = new TreeSet<>();
@@ -33,4 +35,6 @@ public class GameDetailsDto {
     private Set<GenreDto> genres = new TreeSet<>();
 
     private Set<GameReleaseDateDto> releaseDates = new TreeSet<>();
+
+    private FranchiseDto franchise;
 }
