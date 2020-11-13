@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.game.server.utils;
 
 import com.sparkystudios.traklibrary.game.service.dto.*;
 import org.hamcrest.Matchers;
+import org.mockito.Mock;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -38,6 +39,8 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDto.getDescription())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".ageRating", Matchers.is(gameDto.getAgeRating().name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameModes").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchiseId", Matchers.is(gameDto.getFranchiseId() != null ? gameDto.getFranchiseId().intValue() : null)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameDto.getVersion().longValue())))
@@ -50,6 +53,10 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.publishers").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.entries").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.info").exists());
+
+        if (gameDto.getFranchiseId() != null) {
+            resultActions.andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.franchise").exists());
+        }
     }
 
     public static void verifyGameDetailsDto(String root, ResultActions resultActions, GameDetailsDto gameDetailsDto) throws Exception {
@@ -58,13 +65,16 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDetailsDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDetailsDto.getDescription())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".ageRating", Matchers.is(gameDetailsDto.getAgeRating().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameModes").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchiseId", Matchers.is(gameDetailsDto.getFranchiseId() != null ? gameDetailsDto.getFranchiseId().intValue() : null)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchise").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int) gameDetailsDto.getVersion().longValue())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platforms").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".publishers").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDates").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platforms").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".publishers").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".releaseDates").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platforms").exists())
@@ -88,23 +98,21 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists());
     }
 
-    public static void verifyGameUserEntryDto(String root, ResultActions resultActions, GameUserEntryDto gameUserEntryDto) throws Exception {
+    public static void verifyGameUserEntryDto(String root, ResultActions resultActions) throws Exception {
         resultActions
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameUserEntryDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameId", Matchers.is((int)gameUserEntryDto.getGameId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameTitle", Matchers.is(gameUserEntryDto.getGameTitle())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platformId", Matchers.is((int)gameUserEntryDto.getPlatformId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platformName", Matchers.is(gameUserEntryDto.getPlatformName())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".userId", Matchers.is((int)gameUserEntryDto.getUserId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".status", Matchers.is(gameUserEntryDto.getStatus().name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".publishers").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".rating", Matchers.is((int)gameUserEntryDto.getRating())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameUserEntryDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameId").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameTitle").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".userId").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".status").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".publishers").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".rating").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".gameUserEntryPlatforms").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".createdAt").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updatedAt").hasJsonPath())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.game").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.gameDetails").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platform").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists());
     }
 

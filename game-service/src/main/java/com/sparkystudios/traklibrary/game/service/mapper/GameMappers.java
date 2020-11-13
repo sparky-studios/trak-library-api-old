@@ -23,6 +23,8 @@ public final class GameMappers {
 
     public static final GameUserEntryMapper GAME_USER_ENTRY_MAPPER = Mappers.getMapper(GameUserEntryMapper.class);
 
+    public static final GameUserEntryPlatformMapper GAME_USER_ENTRY_PLATFORM_MAPPER = Mappers.getMapper(GameUserEntryPlatformMapper.class);
+
     public static final GenreMapper GENRE_MAPPER = Mappers.getMapper(GenreMapper.class);
 
     public static final PlatformMapper PLATFORM_MAPPER = Mappers.getMapper(PlatformMapper.class);

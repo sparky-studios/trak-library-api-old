@@ -9,6 +9,7 @@ import com.sparkystudios.traklibrary.game.server.exception.GlobalExceptionHandle
 import com.sparkystudios.traklibrary.game.server.utils.ResponseVerifier;
 import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -32,6 +33,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @Import({GameUserEntryController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = GameUserEntryController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
@@ -57,12 +60,12 @@ public class GameUserEntryControllerTest {
     }
 
     @Test
-    void save_withInvalidGameUserEntryDto_returns400() throws Exception {
+    void save_withInvalidGameUserEntryRequest_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
+                .content(objectMapper.writeValueAsString(new GameUserEntryRequest())));
 
         // Assert
         resultActions
@@ -74,35 +77,30 @@ public class GameUserEntryControllerTest {
     }
 
     @Test
-    void save_withValidGameDto_returns201AndValidResponse() throws Exception {
+    void save_withValidGameUserEntryRequest_returns201AndValidResponse() throws Exception {
         // Arrange
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
-        gameUserEntryDto.setId(1L);
-        gameUserEntryDto.setGameId(1L);
-        gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setPlatformId(1L);
-        gameUserEntryDto.setPlatformName("platform-name");
-        gameUserEntryDto.setUserId(1L);
-        gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
-        gameUserEntryDto.setRating((short)4);
-        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
-        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
-        gameUserEntryDto.setVersion(1L);
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setUserId(1L);
+        gameUserEntryRequest.setGameId(1L);
+        gameUserEntryRequest.setRating((short)1);
+        gameUserEntryRequest.setStatus(GameUserEntryStatus.COMPLETED);
+        gameUserEntryRequest.setPlatformIds(Collections.singletonList(1L));
 
         Mockito.when(gameUserEntryService.save(ArgumentMatchers.any()))
-                .thenReturn(gameUserEntryDto);
+                .thenReturn(new GameUserEntryDto());
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(gameUserEntryDto)));
+                .content(objectMapper.writeValueAsString(gameUserEntryRequest)));
 
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
-        ResponseVerifier.verifyGameUserEntryDto("", resultActions, gameUserEntryDto);
+        ResponseVerifier
+                .verifyGameUserEntryDto("", resultActions);
     }
 
     @Test
@@ -112,8 +110,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto.setId(1L);
         gameUserEntryDto.setGameId(1L);
         gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setPlatformId(1L);
-        gameUserEntryDto.setPlatformName("platform-name");
         gameUserEntryDto.setUserId(1L);
         gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto.setRating((short)4);
@@ -132,7 +128,7 @@ public class GameUserEntryControllerTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        ResponseVerifier.verifyGameUserEntryDto("", resultActions, gameUserEntryDto);
+        ResponseVerifier.verifyGameUserEntryDto("", resultActions);
     }
 
     @Test
@@ -169,8 +165,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setPlatformId(1L);
-        gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
@@ -182,8 +176,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setPlatformId(2L);
-        gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
@@ -213,8 +205,8 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
     }
 
     @Test
@@ -224,8 +216,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setPlatformId(1L);
-        gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
@@ -237,8 +227,6 @@ public class GameUserEntryControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setPlatformId(2L);
-        gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
@@ -268,17 +256,17 @@ public class GameUserEntryControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
     }
 
     @Test
-    void update_withInvalidGameDto_returns400() throws Exception {
+    void update_withInvalidGameUserEntryRequest_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
+                .content(objectMapper.writeValueAsString(new GameUserEntryRequest())));
 
         // Assert
         resultActions
@@ -292,65 +280,28 @@ public class GameUserEntryControllerTest {
     @Test
     void update_withValidGameUserEntryDto_returns200AndValidResponse() throws Exception {
         // Arrange
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
-        gameUserEntryDto.setId(1L);
-        gameUserEntryDto.setGameId(1L);
-        gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setPlatformId(1L);
-        gameUserEntryDto.setPlatformName("platform-name");
-        gameUserEntryDto.setUserId(1L);
-        gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
-        gameUserEntryDto.setRating((short)4);
-        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
-        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
-        gameUserEntryDto.setVersion(1L);
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setUserId(1L);
+        gameUserEntryRequest.setGameId(1L);
+        gameUserEntryRequest.setRating((short)1);
+        gameUserEntryRequest.setStatus(GameUserEntryStatus.COMPLETED);
+        gameUserEntryRequest.setPlatformIds(Collections.singletonList(1L));
 
         Mockito.when(gameUserEntryService.update(ArgumentMatchers.any()))
-                .thenReturn(gameUserEntryDto);
+                .thenReturn(new GameUserEntryDto());
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/entries")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(gameUserEntryDto)));
+                .content(objectMapper.writeValueAsString(gameUserEntryRequest)));
 
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
-        ResponseVerifier.verifyGameUserEntryDto("", resultActions, gameUserEntryDto);
-    }
-
-    @Test
-    void patch_withValidPatch_returns200AndValidResponse() throws Exception {
-        // Arrange
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
-        gameUserEntryDto.setId(1L);
-        gameUserEntryDto.setGameId(1L);
-        gameUserEntryDto.setGameTitle("game-title");
-        gameUserEntryDto.setPlatformId(1L);
-        gameUserEntryDto.setPlatformName("platform-name");
-        gameUserEntryDto.setUserId(1L);
-        gameUserEntryDto.setStatus(GameUserEntryStatus.COMPLETED);
-        gameUserEntryDto.setRating((short)4);
-        gameUserEntryDto.setCreatedAt(LocalDateTime.now());
-        gameUserEntryDto.setUpdatedAt(LocalDateTime.now());
-        gameUserEntryDto.setVersion(1L);
-
-        Mockito.when(gameUserEntryService.patch(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
-                .thenReturn(gameUserEntryDto);
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/entries/1")
-                .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.hal+json")
-                .content("{ \"gameTitle\": \"test-title-2\" }"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        ResponseVerifier.verifyGameUserEntryDto("", resultActions, gameUserEntryDto);
+        ResponseVerifier
+                .verifyGameUserEntryDto("", resultActions);
     }
 
     @Test

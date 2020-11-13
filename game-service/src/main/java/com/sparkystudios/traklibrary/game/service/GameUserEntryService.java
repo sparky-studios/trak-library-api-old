@@ -4,29 +4,28 @@ import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-
-import javax.json.JsonMergePatch;
 
 public interface GameUserEntryService {
 
     /**
-     * Given a {@link GameUserEntryDto} instance, the service will attempt to persist the data with the underlying persistence layer.
-     * If the {@link GameUserEntryDto} supplied contains an Id that matches an existing entity, insertion to the persistence layer will
+     * Given a {@link GameUserEntryRequest} instance, the service will attempt to persist the data with the underlying persistence layer.
+     * If the {@link GameUserEntryRequest} supplied contains an Id that matches an existing entity, insertion to the persistence layer will
      * fail and a {@link javax.persistence.EntityExistsException} will be thrown. If persistence succeeds, the data is saved and the
      * saved entity is returned as a {@link GameUserEntryDto}.
      *
      * The method does not allow <code>null</code> entities to be inserted, if null is provided, a {@link NullPointerException}
      * will be thrown.
      *
-     * @param gameUserEntryDto The {@link GameUserEntryDto} instance to persist.
+     * @param gameUserEntryRequest The {@link GameUserEntryRequest} instance to persist.
      *
      * @return The updated persisted entity as a {@link GameUserEntryDto}.
      *
      * @throws NullPointerException Thrown if the argument provided is null.
      */
-    GameUserEntryDto save(GameUserEntryDto gameUserEntryDto);
+    GameUserEntryDto save(GameUserEntryRequest gameUserEntryRequest);
 
     /**
      * Given an ID of a {@link GameUserEntry} entity, this service method will query the underlying persistence layer and try and
@@ -91,7 +90,7 @@ public interface GameUserEntryService {
     long count(GameUserEntrySpecification gameUserEntrySpecification);
 
     /**
-     * Given a {@link GameUserEntryDto} instance, the service will attempt to the update the persisted data which matches the given {@link GameUserEntryDto}
+     * Given a {@link GameUserEntryRequest} instance, the service will attempt to the update the persisted data which matches the given {@link GameUserEntryRequest}
      * in the underlying persistence layer. If the {@link GameUserEntryDto} supplied contains an ID that doesn't match any existing entities, then
      * the update will fail and a {@link javax.persistence.EntityNotFoundException} will be thrown. If persistence succeeds, the relevant
      * record is updated and the updated entity is returned as a {@link GameUserEntryDto}.
@@ -99,32 +98,13 @@ public interface GameUserEntryService {
      * The method does not allow <code>null</code> entities to be inserted, if null is provided, a {@link NullPointerException}
      * will be thrown.
      *
-     * @param gameUserEntryDto The {@link GameUserEntryDto} instance to update.
+     * @param gameUserEntryRequest The {@link GameUserEntryRequest} instance to update.
      *
      * @return The updated persisted entity as a {@link GameUserEntryDto}.
      *
-     * @throws NullPointerException Thrown if the {@link GameUserEntryDto} argument provided is null.
+     * @throws NullPointerException Thrown if the {@link GameUserEntryRequest} argument provided is null.
      */
-    GameUserEntryDto update(GameUserEntryDto gameUserEntryDto);
-
-    /**
-     * Given a {@link JsonMergePatch} which will contain JSON information pertaining to a {@link GameUserEntryDto}, this method will attempt to retrieve
-     * the {@link GameUserEntryDto} that matches the given ID and apply the new JSON on top of it. If the ID provided doesn't match any existing entities,
-     * then the patch will fail and a {@link javax.persistence.EntityNotFoundException} will be thrown. If the {@link JsonMergePatch} contains any
-     * JSON data not contained on the {@link GameUserEntryDto}, it'll be ignored. If the patching succeeds, the patched record will be updated and the updated
-     * entity returned as a {@link GameUserEntryDto}.
-     *
-     * The method does not allow a null {@link JsonMergePatch} to be provided, if null is provided, a {@link NullPointerException} will be thrown.
-     *
-     * @param id The ID of the {@link GameUserEntryDto} to patch.
-     * @param jsonMergePatch The {@link JsonMergePatch} containing the JSON data to patch.
-     *
-     * @return The patched persisted entity as a {@link GameUserEntryDto}.
-     *
-     * @throws javax.persistence.EntityNotFoundException Thrown if the ID provided doesn't match an existing {@link GameUserEntry} entity.
-     * @throws NullPointerException Thrown if the {@link JsonMergePatch} argument is null.
-     */
-    GameUserEntryDto patch(long id, JsonMergePatch jsonMergePatch);
+    GameUserEntryDto update(GameUserEntryRequest gameUserEntryRequest);
 
     /**
      * Deletes the persisted entity that is mapped to the given ID. If the service cannot find a {@link GameUserEntryDto} that is mapped to the ID,

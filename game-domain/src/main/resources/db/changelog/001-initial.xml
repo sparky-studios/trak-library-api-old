@@ -145,9 +145,6 @@
             <column name="game_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="platform_id" type="bigint">
-                <constraints nullable="false" />
-            </column>
             <column name="user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
@@ -171,18 +168,50 @@
                 constraintName="fk_game_user_entry_game_id"
                 referencedTableName="game"
                 referencedColumnNames="id" />
-        <addForeignKeyConstraint
-                baseTableName="game_user_entry"
-                baseColumnNames="platform_id"
-                constraintName="fk_game_user_entry_platform_id"
-                referencedTableName="platform"
-                referencedColumnNames="id" />
 
         <!-- game_user_entry unique constraints -->
         <addUniqueConstraint
                 tableName="game_user_entry"
-                columnNames="game_id,platform_id,user_id"
-                constraintName="unq_game_user_entry_game_id_platform_id_user_id" />
+                columnNames="game_id,user_id"
+                constraintName="unq_game_user_entry_game_id_user_id" />
+
+        <!-- game_user_entry_platform table -->
+        <createTable tableName="game_user_entry_platform">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_user_entry_platform" />
+            </column>
+            <column name="game_user_entry_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="platform_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_user_entry_platform foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry_platform"
+                baseColumnNames="game_user_entry_id"
+                constraintName="fk_game_user_entry_platform_game_user_entry_id"
+                referencedTableName="game_user_entry"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry_platform"
+                baseColumnNames="platform_id"
+                constraintName="fk_game_user_entry_platform_platform_id"
+                referencedTableName="platform"
+                referencedColumnNames="id" />
+
+        <!-- game_user_entry_platform unique constraints -->
+        <addUniqueConstraint
+                tableName="game_user_entry_platform"
+                columnNames="game_user_entry_id,platform_id"
+                constraintName="unq_game_user_entry_platform_game_user_entry_id_platform_id" />
 
         <!-- game_request table -->
         <createTable tableName="game_request">

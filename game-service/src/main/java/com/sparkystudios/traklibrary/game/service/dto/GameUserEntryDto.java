@@ -8,8 +8,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.*;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "game-user-entry")
@@ -21,20 +20,15 @@ public class GameUserEntryDto {
 
     private String gameTitle;
 
-    private long platformId;
-
-    private String platformName;
-
     private long userId;
 
-    @NotNull(message = "{game-user-entry.validation.status.not-null}")
     private GameUserEntryStatus status;
 
     private Collection<String> publishers = new ArrayList<>();
 
-    @Min(message = "{game-user-entry.validation.rating.min}", value = 0)
-    @Max(message = "{game-user-entry.validation.rating.max}", value = 5)
     private short rating;
+
+    private Set<GameUserEntryPlatformDto> gameUserEntryPlatforms = new TreeSet<>();
 
     private LocalDateTime createdAt;
 

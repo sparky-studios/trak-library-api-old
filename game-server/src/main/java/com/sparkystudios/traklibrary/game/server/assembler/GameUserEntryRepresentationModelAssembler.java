@@ -28,8 +28,6 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
                     .withRel("gameDetails"));
-            resource.add(linkTo(methodOn(PlatformController.class).findById(content.getPlatformId()))
-                    .withRel("platform"));
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))
                     .withRel("image"));
         }
