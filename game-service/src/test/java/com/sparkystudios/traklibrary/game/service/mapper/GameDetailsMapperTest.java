@@ -43,6 +43,7 @@ class GameDetailsMapperTest {
         game.setTitle("test-title");
         game.setDescription("sure is a description.");
         game.setAgeRating(AgeRating.TEEN);
+        game.getGameModes().add(GameMode.MULTI_PLAYER);
         game.setFranchiseId(5L);
         game.setVersion(5L);
         game.addGenre(genre);
@@ -59,6 +60,7 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
+        Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
         Assertions.assertThat(result.getFranchiseId()).isEqualTo(game.getFranchiseId());
         Assertions.assertThat(result.getVersion()).isEqualTo(game.getVersion());
         Assertions.assertThat(result.getGenres()).hasSize(1);

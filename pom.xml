@@ -14,8 +14,10 @@
     <groupId>com.sparkystudios.traklibrary</groupId>
     <artifactId>trak-api</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>Trak Library API</name>
     <packaging>pom</packaging>
+
+    <name>Trak Library API</name>
+    <url>https://traklibrary.com</url>
 
     <profiles>
         <profile>
@@ -46,6 +48,7 @@
                                 </execution>
                             </executions>
                             <configuration>
+                                <dockerHost>http://localhost:2375</dockerHost>
                                 <images>
                                     <image>
                                         <name>sparkystudios/${project.build.finalName}</name>

@@ -809,8 +809,6 @@ class GameControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setPlatformId(1L);
-        gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
@@ -822,8 +820,6 @@ class GameControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setPlatformId(2L);
-        gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
@@ -853,8 +849,8 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
     }
 
     @Test
@@ -864,8 +860,6 @@ class GameControllerTest {
         gameUserEntryDto1.setId(1L);
         gameUserEntryDto1.setGameId(1L);
         gameUserEntryDto1.setGameTitle("game-title-1");
-        gameUserEntryDto1.setPlatformId(1L);
-        gameUserEntryDto1.setPlatformName("platform-name-1");
         gameUserEntryDto1.setUserId(1L);
         gameUserEntryDto1.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryDto1.setRating((short)4);
@@ -877,8 +871,6 @@ class GameControllerTest {
         gameUserEntryDto2.setId(2L);
         gameUserEntryDto2.setGameId(2L);
         gameUserEntryDto2.setGameTitle("game-title-2");
-        gameUserEntryDto2.setPlatformId(2L);
-        gameUserEntryDto2.setPlatformName("platform-name-2");
         gameUserEntryDto2.setUserId(2L);
         gameUserEntryDto2.setStatus(GameUserEntryStatus.IN_PROGRESS);
         gameUserEntryDto2.setRating((short)2);
@@ -908,8 +900,8 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions, gameUserEntryDto1);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions, gameUserEntryDto2);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
+        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
     }
 
     @Test

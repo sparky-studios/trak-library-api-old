@@ -12,5 +12,6 @@ public interface FranchiseMapper {
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "games", ignore = true)
     Franchise franchiseDtoToFranchise(FranchiseDto franchiseDto);
 }
