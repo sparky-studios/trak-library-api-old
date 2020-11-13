@@ -4,11 +4,11 @@ import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "game-user-entry")

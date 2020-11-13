@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class GameUserEntryPlatformMapperTest {
+class GameUserEntryPlatformMapperTest {
 
     @Test
     void gameUserEntryPlatformToGameUserEntryPlatformDto_withNull_returnsNull() {

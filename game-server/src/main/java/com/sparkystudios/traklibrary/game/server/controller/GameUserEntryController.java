@@ -21,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.json.JsonMergePatch;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
