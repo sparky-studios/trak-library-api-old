@@ -778,7 +778,7 @@ class GameControllerTest {
     @Test
     void findGameUserEntriesByGameId_withNoData_returns200AndEmptyPagedResponse() throws Exception {
         // Arrange
-        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
 
         Mockito.when(gameUserEntryService.countGameUserEntriesByGameId(ArgumentMatchers.anyLong()))
@@ -827,7 +827,7 @@ class GameControllerTest {
         gameUserEntryDto2.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto2.setVersion(2L);
 
-        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(Arrays.asList(gameUserEntryDto1, gameUserEntryDto2));
 
         Mockito.when(gameUserEntryService.countGameUserEntriesByGameId(ArgumentMatchers.anyLong()))
@@ -878,7 +878,7 @@ class GameControllerTest {
         gameUserEntryDto2.setUpdatedAt(LocalDateTime.now());
         gameUserEntryDto2.setVersion(2L);
 
-        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
+        Mockito.when(gameUserEntryService.findGameUserEntriesByGameId(ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any()))
                 .thenReturn(Arrays.asList(gameUserEntryDto1, gameUserEntryDto2));
 
         Mockito.when(gameUserEntryService.countGameUserEntriesByGameId(ArgumentMatchers.anyLong()))

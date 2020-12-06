@@ -192,7 +192,7 @@ class GameUserEntryServiceImplTest {
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, pageable));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, null, pageable));
     }
 
     @Test
@@ -205,7 +205,7 @@ class GameUserEntryServiceImplTest {
                 .thenReturn(Page.empty());
 
         // Act
-        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, null, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -225,7 +225,7 @@ class GameUserEntryServiceImplTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(new GameUserEntry(), new GameUserEntry())));
 
         // Act
-        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, null, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert

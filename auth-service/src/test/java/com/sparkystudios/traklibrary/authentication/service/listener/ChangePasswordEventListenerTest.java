@@ -36,7 +36,7 @@ class ChangePasswordEventListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.never())
-                .sendChangePasswordEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendChangePasswordEmail(ArgumentMatchers.any());
     }
 
     @Test
@@ -52,7 +52,7 @@ class ChangePasswordEventListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.never())
-                .sendChangePasswordEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendChangePasswordEmail(ArgumentMatchers.any());
     }
 
     @Test
@@ -68,6 +68,6 @@ class ChangePasswordEventListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.atMostOnce())
-                .sendChangePasswordEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendChangePasswordEmail(ArgumentMatchers.any());
     }
 }

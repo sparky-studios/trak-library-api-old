@@ -1,10 +1,13 @@
 package com.sparkystudios.traklibrary.authentication.service.client;
 
+import com.sparkystudios.traklibrary.authentication.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.authentication.service.dto.EmailVerificationRequestDto;
+
 public interface EmailClient {
 
-    void sendVerificationEmail(String emailAddress, String verificationCode);
+    void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto);
 
-    void sendRecoveryEmail(String emailAddress, String recoveryToken);
+    void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
 
-    void sendChangePasswordEmail(String emailAddress, String recoveryToken);
+    void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
 }

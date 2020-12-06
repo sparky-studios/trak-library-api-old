@@ -36,7 +36,7 @@ class VerificationNeededListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.never())
-                .sendRecoveryEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendRecoveryEmail(ArgumentMatchers.any());
     }
 
     @Test
@@ -52,7 +52,7 @@ class VerificationNeededListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.never())
-                .sendRecoveryEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendRecoveryEmail(ArgumentMatchers.any());
     }
 
     @Test
@@ -68,6 +68,6 @@ class VerificationNeededListenerTest {
 
         // Assert
         Mockito.verify(emailClient, Mockito.atMostOnce())
-                .sendRecoveryEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendRecoveryEmail(ArgumentMatchers.any());
     }
 }

@@ -1,6 +1,10 @@
 package com.sparkystudios.traklibrary.email.server.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import com.sparkystudios.traklibrary.email.service.EmailService;
+import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mockito;
@@ -24,11 +28,14 @@ class EmailControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     @MockBean
     private EmailService emailService;
 
     @Test
-    void sendVerificationEmail_withMissingParameters_returns400() throws Exception {
+    void sendVerificationEmail_withNoBody_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/verification")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -40,17 +47,33 @@ class EmailControllerTest {
     }
 
     @Test
-    void sendVerificationEmail_withParameters_returns200AndValidResponse() throws Exception {
+    void sendVerificationEmail_withInvalidBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/verification")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(new EmailVerificationRequestDto())));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void sendVerificationEmail_withValidBody_returns200AndValidResponse() throws Exception {
         // Arrange
+        EmailVerificationRequestDto emailVerificationRequestDto = new EmailVerificationRequestDto();
+        emailVerificationRequestDto.setEmailAddress("test@traklibrary.com");
+        emailVerificationRequestDto.setVerificationCode("12345");
+
         Mockito.doNothing().when(emailService)
-                .sendVerificationEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendVerificationEmail(ArgumentMatchers.any());
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/verification")
-                .param("email-address", "test@traklibrary.com")
-                .param("verification-code", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(emailVerificationRequestDto)));
 
         // Assert
         resultActions
@@ -58,7 +81,7 @@ class EmailControllerTest {
     }
 
     @Test
-    void sendRecoveryEmail_withMissingParameters_returns400() throws Exception {
+    void sendRecoveryEmail_withNoBody_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/recovery")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,17 +93,33 @@ class EmailControllerTest {
     }
 
     @Test
-    void sendRecoveryEmail_withParameters_returns200AndValidResponse() throws Exception {
+    void sendRecoveryEmail_withInvalidBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/recovery")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(new EmailVerificationRequestDto())));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void sendRecoveryEmail_withValidBody_returns200AndValidResponse() throws Exception {
         // Arrange
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+        emailRecoveryRequestDto.setEmailAddress("test@traklibrary.com");
+        emailRecoveryRequestDto.setRecoveryToken(Strings.repeat("a", 30));
+
         Mockito.doNothing().when(emailService)
-                .sendRecoveryEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendRecoveryEmail(ArgumentMatchers.any());
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/recovery")
-                .param("email-address", "test@traklibrary.com")
-                .param("recovery-token", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(emailRecoveryRequestDto)));
 
         // Assert
         resultActions
@@ -88,7 +127,7 @@ class EmailControllerTest {
     }
 
     @Test
-    void sendChangePasswordEmail_withMissingParameters_returns400() throws Exception {
+    void sendChangePasswordEmail_withNoBody_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -100,17 +139,33 @@ class EmailControllerTest {
     }
 
     @Test
-    void sendChangePasswordEmail_withParameters_returns200AndValidResponse() throws Exception {
+    void sendChangePasswordEmail_withInvalidBody_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(new EmailRecoveryRequestDto())));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest());
+    }
+
+    @Test
+    void sendChangePasswordEmail_withValidBody_returns200AndValidResponse() throws Exception {
         // Arrange
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+        emailRecoveryRequestDto.setEmailAddress("test@traklibrary.com");
+        emailRecoveryRequestDto.setRecoveryToken(Strings.repeat("a", 30));
+
         Mockito.doNothing().when(emailService)
-                .sendChangePasswordEmail(ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+                .sendChangePasswordEmail(ArgumentMatchers.any());
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/change-password")
-                .param("email-address", "test@traklibrary.com")
-                .param("recovery-token", "1234A")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.traklibrary.v1+json")
+                .content(objectMapper.writeValueAsString(emailRecoveryRequestDto)));
 
         // Assert
         resultActions
