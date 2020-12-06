@@ -1,5 +1,7 @@
 package com.sparkystudios.traklibrary.email.service;
 
+import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
 import com.sparkystudios.traklibrary.email.service.impl.EmailServiceThymeleafImpl;
 
@@ -26,10 +28,9 @@ public interface EmailService {
      * It should be noted, that no validation needs to occur with any {@link EmailService}
      * implementation, validation of the fields should occur at the controller level.
      *
-     * @param emailAddress The email address to send the verification email to.
-     * @param verificationCode The verification code to attach to the email.
+     * @param emailVerificationRequestDto The email and verification code to dispatch.
      */
-    void sendVerificationEmail(String emailAddress, String verificationCode);
+    void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto);
 
     /**
      * Given an email address and a password, this method will dispatch an account recovery email
@@ -40,10 +41,9 @@ public interface EmailService {
      * It should be noted, that no validation needs to occur with any {@link EmailService}
      * implementation, validation of the fields should occur at the controller level.
      *
-     * @param emailAddress The email address to send the account recovery email to.
-     * @param recoveryToken The randomly generated recovery token to attach to the email.
+     * @param emailRecoveryRequestDto The email and recovery code to dispatch.
      */
-    void sendRecoveryEmail(String emailAddress, String recoveryToken);
+    void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
 
     /**
      * Given an email address and a password, this method will dispatch a change password email
@@ -54,8 +54,7 @@ public interface EmailService {
      * It should be noted, that no validation needs to occur with any {@link EmailService}
      * implementation, validation of the fields should occur at the controller level.
      *
-     * @param emailAddress The email address to send the change password email to.
-     * @param recoveryToken The randomly generated recovery token to attach to the email.
+     * @param emailRecoveryRequestDto The email and recovery code to dispatch.
      */
-    void sendChangePasswordEmail(String emailAddress, String recoveryToken);
+    void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
 }

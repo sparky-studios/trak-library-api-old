@@ -1,5 +1,7 @@
 package com.sparkystudios.traklibrary.email.service.impl;
 
+import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -46,8 +48,10 @@ class EmailServiceThymeleafImplTest {
         Mockito.when(templateEngine.process(ArgumentMatchers.eq("verification-template"), ArgumentMatchers.any(IContext.class)))
                 .thenReturn("");
 
+        EmailVerificationRequestDto emailVerificationRequestDto = new EmailVerificationRequestDto();
+
         // Assert
-        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendVerificationEmail("", ""));
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendVerificationEmail(emailVerificationRequestDto));
     }
 
     @Test
@@ -67,8 +71,12 @@ class EmailServiceThymeleafImplTest {
         Mockito.doNothing()
                 .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
 
+        EmailVerificationRequestDto emailVerificationRequestDto = new EmailVerificationRequestDto();
+        emailVerificationRequestDto.setEmailAddress("test@traklibrary.com");
+        emailVerificationRequestDto.setVerificationCode("12345");
+
         // Act
-        emailService.sendVerificationEmail("email.address@test.com", "12345");
+        emailService.sendVerificationEmail(emailVerificationRequestDto);
 
         // Assert
         Mockito.verify(javaMailSender, Mockito.atMostOnce())
@@ -89,8 +97,10 @@ class EmailServiceThymeleafImplTest {
         Mockito.when(templateEngine.process(ArgumentMatchers.eq("recovery-template"), ArgumentMatchers.any(IContext.class)))
                 .thenReturn("");
 
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+
         // Assert
-        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendRecoveryEmail("", ""));
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendRecoveryEmail(emailRecoveryRequestDto));
     }
 
     @Test
@@ -110,8 +120,12 @@ class EmailServiceThymeleafImplTest {
         Mockito.doNothing()
                 .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
 
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+        emailRecoveryRequestDto.setEmailAddress("test@traklibrary.com");
+        emailRecoveryRequestDto.setRecoveryToken("12345");
+
         // Act
-        emailService.sendRecoveryEmail("email.address@test.com", "12345");
+        emailService.sendRecoveryEmail(emailRecoveryRequestDto);
 
         // Assert
         Mockito.verify(javaMailSender, Mockito.atMostOnce())
@@ -132,8 +146,10 @@ class EmailServiceThymeleafImplTest {
         Mockito.when(templateEngine.process(ArgumentMatchers.eq("change-password-template"), ArgumentMatchers.any(IContext.class)))
                 .thenReturn("");
 
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+
         // Assert
-        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendChangePasswordEmail("", ""));
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendChangePasswordEmail(emailRecoveryRequestDto));
     }
 
     @Test
@@ -153,8 +169,12 @@ class EmailServiceThymeleafImplTest {
         Mockito.doNothing()
                 .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
 
+        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+        emailRecoveryRequestDto.setEmailAddress("test@traklibrary.com");
+        emailRecoveryRequestDto.setRecoveryToken("12345");
+
         // Act
-        emailService.sendChangePasswordEmail("email.address@test.com", "12345");
+        emailService.sendChangePasswordEmail(emailRecoveryRequestDto);
 
         // Assert
         Mockito.verify(javaMailSender, Mockito.atMostOnce())

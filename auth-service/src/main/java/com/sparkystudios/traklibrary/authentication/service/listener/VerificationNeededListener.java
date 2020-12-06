@@ -3,6 +3,7 @@ package com.sparkystudios.traklibrary.authentication.service.listener;
 import com.google.common.base.Strings;
 import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.client.EmailClient;
+import com.sparkystudios.traklibrary.authentication.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.authentication.service.event.OnVerificationNeededEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
@@ -21,7 +22,11 @@ public class VerificationNeededListener implements ApplicationListener<OnVerific
         String verificationCode = userService.createVerificationCode(onVerificationNeededEvent.getUsername());
         // Only send a new email if a new valid has been created.
         if (!Strings.isNullOrEmpty(verificationCode)) {
-            emailClient.sendVerificationEmail(onVerificationNeededEvent.getEmailAddress(), verificationCode);
+            EmailVerificationRequestDto emailVerificationRequestDto = new EmailVerificationRequestDto();
+            emailVerificationRequestDto.setEmailAddress(onVerificationNeededEvent.getEmailAddress());
+            emailVerificationRequestDto.setVerificationCode(verificationCode);
+
+            emailClient.sendVerificationEmail(emailVerificationRequestDto);
         }
     }
 }

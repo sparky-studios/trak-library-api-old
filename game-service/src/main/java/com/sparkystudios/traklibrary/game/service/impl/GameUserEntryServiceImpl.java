@@ -17,11 +17,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -95,7 +100,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable) {
+    public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -103,8 +108,11 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             throw new EntityNotFoundException(errorMessage);
         }
 
+        Specification<GameUserEntry> specification = (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("gameId"), gameId);
+
         return gameUserEntryRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
+                .findAll(specification.and(gameUserEntrySpecification), pageable)
                 .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto);
     }
 

@@ -47,7 +47,7 @@ public class GameDetailsRepresentationModelAssembler implements SimpleRepresenta
             resource.add(linkTo(methodOn(GameController.class).findPublishersByGameId(content.getId()))
                     .withRel("publishers"));
 
-            resource.add(linkTo(methodOn(GameController.class).findGameUserEntriesByGameId(content.getId(), Pageable.unpaged(), gameUserEntryDtoPagedResourcesAssembler))
+            resource.add(linkTo(methodOn(GameController.class).findGameUserEntriesByGameId(content.getId(), null, Pageable.unpaged(), gameUserEntryDtoPagedResourcesAssembler))
                     .withRel("entries"));
 
             if (content.getFranchiseId() != null) {

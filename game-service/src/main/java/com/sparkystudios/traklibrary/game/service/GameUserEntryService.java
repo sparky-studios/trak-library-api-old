@@ -45,13 +45,15 @@ public interface GameUserEntryService {
      * Given the ID of a {@link Game}, this method will retrieve a {@link Page} of {@link GameUserEntry}'s that are associated with
      * the given {@link Game}. If the ID provided does not map to any {@link Game}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link GameUserEntry}'s associated with the {@link Game}, an empty {@link Iterable} will be returned.
+     * The query can be additionally filtered by providing arguments to the {@link GameUserEntrySpecification} specification object.
      *
      * @param gameId The ID of the {@link Game} to retrieve {@link GameUserEntry} entries for.
+     * @param gameUserEntrySpecification A {@link GameUserEntrySpecification} used to additionally filter the results.
      * @param pageable The amount of data and the page to return.
      *
      * @return A page of {@link GameUserEntryDto}s that are mapped with the given {@link Game}.
      */
-    Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable);
+    Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable);
 
     /**
      * Given the ID of a {@link Game}, this method will retrieve the total count for how many {@link GameUserEntryDto}'s have an association

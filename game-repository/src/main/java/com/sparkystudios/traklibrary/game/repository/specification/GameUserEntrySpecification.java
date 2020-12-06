@@ -8,7 +8,6 @@ import org.springframework.data.jpa.domain.Specification;
 
 @And({
         @Spec(path = "id", spec = Equal.class),
-        @Spec(path = "platformId", params = "platform-id", spec = Equal.class),
         @Spec(path = "gameId", params = "game-id", spec = Equal.class),
         @Spec(path = "userId", params = "user-id", spec = Equal.class),
         @Spec(path = "status", spec = Equal.class)

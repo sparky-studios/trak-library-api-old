@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
+import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.*;
 import com.sparkystudios.traklibrary.game.service.*;
 import com.sparkystudios.traklibrary.game.service.dto.*;
@@ -358,6 +359,7 @@ public class GameController {
     @AllowedForUser
     @GetMapping("/{id}/entries")
     public PagedModel<EntityModel<GameUserEntryDto>> findGameUserEntriesByGameId(@PathVariable long id,
+                                                                                 GameUserEntrySpecification gameUserEntrySpecification,
                                                                                  @PageableDefault Pageable pageable,
                                                                                  PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
@@ -366,7 +368,7 @@ public class GameController {
                 .withSelfRel();
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
-        List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(id, pageable).spliterator(), false)
+        List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(id, gameUserEntrySpecification, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Get the total number of entities that match the given criteria, dis-regarding page sizing.

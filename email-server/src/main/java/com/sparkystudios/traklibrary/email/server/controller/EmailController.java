@@ -1,10 +1,13 @@
 package com.sparkystudios.traklibrary.email.server.controller;
 
 import com.sparkystudios.traklibrary.email.service.EmailService;
+import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -33,14 +36,12 @@ public class EmailController {
      * If the email is sent successfully, the end-point will return a 204 response code, otherwise if any issues
      * occurred a {@link EmailFailedException} will be thrown.
      *
-     * @param emailAddress The email address to dispatch the verification email to.
-     * @param verificationCode The verification code of the user to attach to the email.
+     * @param emailVerificationRequestDto The body containing the email and verification code to dispatch.
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/verification")
-    public void sendVerificationEmail(@RequestParam("email-address") String emailAddress,
-                                      @RequestParam("verification-code") String verificationCode) {
-        emailService.sendVerificationEmail(emailAddress, verificationCode);
+    public void sendVerificationEmail(@Validated @RequestBody EmailVerificationRequestDto emailVerificationRequestDto) {
+        emailService.sendVerificationEmail(emailVerificationRequestDto);
     }
 
     /**
@@ -52,14 +53,12 @@ public class EmailController {
      * If the email is sent successfully, the end-point will return a 204 response code, otherwise if any issues
      * occurred a {@link EmailFailedException} will be thrown.
      *
-     * @param emailAddress The email address to dispatch the account recovery email to.
-     * @param recoveryToken The randomly generated password of the user to attach to the email.
+     * @param emailRecoveryRequestDto The body containing the email and recovery token to dispatch.
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/recovery")
-    public void sendRecoveryEmail(@RequestParam("email-address") String emailAddress,
-                                  @RequestParam("recovery-token") String recoveryToken) {
-        emailService.sendRecoveryEmail(emailAddress, recoveryToken);
+    public void sendRecoveryEmail(@Validated @RequestBody EmailRecoveryRequestDto emailRecoveryRequestDto) {
+        emailService.sendRecoveryEmail(emailRecoveryRequestDto);
     }
 
     /**
@@ -71,13 +70,11 @@ public class EmailController {
      * If the email is sent successfully, the end-point will return a 204 response code, otherwise if any issues
      * occurred a {@link EmailFailedException} will be thrown.
      *
-     * @param emailAddress The email address to dispatch the change password email to.
-     * @param recoveryToken The randomly generated password of the user to attach to the email.
+     * @param emailRecoveryRequestDto The body containing the email and recovery token to dispatch.
      */
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping("/change-password")
-    public void sendChangePasswordEmail(@RequestParam("email-address") String emailAddress,
-                                        @RequestParam("recovery-token") String recoveryToken) {
-        emailService.sendChangePasswordEmail(emailAddress, recoveryToken);
+    public void sendChangePasswordEmail(@Validated @RequestBody EmailRecoveryRequestDto emailRecoveryRequestDto) {
+        emailService.sendChangePasswordEmail(emailRecoveryRequestDto);
     }
 }

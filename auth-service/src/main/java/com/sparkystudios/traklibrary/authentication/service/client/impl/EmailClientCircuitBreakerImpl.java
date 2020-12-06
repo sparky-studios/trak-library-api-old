@@ -1,6 +1,8 @@
 package com.sparkystudios.traklibrary.authentication.service.client.impl;
 
 import com.sparkystudios.traklibrary.authentication.service.client.EmailClient;
+import com.sparkystudios.traklibrary.authentication.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.authentication.service.dto.EmailVerificationRequestDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,30 +44,30 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     }
 
     @Override
-    public void sendVerificationEmail(String emailAddress, String verificationCode) {
-        String url = "http://trak-email-server/verification?email-address={emailAddress}&verification-code={verificationCode}";
+    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
+        String url = "http://trak-email-server/verification";
 
-        sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(getHeaders()), Void.class, emailAddress, verificationCode), throwable -> {
+        sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(emailVerificationRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send verification email", throwable);
             return null;
         });
     }
 
     @Override
-    public void sendRecoveryEmail(String emailAddress, String recoveryToken) {
-        String url = "http://trak-email-server/recovery?email-address={emailAddress}&recovery-token={recoveryToken}";
+    public void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
+        String url = "http://trak-email-server/recovery";
 
-        sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(getHeaders()), Void.class, emailAddress, recoveryToken), throwable -> {
+        sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(emailRecoveryRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send account recovery email", throwable);
             return null;
         });
     }
 
     @Override
-    public void sendChangePasswordEmail(String emailAddress, String recoveryToken) {
-        String url = "http://trak-email-server/change-password?email-address={emailAddress}&recovery-token={recoveryToken}";
+    public void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
+        String url = "http://trak-email-server/change-password";
 
-        sendChangePasswordEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(getHeaders()), Void.class, emailAddress, recoveryToken), throwable -> {
+        sendChangePasswordEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(emailRecoveryRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send change password email", throwable);
             return null;
         });
