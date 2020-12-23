@@ -169,8 +169,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
     }
 
@@ -213,8 +213,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
@@ -260,8 +260,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(100)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
@@ -290,8 +290,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
     }
 
@@ -334,8 +334,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDetailsDto("._embedded.data[0]", resultActions, gameDetailsDto1);
@@ -381,8 +381,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(100)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDetailsDto("._embedded.data[0]", resultActions, gameDetailsDto1);
@@ -411,8 +411,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
     }
 
@@ -453,8 +453,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGenreDto("._embedded.data[0]", resultActions, genreDto1);
@@ -498,8 +498,8 @@ public class GenreControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(100)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGenreDto("._embedded.data[0]", resultActions, genreDto1);

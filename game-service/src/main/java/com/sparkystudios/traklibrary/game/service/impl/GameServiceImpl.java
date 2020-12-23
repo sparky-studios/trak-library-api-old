@@ -102,6 +102,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto saveGenresForGameId(long id, @NonNull Collection<Long> genreIds) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -171,6 +172,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto savePlatformsForGameId(long id, @NonNull Collection<Long> platformsIds) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -193,6 +195,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto updatePlatformsForGameId(long id, @NonNull Collection<Long> platformIds) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -239,6 +242,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto saveDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -261,6 +265,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto updateDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -307,6 +312,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto savePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -329,6 +335,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public GameDto updatePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
@@ -348,6 +355,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Iterable<GameDto> findGamesByFranchiseId(long franchiseId, Pageable pageable) {
         if (!franchiseRepository.existsById(franchiseId)) {
             String errorMessage = messageSource
@@ -361,6 +369,7 @@ public class GameServiceImpl implements GameService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public long countGamesByFranchiseId(long franchiseId) {
         if (!franchiseRepository.existsById(franchiseId)) {
             String errorMessage = messageSource

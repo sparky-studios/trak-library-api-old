@@ -22,9 +22,6 @@
             <column name="age_rating" type="smallint" defaultValueNumeric="5">
                 <constraints nullable="false"/>
             </column>
-            <column name="game_modes" type="bigint" defaultValueNumeric="0">
-                <constraints nullable="false"/>
-            </column>
             <column name="franchise_id" type="bigint" />
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
@@ -32,6 +29,24 @@
             <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
+
+        <!-- Create the game mode tables -->
+        <createTable tableName="game_mode">
+            <column name="mode" type="varchar(30)">
+                <constraints nullable="false" />
+            </column>
+            <column name="game_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+        </createTable>
+
+        <!-- game_mode foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_mode"
+                baseColumnNames="game_id"
+                constraintName="fk_game_mode_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
 
         <!-- Create the genre table -->
         <createTable tableName="genre">
@@ -519,6 +534,7 @@
             <dropTable tableName="platform" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
+            <dropTable tableName="game_mode" />
             <dropTable tableName="game" />
         </rollback>
     </changeSet>

@@ -70,13 +70,13 @@ class GameBarcodeControllerTest {
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is((int)gameBarcodeDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.gameId", Matchers.is((int)gameBarcodeDto.getGameId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.platformId", Matchers.is((int)gameBarcodeDto.getPlatformId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.game_id", Matchers.is((int)gameBarcodeDto.getGameId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.platform_id", Matchers.is((int)gameBarcodeDto.getPlatformId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.barcode", Matchers.is(gameBarcodeDto.getBarcode())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.barcodeType", Matchers.is(gameBarcodeDto.getBarcodeType().name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.barcode_type", Matchers.is(gameBarcodeDto.getBarcodeType().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.self").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.game").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$._links.gameDetails").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$._links.game_details").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.platform").exists());
     }
 }

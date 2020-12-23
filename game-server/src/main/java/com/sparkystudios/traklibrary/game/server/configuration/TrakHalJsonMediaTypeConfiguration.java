@@ -1,9 +1,7 @@
 package com.sparkystudios.traklibrary.game.server.configuration;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.*;
 import com.fasterxml.jackson.databind.Module;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr353.JSR353Module;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +18,7 @@ import org.springframework.hateoas.mediatype.hal.HalLinkDiscoverer;
 import org.springframework.hateoas.mediatype.hal.Jackson2HalModule;
 import org.springframework.hateoas.server.LinkRelationProvider;
 import org.springframework.http.MediaType;
+import org.springframework.lang.NonNull;
 
 import java.util.List;
 
@@ -44,6 +43,7 @@ public class TrakHalJsonMediaTypeConfiguration implements HypermediaMappingInfor
     }
 
     @Override
+    @NonNull
     public ObjectMapper configureObjectMapper(ObjectMapper mapper) {
         mapper.registerModule(new JavaTimeModule());
         mapper.registerModule(getJacksonModule());
@@ -56,11 +56,13 @@ public class TrakHalJsonMediaTypeConfiguration implements HypermediaMappingInfor
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
         mapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
         mapper.disable(DeserializationFeature.ADJUST_DATES_TO_CONTEXT_TIME_ZONE);
+        mapper.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 
         return mapper;
     }
 
     @Override
+    @NonNull
     public List<MediaType> getMediaTypes() {
         return MediaType.parseMediaTypes("application/vnd.traklibrary.v1.hal+json");
     }

@@ -12,7 +12,7 @@ class GameDetailsMapperTest {
     @Test
     void gameToGameDetailsDto_withNull_returnsNull() {
         // Act
-        GameDetailsDto result = GameMappers.GAME_INFO_MAPPER.gameToGameDetailsDto(null);
+        GameDetailsDto result = GameMappers.GAME_DETAILS_MAPPER.gameToGameDetailsDto(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
@@ -53,7 +53,7 @@ class GameDetailsMapperTest {
         game.setFranchise(franchise);
 
         // Act
-        GameDetailsDto result = GameMappers.GAME_INFO_MAPPER.gameToGameDetailsDto(game);
+        GameDetailsDto result = GameMappers.GAME_DETAILS_MAPPER.gameToGameDetailsDto(game);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(game.getId());
