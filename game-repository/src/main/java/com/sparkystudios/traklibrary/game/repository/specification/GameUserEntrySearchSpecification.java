@@ -13,8 +13,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class GameUserEntrySearchSpecification implements Specification<GameUserEntry> {
 
-    private transient final Set<Platform> platforms;
-    private transient final Set<Genre> genres;
+    private final transient Set<Platform> platforms;
+    private final transient Set<Genre> genres;
     private final Set<GameMode> gameModes;
     private final Set<AgeRating> ageRatings;
     private final Set<GameUserEntryStatus> statuses;
