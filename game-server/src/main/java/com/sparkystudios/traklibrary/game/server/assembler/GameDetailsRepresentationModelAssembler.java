@@ -59,6 +59,6 @@ public class GameDetailsRepresentationModelAssembler implements SimpleRepresenta
 
     @Override
     public void addLinks(@NonNull CollectionModel<EntityModel<GameDetailsDto>> resources) {
-        // Unused. Additional resource links aren't added to collections.
+        // Empty.
     }
 }

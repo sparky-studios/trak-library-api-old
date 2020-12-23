@@ -1,6 +1,5 @@
 package com.sparkystudios.traklibrary.game.domain;
 
-import com.sparkystudios.traklibrary.game.domain.converter.GameModeAttributeConverter;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -78,8 +77,10 @@ public class Game {
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<GameReleaseDate> releaseDates = new TreeSet<>();
 
-    @Convert(converter = GameModeAttributeConverter.class)
-    @Column(name = "game_modes", nullable = false)
+    @ElementCollection(targetClass = GameMode.class)
+    @CollectionTable(name = "game_mode", joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "mode", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Set<GameMode> gameModes = EnumSet.noneOf(GameMode.class);
 
     @Column(name = "franchise_id")

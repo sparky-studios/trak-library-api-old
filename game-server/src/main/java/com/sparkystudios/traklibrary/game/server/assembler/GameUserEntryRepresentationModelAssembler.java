@@ -26,7 +26,7 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
-                    .withRel("gameDetails"));
+                    .withRel("game_details"));
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))
                     .withRel("image"));
         }

@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.repository;
 
 import com.sparkystudios.traklibrary.game.domain.*;
+import com.sparkystudios.traklibrary.game.repository.specification.GameSearchSpecification;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
+import java.util.Collections;
 
 @DataJpaTest
 class GameRepositoryTest {
@@ -73,7 +75,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByDevelopersId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -151,7 +153,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByPublishersId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -228,7 +230,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByGenresId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -305,7 +307,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByPlatformsId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -335,5 +337,324 @@ class GameRepositoryTest {
 
         // Assert
         Assertions.assertThat(result).isEqualTo(2L);
+    }
+
+    @Test
+    void findAllWithGameSearchSpecification_withNonMatchingPlatform_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("non-matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        Page<Game> result = gameRepository
+                .findAll(gameSearchSpecification, Pageable.unpaged());
+
+        // Assert
+        Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findAllWithGameSearchSpecification_withNonMatchingGenre_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("non-matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        Page<Game> result = gameRepository
+                .findAll(gameSearchSpecification, Pageable.unpaged());
+
+        // Assert
+        Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findAllWithGameSearchSpecification_withNonMatchingGameMode_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), Collections.singleton(GameMode.MULTI_PLAYER), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        Page<Game> result = gameRepository
+                .findAll(gameSearchSpecification, Pageable.unpaged());
+
+        // Assert
+        Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findAllWithGameSearchSpecification_withNonMatchingAgeRating_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(AgeRating.ADULTS_ONLY));
+
+        // Act
+        Page<Game> result = gameRepository
+                .findAll(gameSearchSpecification, Pageable.unpaged());
+
+        // Assert
+        Assertions.assertThat(result).isEmpty();
+    }
+
+    @Test
+    void findAllWithGameSearchSpecification_withMatchingCriteria_returnsResults() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        Page<Game> result = gameRepository
+                .findAll(gameSearchSpecification, Pageable.unpaged());
+
+        // Assert
+        Assertions.assertThat(result).isNotEmpty();
+    }
+
+    @Test
+    void countWithGameSearchSpecification_withNonMatchingPlatform_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("non-matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        long result = gameRepository.count(gameSearchSpecification);
+
+        // Assert
+        Assertions.assertThat(result).isZero();
+    }
+
+    @Test
+    void countWithGameSearchSpecification_withNonMatchingGenre_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("non-matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        long result = gameRepository.count(gameSearchSpecification);
+
+        // Assert
+        Assertions.assertThat(result).isZero();
+    }
+
+    @Test
+    void countWithGameSearchSpecification_withNonMatchingGameMode_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), Collections.singleton(GameMode.MULTI_PLAYER), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        long result = gameRepository.count(gameSearchSpecification);
+
+        // Assert
+        Assertions.assertThat(result).isZero();
+    }
+
+    @Test
+    void countWithGameSearchSpecification_withNonMatchingAgeRating_returnsEmpty() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(AgeRating.ADULTS_ONLY));
+
+        // Act
+        long result = gameRepository.count(gameSearchSpecification);
+
+        // Assert
+        Assertions.assertThat(result).isZero();
+    }
+
+    @Test
+    void countWithGameSearchSpecification_withMatchingCriteria_returnsResults() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("matching-platform");
+        platform.setDescription("test-description");
+        platform = platformRepository.save(platform);
+
+        Genre genre = new Genre();
+        genre.setName("matching-genre");
+        genre.setDescription("test-description");
+        genre = genreRepository.save(genre);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.addPlatform(platform);
+        game.addGenre(genre);
+        gameRepository.save(game);
+
+        GameSearchSpecification gameSearchSpecification =
+                new GameSearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()));
+
+        // Act
+        long result = gameRepository.count(gameSearchSpecification);
+
+        // Assert
+        Assertions.assertThat(result).isNotZero();
     }
 }

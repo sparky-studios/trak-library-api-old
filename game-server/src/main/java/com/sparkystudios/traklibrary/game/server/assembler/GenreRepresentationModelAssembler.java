@@ -36,7 +36,7 @@ public class GenreRepresentationModelAssembler implements SimpleRepresentationMo
                 .withRel("games"));
 
             resource.add(linkTo(methodOn(GenreController.class).findGameDetailsByGenreId(content.getId(), Pageable.unpaged(), gameDetailsDtoPagedResourcesAssembler))
-                    .withRel("gameDetails"));
+                    .withRel("game_details"));
         }
     }
 
