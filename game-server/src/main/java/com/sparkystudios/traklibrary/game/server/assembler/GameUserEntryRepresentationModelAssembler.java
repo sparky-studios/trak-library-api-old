@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
-import com.sparkystudios.traklibrary.game.server.controller.GameFilterController;
 import com.sparkystudios.traklibrary.game.server.controller.GameUserEntryController;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import org.springframework.hateoas.CollectionModel;

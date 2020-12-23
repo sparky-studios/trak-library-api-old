@@ -75,7 +75,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByDevelopersId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -153,7 +153,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByPublishersId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -230,7 +230,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByGenresId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test
@@ -307,7 +307,7 @@ class GameRepositoryTest {
         long result = gameRepository.countByPlatformsId(1L);
 
         // Assert
-        Assertions.assertThat(result).isEqualTo(0L);
+        Assertions.assertThat(result).isZero();
     }
 
     @Test

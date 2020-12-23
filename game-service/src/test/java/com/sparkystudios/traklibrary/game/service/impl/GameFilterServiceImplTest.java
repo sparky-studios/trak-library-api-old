@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Set;
 
 @ExtendWith(MockitoExtension.class)
-public class GameFilterServiceImplTest {
+class GameFilterServiceImplTest {
 
     @Mock
     private PlatformRepository platformRepository;
