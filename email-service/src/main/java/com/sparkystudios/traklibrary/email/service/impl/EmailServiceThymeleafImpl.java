@@ -18,7 +18,9 @@ import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
@@ -31,7 +33,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
     private static final String CHANGE_PASSWORD_SUBJECT = "email.change-password.subject";
 
     @Setter
-    @Value("${trak.aws.simple-email-service.from-address}")
+    @Value("${trak.aws.ses.from-address}")
     private String fromAddress;
 
     private final JavaMailSender javaMailSender;
@@ -89,7 +91,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         }
     }
 
-    private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException {
+    private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException, UnsupportedEncodingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
@@ -101,7 +103,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         mimeMessageHelper.setTo(emailDto.getTo());
         mimeMessageHelper.setText(html, true);
         mimeMessageHelper.setSubject(emailDto.getSubject());
-        mimeMessageHelper.setFrom(emailDto.getFrom());
+        mimeMessageHelper.setFrom(new InternetAddress(emailDto.getFrom(), "Trak Library"));
 
         return mimeMessage;
     }

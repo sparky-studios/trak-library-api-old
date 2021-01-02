@@ -3,6 +3,7 @@ package com.sparkystudios.traklibrary.image.server.controller;
 import com.sparkystudios.traklibrary.image.server.annotation.AllowedForAdmin;
 import com.sparkystudios.traklibrary.image.service.ImageService;
 import com.sparkystudios.traklibrary.image.service.exception.ImageFailedException;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;

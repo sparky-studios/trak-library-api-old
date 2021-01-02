@@ -14,6 +14,8 @@ services:
       - discovery-server
       - config-server
     restart: on-failure
+    expose:
+      - 8080
     networks:
       - trak-network
 
@@ -31,6 +33,8 @@ services:
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
     depends_on:
       - discovery-server
+    expose:
+      - 8888
     restart: on-failure
     networks:
       - trak-network
@@ -58,6 +62,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
@@ -75,6 +81,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
@@ -92,6 +100,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
@@ -109,6 +119,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
@@ -126,6 +138,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
