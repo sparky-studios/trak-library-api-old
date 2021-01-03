@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +38,7 @@ import java.util.Collections;
 @Import({PlatformController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = PlatformController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class PlatformControllerTest {
+class PlatformControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

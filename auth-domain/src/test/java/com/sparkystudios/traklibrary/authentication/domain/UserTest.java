@@ -122,7 +122,7 @@ class UserTest {
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getUsername()).isEqualTo(user.getUsername());
         Assertions.assertThat(result.getPassword()).isEqualTo(user.getPassword());
         Assertions.assertThat(result.getEmailAddress()).isEqualTo(user.getEmailAddress());
@@ -133,7 +133,7 @@ class UserTest {
         Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualToIgnoringNanos(user.getRecoveryTokenExpiryDate());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test

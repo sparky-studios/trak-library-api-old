@@ -42,7 +42,7 @@ import java.util.Collections;
 @Import({GenreController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = GenreController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class GenreControllerTest {
+class GenreControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

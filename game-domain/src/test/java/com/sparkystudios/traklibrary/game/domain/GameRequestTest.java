@@ -75,7 +75,7 @@ class GameRequestTest {
         GameRequest result = testEntityManager.persistFlushFind(gameRequest);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getTitle()).isEqualTo(gameRequest.getTitle());
         Assertions.assertThat(result.getNotes()).isEqualTo(gameRequest.getNotes());
         Assertions.assertThat(result.isCompleted()).isTrue();
@@ -83,6 +83,6 @@ class GameRequestTest {
         Assertions.assertThat(result.getUserId()).isEqualTo(gameRequest.getUserId());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 }

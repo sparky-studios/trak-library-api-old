@@ -51,10 +51,10 @@ class GenreTest {
         Genre result = testEntityManager.persistFlushFind(genre);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(genre.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(genre.getDescription());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test

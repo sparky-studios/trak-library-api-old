@@ -63,12 +63,12 @@ class PlatformTest {
         Platform result = testEntityManager.persistFlushFind(platform);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(platform.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(platform.getDescription());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
