@@ -33,7 +33,7 @@ public class MessageConfig {
     public CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
         filter.setIncludeQueryString(true);
-        filter.setIncludePayload(true);
+        filter.setIncludePayload(false);
         filter.setMaxPayloadLength(10000);
         filter.setIncludeHeaders(false);
         return filter;
