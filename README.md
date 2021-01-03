@@ -24,7 +24,7 @@ Create an **.env** file at the root of the project and add the following values:
 
 ```.env
 # Which version to deploy when running docker-compose.
-VERSION=latest-development
+VERSION=****
 
 # Encryption key used to encrypt/decrypt config server values.
 CONFIG_SERVER_ENCRYPT_KEY=****
