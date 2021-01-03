@@ -80,11 +80,11 @@ class DeveloperTest {
         Developer result = testEntityManager.persistFlushFind(developer);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(developer.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(developer.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(developer.getFoundedDate());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
