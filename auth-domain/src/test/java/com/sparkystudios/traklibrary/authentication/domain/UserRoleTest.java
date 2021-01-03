@@ -60,11 +60,11 @@ class UserRoleTest {
         UserRole result = testEntityManager.persistFlushFind(userRole);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getRole()).isEqualTo(userRole.getRole());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
@@ -142,6 +142,7 @@ class UserRoleTest {
 
         // Assert
         Assertions.assertThat(result.getUsers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getUsers().iterator().next()).isEqualTo(user1);
+        Assertions.assertThat(result.getUsers().iterator().next().getId())
+                .isEqualTo(user1.getId());
     }
 }

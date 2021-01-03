@@ -12,5 +12,6 @@ public interface PlatformReleaseDateMapper {
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "platform", ignore = true)
     PlatformReleaseDate platformReleaseDateDtoToPlatformReleaseDate(PlatformReleaseDateDto platformReleaseDateDto);
 }

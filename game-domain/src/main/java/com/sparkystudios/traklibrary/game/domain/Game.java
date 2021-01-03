@@ -1,8 +1,6 @@
 package com.sparkystudios.traklibrary.game.domain;
 
-import com.sparkystudios.traklibrary.game.domain.converter.GameModeAttributeConverter;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -35,6 +33,7 @@ public class Game {
     private AgeRating ageRating;
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_genre_xref",
@@ -44,6 +43,7 @@ public class Game {
     private Set<Genre> genres = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_platform_xref",
@@ -53,6 +53,7 @@ public class Game {
     private Set<Platform> platforms = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_publisher_xref",
@@ -62,6 +63,7 @@ public class Game {
     private Set<Publisher> publishers = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(
             name = "game_developer_xref",
@@ -71,12 +73,24 @@ public class Game {
     private Set<Developer> developers = new HashSet<>();
 
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<GameReleaseDate> releaseDates = new TreeSet<>();
 
-    @Convert(converter = GameModeAttributeConverter.class)
-    @Column(name = "game_modes", nullable = false)
+    @ElementCollection(targetClass = GameMode.class)
+    @CollectionTable(name = "game_mode", joinColumns = @JoinColumn(name = "game_id"))
+    @Column(name = "mode", nullable = false)
+    @Enumerated(EnumType.STRING)
     private Set<GameMode> gameModes = EnumSet.noneOf(GameMode.class);
+
+    @Column(name = "franchise_id")
+    private Long franchiseId;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "franchise_id", insertable = false, updatable = false)
+    private Franchise franchise;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

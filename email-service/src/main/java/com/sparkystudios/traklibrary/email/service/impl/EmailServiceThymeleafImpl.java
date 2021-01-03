@@ -2,6 +2,8 @@ package com.sparkystudios.traklibrary.email.service.impl;
 
 import com.sparkystudios.traklibrary.email.service.EmailService;
 import com.sparkystudios.traklibrary.email.service.dto.EmailDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -16,7 +18,9 @@ import org.thymeleaf.ITemplateEngine;
 import org.thymeleaf.context.Context;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 
@@ -29,7 +33,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
     private static final String CHANGE_PASSWORD_SUBJECT = "email.change-password.subject";
 
     @Setter
-    @Value("${trak.aws.simple-email-service.from-address}")
+    @Value("${trak.aws.ses.from-address}")
     private String fromAddress;
 
     private final JavaMailSender javaMailSender;
@@ -38,13 +42,13 @@ public class EmailServiceThymeleafImpl implements EmailService {
 
     @Async
     @Override
-    public void sendVerificationEmail(String emailAddress, String verificationCode) {
+    public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
         // Create the Email template and all the data it needs before sending.
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
-        emailDto.setTo(emailAddress);
+        emailDto.setTo(emailVerificationRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(VERIFICATION_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("verificationCode", verificationCode));
+        emailDto.setData(Collections.singletonMap("verificationCode", emailVerificationRequestDto.getVerificationCode()));
 
         try {
             javaMailSender.send(getMimeMessage(emailDto, "verification-template"));
@@ -53,14 +57,15 @@ public class EmailServiceThymeleafImpl implements EmailService {
         }
     }
 
+    @Async
     @Override
-    public void sendRecoveryEmail(String emailAddress, String recoveryToken) {
+    public void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
         // Create the Email template and all the data it needs before sending.
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
-        emailDto.setTo(emailAddress);
+        emailDto.setTo(emailRecoveryRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(RECOVERY_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("recoveryToken", recoveryToken));
+        emailDto.setData(Collections.singletonMap("recoveryToken", emailRecoveryRequestDto.getRecoveryToken()));
 
         try {
             javaMailSender.send(getMimeMessage(emailDto, "recovery-template"));
@@ -69,14 +74,15 @@ public class EmailServiceThymeleafImpl implements EmailService {
         }
     }
 
+    @Async
     @Override
-    public void sendChangePasswordEmail(String emailAddress, String recoveryToken) {
+    public void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
         // Create the Email template and all the data it needs before sending.
         EmailDto emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
-        emailDto.setTo(emailAddress);
+        emailDto.setTo(emailRecoveryRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(CHANGE_PASSWORD_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("recoveryToken", recoveryToken));
+        emailDto.setData(Collections.singletonMap("recoveryToken", emailRecoveryRequestDto.getRecoveryToken()));
 
         try {
             javaMailSender.send(getMimeMessage(emailDto, "change-password-template"));
@@ -85,7 +91,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         }
     }
 
-    private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException {
+    private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException, UnsupportedEncodingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
@@ -97,7 +103,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
         mimeMessageHelper.setTo(emailDto.getTo());
         mimeMessageHelper.setText(html, true);
         mimeMessageHelper.setSubject(emailDto.getSubject());
-        mimeMessageHelper.setFrom(emailDto.getFrom());
+        mimeMessageHelper.setFrom(new InternetAddress(emailDto.getFrom(), "Trak Library"));
 
         return mimeMessage;
     }

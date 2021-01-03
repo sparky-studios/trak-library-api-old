@@ -1,14 +1,14 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
-import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
-import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
+import com.sparkystudios.traklibrary.game.domain.GameUserEntryPlatform;
 import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GameUserEntryRepository;
+import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
-import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.GameUserEntryMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
@@ -23,13 +23,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
-import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -42,6 +38,9 @@ class GameUserEntryServiceImplTest {
     @Mock
     private GameRepository gameRepository;
 
+    @Mock
+    private PlatformRepository platformRepository;
+
     @Spy
     private final GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
 
@@ -50,9 +49,6 @@ class GameUserEntryServiceImplTest {
 
     @Mock
     private MessageSource messageSource;
-
-    @Mock
-    private PatchService patchService;
 
     @InjectMocks
     private GameUserEntryServiceImpl gameUserEntryService;
@@ -74,10 +70,10 @@ class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.save(gameUserEntryDto));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.save(gameUserEntryRequest));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -94,17 +90,17 @@ class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
 
 
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameUserEntryService.save(gameUserEntryDto));
+        Assertions.assertThrows(EntityExistsException.class, () -> gameUserEntryService.save(gameUserEntryRequest));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    void save_withNewGameUserEntryDto_savesGameUserEntryDto() {
+    void save_withNewGameUserEntryRequestWithNoPlatforms_savesGameUserEntry() {
         // Arrange
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -115,10 +111,42 @@ class GameUserEntryServiceImplTest {
         Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntry());
 
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+
         // Act
-        gameUserEntryService.save(new GameUserEntryDto());
+        gameUserEntryService.save(gameUserEntryRequest);
 
         // Assert
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void save_withNewGameUserEntryRequestWithPlatformIds_savesGameUserEntryAndInvokesPlatformRepository() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        Mockito.when(platformRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.empty());
+
+        GameUserEntryRequest gameUserEntryRequest = Mockito.spy(GameUserEntryRequest.class);
+        gameUserEntryRequest.setPlatformIds(List.of(1L, 2L));
+
+        // Act
+        gameUserEntryService.save(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(platformRepository, Mockito.atMost(2))
+                .findById(ArgumentMatchers.anyLong());
+
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
     }
@@ -139,28 +167,11 @@ class GameUserEntryServiceImplTest {
     @Test
     void findById_withValidGameUserEntry_returnsGameUserEntryDto() {
         // Arrange
-        Game game = new Game();
-        game.setTitle("test-title");
-
-        Platform platform = new Platform();
-        platform.setName("test-name");
-
-        GameUserEntry gameUserEntry = new GameUserEntry();
-        gameUserEntry.setId(1L);
-        gameUserEntry.setGameId(2L);
-        gameUserEntry.setGame(game);
-        gameUserEntry.setPlatformId(3L);
-        gameUserEntry.setPlatform(platform);
-        gameUserEntry.setUserId(4L);
-        gameUserEntry.setStatus(GameUserEntryStatus.COMPLETED);
-        gameUserEntry.setRating((short)4);
-        gameUserEntry.setVersion(1L);
-
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(gameUserEntry));
+                .thenReturn(Optional.of(new GameUserEntry()));
 
         // Act
         GameUserEntryDto result = gameUserEntryService.findById(0L);
@@ -181,7 +192,7 @@ class GameUserEntryServiceImplTest {
         Pageable pageable = Mockito.mock(Pageable.class);
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, pageable));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.findGameUserEntriesByGameId(0L, null, pageable));
     }
 
     @Test
@@ -194,7 +205,7 @@ class GameUserEntryServiceImplTest {
                 .thenReturn(Page.empty());
 
         // Act
-        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, null, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -214,7 +225,7 @@ class GameUserEntryServiceImplTest {
                 .thenReturn(new PageImpl<>(Arrays.asList(new GameUserEntry(), new GameUserEntry())));
 
         // Act
-        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, Mockito.mock(Pageable.class)).spliterator(), false)
+        List<GameUserEntryDto> result = StreamSupport.stream(gameUserEntryService.findGameUserEntriesByGameId(0L, null, Mockito.mock(Pageable.class)).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Assert
@@ -336,10 +347,10 @@ class GameUserEntryServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.update(gameUserEntryDto));
+        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.update(gameUserEntryRequest));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
@@ -350,96 +361,96 @@ class GameUserEntryServiceImplTest {
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(gameUserEntryRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        GameUserEntryDto gameUserEntryDto = new GameUserEntryDto();
-
-        // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.update(gameUserEntryDto));
-        Mockito.verify(gameUserEntryRepository, Mockito.never())
-                .save(ArgumentMatchers.any());
-    }
-
-    @Test
-    void update_withExistingGameUserEntryDto_updatesGameUserEntryDto() {
-        // Arrange
-        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gameUserEntryRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
-                .thenReturn(new GameUserEntry());
-
-        // Act
-        gameUserEntryService.update(new GameUserEntryDto());
-
-        // Assert
-        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
-                .save(ArgumentMatchers.any());
-    }
-
-    @Test
-    void patch_withNoGameUserEntryMatchingId_throwsEntityNotFoundException() {
-        // Arrange
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.patch(0L, jsonMergePatch));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameUserEntryService.update(gameUserEntryRequest));
         Mockito.verify(gameUserEntryRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
     }
 
     @Test
-    void patch_withValidIdButInvalidUser_throwsInvalidUserException() {
+    void update_withGameUserEntryWithNoPlatforms_savesGameUserEntry() {
         // Arrange
-        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(new GameUserEntry()));
-
-        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        Mockito.when(patchService.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(new GameUserEntryDto());
-
-        JsonMergePatch jsonMergePatch = Mockito.mock(JsonMergePatch.class);
-
-        // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> gameUserEntryService.patch(0L, jsonMergePatch));
-        Mockito.verify(gameUserEntryRepository, Mockito.never())
-                .save(ArgumentMatchers.any());
-    }
-
-    @Test
-    void patch_withValidId_saveGameUserEntry() {
-        // Arrange
-        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(new GameUserEntry()));
-
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.when(patchService.patch(ArgumentMatchers.any(), ArgumentMatchers.any(), ArgumentMatchers.any()))
-                .thenReturn(new GameUserEntryDto());
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new GameUserEntry()));
+
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
 
         // Act
-        gameUserEntryService.patch(0L, Mockito.mock(JsonMergePatch.class));
+        gameUserEntryService.update(gameUserEntryRequest);
 
         // Assert
+        Mockito.verify(platformRepository, Mockito.never())
+                .findById(ArgumentMatchers.anyLong());
+
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void update_withGameUserEntryWithDifferentPlatforms_savesGameUserEntry() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Platform platform1 = new Platform();
+        platform1.setId(1L);
+
+        GameUserEntryPlatform gameUserEntryPlatform1 = new GameUserEntryPlatform();
+        gameUserEntryPlatform1.setPlatformId(platform1.getId());
+        gameUserEntryPlatform1.setPlatform(platform1);
+
+        Platform platform2 = new Platform();
+        platform2.setId(2L);
+
+        GameUserEntryPlatform gameUserEntryPlatform2 = new GameUserEntryPlatform();
+        gameUserEntryPlatform2.setPlatformId(platform2.getId());
+        gameUserEntryPlatform2.setPlatform(platform2);
+
+        List<GameUserEntryPlatform> platforms = new ArrayList<>();
+        platforms.add(gameUserEntryPlatform1);
+        platforms.add(gameUserEntryPlatform2);
+
+        GameUserEntry gameUserEntry = new GameUserEntry();
+        gameUserEntry.setGameUserEntryPlatforms(platforms);
+
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(gameUserEntry));
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        List<Long> platformIds = new ArrayList<>();
+        platformIds.add(1L);
+        platformIds.add(3L);
+
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(platformIds);
+
+        Mockito.when(platformRepository.findById(ArgumentMatchers.eq(3L)))
+                .thenReturn(Optional.of(new Platform()));
+
+        // Act
+        gameUserEntryService.update(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(platformRepository, Mockito.atMostOnce())
+                .findById(ArgumentMatchers.anyLong());
+
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
     }

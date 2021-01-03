@@ -80,11 +80,13 @@ class PublisherTest {
         Publisher result = testEntityManager.persistFlushFind(publisher);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(publisher.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(publisher.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(publisher.getFoundedDate());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
@@ -146,6 +148,7 @@ class PublisherTest {
 
         // Assert
         Assertions.assertThat(result.getGames().size()).isEqualTo(1);
-        Assertions.assertThat(result.getGames().iterator().next()).isEqualTo(game1);
+        Assertions.assertThat(result.getGames().iterator().next().getId())
+                .isEqualTo(game1.getId());
     }
 }

@@ -31,7 +31,6 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Collections;
@@ -39,7 +38,7 @@ import java.util.Collections;
 @Import({PlatformController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = PlatformController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class PlatformControllerTest {
+class PlatformControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -158,8 +157,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
     }
 
@@ -202,8 +201,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
@@ -249,8 +248,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(100)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyGameDto("._embedded.data[0]", resultActions, gameDto1);
@@ -279,8 +278,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(0)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(0)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
     }
 
@@ -321,8 +320,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").doesNotExist())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(2)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(2)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyPlatformDto("._embedded.data[0]", resultActions, platformDto1);
@@ -366,8 +365,8 @@ public class PlatformControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.next").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$._links.prev").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.size").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalElements", Matchers.is(100)))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.page.totalPages").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_elements", Matchers.is(100)))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.page.total_pages").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.page.number").exists());
 
         ResponseVerifier.verifyPlatformDto("._embedded.data[0]", resultActions, platformDto1);

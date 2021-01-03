@@ -12,6 +12,7 @@ import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -97,7 +98,7 @@ public class GenreController {
                                                                @PageableDefault Pageable pageable,
                                                                PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -131,7 +132,7 @@ public class GenreController {
                                                                             @PageableDefault Pageable pageable,
                                                                             PagedResourcesAssembler<GameDetailsDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -168,7 +169,7 @@ public class GenreController {
                                                     @PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GenreDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

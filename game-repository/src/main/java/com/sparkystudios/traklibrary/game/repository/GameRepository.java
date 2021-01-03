@@ -14,6 +14,10 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long>, 
 
     long countByDevelopersId(long developerId);
 
+    Page<Game> findByFranchiseId(long franchise, Pageable pageable);
+
+    long countByFranchiseId(long franchiseId);
+
     Page<Game> findByPublishersId(long publisherId, Pageable pageable);
 
     long countByPublishersId(long publisherId);

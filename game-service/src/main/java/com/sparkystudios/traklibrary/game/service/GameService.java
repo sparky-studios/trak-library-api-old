@@ -2,13 +2,13 @@ package com.sparkystudios.traklibrary.game.service;
 
 import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
-import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
+import com.sparkystudios.traklibrary.game.service.dto.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.lang.NonNull;
 
 import javax.json.JsonMergePatch;
+import java.util.Collection;
 
 /**
  * The {@link GameService} follows the basic CRUD principle for interaction with {@link Game} entities on the persistence layer.
@@ -74,6 +74,38 @@ public interface GameService {
     long countGamesByGenreId(long genreId);
 
     /**
+     * This method is used to associate a {@link Collection} of {@link GenreDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link GenreDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted
+     *
+     * It should be noted, that this method will remove all existing {@link GenreDto} associations and replace them
+     * with the new ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link GenreDto}'s with.
+     * @param genreIds A {@link Collection} of {@link GenreDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link GenreDto}'s have been associated with.
+     */
+    GameDto saveGenresForGameId(long id, @NonNull Collection<Long> genreIds);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link GenreDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link GenreDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted
+     *
+     * It should be noted, that this method will only update the {@link GameDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link GenreDto}'s with.
+     * @param genreIds A {@link Collection} of {@link GenreDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link GenreDto}'s have been associated with.
+     */
+    GameDto updateGenresForGameId(long id, @NonNull Collection<Long> genreIds);
+
+    /**
      * Given the ID of a {@link Platform}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
      * the given {@link Platform}. If the ID provided does not map to any {@link Platform}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link Game}s associated with the {@link Platform}, an empty {@link Iterable} will be returned.
@@ -95,6 +127,38 @@ public interface GameService {
      * @return The total count of {@link GameDto}'s associated with the given {@link Platform}.
      */
     long countGamesByPlatformId(long platformId);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link PlatformDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link PlatformDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted.
+     *
+     * It should be noted, that this method will remove all existing {@link PlatformDto} associations and replace them
+     * with the new ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PlatformDto}'s with.
+     * @param platformsIds A {@link Collection} of {@link PlatformDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PlatformDto}'s have been associated with.
+     */
+    GameDto savePlatformsForGameId(long id, @NonNull Collection<Long> platformsIds);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link PlatformDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link PlatformDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted
+     *
+     * It should be noted, that this method will only update the {@link GameDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PlatformDto}'s with.
+     * @param platformIds A {@link Collection} of {@link PlatformDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PlatformDto}'s have been associated with.
+     */
+    GameDto updatePlatformsForGameId(long id, @NonNull Collection<Long> platformIds);
 
     /**
      * Given the ID of a {@link Developer}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
@@ -120,6 +184,38 @@ public interface GameService {
     long countGamesByDeveloperId(long developerId);
 
     /**
+     * This method is used to associate a {@link Collection} of {@link DeveloperDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link DeveloperDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted.
+     *
+     * It should be noted, that this method will remove all existing {@link DeveloperDto} associations and replace them
+     * with the new ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link DeveloperDto}'s with.
+     * @param developerIds A {@link Collection} of {@link DeveloperDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link DeveloperDto}'s have been associated with.
+     */
+    GameDto saveDevelopersForGameId(long id, @NonNull Collection<Long> developerIds);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link DeveloperDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link DeveloperDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted
+     *
+     * It should be noted, that this method will only update the {@link GameDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link DeveloperDto}'s with.
+     * @param developerIds A {@link Collection} of {@link DeveloperDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link DeveloperDto}'s have been associated with.
+     */
+    GameDto updateDevelopersForGameId(long id, @NonNull Collection<Long> developerIds);
+
+    /**
      * Given the ID of a {@link Publisher}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
      * the given {@link PublisherDto}. If the ID provided does not map to any {@link DeveloperDto}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link Game}s associated with the {@link PublisherDto}, an empty {@link Iterable} will be returned.
@@ -141,6 +237,61 @@ public interface GameService {
      * @return The total count of {@link GameDto}'s associated with the given {@link Publisher}.
      */
     long countGamesByPublisherId(long publisherId);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link PublisherDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link PublisherDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted.
+     *
+     * It should be noted, that this method will remove all existing {@link PublisherDto} associations and replace them
+     * with the new ID's provided.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PublisherDto}'s with.
+     * @param publisherIds A {@link Collection} of {@link PublisherDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PublisherDto}'s have been associated with.
+     */
+    GameDto savePublishersForGameId(long id, @NonNull Collection<Long> publisherIds);
+
+    /**
+     * This method is used to associate a {@link Collection} of {@link PublisherDto} ID's with a given {@link GameDto}
+     * that matches the provided ID. If the ID provided doesn't match an existing {@link GameDto} than an
+     * {@link javax.persistence.EntityNotFoundException} will be thrown. If any of the {@link PublisherDto} ID's don't
+     * currently exist within the database, then the elements won't be persisted
+     *
+     * It should be noted, that this method will only update the {@link GameDto} with new associations, no existing
+     * associations will be removed.
+     *
+     * @param id The ID of the {@link GameDto} to associated {@link PublisherDto}'s with.
+     * @param publisherIds A {@link Collection} of {@link PublisherDto} ID's to associate with the {@link GameDto}.
+     *
+     * @return The {@link GameDto} that the {@link PublisherDto}'s have been associated with.
+     */
+    GameDto updatePublishersForGameId(long id, @NonNull Collection<Long> publisherIds);
+
+    /**
+     * Given the ID of a {@link Franchise}, this method will retrieve a {@link Page} of {@link Game}s that are associated with
+     * the given {@link FranchiseDto}. If the ID provided does not map to any {@link FranchiseDto}, a {@link javax.persistence.EntityNotFoundException}
+     * will be thrown. If there are no {@link Game}s associated with the {@link FranchiseDto}, an empty {@link Iterable} will be returned.
+     *
+     * @param franchiseId The ID of the {@link Franchise} to retrieve {@link Game} entries for.
+     * @param pageable The amount of data and the page to return.
+     *
+     * @return A page of {@link GameDto}s that are mapped with the given {@link Franchise} entity.
+     */
+    Iterable<GameDto> findGamesByFranchiseId(long franchiseId, Pageable pageable);
+
+    /**
+     * Given the ID of a {@link Franchise}, this method will retrieve the total count for how many {@link GameDto}'s have an association
+     * to the given {@link Franchise}. If the ID provided does not map to any {@link Franchise}, {@link javax.persistence.EntityNotFoundException}
+     * will be thrown.
+     *
+     * @param franchiseId The ID of the {@link Franchise} to retrieve the total count of {@link Game} entries for.
+     *
+     * @return The total count of {@link GameDto}'s associated with the given {@link Franchise}.
+     */
+    long countGamesByFranchiseId(long franchiseId);
 
     /**
      * Retrieves all of the {@link Game} entities stored within the persistence layer. This method should not be used within a live

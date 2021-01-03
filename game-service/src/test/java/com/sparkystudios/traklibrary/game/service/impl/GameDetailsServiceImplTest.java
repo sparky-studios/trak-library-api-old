@@ -35,7 +35,7 @@ class GameDetailsServiceImplTest {
     private GenreRepository genreRepository;
 
     @Spy
-    private final GameDetailsMapper gameDetailsMapper = GameMappers.GAME_INFO_MAPPER;
+    private final GameDetailsMapper gameDetailsMapper = GameMappers.GAME_DETAILS_MAPPER;
 
     @Mock
     private MessageSource messageSource;

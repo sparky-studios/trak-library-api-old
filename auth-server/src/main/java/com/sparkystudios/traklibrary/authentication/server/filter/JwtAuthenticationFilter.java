@@ -67,6 +67,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // Create a response that returns the jwt token.
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{ \"token\": " + "\"" + token + "\" }");
+        response.getWriter().write("{ \"access_token\": " + "\"" + token + "\" }");
     }
 }

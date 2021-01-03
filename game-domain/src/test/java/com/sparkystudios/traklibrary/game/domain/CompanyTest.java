@@ -80,10 +80,12 @@ class CompanyTest {
         Company result = testEntityManager.persistFlushFind(company);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(company.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(company.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(company.getFoundedDate());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 }

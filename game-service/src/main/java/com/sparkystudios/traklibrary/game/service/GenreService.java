@@ -54,7 +54,7 @@ public interface GenreService {
 
     /**
      * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Genre}s entities that are associated
-     * with this {@link Game}, which is mapped by {@link GameGenreXref} entities. If no {@link Genre}s are associated with a given
+     * with this {@link Game}, which is mapped by a reference table. If no {@link Genre}s are associated with a given
      * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a
      * {@link javax.persistence.EntityNotFoundException} exception will be thrown.
      *

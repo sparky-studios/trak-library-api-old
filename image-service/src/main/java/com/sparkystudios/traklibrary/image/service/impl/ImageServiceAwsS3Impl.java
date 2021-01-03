@@ -1,8 +1,5 @@
 package com.sparkystudios.traklibrary.image.service.impl;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.S3Object;
-import com.amazonaws.services.s3.model.S3ObjectInputStream;
 import com.amazonaws.util.IOUtils;
 import com.google.common.io.Files;
 import com.sparkystudios.traklibrary.image.service.ImageService;
@@ -12,13 +9,15 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Service;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Arrays;
-import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
@@ -32,8 +31,8 @@ public class ImageServiceAwsS3Impl implements ImageService {
     @Value("${trak.aws.s3.bucket-name}")
     private String bucketName;
 
-    private final AmazonS3 amazonS3;
     private final MessageSource messageSource;
+    private final ResourceLoader resourceLoader;
 
     @Override
     public void upload(String folder, String filename, byte[] content) {
@@ -46,13 +45,10 @@ public class ImageServiceAwsS3Impl implements ImageService {
                     .getMessage(INVALID_FILE_FORMAT_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale()));
         }
 
-        try {
-            Path path = java.nio.file.Files.createTempFile(folder, UUID.randomUUID().toString() + "." + extension);
+        WritableResource resource = (WritableResource) resourceLoader.getResource("s3://" + bucketName + "/" + folder + "/" + filename);
 
-            try (FileOutputStream stream = new FileOutputStream(path.toFile())) {
-                stream.write(content);
-                amazonS3.putObject(bucketName, folder + "/" + filename, path.toFile());
-            }
+        try (OutputStream outputStream = resource.getOutputStream()) {
+            outputStream.write(content);
         } catch (IOException e) {
             String errorMessage = messageSource
                     .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());
@@ -63,9 +59,10 @@ public class ImageServiceAwsS3Impl implements ImageService {
 
     @Override
     public byte[] download(String folder, String filename) {
-        try (S3Object object = amazonS3.getObject(bucketName, folder + "/" + filename)) {
-            S3ObjectInputStream stream = object.getObjectContent();
-            return IOUtils.toByteArray(stream);
+        Resource resource = resourceLoader.getResource("s3://" + bucketName + "/" + folder + "/" + filename);
+
+        try (InputStream inputStream = resource.getInputStream()) {
+            return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
             String errorMessage = messageSource
                     .getMessage(DOWNLOAD_FAILED_MESSAGE, new Object[] {filename}, LocaleContextHolder.getLocale());

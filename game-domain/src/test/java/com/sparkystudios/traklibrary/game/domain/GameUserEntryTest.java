@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
-import java.time.LocalDate;
 
 @DataJpaTest
 class GameUserEntryTest {
@@ -18,33 +17,7 @@ class GameUserEntryTest {
     @Test
     void persist_withNullGame_throwsPersistenceException() {
         // Arrange
-        Platform platform = new Platform();
-        platform.setName("test-platform");
-        platform.setDescription("test-description");
-        platform = testEntityManager.persistFlushFind(platform);
-
         GameUserEntry gameUserEntry = new GameUserEntry();
-        gameUserEntry.setPlatformId(platform.getId());
-        gameUserEntry.setUserId(1L);
-        gameUserEntry.setStatus(GameUserEntryStatus.COMPLETED);
-        gameUserEntry.setRating((short)5);
-
-        // Assert
-        Assertions.assertThatExceptionOfType(PersistenceException.class)
-                .isThrownBy(() -> testEntityManager.persistFlushFind(gameUserEntry));
-    }
-
-    @Test
-    void persist_withNullPlatform_throwsPersistenceException() {
-        // Arrange
-        Game game = new Game();
-        game.setTitle("game-title");
-        game.setDescription("game-description");
-        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
-        game = testEntityManager.persistFlushFind(game);
-
-        GameUserEntry gameUserEntry = new GameUserEntry();
-        gameUserEntry.setGameId(game.getId());
         gameUserEntry.setUserId(1L);
         gameUserEntry.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntry.setRating((short)5);
@@ -63,14 +36,8 @@ class GameUserEntryTest {
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
-        Platform platform = new Platform();
-        platform.setName("test-platform");
-        platform.setDescription("test-description");
-        platform = testEntityManager.persistFlushFind(platform);
-
         GameUserEntry gameUserEntry = new GameUserEntry();
         gameUserEntry.setGameId(game.getId());
-        gameUserEntry.setPlatformId(platform.getId());
         gameUserEntry.setUserId(1L);
         gameUserEntry.setStatus(null);
         gameUserEntry.setRating((short)5);
@@ -81,7 +48,7 @@ class GameUserEntryTest {
     }
 
     @Test
-    void persist_withValidGameUserEntry_mapsGameUserEntry() {
+    void persist_withValidGameUserEntryPlatformRelationships_mapsRelationship() {
         // Arrange
         Game game = new Game();
         game.setTitle("game-title");
@@ -89,30 +56,32 @@ class GameUserEntryTest {
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game = testEntityManager.persistFlushFind(game);
 
-        Platform platform = new Platform();
-        platform.setName("test-platform");
-        platform.setDescription("test-description");
-        platform = testEntityManager.persistFlushFind(platform);
+        Platform platform1 = new Platform();
+        platform1.setName("test-platform-1");
+        platform1 = testEntityManager.persistFlushFind(platform1);
+
+        Platform platform2 = new Platform();
+        platform2.setName("test-platform-2");
+        platform2 = testEntityManager.persistFlushFind(platform2);
+
+        GameUserEntryPlatform gameUserEntryPlatform1 = new GameUserEntryPlatform();
+        gameUserEntryPlatform1.setPlatform(platform1);
+
+        GameUserEntryPlatform gameUserEntryPlatform2 = new GameUserEntryPlatform();
+        gameUserEntryPlatform2.setPlatform(platform2);
 
         GameUserEntry gameUserEntry = new GameUserEntry();
         gameUserEntry.setGameId(game.getId());
-        gameUserEntry.setPlatformId(platform.getId());
         gameUserEntry.setUserId(1L);
         gameUserEntry.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntry.setRating((short)5);
+        gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform1);
+        gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform2);
 
         // Act
         GameUserEntry result = testEntityManager.persistFlushFind(gameUserEntry);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
-        Assertions.assertThat(result.getGameId()).isEqualTo(gameUserEntry.getGameId());
-        Assertions.assertThat(result.getGame()).isEqualTo(game);
-        Assertions.assertThat(result.getPlatformId()).isEqualTo(gameUserEntry.getPlatformId());
-        Assertions.assertThat(result.getPlatform()).isEqualTo(platform);
-        Assertions.assertThat(result.getUserId()).isEqualTo(gameUserEntry.getUserId());
-        Assertions.assertThat(result.getStatus()).isEqualTo(gameUserEntry.getStatus());
-        Assertions.assertThat(result.getRating()).isEqualTo(gameUserEntry.getRating());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getGameUserEntryPlatforms()).hasSize(2);
     }
 }

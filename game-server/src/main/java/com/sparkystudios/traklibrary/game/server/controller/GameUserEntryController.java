@@ -4,7 +4,9 @@ import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntry
 import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +21,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.json.JsonMergePatch;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -33,23 +34,23 @@ public class GameUserEntryController {
     private final GameUserEntryRepresentationModelAssembler gameUserEntryRepresentationModelAssembler;
 
     /**
-     * End-point that will attempt to save the given {@link GameUserEntryDto} request body to the underlying
-     * persistence layer. The {@link GameUserEntryDto} must either be valid or have all of the required fields meet
+     * End-point that will attempt to save the given {@link GameUserEntryRequest} request body to the underlying
+     * persistence layer. The {@link GameUserEntryRequest} must either be valid or have all of the required fields meet
      * its pre-requisite conditions in order to attempt a save to the persistence layer.
      *
-     * If the {@link GameUserEntryDto} being saved contains an ID that matches an existing entity in the persistence layer,
-     * the {@link GameUserEntryDto} will not be saved and a {@link ApiError} will
-     * be returned with appropriate exceptions details.
+     * If the {@link GameUserEntryRequest} being saved contains an ID that matches an existing entity in the persistence layer,
+     * the {@link GameUserEntryRequest} will not be saved and a {@link ApiError} will be returned with appropriate exceptions
+     * details.
      *
-     * @param gameUserEntryDto The {@link GameUserEntryDto} to save.
+     * @param gameUserEntryRequest The {@link GameUserEntryRequest} to save.
      *
      * @return The saved {@link GameUserEntryDto} instance as a HATEOAS response.
      */
     @AllowedForUser
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EntityModel<GameUserEntryDto> save(@Validated @RequestBody GameUserEntryDto gameUserEntryDto) {
-        return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.save(gameUserEntryDto));
+    public EntityModel<GameUserEntryDto> save(@Validated @RequestBody GameUserEntryRequest gameUserEntryRequest) {
+        return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.save(gameUserEntryRequest));
     }
 
     /**
@@ -90,7 +91,7 @@ public class GameUserEntryController {
                                                              PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
 
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = new Link(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -106,44 +107,21 @@ public class GameUserEntryController {
     }
 
     /**
-     * End-point that will attempt to updated the given {@link GameUserEntryDto} request body to the underlying
-     * persistence layer. The {@link GameUserEntryDto} must either be valid or have all of the required fields meet
+     * End-point that will attempt to updated the given {@link GameUserEntryRequest} request body to the underlying
+     * persistence layer. The {@link GameUserEntryRequest} must either be valid or have all of the required fields meet
      * its pre-requisite conditions in order to attempt an update in the persistence layer.
      *
-     * If the {@link GameUserEntryDto} being saved doesn't contain an ID that matches an existing entity in the persistence layer,
-     * the {@link GameUserEntryDto} will not be updated and a {@link ApiError} will
-     * be returned with appropriate exceptions details.
+     * If the {@link GameUserEntryRequest} being saved doesn't contain an ID that matches an existing entity in the persistence layer,
+     * the {@link GameUserEntryRequest} will not be updated and a {@link ApiError} will be returned with appropriate exceptions details.
      *
-     * @param gameUserEntryDto The {@link GameUserEntryDto} to updated.
+     * @param gameUserEntryRequest The {@link GameUserEntryRequest} to updated.
      *
      * @return The updated {@link GameUserEntryDto} instance as a HATEOAS response.
      */
     @AllowedForUser
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EntityModel<GameUserEntryDto> update(@Validated @RequestBody GameUserEntryDto gameUserEntryDto) {
-        return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.update(gameUserEntryDto));
-    }
-
-    /**
-     * End-point that will attempt to patch the {@link GameUserEntryDto} that matches the given ID with the values
-     * specified within the {@link JsonMergePatch}. The {@link JsonMergePatch} must contain valid data to be applied
-     * to the {@link GameUserEntryDto}, otherwise an {@link ApiError} will be returned to the user with additional exception
-     * data.
-     *
-     * The {@link JsonMergePatch} provided can contain JSON data that is not contained within the {@link GameUserEntryDto},
-     * however it will not apply any unknown field, but instead ignore them. If the ID provided does not match
-     * a {@link GameUserEntryDto} or the patch fails to apply, {@link ApiError} instances will be returned with additional
-     * error information.
-     *
-     * @param id The ID of the {@link GameUserEntryDto} to patch.
-     * @param jsonMergePatch The {@link JsonMergePatch} which contains JSON data to update the {@link GameUserEntryDto} with.
-     *
-     * @return The patched {@link GameUserEntryDto} instance.
-     */
-    @AllowedForUser
-    @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
-    public EntityModel<GameUserEntryDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
-        return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.patch(id, jsonMergePatch));
+    public EntityModel<GameUserEntryDto> update(@Validated @RequestBody GameUserEntryRequest gameUserEntryRequest) {
+        return gameUserEntryRepresentationModelAssembler.toModel(gameUserEntryService.update(gameUserEntryRequest));
     }
 
     /**

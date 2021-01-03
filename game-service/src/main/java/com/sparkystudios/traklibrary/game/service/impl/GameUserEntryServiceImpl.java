@@ -1,12 +1,15 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
+import com.sparkystudios.traklibrary.game.domain.GameUserEntryPlatform;
+import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GameUserEntryRepository;
+import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
 import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
-import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
 import com.sparkystudios.traklibrary.game.service.mapper.GameUserEntryMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.exception.InvalidUserException;
@@ -14,10 +17,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
@@ -35,33 +38,50 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     private static final String GAME_NOT_FOUND_MESSAGE = "game.exception.not-found";
 
     private final GameUserEntryRepository gameUserEntryRepository;
+    private final PlatformRepository platformRepository;
     private final GameRepository gameRepository;
     private final GameUserEntryMapper gameUserEntryMapper;
     private final AuthenticationService authenticationService;
     private final MessageSource messageSource;
-    private final PatchService patchService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public GameUserEntryDto save(GameUserEntryDto gameUserEntryDto) {
-        Objects.requireNonNull(gameUserEntryDto);
+    public GameUserEntryDto save(GameUserEntryRequest gameUserEntryRequest) {
+        Objects.requireNonNull(gameUserEntryRequest);
 
-        if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryDto.getUserId())) {
+        if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryRequest.getUserId())) {
             String errorMessage = messageSource
                     .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
-        if (gameUserEntryRepository.existsById(gameUserEntryDto.getId())) {
+        if (gameUserEntryRepository.existsById(gameUserEntryRequest.getGameUserEntryId())) {
             String errorMessage = messageSource
-                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameUserEntryRequest.getGameUserEntryId() }, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
 
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository
-                .save(gameUserEntryMapper.gameUserEntryDtoToGameUserEntry(gameUserEntryDto)));
+        // Create the game user entry entity from the request and persist it.
+        GameUserEntry gameUserEntry = new GameUserEntry();
+        gameUserEntry.setUserId(gameUserEntryRequest.getUserId());
+        gameUserEntry.setGameId(gameUserEntryRequest.getGameId());
+        gameUserEntry.setRating(gameUserEntryRequest.getRating());
+        gameUserEntry.setStatus(gameUserEntryRequest.getStatus());
+
+        gameUserEntryRequest.getPlatformIds().forEach(platformId -> {
+            Optional<Platform> platform = platformRepository.findById(platformId);
+            // Create a platform reference and add it to the game user entry entity if the platform exists.
+            if (platform.isPresent()) {
+                GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
+                gameUserEntryPlatform.setPlatform(platform.get());
+
+                gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform);
+            }
+        });
+
+        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.save(gameUserEntry));
     }
 
     @Override
@@ -76,7 +96,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, Pageable pageable) {
+    public Iterable<GameUserEntryDto> findGameUserEntriesByGameId(long gameId, GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable) {
         if (!gameRepository.existsById(gameId)) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
@@ -84,8 +104,11 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             throw new EntityNotFoundException(errorMessage);
         }
 
+        Specification<GameUserEntry> specification = (root, criteriaQuery, criteriaBuilder) ->
+                criteriaBuilder.equal(root.get("gameId"), gameId);
+
         return gameUserEntryRepository
-                .findAll(((root, criteriaQuery, criteriaBuilder) -> criteriaBuilder.equal(root.get("gameId"), gameId)), pageable)
+                .findAll(specification.and(gameUserEntrySpecification), pageable)
                 .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto);
     }
 
@@ -121,43 +144,55 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public GameUserEntryDto update(GameUserEntryDto gameUserEntryDto) {
-        Objects.requireNonNull(gameUserEntryDto);
+    public GameUserEntryDto update(GameUserEntryRequest gameUserEntryRequest) {
+        Objects.requireNonNull(gameUserEntryRequest);
 
-        if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryDto.getUserId())) {
+        if (!authenticationService.isCurrentAuthenticatedUser(gameUserEntryRequest.getUserId())) {
             String errorMessage = messageSource
                     .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
 
             throw new InvalidUserException(errorMessage);
         }
 
-        if (!gameUserEntryRepository.existsById(gameUserEntryDto.getId())) {
+        Optional<GameUserEntry> gameUserEntry = gameUserEntryRepository.findById(gameUserEntryRequest.getGameUserEntryId());
+        if (gameUserEntry.isEmpty()) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameUserEntryDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameUserEntryRequest.getGameUserEntryId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository
-                .save(gameUserEntryMapper.gameUserEntryDtoToGameUserEntry(gameUserEntryDto)));
-    }
+        // Update the basic information of the existing game user entry entity.
+        GameUserEntry gue = gameUserEntry.get();
+        gue.setUserId(gameUserEntryRequest.getUserId());
+        gue.setGameId(gameUserEntryRequest.getGameId());
+        gue.setRating(gameUserEntryRequest.getRating());
+        gue.setStatus(gameUserEntryRequest.getStatus());
 
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public GameUserEntryDto patch(long id, JsonMergePatch jsonMergePatch) {
-        // Set the new Java object with the patch information.
-        GameUserEntryDto patched = patchService.patch(jsonMergePatch, findById(id), GameUserEntryDto.class);
+        // Remove any game user entry platforms that have been removed from the request.
+        gue.getGameUserEntryPlatforms()
+                .removeIf(gameUserEntryPlatform -> !gameUserEntryRequest.getPlatformIds().contains(gameUserEntryPlatform.getPlatformId()));
 
-        if (!authenticationService.isCurrentAuthenticatedUser(patched.getUserId())) {
-            String errorMessage = messageSource
-                    .getMessage(INVALID_USER_MESSAGE, new Object[] {}, LocaleContextHolder.getLocale());
+        // Loop through each and add any new entries.
+        gameUserEntryRequest.getPlatformIds().forEach(platformId -> {
 
-            throw new InvalidUserException(errorMessage);
-        }
+            boolean contains = gue.getGameUserEntryPlatforms()
+                    .stream()
+                    .anyMatch(gameUserEntryPlatform -> gameUserEntryPlatform.getPlatformId() == platformId);
 
-        // Save to the repository and convert it back to a GameDto.
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository
-                .save(gameUserEntryMapper.gameUserEntryDtoToGameUserEntry(patched)));
+            if (!contains) {
+                Optional<Platform> platform = platformRepository.findById(platformId);
+                // Create a platform reference and add it to the game user entry entity if the platform exists.
+                if (platform.isPresent()) {
+                    GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
+                    gameUserEntryPlatform.setPlatform(platform.get());
+
+                    gue.addGameUserEntryPlatform(gameUserEntryPlatform);
+                }
+            }
+        });
+
+        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.save(gue));
     }
 
     @Override
@@ -165,7 +200,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     public void deleteById(long id) {
         Optional<GameUserEntry> gameUserEntry = gameUserEntryRepository.findById(id);
 
-        if (!gameUserEntry.isPresent()) {
+        if (gameUserEntry.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 

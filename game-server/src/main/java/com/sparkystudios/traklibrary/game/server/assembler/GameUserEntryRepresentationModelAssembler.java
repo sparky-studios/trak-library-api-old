@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.server.assembler;
 
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
 import com.sparkystudios.traklibrary.game.server.controller.GameUserEntryController;
-import com.sparkystudios.traklibrary.game.server.controller.PlatformController;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -27,9 +26,7 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findById(content.getGameId()))
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
-                    .withRel("gameDetails"));
-            resource.add(linkTo(methodOn(PlatformController.class).findById(content.getPlatformId()))
-                    .withRel("platform"));
+                    .withRel("game_details"));
             resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))
                     .withRel("image"));
         }

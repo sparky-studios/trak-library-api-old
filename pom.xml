@@ -7,15 +7,17 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.4.RELEASE</version>
+        <version>2.4.1</version>
         <relativePath/>
     </parent>
 
     <groupId>com.sparkystudios.traklibrary</groupId>
     <artifactId>trak-api</artifactId>
     <version>0.1.0-SNAPSHOT</version>
-    <name>Trak Library API</name>
     <packaging>pom</packaging>
+
+    <name>Trak Library API</name>
+    <url>https://traklibrary.com</url>
 
     <profiles>
         <profile>
@@ -27,15 +29,8 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-maven-plugin</artifactId>
-                            <configuration>
-                                <excludeDevtools>false</excludeDevtools>
-                            </configuration>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <executions>
                                 <execution>
                                     <id>default</id>
@@ -46,9 +41,14 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
+                                <dockerHost>http://localhost:2375</dockerHost>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                    </image>
+                                </images>
                                 <buildArgs>
-                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5005</DEBUG_ARGS>
+                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</DEBUG_ARGS>
                                 </buildArgs>
                             </configuration>
                         </plugin>
@@ -62,12 +62,8 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-maven-plugin</artifactId>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <executions>
                                 <execution>
                                     <id>default</id>
@@ -78,8 +74,19 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
-                                <tag>${project.version}</tag>
+                                <dockerHost>http://localhost:2375</dockerHost>
+                                <skipPush>true</skipPush>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                        <build>
+                                            <contextDir>${project.basedir}</contextDir>
+                                            <tags>
+                                                <tag>${project.version}-staging</tag>
+                                            </tags>
+                                        </build>
+                                    </image>
+                                </images>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -92,12 +99,8 @@
                 <pluginManagement>
                     <plugins>
                         <plugin>
-                            <groupId>org.springframework.boot</groupId>
-                            <artifactId>spring-boot-maven-plugin</artifactId>
-                        </plugin>
-                        <plugin>
-                            <groupId>com.spotify</groupId>
-                            <artifactId>dockerfile-maven-plugin</artifactId>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
                             <executions>
                                 <execution>
                                     <id>default</id>
@@ -108,8 +111,18 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <repository>sparkystudios/${project.build.finalName}</repository>
-                                <tag>${project.version}</tag>
+                                <skipPush>true</skipPush>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                        <build>
+                                            <contextDir>${project.basedir}</contextDir>
+                                            <tags>
+                                                <tag>${project.version}</tag>
+                                            </tags>
+                                        </build>
+                                    </image>
+                                </images>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -118,80 +131,11 @@
         </profile>
         <profile>
             <id>coverage</id>
-            <properties>
-                <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-                <sonar.organization>sparky-studios</sonar.organization>
-                <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
-                <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
-            </properties>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <configuration>
-                            <excludes>
-                                <!-- auth-server -->
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
-                                <!-- auth-service -->
-                                <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
-                                <!-- config-server -->
-                                <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
-                                <!-- discovery server -->
-                                <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
-                                <!-- email-server -->
-                                <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
-                                <!-- email-service -->
-                                <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
-                                <!-- game-server -->
-                                <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
-                                <!-- game-service -->
-                                <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
-                                <!-- image-server -->
-                                <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
-                                <!-- image-service -->
-                                <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
-                                <!-- notification-server -->
-                                <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
-                                <!-- notification-service -->
-                                <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
-                                <!-- security -->
-                                <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
-                                <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
-                            </excludes>
-                        </configuration>
                         <executions>
                             <execution>
                                 <id>prepare-agent</id>
@@ -213,27 +157,36 @@
     </profiles>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <!-- Sonar properties -->
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>sparky-studios</sonar.organization>
+        <sonar.projectKey>sparky-studios_trak-api</sonar.projectKey>
+        <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <!-- Dependency versions -->
         <!-- AWS versions -->
         <com.amazonaws.version>1.11.772</com.amazonaws.version>
         <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
         <com.google.guava.version>29.0-jre</com.google.guava.version>
+        <io.fabric8.version>0.33.0</io.fabric8.version>
         <io.jsonwebtoken.version>0.9.1</io.jsonwebtoken.version>
         <javax.json.version>1.1.4</javax.json.version>
         <javax.validation.version>2.0.0.Final</javax.validation.version>
         <net.kaczmarzyk.specification.version>2.1.1</net.kaczmarzyk.specification.version>
         <org.apache.httpcomponents.version>4.5.3</org.apache.httpcomponents.version>
+        <org.apache.maven.plugins.version>3.8.1</org.apache.maven.plugins.version>
         <org.assertj.version>3.16.1</org.assertj.version>
         <org.jacoco.version>0.8.5</org.jacoco.version>
         <org.glassfish.javax.json.version>1.1.4</org.glassfish.javax.json.version>
         <org.mapstruct.version>1.3.1.Final</org.mapstruct.version>
         <org.sonarsource.scanner.maven.version>3.7.0.1746</org.sonarsource.scanner.maven.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
-        <org.springframework.cloud.version>Hoxton.SR3</org.springframework.cloud.version>
+        <org.springframework.cloud.version>2020.0.0</org.springframework.cloud.version>
         <!-- Used to specify parameters for sonarcloud analysis. -->
         <aggregate.report.dir>report-aggregator/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
@@ -291,19 +244,28 @@
             <version>${com.google.guava.version}</version>
         </dependency>
         <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.johnzon</groupId>
             <artifactId>johnzon-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${org.projectlombok.version}</version>
             <scope>provided</scope>
-        </dependency>
-        <!-- Spring dependencies -->
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-devtools</artifactId>
         </dependency>
         <!-- Testing dependencies -->
         <dependency>
@@ -377,9 +339,11 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${org.apache.maven.plugins.version}</version>
                 <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
+                    <source>11</source>
+                    <target>11</target>
+                    <encoding>UTF-8</encoding>
                     <annotationProcessorPaths>
                         <path>
                             <groupId>org.mapstruct</groupId>
@@ -390,6 +354,11 @@
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
                             <version>${org.projectlombok.version}</version>
+                        </path>
+                        <path>
+                            <groupId>org.hibernate</groupId>
+                            <artifactId>hibernate-jpamodelgen</artifactId>
+                            <version>${hibernate.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
@@ -402,6 +371,69 @@
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
                     <version>${org.jacoco.version}</version>
+                    <configuration>
+                        <excludes>
+                            <!-- auth-server -->
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
+                            <!-- auth-service -->
+                            <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
+                            <!-- config-server -->
+                            <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
+                            <!-- discovery server -->
+                            <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
+                            <!-- email-server -->
+                            <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/email/server/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/email/server/EmailServerApplication.class</exclude>
+                            <!-- email-service -->
+                            <exclude>com/sparkystudios/traklibrary/email/service/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/email/service/exception/**/*</exclude>
+                            <!-- game-server -->
+                            <exclude>com/sparkystudios/traklibrary/game/server/adapter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/annotation/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/assembler/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/converter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/exception/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/server/filter/**/*</exclude>
+                            <!-- game-service -->
+                            <exclude>com/sparkystudios/traklibrary/game/service/client/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/service/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/game/service/exception/**/*</exclude>
+                            <!-- image-server -->
+                            <exclude>com/sparkystudios/traklibrary/image/server/adapter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/server/annotation/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/server/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/server/exception/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/server/filter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/server/ImageServerApplication.class</exclude>
+                            <!-- image-service -->
+                            <exclude>com/sparkystudios/traklibrary/image/service/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/image/service/exception/**/*</exclude>
+                            <!-- notification-server -->
+                            <exclude>com/sparkystudios/traklibrary/notification/server/adapter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/server/annotation/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/server/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/server/exception/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/server/filter/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/server/NotificationServerApplication.class</exclude>
+                            <!-- notification-service -->
+                            <exclude>com/sparkystudios/traklibrary/notification/service/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/notification/service/exception/**/*</exclude>
+                            <!-- security -->
+                            <exclude>com/sparkystudios/traklibrary/security/configuration/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/security/dto/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/security/exception/**/*</exclude>
+                            <exclude>com/sparkystudios/traklibrary/security/filter/**/*</exclude>
+                        </excludes>
+                    </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.sonarsource.scanner.maven</groupId>
@@ -413,9 +445,9 @@
                     <artifactId>spring-boot-maven-plugin</artifactId>
                 </plugin>
                 <plugin>
-                    <groupId>com.spotify</groupId>
-                    <artifactId>dockerfile-maven-plugin</artifactId>
-                    <version>1.4.10</version>
+                    <groupId>io.fabric8</groupId>
+                    <artifactId>docker-maven-plugin</artifactId>
+                    <version>${io.fabric8.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

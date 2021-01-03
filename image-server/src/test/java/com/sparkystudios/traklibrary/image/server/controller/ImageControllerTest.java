@@ -23,7 +23,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @Import({ImageController.class, GlobalExceptionHandler.class})
 @WebMvcTest(controllers = ImageController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-public class ImageControllerTest {
+class ImageControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

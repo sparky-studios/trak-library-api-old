@@ -105,14 +105,14 @@ class MobileDeviceLinkTest {
         MobileDeviceLink result = testEntityManager.persistFlushFind(mobileDeviceLink);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getUserId()).isEqualTo(mobileDeviceLink.getUserId());
         Assertions.assertThat(result.getDeviceGuid()).isEqualTo(mobileDeviceLink.getDeviceGuid());
-        Assertions.assertThat(result.getLinkedDate()).isEqualTo(mobileDeviceLink.getLinkedDate());
+        Assertions.assertThat(result.getLinkedDate()).isEqualToIgnoringNanos(mobileDeviceLink.getLinkedDate());
         Assertions.assertThat(result.getToken()).isEqualTo(mobileDeviceLink.getToken());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getEndpointArn()).isEqualTo(mobileDeviceLink.getEndpointArn());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 }

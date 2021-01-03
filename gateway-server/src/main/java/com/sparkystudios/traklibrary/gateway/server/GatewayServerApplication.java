@@ -2,14 +2,11 @@ package com.sparkystudios.traklibrary.gateway.server;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
-@EnableZuulProxy
-@EnableEurekaClient
+@EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {
-        "com.sparkystudios.traklibrary.gateway.server",
-        "com.sparkystudios.traklibrary.security"
+        "com.sparkystudios.traklibrary.gateway.server"
 })
 public class GatewayServerApplication {
 

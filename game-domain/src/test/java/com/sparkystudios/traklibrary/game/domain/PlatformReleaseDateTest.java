@@ -45,13 +45,16 @@ class PlatformReleaseDateTest {
         platform.addReleaseDate(platformReleaseDate);
 
         // Act
-        PlatformReleaseDate result = testEntityManager.persistFlushFind(platform).getReleaseDates().iterator().next();
+        platform = testEntityManager.persistFlushFind(platform);
+        PlatformReleaseDate result = platform.getReleaseDates().iterator().next();
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
-        Assertions.assertThat(result.getPlatform()).isEqualTo(platform);
+        Assertions.assertThat(result.getId()).isPositive();
+        Assertions.assertThat(result.getPlatform().getId()).isEqualTo(platform.getId());
         Assertions.assertThat(result.getRegion()).isEqualTo(platformReleaseDate.getRegion());
         Assertions.assertThat(result.getReleaseDate()).isEqualTo(platformReleaseDate.getReleaseDate());
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getCreatedAt()).isNotNull();
+        Assertions.assertThat(result.getUpdatedAt()).isNotNull();
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 }

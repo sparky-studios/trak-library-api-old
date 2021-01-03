@@ -9,9 +9,11 @@ public final class GameMappers {
 
     public static final DeveloperMapper DEVELOPER_MAPPER = Mappers.getMapper(DeveloperMapper.class);
 
+    public static final FranchiseMapper FRANCHISE_MAPPER = Mappers.getMapper(FranchiseMapper.class);
+
     public static final GameBarcodeMapper GAME_BARCODE_MAPPER = Mappers.getMapper(GameBarcodeMapper.class);
 
-    public static final GameDetailsMapper GAME_INFO_MAPPER = Mappers.getMapper(GameDetailsMapper.class);
+    public static final GameDetailsMapper GAME_DETAILS_MAPPER = Mappers.getMapper(GameDetailsMapper.class);
 
     public static final GameMapper GAME_MAPPER = Mappers.getMapper(GameMapper.class);
 
@@ -20,6 +22,8 @@ public final class GameMappers {
     public static final GameRequestMapper GAME_REQUEST_MAPPER = Mappers.getMapper(GameRequestMapper.class);
 
     public static final GameUserEntryMapper GAME_USER_ENTRY_MAPPER = Mappers.getMapper(GameUserEntryMapper.class);
+
+    public static final GameUserEntryPlatformMapper GAME_USER_ENTRY_PLATFORM_MAPPER = Mappers.getMapper(GameUserEntryPlatformMapper.class);
 
     public static final GenreMapper GENRE_MAPPER = Mappers.getMapper(GenreMapper.class);
 

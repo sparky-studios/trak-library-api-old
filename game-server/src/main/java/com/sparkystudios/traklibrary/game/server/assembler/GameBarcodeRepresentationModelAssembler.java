@@ -31,7 +31,7 @@ public class GameBarcodeRepresentationModelAssembler implements SimpleRepresenta
                     .withRel("game"));
 
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
-                    .withRel("gameDetails"));
+                    .withRel("game_details"));
 
             resource.add(linkTo(methodOn(PlatformController.class).findById(content.getPlatformId()))
                     .withRel("platform"));

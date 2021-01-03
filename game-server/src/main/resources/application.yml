@@ -1,0 +1,10 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://${spring.cloud.discovery.username}:${spring.cloud.discovery.password}@discovery-server:8761/eureka
+
+spring:
+  application:
+    name: trak-game-server
+  config:
+    import: optional:configserver:http://${spring.cloud.config.username}:${spring.cloud.config.password}@config-server:8888

@@ -122,18 +122,18 @@ class UserTest {
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getUsername()).isEqualTo(user.getUsername());
         Assertions.assertThat(result.getPassword()).isEqualTo(user.getPassword());
         Assertions.assertThat(result.getEmailAddress()).isEqualTo(user.getEmailAddress());
         Assertions.assertThat(result.isVerified()).isTrue();
         Assertions.assertThat(result.getVerificationCode()).isEqualTo(user.getVerificationCode());
-        Assertions.assertThat(result.getVerificationExpiryDate()).isEqualTo(user.getVerificationExpiryDate());
+        Assertions.assertThat(result.getVerificationExpiryDate()).isEqualToIgnoringNanos(user.getVerificationExpiryDate());
         Assertions.assertThat(result.getRecoveryToken()).isEqualTo(user.getRecoveryToken());
-        Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualTo(user.getRecoveryTokenExpiryDate());
+        Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualToIgnoringNanos(user.getRecoveryTokenExpiryDate());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
@@ -197,6 +197,7 @@ class UserTest {
 
         // Assert
         Assertions.assertThat(result.getUserRoles().size()).isEqualTo(1);
-        Assertions.assertThat(result.getUserRoles().iterator().next()).isEqualTo(userRole1);
+        Assertions.assertThat(result.getUserRoles().iterator().next().getId())
+                .isEqualTo(userRole1.getId());
     }
 }

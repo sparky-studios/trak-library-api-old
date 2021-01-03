@@ -10,7 +10,9 @@ import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 @DataJpaTest
 class GameTest {
@@ -84,14 +86,14 @@ class GameTest {
         Game result = testEntityManager.persistFlushFind(game);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
@@ -149,7 +151,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getGenres().size()).isEqualTo(1);
-        Assertions.assertThat(result.getGenres().iterator().next()).isEqualTo(genre1);
+        Assertions.assertThat(result.getGenres().iterator().next().getId())
+                .isEqualTo(genre1.getId());
     }
 
     @Test
@@ -207,7 +210,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getPlatforms().size()).isEqualTo(1);
-        Assertions.assertThat(result.getPlatforms().iterator().next()).isEqualTo(platform1);
+        Assertions.assertThat(result.getPlatforms().iterator().next().getId())
+                .isEqualTo(platform1.getId());
     }
 
     @Test
@@ -269,7 +273,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getPublishers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getPublishers().iterator().next()).isEqualTo(publisher1);
+        Assertions.assertThat(result.getPublishers().iterator().next().getId())
+                .isEqualTo(publisher1.getId());
     }
 
     @Test
@@ -331,7 +336,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getDevelopers().size()).isEqualTo(1);
-        Assertions.assertThat(result.getDevelopers().iterator().next()).isEqualTo(developer1);
+        Assertions.assertThat(result.getDevelopers().iterator().next().getId())
+                .isEqualTo(developer1.getId());
     }
 
     @Test
@@ -365,8 +371,8 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(3);
-        Assertions.assertThat(result.getReleaseDates())
-                .isEqualTo(new TreeSet<>(Arrays.asList(gameReleaseDate1, gameReleaseDate2, gameReleaseDate3)));
+        Assertions.assertThat(result.getReleaseDates().stream().map(GameReleaseDate::getId).sorted().collect(Collectors.toList()))
+                .isEqualTo(List.of(gameReleaseDate1.getId(), gameReleaseDate2.getId(), gameReleaseDate3.getId()));
     }
 
     @Test
@@ -401,7 +407,29 @@ class GameTest {
 
         // Assert
         Assertions.assertThat(result.getReleaseDates().size()).isEqualTo(1);
-        Assertions.assertThat(result.getReleaseDates().iterator().next())
-                .isEqualTo(gameReleaseDate3);
+        Assertions.assertThat(result.getReleaseDates().iterator().next().getId())
+                .isEqualTo(gameReleaseDate3.getId());
+    }
+
+    @Test
+    void persist_withValidFranchiseRelationship_mapsRelationship() {
+        // Arrange
+        Franchise franchise = new Franchise();
+        franchise.setTitle("test-franchise");
+        franchise.setDescription("test-franchise-description");
+        franchise = testEntityManager.persistFlushFind(franchise);
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setFranchiseId(franchise.getId());
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getFranchise()).isEqualTo(franchise);
+        Assertions.assertThat(result.getFranchiseId()).isEqualTo(franchise.getId());
     }
 }
