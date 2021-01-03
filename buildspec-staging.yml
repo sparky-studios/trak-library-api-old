@@ -24,5 +24,5 @@ phases:
       - |
         if [[ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ]] ;
         then
-          mvn -Ddocker.push.username=$DOCKER_USERNAME -Ddocker.push.password=$DOCKER_PASSWORD -Pstaging
+          mvn -Ddocker.push.username=$DOCKER_USERNAME -Ddocker.push.password=$DOCKER_PASSWORD -Pstaging docker:push
         fi
