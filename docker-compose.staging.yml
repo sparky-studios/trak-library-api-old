@@ -3,30 +3,39 @@ services:
   auth-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
+
   config-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   discovery-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   email-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   game-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   gateway-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   image-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging
 
   notification-server:
     environment:
       - spring.profiles.active=staging
+      - spring.cloud.config.profile=staging

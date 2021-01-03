@@ -50,7 +50,7 @@ public class TrakHalJsonMediaTypeConfiguration implements HypermediaMappingInfor
         mapper.registerModule(new JSR353Module());
 
         mapper.setHandlerInstantiator(new Jackson2HalModule.HalHandlerInstantiator(relProvider,
-                curieProvider.getIfAvailable(() -> CurieProvider.NONE), resolver, true,
+                curieProvider.getIfAvailable(() -> CurieProvider.NONE), resolver,
                 halConfiguration.getIfAvailable(HalConfiguration::new)));
 
         mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);

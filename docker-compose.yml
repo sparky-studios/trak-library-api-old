@@ -2,7 +2,7 @@ version: "3.3"
 services:
   auth-server:
     container_name: traklibrary-auth-server
-    image: sparkystudios/traklibrary-auth-server:latest
+    image: sparkystudios/traklibrary-auth-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -14,12 +14,14 @@ services:
       - discovery-server
       - config-server
     restart: on-failure
+    expose:
+      - 8080
     networks:
       - trak-network
 
   config-server:
     container_name: traklibrary-config-server
-    image: sparkystudios/traklibrary-config-server:latest
+    image: sparkystudios/traklibrary-config-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -31,23 +33,27 @@ services:
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
     depends_on:
       - discovery-server
+    expose:
+      - 8888
     restart: on-failure
     networks:
       - trak-network
 
   discovery-server:
     container_name: traklibrary-discovery-server
-    image: sparkystudios/traklibrary-discovery-server:latest
+    image: sparkystudios/traklibrary-discovery-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - spring.security.user.name=${DISCOVERY_SERVER_USERNAME}
       - spring.security.user.password=${DISCOVERY_SERVER_PASSWORD}
+    ports:
+    - 8761:8761
     networks:
       - trak-network
 
   email-server:
     container_name: traklibrary-email-server
-    image: sparkystudios/traklibrary-email-server:latest
+    image: sparkystudios/traklibrary-email-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -58,13 +64,15 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
 
   game-server:
     container_name: traklibrary-game-server
-    image: sparkystudios/traklibrary-game-server:latest
+    image: sparkystudios/traklibrary-game-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -75,13 +83,15 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
 
   gateway-server:
     container_name: traklibrary-gateway-server
-    image: sparkystudios/traklibrary-gateway-server:latest
+    image: sparkystudios/traklibrary-gateway-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -92,13 +102,17 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
+    ports:
+    - 8080:8080
     restart: on-failure
     networks:
       - trak-network
 
   image-server:
     container_name: traklibrary-image-server
-    image: sparkystudios/traklibrary-image-server:latest
+    image: sparkystudios/traklibrary-image-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -109,13 +123,15 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network
 
   notification-server:
     container_name: traklibrary-notification-server
-    image: sparkystudios/traklibrary-notification-server:latest
+    image: sparkystudios/traklibrary-notification-server:${VERSION}
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -126,6 +142,8 @@ services:
     depends_on:
       - discovery-server
       - config-server
+    expose:
+      - 8080
     restart: on-failure
     networks:
       - trak-network

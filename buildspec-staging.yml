@@ -3,7 +3,6 @@ version: 0.2
 env:
   shell: bash
   parameter-store:
-    SONAR_TOKEN: "/trak-api/sonarcloud-token"
     DOCKER_USERNAME: "/trak-api/docker/username"
     DOCKER_PASSWORD: "/trak-api/docker/password"
 
@@ -14,22 +13,16 @@ phases:
   pre_build:
     commands:
       - echo [INFO] Cleaning Trak Library API `date`
+      - mvn versions:set -DremoveSnapshot
       - mvn clean -Pstaging
   build:
     commands:
       - echo [INFO] Building Trak Library API `date`
-      - mvn compile -Pstaging
+      - mvn package -Pstaging
   post_build:
     commands:
-      - echo [INFO] Running Trak Library API tests `date`
       - |
-        branch_name=$CODEBUILD_SOURCE_VERSION
-        if [[ "$branch_name" == pr/* ]] ;
-        then
-        	pull_request_number="${branch_name:3}"
-        	mvn verify sonar:sonar -Pstaging -Dsonar.pullrequest.provider=Github -Dsonar.pullrequest.github.repository=sparky-studios/trak-api -Dsonar.pullrequest.key=$pull_request_number -Dsonar.pullrequest.branch=$CODEBUILD_WEBHOOK_HEAD_REF
-        fi
         if [[ "$CODEBUILD_WEBHOOK_EVENT" == "PULL_REQUEST_MERGED" ]] ;
         then
-          mvn verify sonar:sonar -Pstaging -Dsonar.branch.name=staging
+          mvn -Ddocker.push.username=$DOCKER_USERNAME -Ddocker.push.password=$DOCKER_PASSWORD -Pstaging
         fi

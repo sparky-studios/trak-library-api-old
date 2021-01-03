@@ -1025,7 +1025,7 @@ class GameControllerTest {
                 .thenReturn(100L);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("?page=2")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/?page=2")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert

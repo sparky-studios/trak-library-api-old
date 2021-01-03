@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.email.service.configuration;
+package com.sparkystudios.traklibrary.email.service.config;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
@@ -12,16 +12,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 
 @Configuration
-public class AwsSimpleEmailServiceConfig {
-
-    @Value("${trak.aws.simple-email-service.access-key}")
-    private String accessKey;
-
-    @Value("${trak.aws.simple-email-service.secret-key}")
-    private String secretKey;
+public class EmailConfig {
 
     @Bean
-    public AmazonSimpleEmailService amazonSimpleEmailService() {
+    public AmazonSimpleEmailService amazonSimpleEmailService(@Value("${cloud.aws.credentials.access-key}") String accessKey,
+                                                             @Value("${cloud.aws.credentials.secret-key}") String secretKey) {
+
         return AmazonSimpleEmailServiceClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
                 .withRegion(Regions.EU_WEST_1)

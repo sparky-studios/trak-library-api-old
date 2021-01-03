@@ -23,6 +23,9 @@ Make sure you have installed all the following prerequisites on your development
 Create an **.env** file at the root of the project and add the following values:
 
 ```.env
+# Which version to deploy when running docker-compose.
+VERSION=latest-development
+
 # Encryption key used to encrypt/decrypt config server values.
 CONFIG_SERVER_ENCRYPT_KEY=****
 
@@ -39,6 +42,7 @@ DISCOVERY_SERVER_USERNAME=****
 DISCOVERY_SERVER_PASSWORD=****
 ```
 
+- For a development environment, the **VERSION** variable should always be set **latest**. 
 - The encryption key used to decrypt the values stored within configuration repository. This key is only provided on request by an Administrator and can only be used for development configuration values.
 - The git credentials will need to be your GitHub username, and the personal access token which allows you to access the configuration repository respectively.
 - The basic authentication credentials that services will need to access the configuration files from the configuration server. They should match the values provided to you by an Administrator.
