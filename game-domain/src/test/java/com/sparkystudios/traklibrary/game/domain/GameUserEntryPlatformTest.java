@@ -83,13 +83,13 @@ class GameUserEntryPlatformTest {
         GameUserEntryPlatform result = testEntityManager.persistFlushFind(gameUserEntryPlatform);
 
         // Assert
-        Assertions.assertThat(result.getId()).isGreaterThan(0L);
+        Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getGameUserEntryId()).isEqualTo(gameUserEntry.getId());
         Assertions.assertThat(result.getGameUserEntry().getId()).isEqualTo(gameUserEntry.getId());
         Assertions.assertThat(result.getPlatformId()).isEqualTo(platform.getId());
         Assertions.assertThat(result.getPlatform().getId()).isEqualTo(platform.getId());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
-        Assertions.assertThat(result.getVersion()).isNotNull().isGreaterThanOrEqualTo(0L);
+        Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 }
