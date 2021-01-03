@@ -56,6 +56,9 @@
             <plugin>
                 <groupId>io.fabric8</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <skipPush>false</skipPush>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -74,7 +74,44 @@
                                 </execution>
                             </executions>
                             <configuration>
-                                <pushRegistry>sparkystudios/${project.build.finalName}</pushRegistry>
+                                <dockerHost>http://localhost:2375</dockerHost>
+                                <skipPush>true</skipPush>
+                                <images>
+                                    <image>
+                                        <name>sparkystudios/${project.build.finalName}</name>
+                                        <build>
+                                            <contextDir>${project.basedir}</contextDir>
+                                            <tags>
+                                                <tag>${project.version}-staging</tag>
+                                            </tags>
+                                        </build>
+                                    </image>
+                                </images>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+        <profile>
+            <id>production</id>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>io.fabric8</groupId>
+                            <artifactId>docker-maven-plugin</artifactId>
+                            <executions>
+                                <execution>
+                                    <id>default</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>build</goal>
+                                    </goals>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <skipPush>true</skipPush>
                                 <images>
                                     <image>
                                         <name>sparkystudios/${project.build.finalName}</name>
@@ -86,17 +123,11 @@
                                         </build>
                                     </image>
                                 </images>
-                                <buildArgs>
-                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</DEBUG_ARGS>
-                                </buildArgs>
                             </configuration>
                         </plugin>
                     </plugins>
                 </pluginManagement>
             </build>
-        </profile>
-        <profile>
-            <id>production</id>
         </profile>
         <profile>
             <id>coverage</id>

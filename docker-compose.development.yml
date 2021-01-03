@@ -50,7 +50,6 @@ services:
       - spring.profiles.active=development
       - spring.cloud.config.profile=development
     ports:
-      - 8761:8761
       - 5007:5005
 
   email-server:
@@ -88,7 +87,6 @@ services:
       - spring.profiles.active=development
       - spring.cloud.config.profile=development
     ports:
-      - 8080:8080
       - 5010:5005
 
   image-server:
