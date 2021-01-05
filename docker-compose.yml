@@ -6,6 +6,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -57,6 +58,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -76,6 +78,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -95,6 +98,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -116,6 +120,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -135,6 +140,7 @@ services:
     command: ["-m", "512m"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
