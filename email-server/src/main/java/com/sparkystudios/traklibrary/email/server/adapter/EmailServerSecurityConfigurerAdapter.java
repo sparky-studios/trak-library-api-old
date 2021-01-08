@@ -33,8 +33,6 @@ public class EmailServerSecurityConfigurerAdapter extends WebSecurityConfigurerA
                 .anyRequest()
                 .authenticated()
                 .and()
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
