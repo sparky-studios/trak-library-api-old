@@ -12,9 +12,4 @@ COPY ${jar} game-server.jar
 ARG DEBUG_ARGS
 ENV ENV_DEBUG=${DEBUG_ARGS}
 
-# Expose this port for external communication.
-EXPOSE 8080
-# Exposed for debug purposes.
-EXPOSE 5005
-
-ENTRYPOINT java ${ENV_DEBUG} -Djava.security.egd-file=file:/dev/./urandom -Xmx256m -jar game-server.jar
+ENTRYPOINT ["java", "-Djava.security.egd-file=file:/dev/./urandom", "-Xmx256m", "-jar", "game-server.jar"]

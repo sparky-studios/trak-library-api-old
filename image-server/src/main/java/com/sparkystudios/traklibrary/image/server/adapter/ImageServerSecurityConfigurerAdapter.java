@@ -25,8 +25,6 @@ public class ImageServerSecurityConfigurerAdapter extends WebSecurityConfigurerA
                 .anyRequest()
                 .authenticated()
                 .and()
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

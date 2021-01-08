@@ -34,8 +34,6 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
                 .anyRequest()
                 .authenticated()
                 .and()
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
