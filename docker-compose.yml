@@ -3,9 +3,10 @@ services:
   auth-server:
     container_name: traklibrary-auth-server
     image: sparkystudios/traklibrary-auth-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -22,7 +23,7 @@ services:
   config-server:
     container_name: traklibrary-config-server
     image: sparkystudios/traklibrary-config-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
       - spring.cloud.config.server.git.password=${CONFIG_SERVER_GIT_PASSWORD}
@@ -42,7 +43,7 @@ services:
   discovery-server:
     container_name: traklibrary-discovery-server
     image: sparkystudios/traklibrary-discovery-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - spring.security.user.name=${DISCOVERY_SERVER_USERNAME}
       - spring.security.user.password=${DISCOVERY_SERVER_PASSWORD}
@@ -54,9 +55,10 @@ services:
   email-server:
     container_name: traklibrary-email-server
     image: sparkystudios/traklibrary-email-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -73,9 +75,10 @@ services:
   game-server:
     container_name: traklibrary-game-server
     image: sparkystudios/traklibrary-game-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -92,9 +95,10 @@ services:
   gateway-server:
     container_name: traklibrary-gateway-server
     image: sparkystudios/traklibrary-gateway-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -113,9 +117,10 @@ services:
   image-server:
     container_name: traklibrary-image-server
     image: sparkystudios/traklibrary-image-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
@@ -132,9 +137,10 @@ services:
   notification-server:
     container_name: traklibrary-notification-server
     image: sparkystudios/traklibrary-notification-server:${VERSION}
-    command: ["-m", "512m"]
+    command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}

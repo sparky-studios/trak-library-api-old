@@ -5,16 +5,10 @@ LABEL maintainer="Sparky Studios <development@traklibrary.com>"
 WORKDIR app
 
 # Copy the jar file into the docker container.
-ARG jar=target/traklibrary-notification-server.jar
-COPY ${jar} notification-server.jar
-
-# Additional debug arguments provided by the maven build.
-ARG DEBUG_ARGS
-ENV ENV_DEBUG=${DEBUG_ARGS}
+ARG jar=target/traklibrary-notification-api.jar
+COPY ${jar} traklibrary-notification-api.jar
 
 # Expose this port for external communication.
 EXPOSE 8080
-# Exposed for debug purposes.
-EXPOSE 5005
 
-ENTRYPOINT java ${ENV_DEBUG} -Djava.security.egd-file=file:/dev/./urandom -Xmx256m -jar notification-server.jar
+ENTRYPOINT ["java", "-Djava.security.egd-file=file:/dev/./urandom", "-jar", "traklibrary-notification-api.jar"]

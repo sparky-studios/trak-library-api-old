@@ -60,7 +60,7 @@
     </dependencies>
 
     <build>
-        <finalName>traklibrary-game-server</finalName>
+        <finalName>traklibrary-game-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

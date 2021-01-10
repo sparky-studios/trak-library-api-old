@@ -33,7 +33,7 @@
     </dependencies>
 
     <build>
-        <finalName>traklibrary-discovery-server</finalName>
+        <finalName>traklibrary-discovery-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -5,16 +5,11 @@ LABEL maintainer="Sparky Studios <development@traklibrary.com>"
 WORKDIR app
 
 # Copy the jar file into the docker container.
-ARG jar=target/traklibrary-discovery-server.jar
-COPY ${jar} discovery-server.jar
-
-# Additional debug arguments provided by the maven build.
-ARG DEBUG_ARGS
-ENV ENV_DEBUG=${DEBUG_ARGS}
+ARG jar=target/traklibrary-discovery-api.jar
+COPY ${jar} traklibrary-discovery-api.jar
 
 # Expose this port for external communication.
-EXPOSE 8080
-# Exposed for debug purposes.
-EXPOSE 5005
+EXPOSE 8761
 
-ENTRYPOINT java ${ENV_DEBUG} -Djava.security.egd-file=file:/dev/./urandom -Xmx256m -jar discovery-server.jar
+ENTRYPOINT ["java", "-Djava.security.egd-file=file:/dev/./urandom", "-jar", "traklibrary-discovery-api.jar"]
+

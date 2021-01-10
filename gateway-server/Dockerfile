@@ -5,16 +5,11 @@ LABEL maintainer="Sparky Studios <development@traklibrary.com>"
 WORKDIR app
 
 # Copy the jar file into the docker container.
-ARG jar=target/traklibrary-gateway-server.jar
-COPY ${jar} gateway-server.jar
-
-# Additional debug arguments provided by the maven build.
-ARG DEBUG_ARGS
-ENV ENV_DEBUG=${DEBUG_ARGS}
+ARG jar=target/traklibrary-gateway-api.jar
+COPY ${jar} traklibrary-gateway-api.jar
 
 # Expose this port for external communication.
 EXPOSE 8080
-# Exposed for debug purposes.
-EXPOSE 5005
 
-ENTRYPOINT java ${ENV_DEBUG} -Djava.security.egd-file=file:/dev/./urandom -Xmx256m -jar gateway-server.jar
+ENTRYPOINT ["java", "-Djava.security.egd-file=file:/dev/./urandom", "-jar", "traklibrary-gateway-api.jar"]
+

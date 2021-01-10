@@ -23,8 +23,6 @@ public class NotificationServerSecurityConfigurerAdapter extends WebSecurityConf
                 .anyRequest()
                 .authenticated()
                 .and()
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -25,8 +25,6 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
                 .anyRequest()
                 .authenticated()
                 .and()
-                .cors()
-                .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

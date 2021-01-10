@@ -32,9 +32,8 @@ public class MessageConfig {
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
         CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
-        filter.setIncludeQueryString(true);
-        filter.setIncludePayload(false);
-        filter.setIncludeHeaders(false);
+        filter.setMaxPayloadLength(10000);
+
         return filter;
     }
 }
