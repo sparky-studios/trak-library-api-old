@@ -45,11 +45,11 @@
                                 <images>
                                     <image>
                                         <name>sparkystudios/${project.build.finalName}</name>
+                                        <build>
+                                            <contextDir>${project.basedir}</contextDir>
+                                        </build>
                                     </image>
                                 </images>
-                                <buildArgs>
-                                    <DEBUG_ARGS>-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005</DEBUG_ARGS>
-                                </buildArgs>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -78,12 +78,9 @@
                                 <skipPush>true</skipPush>
                                 <images>
                                     <image>
-                                        <name>sparkystudios/${project.build.finalName}</name>
+                                        <name>sparkystudios/${project.build.finalName}:${project.version}-staging</name>
                                         <build>
                                             <contextDir>${project.basedir}</contextDir>
-                                            <tags>
-                                                <tag>${project.version}-staging</tag>
-                                            </tags>
                                         </build>
                                     </image>
                                 </images>
@@ -111,15 +108,13 @@
                                 </execution>
                             </executions>
                             <configuration>
+                                <dockerHost>http://localhost:2375</dockerHost>
                                 <skipPush>true</skipPush>
                                 <images>
                                     <image>
                                         <name>sparkystudios/${project.build.finalName}</name>
                                         <build>
                                             <contextDir>${project.basedir}</contextDir>
-                                            <tags>
-                                                <tag>${project.version}</tag>
-                                            </tags>
                                         </build>
                                     </image>
                                 </images>

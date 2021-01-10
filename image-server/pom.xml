@@ -52,7 +52,7 @@
     </dependencies>
 
     <build>
-        <finalName>traklibrary-image-server</finalName>
+        <finalName>traklibrary-image-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

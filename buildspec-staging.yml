@@ -13,7 +13,7 @@ phases:
   pre_build:
     commands:
       - echo [INFO] Cleaning Trak Library API `date`
-      - mvn versions:set -DremoveSnapshot
+      - mvn versions:set -DremoveSnapshot -DgenerateBackupPoms=false
       - mvn clean -Pstaging
   build:
     commands:
