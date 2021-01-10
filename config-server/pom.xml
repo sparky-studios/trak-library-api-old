@@ -45,7 +45,7 @@
     </dependencies>
 
     <build>
-        <finalName>traklibrary-config-server</finalName>
+        <finalName>traklibrary-config-api</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
