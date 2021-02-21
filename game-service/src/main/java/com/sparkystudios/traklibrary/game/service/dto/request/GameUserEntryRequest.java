@@ -28,4 +28,8 @@ public class GameUserEntryRequest {
     @NotNull(message = "{game-user-entry-request.validation.platforms.not-null}")
     @NotEmpty(message = "{game-user-entry-request.validation.platforms.not-empty}")
     private Collection<Long> platformIds;
+
+    @NotNull(message = "{game-user-entry-request.validation.downloadable-contents.not-null}")
+    @NotEmpty(message = "{game-user-entry-request.validation.downloadable-contents.not-empty}")
+    private Collection<Long> downloadableContentIds;
 }
