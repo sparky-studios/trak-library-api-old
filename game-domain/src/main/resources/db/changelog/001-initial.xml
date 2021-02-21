@@ -30,6 +30,40 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
+        <!-- Create the DLC table -->
+        <createTable tableName="dlc">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlc" />
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="description" type="varchar(4096)">
+                <constraints nullable="false" />
+            </column>
+            <column name="release_date" type="date" />
+            <column name="game_id" type="bigint" />
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- DLC foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="dlc"
+                baseColumnNames="game_id"
+                constraintName="fk_dlc_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+
+        <!-- DLC unique constraints -->
+        <addUniqueConstraint
+                tableName="dlc"
+                columnNames="name,game_id"
+                constraintName="unq_dlc_name_game_id" />
+
         <!-- Create the game mode tables -->
         <createTable tableName="game_mode">
             <column name="mode" type="varchar(30)">
