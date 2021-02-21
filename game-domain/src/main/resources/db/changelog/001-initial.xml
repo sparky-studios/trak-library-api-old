@@ -262,6 +262,44 @@
                 columnNames="game_user_entry_id,platform_id"
                 constraintName="unq_game_user_entry_platform_game_user_entry_id_platform_id" />
 
+        <!-- game_user_entry_dlc table -->
+        <createTable tableName="game_user_entry_dlc">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_game_user_entry_dlc" />
+            </column>
+            <column name="game_user_entry_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="dlc_id" type="bigint">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- game_user_entry_platform foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry_dlc"
+                baseColumnNames="game_user_entry_id"
+                constraintName="fk_game_user_entry_dlc_game_user_entry_id"
+                referencedTableName="game_user_entry"
+                referencedColumnNames="id" />
+        <addForeignKeyConstraint
+                baseTableName="game_user_entry_dlc"
+                baseColumnNames="dlc_id"
+                constraintName="fk_game_user_entry_dlc_dlc_id"
+                referencedTableName="dlc"
+                referencedColumnNames="id" />
+
+        <!-- game_user_entry_platform unique constraints -->
+        <addUniqueConstraint
+                tableName="game_user_entry_dlc"
+                columnNames="game_user_entry_id,dlc_id"
+                constraintName="unq_game_user_entry_dlc_game_user_entry_id_dlc_id" />
+
         <!-- game_request table -->
         <createTable tableName="game_request">
             <column name="id" type="bigint" autoIncrement="true">
@@ -563,12 +601,15 @@
             <dropTable tableName="developer" />
             <dropTable tableName="company" />
             <dropTable tableName="game_request" />
+            <dropTable tableName="game_user_entry_dlc" />
+            <dropTable tableName="game_user_entry_platform" />
             <dropTable tableName="game_user_entry" />
             <dropTable tableName="game_platform_xref" />
             <dropTable tableName="platform" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
             <dropTable tableName="game_mode" />
+            <dropTable tableName="dlc" />
             <dropTable tableName="game" />
         </rollback>
     </changeSet>
