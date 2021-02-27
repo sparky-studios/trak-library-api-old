@@ -8,10 +8,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 @DataJpaTest
@@ -412,6 +410,68 @@ class GameTest {
     }
 
     @Test
+    void persist_withValidDownloadableContentsRelationships_mapsRelationships() {
+        // Arrange
+        DownloadableContent downloadableContent1 = new DownloadableContent();
+        downloadableContent1.setName("test-name-1");
+        downloadableContent1.setDescription("test-description-1");
+        downloadableContent1.setReleaseDate(LocalDate.now());
+
+        DownloadableContent downloadableContent2 = new DownloadableContent();
+        downloadableContent2.setName("test-name-2");
+        downloadableContent2.setDescription("test-description-2");
+        downloadableContent2.setReleaseDate(LocalDate.now());
+
+        Game game = new Game();
+        game.setTitle("game-title-1");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.addDownloadableContent(downloadableContent1);
+        game.addDownloadableContent(downloadableContent2);
+        game = testEntityManager.persistFlushFind(game);
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getDownloadableContents().size()).isEqualTo(2);
+        Assertions.assertThat(result.getDownloadableContents().stream().map(DownloadableContent::getId).sorted().collect(Collectors.toList()))
+                .isEqualTo(List.of(downloadableContent1.getId(), downloadableContent2.getId()));
+    }
+
+    @Test
+    void persist_withValidRemovedDownloadableContentsRelationships_mapsRelationships() {
+        // Arrange
+        DownloadableContent downloadableContent1 = new DownloadableContent();
+        downloadableContent1.setName("test-name-1");
+        downloadableContent1.setDescription("test-description-1");
+        downloadableContent1.setReleaseDate(LocalDate.now());
+
+        DownloadableContent downloadableContent2 = new DownloadableContent();
+        downloadableContent2.setName("test-name-2");
+        downloadableContent2.setDescription("test-description-2");
+        downloadableContent2.setReleaseDate(LocalDate.now());
+
+        Game game = new Game();
+        game.setTitle("game-title");
+        game.setDescription("game-description");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.addDownloadableContent(downloadableContent1);
+        game.addDownloadableContent(downloadableContent2);
+        game = testEntityManager.persistFlushFind(game);
+
+        game.removeDownloadableContent(testEntityManager.find(DownloadableContent.class, downloadableContent1.getId()));
+
+        // Act
+        Game result = testEntityManager.persistFlushFind(game);
+
+        // Assert
+        Assertions.assertThat(result.getDownloadableContents().size()).isEqualTo(1);
+        Assertions.assertThat(result.getDownloadableContents().iterator().next().getId())
+                .isEqualTo(downloadableContent2.getId());
+    }
+
+    @Test
     void persist_withValidFranchiseRelationship_mapsRelationship() {
         // Arrange
         Franchise franchise = new Franchise();
@@ -420,8 +480,8 @@ class GameTest {
         franchise = testEntityManager.persistFlushFind(franchise);
 
         Game game = new Game();
-        game.setTitle("game-title-1");
-        game.setDescription("game-description-1");
+        game.setTitle("game-title");
+        game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.setFranchiseId(franchise.getId());
 

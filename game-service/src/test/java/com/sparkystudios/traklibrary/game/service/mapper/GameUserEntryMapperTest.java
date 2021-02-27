@@ -28,8 +28,16 @@ class GameUserEntryMapperTest {
         game.setTitle("test-title");
         game.addPublisher(publisher);
 
+
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
         gameUserEntryPlatform.setId(1L);
+
+        DownloadableContent downloadableContent = new DownloadableContent();
+        downloadableContent.setName("test-name");
+
+        GameUserEntryDownloadableContent gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
+        gameUserEntryDownloadableContent.setId(2L);
+        gameUserEntryDownloadableContent.setDownloadableContent(downloadableContent);
 
         GameUserEntry gameUserEntry = new GameUserEntry();
         gameUserEntry.setId(5L);
@@ -41,6 +49,7 @@ class GameUserEntryMapperTest {
         gameUserEntry.setCreatedAt(LocalDateTime.now());
         gameUserEntry.setUpdatedAt(LocalDateTime.now());
         gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform);
+        gameUserEntry.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
 
         // Act
         GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(gameUserEntry);
@@ -57,6 +66,9 @@ class GameUserEntryMapperTest {
         Assertions.assertThat(result.getGameUserEntryPlatforms()).hasSize(1);
         Assertions.assertThat(result.getGameUserEntryPlatforms().iterator().next().getId())
                 .isEqualTo(gameUserEntryPlatform.getId());
+        Assertions.assertThat(result.getGameUserEntryDownloadableContents()).hasSize(1);
+        Assertions.assertThat(result.getGameUserEntryDownloadableContents().iterator().next().getId())
+                .isEqualTo(gameUserEntryDownloadableContent.getId());
         Assertions.assertThat(result.getCreatedAt()).isEqualTo(gameUserEntry.getCreatedAt());
         Assertions.assertThat(result.getUpdatedAt()).isEqualTo(gameUserEntry.getUpdatedAt());
     }

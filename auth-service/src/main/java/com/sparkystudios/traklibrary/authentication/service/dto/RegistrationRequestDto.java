@@ -22,6 +22,7 @@ public class RegistrationRequestDto {
     @NotEmpty(message = "{registration-request.validation.username.not-empty}")
     private String username;
 
+    @NotEmpty(message = "{registration-request.validation.email-address.not-empty}")
     @Email(message = "{registration-request.validation.email-address.invalid}")
     private String emailAddress;
 

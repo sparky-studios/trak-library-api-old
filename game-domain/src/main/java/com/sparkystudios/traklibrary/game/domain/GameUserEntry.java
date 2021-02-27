@@ -3,6 +3,8 @@ package com.sparkystudios.traklibrary.game.domain;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -37,7 +39,14 @@ public class GameUserEntry {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @OneToMany(mappedBy = "gameUserEntry", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<GameUserEntryPlatform> gameUserEntryPlatforms = new ArrayList<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "gameUserEntry", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<GameUserEntryDownloadableContent> gameUserEntryDownloadableContents = new ArrayList<>();
 
     @Column(name = "status", nullable = false)
     private GameUserEntryStatus status;
@@ -81,5 +90,31 @@ public class GameUserEntry {
     public void removeGameUserEntryPlatform(GameUserEntryPlatform gameUserEntryPlatform) {
         gameUserEntryPlatforms.remove(gameUserEntryPlatform);
         gameUserEntryPlatform.setGameUserEntry(null);
+    }
+
+    /**
+     * Convenience method that is used to add a {@link GameUserEntryDownloadableContent} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link GameUserEntryDownloadableContent} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param gameUserEntryDownloadableContent The {@link GameUserEntryDownloadableContent} to add to the {@link Game}.
+     */
+    public void addGameUserEntryDownloadableContent(GameUserEntryDownloadableContent gameUserEntryDownloadableContent) {
+        gameUserEntryDownloadableContents.add(gameUserEntryDownloadableContent);
+        gameUserEntryDownloadableContent.setGameUserEntry(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link GameUserEntryDownloadableContent} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link GameUserEntryDownloadableContent} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param gameUserEntryDownloadableContent The {@link GameUserEntryDownloadableContent} to remove to the {@link Game}.
+     */
+    public void removeGameUserEntryPlatform(GameUserEntryDownloadableContent gameUserEntryDownloadableContent) {
+        gameUserEntryDownloadableContents.remove(gameUserEntryDownloadableContent);
+        gameUserEntryDownloadableContent.setGameUserEntry(null);
     }
 }

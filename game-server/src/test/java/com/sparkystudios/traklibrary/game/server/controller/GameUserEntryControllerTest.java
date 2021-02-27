@@ -82,6 +82,7 @@ class GameUserEntryControllerTest {
         gameUserEntryRequest.setRating((short)1);
         gameUserEntryRequest.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryRequest.setPlatformIds(Collections.singletonList(1L));
+        gameUserEntryRequest.setDownloadableContentIds(Collections.singletonList(1L));
 
         Mockito.when(gameUserEntryService.save(ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntryDto());
@@ -283,6 +284,7 @@ class GameUserEntryControllerTest {
         gameUserEntryRequest.setRating((short)1);
         gameUserEntryRequest.setStatus(GameUserEntryStatus.COMPLETED);
         gameUserEntryRequest.setPlatformIds(Collections.singletonList(1L));
+        gameUserEntryRequest.setDownloadableContentIds(Collections.singletonList(1L));
 
         Mockito.when(gameUserEntryService.update(ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntryDto());

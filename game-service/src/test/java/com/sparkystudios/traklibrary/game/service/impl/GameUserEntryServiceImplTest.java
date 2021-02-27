@@ -1,8 +1,11 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
+import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
+import com.sparkystudios.traklibrary.game.domain.GameUserEntryDownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryPlatform;
 import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.repository.DownloadableContentRepository;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GameUserEntryRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
@@ -40,6 +43,9 @@ class GameUserEntryServiceImplTest {
 
     @Mock
     private PlatformRepository platformRepository;
+
+    @Mock
+    private DownloadableContentRepository downloadableContentRepository;
 
     @Spy
     private final GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
@@ -113,11 +119,15 @@ class GameUserEntryServiceImplTest {
 
         GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
         gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
 
         // Act
         gameUserEntryService.save(gameUserEntryRequest);
 
         // Assert
+        Mockito.verify(platformRepository, Mockito.never())
+                .findById(ArgumentMatchers.anyLong());
+
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
     }
@@ -135,16 +145,74 @@ class GameUserEntryServiceImplTest {
                 .thenReturn(new GameUserEntry());
 
         Mockito.when(platformRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.empty());
+                .thenReturn(Optional.of(new Platform()));
 
         GameUserEntryRequest gameUserEntryRequest = Mockito.spy(GameUserEntryRequest.class);
         gameUserEntryRequest.setPlatformIds(List.of(1L, 2L));
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
 
         // Act
         gameUserEntryService.save(gameUserEntryRequest);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMost(2))
+                .findById(ArgumentMatchers.anyLong());
+
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void save_withNewGameUserEntryRequestWithNoDownloadableContents_savesGameUserEntry() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
+
+        // Act
+        gameUserEntryService.save(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(downloadableContentRepository, Mockito.never())
+                .findById(ArgumentMatchers.anyLong());
+
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void save_withNewGameUserEntryRequestWithDownloadableContentIds_savesGameUserEntryAndInvokesDownloadableContentRepository() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        Mockito.when(downloadableContentRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new DownloadableContent()));
+
+        GameUserEntryRequest gameUserEntryRequest = Mockito.spy(GameUserEntryRequest.class);
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(List.of(1L, 2L));
+
+        // Act
+        gameUserEntryService.save(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(downloadableContentRepository, Mockito.atMost(2))
                 .findById(ArgumentMatchers.anyLong());
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
@@ -386,6 +454,7 @@ class GameUserEntryServiceImplTest {
 
         GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
         gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
 
         Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntry());
@@ -440,8 +509,9 @@ class GameUserEntryServiceImplTest {
 
         GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
         gameUserEntryRequest.setPlatformIds(platformIds);
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
 
-        Mockito.when(platformRepository.findById(ArgumentMatchers.eq(3L)))
+        Mockito.when(platformRepository.findById(3L))
                 .thenReturn(Optional.of(new Platform()));
 
         // Act
@@ -449,6 +519,88 @@ class GameUserEntryServiceImplTest {
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
+                .findById(ArgumentMatchers.anyLong());
+
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void update_withGameUserEntryWithNoDownloadableContents_savesGameUserEntry() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(new GameUserEntry()));
+
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        // Act
+        gameUserEntryService.update(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(downloadableContentRepository, Mockito.never())
+                .findById(ArgumentMatchers.anyLong());
+
+        Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
+    }
+
+    @Test
+    void update_withGameUserEntryWithDifferentDownloadableContents_savesGameUserEntry() {
+        // Arrange
+        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        DownloadableContent downloadableContent1 = new DownloadableContent();
+        downloadableContent1.setId(1L);
+
+        GameUserEntryDownloadableContent gameUserEntryDownloadableContent1 = new GameUserEntryDownloadableContent();
+        gameUserEntryDownloadableContent1.setDownloadableContentId(downloadableContent1.getId());
+        gameUserEntryDownloadableContent1.setDownloadableContent(downloadableContent1);
+
+        DownloadableContent downloadableContent2 = new DownloadableContent();
+        downloadableContent2.setId(2L);
+
+        GameUserEntryDownloadableContent gameUserEntryDownloadableContent2 = new GameUserEntryDownloadableContent();
+        gameUserEntryDownloadableContent2.setDownloadableContentId(downloadableContent2.getId());
+        gameUserEntryDownloadableContent2.setDownloadableContent(downloadableContent2);
+
+        List<GameUserEntryDownloadableContent> downloadableContents = new ArrayList<>();
+        downloadableContents.add(gameUserEntryDownloadableContent1);
+        downloadableContents.add(gameUserEntryDownloadableContent2);
+
+        GameUserEntry gameUserEntry = new GameUserEntry();
+        gameUserEntry.setGameUserEntryDownloadableContents(downloadableContents);
+
+        Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Optional.of(gameUserEntry));
+
+        Mockito.when(gameUserEntryRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntry());
+
+        List<Long> downloadableContentIds = new ArrayList<>();
+        downloadableContentIds.add(1L);
+        downloadableContentIds.add(3L);
+
+        GameUserEntryRequest gameUserEntryRequest = new GameUserEntryRequest();
+        gameUserEntryRequest.setPlatformIds(Collections.emptyList());
+        gameUserEntryRequest.setDownloadableContentIds(downloadableContentIds);
+
+        Mockito.when(downloadableContentRepository.findById(3L))
+                .thenReturn(Optional.of(new DownloadableContent()));
+
+        // Act
+        gameUserEntryService.update(gameUserEntryRequest);
+
+        // Assert
+        Mockito.verify(downloadableContentRepository, Mockito.atMostOnce())
                 .findById(ArgumentMatchers.anyLong());
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())

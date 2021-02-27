@@ -30,6 +30,8 @@ public class GameUserEntryDto {
 
     private Set<GameUserEntryPlatformDto> gameUserEntryPlatforms = new TreeSet<>();
 
+    private Set<GameUserEntryDownloadableContentDto> gameUserEntryDownloadableContents = new TreeSet<>();
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

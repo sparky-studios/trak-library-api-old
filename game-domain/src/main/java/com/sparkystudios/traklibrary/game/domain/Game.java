@@ -92,6 +92,11 @@ public class Game {
     @JoinColumn(name = "franchise_id", insertable = false, updatable = false)
     private Franchise franchise;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<DownloadableContent> downloadableContents = new TreeSet<>();
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
@@ -232,5 +237,31 @@ public class Game {
     public void removeReleaseDate(GameReleaseDate gameReleaseDate) {
         releaseDates.remove(gameReleaseDate);
         gameReleaseDate.setGame(null);
+    }
+
+    /**
+     * Convenience method that is used to add a {@link DownloadableContent} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link DownloadableContent} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param downloadableContent The {@link DownloadableContent} to add to the {@link Game}.
+     */
+    public void addDownloadableContent(DownloadableContent downloadableContent) {
+        downloadableContents.add(downloadableContent);
+        downloadableContent.setGame(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link DownloadableContent} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link DownloadableContent} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param downloadableContent The {@link DownloadableContent} to remove from the {@link Game}.
+     */
+    public void removeDownloadableContent(DownloadableContent downloadableContent) {
+        downloadableContents.remove(downloadableContent);
+        downloadableContent.setGame(null);
     }
 }

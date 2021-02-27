@@ -1,8 +1,11 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
+import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
+import com.sparkystudios.traklibrary.game.domain.GameUserEntryDownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryPlatform;
 import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.repository.DownloadableContentRepository;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.GameUserEntryRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
@@ -39,6 +42,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
     private final GameUserEntryRepository gameUserEntryRepository;
     private final PlatformRepository platformRepository;
+    private final DownloadableContentRepository downloadableContentRepository;
     private final GameRepository gameRepository;
     private final GameUserEntryMapper gameUserEntryMapper;
     private final AuthenticationService authenticationService;
@@ -70,6 +74,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
         gameUserEntry.setRating(gameUserEntryRequest.getRating());
         gameUserEntry.setStatus(gameUserEntryRequest.getStatus());
 
+        // Loop through each requested platform and add it to the user entry.
         gameUserEntryRequest.getPlatformIds().forEach(platformId -> {
             Optional<Platform> platform = platformRepository.findById(platformId);
             // Create a platform reference and add it to the game user entry entity if the platform exists.
@@ -78,6 +83,18 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
                 gameUserEntryPlatform.setPlatform(platform.get());
 
                 gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform);
+            }
+        });
+
+        // Loop through eahc request dlc and add it to the user entry.
+        gameUserEntryRequest.getDownloadableContentIds().forEach(downloadableContentId -> {
+            Optional<DownloadableContent> downloadableContent = downloadableContentRepository.findById(downloadableContentId);
+            // Create a platform reference and add it to the game user entry entity if the platform exists.
+            if (downloadableContent.isPresent()) {
+                GameUserEntryDownloadableContent gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
+                gameUserEntryDownloadableContent.setDownloadableContent(downloadableContent.get());
+
+                gameUserEntry.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
             }
         });
 
@@ -188,6 +205,29 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
                     gameUserEntryPlatform.setPlatform(platform.get());
 
                     gue.addGameUserEntryPlatform(gameUserEntryPlatform);
+                }
+            }
+        });
+
+        // Remove any game user entry downloadable contents that have been removed from the request.
+        gue.getGameUserEntryDownloadableContents()
+                .removeIf(gameUserEntryDownloadableContent -> !gameUserEntryRequest.getDownloadableContentIds().contains(gameUserEntryDownloadableContent.getDownloadableContentId()));
+
+        // Loop through each and add any new entries.
+        gameUserEntryRequest.getDownloadableContentIds().forEach(gameUserEntryDownloadableContentId -> {
+
+            boolean contains = gue.getGameUserEntryDownloadableContents()
+                    .stream()
+                    .anyMatch(gameUserEntryDownloadableContent -> gameUserEntryDownloadableContent.getDownloadableContentId() == gameUserEntryDownloadableContentId);
+
+            if (!contains) {
+                Optional<DownloadableContent> downloadableContent = downloadableContentRepository.findById(gameUserEntryDownloadableContentId);
+                // Create a downloadable content reference and add it to the game user entry entity if the platform exists.
+                if (downloadableContent.isPresent()) {
+                    GameUserEntryDownloadableContent gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
+                    gameUserEntryDownloadableContent.setDownloadableContent(downloadableContent.get());
+
+                    gue.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
                 }
             }
         });

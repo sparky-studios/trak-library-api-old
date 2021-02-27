@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.*;
+import com.sparkystudios.traklibrary.game.service.dto.DownloadableContentDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import org.assertj.core.api.Assertions;
@@ -23,11 +24,6 @@ class GameMapperTest {
     @Test
     void gameToGameDto_withGame_mapsFields() {
         // Arrange
-        GameReleaseDate gameReleaseDate = new GameReleaseDate();
-        gameReleaseDate.setRegion(GameRegion.PAL);
-        gameReleaseDate.setReleaseDate(LocalDate.now());
-        gameReleaseDate.setVersion(1L);
-
         Game game = new Game();
         game.setId(5L);
         game.setTitle("test-title");
@@ -38,7 +34,8 @@ class GameMapperTest {
         game.setCreatedAt(LocalDateTime.now());
         game.setUpdatedAt(LocalDateTime.now());
         game.setVersion(1L);
-        game.addReleaseDate(gameReleaseDate);
+        game.addReleaseDate(new GameReleaseDate());
+        game.addDownloadableContent(new DownloadableContent());
 
         // Act
         GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(game);
@@ -68,11 +65,6 @@ class GameMapperTest {
     @Test
     void gameDtoToGame_withGameDto_mapsFields() {
         // Arrange
-        GameReleaseDateDto gameReleaseDateDto = new GameReleaseDateDto();
-        gameReleaseDateDto.setRegion(GameRegion.PAL);
-        gameReleaseDateDto.setReleaseDate(LocalDate.now());
-        gameReleaseDateDto.setVersion(1L);
-
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
@@ -83,7 +75,8 @@ class GameMapperTest {
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
-        gameDto.getReleaseDates().add(gameReleaseDateDto);
+        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+        gameDto.getDownloadableContents().add(new DownloadableContentDto());
 
         // Act
         Game result = GameMappers.GAME_MAPPER.gameDtoToGame(gameDto);
