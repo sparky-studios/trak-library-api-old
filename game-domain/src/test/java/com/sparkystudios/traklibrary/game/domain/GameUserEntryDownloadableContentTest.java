@@ -10,7 +10,7 @@ import javax.persistence.PersistenceException;
 import java.time.LocalDate;
 
 @DataJpaTest
-public class GameUserEntryDownloadableContentTest {
+class GameUserEntryDownloadableContentTest {
 
     @Autowired
     private TestEntityManager testEntityManager;

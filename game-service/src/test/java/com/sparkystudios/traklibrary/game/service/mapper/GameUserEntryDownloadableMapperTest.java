@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
-public class GameUserEntryDownloadableMapperTest {
+class GameUserEntryDownloadableMapperTest {
 
     @Test
     void gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto_withNull_returnsNull() {

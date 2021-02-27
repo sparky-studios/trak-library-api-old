@@ -511,7 +511,7 @@ class GameUserEntryServiceImplTest {
         gameUserEntryRequest.setPlatformIds(platformIds);
         gameUserEntryRequest.setDownloadableContentIds(Collections.emptyList());
 
-        Mockito.when(platformRepository.findById(ArgumentMatchers.eq(3L)))
+        Mockito.when(platformRepository.findById(3L))
                 .thenReturn(Optional.of(new Platform()));
 
         // Act
@@ -593,7 +593,7 @@ class GameUserEntryServiceImplTest {
         gameUserEntryRequest.setPlatformIds(Collections.emptyList());
         gameUserEntryRequest.setDownloadableContentIds(downloadableContentIds);
 
-        Mockito.when(downloadableContentRepository.findById(ArgumentMatchers.eq(3L)))
+        Mockito.when(downloadableContentRepository.findById(3L))
                 .thenReturn(Optional.of(new DownloadableContent()));
 
         // Act

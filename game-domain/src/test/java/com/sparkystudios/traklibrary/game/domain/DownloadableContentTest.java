@@ -11,7 +11,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 
 @DataJpaTest
-public class DownloadableContentTest {
+class DownloadableContentTest {
 
     @Autowired
     private TestEntityManager testEntityManager;
