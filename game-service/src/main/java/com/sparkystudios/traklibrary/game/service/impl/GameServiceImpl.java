@@ -59,6 +59,7 @@ public class GameServiceImpl implements GameService {
 
         Game game = gameMapper.gameDtoToGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
+        game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
         // We need to retrieve the game by the new ID as we want the release dates joined to the result.
         return gameMapper.gameToGameDto(gameRepository.save(game));
@@ -420,6 +421,7 @@ public class GameServiceImpl implements GameService {
 
         Game game = gameMapper.gameDtoToGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
+        game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
         return gameMapper.gameToGameDto(gameRepository.save(game));
     }

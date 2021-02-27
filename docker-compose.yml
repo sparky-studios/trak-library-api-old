@@ -1,8 +1,8 @@
 version: "3.3"
 services:
   auth-server:
-    container_name: traklibrary-auth-server
-    image: sparkystudios/traklibrary-auth-server:${VERSION}
+    container_name: traklibrary-auth-api
+    image: sparkystudios/traklibrary-auth-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -21,8 +21,8 @@ services:
       - trak-network
 
   config-server:
-    container_name: traklibrary-config-server
-    image: sparkystudios/traklibrary-config-server:${VERSION}
+    container_name: traklibrary-config-api
+    image: sparkystudios/traklibrary-config-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -41,8 +41,8 @@ services:
       - trak-network
 
   discovery-server:
-    container_name: traklibrary-discovery-server
-    image: sparkystudios/traklibrary-discovery-server:${VERSION}
+    container_name: traklibrary-discovery-api
+    image: sparkystudios/traklibrary-discovery-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - spring.security.user.name=${DISCOVERY_SERVER_USERNAME}
@@ -53,8 +53,8 @@ services:
       - trak-network
 
   email-server:
-    container_name: traklibrary-email-server
-    image: sparkystudios/traklibrary-email-server:${VERSION}
+    container_name: traklibrary-email-api
+    image: sparkystudios/traklibrary-email-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -73,8 +73,8 @@ services:
       - trak-network
 
   game-server:
-    container_name: traklibrary-game-server
-    image: sparkystudios/traklibrary-game-server:${VERSION}
+    container_name: traklibrary-game-api
+    image: sparkystudios/traklibrary-game-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -93,8 +93,8 @@ services:
       - trak-network
 
   gateway-server:
-    container_name: traklibrary-gateway-server
-    image: sparkystudios/traklibrary-gateway-server:${VERSION}
+    container_name: traklibrary-gateway-api
+    image: sparkystudios/traklibrary-gateway-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -115,8 +115,8 @@ services:
       - trak-network
 
   image-server:
-    container_name: traklibrary-image-server
-    image: sparkystudios/traklibrary-image-server:${VERSION}
+    container_name: traklibrary-image-api
+    image: sparkystudios/traklibrary-image-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
@@ -135,8 +135,8 @@ services:
       - trak-network
 
   notification-server:
-    container_name: traklibrary-notification-server
-    image: sparkystudios/traklibrary-notification-server:${VERSION}
+    container_name: traklibrary-notification-api
+    image: sparkystudios/traklibrary-notification-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}

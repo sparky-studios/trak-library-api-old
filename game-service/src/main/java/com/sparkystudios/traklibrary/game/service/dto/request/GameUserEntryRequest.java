@@ -30,6 +30,5 @@ public class GameUserEntryRequest {
     private Collection<Long> platformIds;
 
     @NotNull(message = "{game-user-entry-request.validation.downloadable-contents.not-null}")
-    @NotEmpty(message = "{game-user-entry-request.validation.downloadable-contents.not-empty}")
     private Collection<Long> downloadableContentIds;
 }

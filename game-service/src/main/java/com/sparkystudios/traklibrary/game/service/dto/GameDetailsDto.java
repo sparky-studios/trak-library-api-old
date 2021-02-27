@@ -40,5 +40,7 @@ public class GameDetailsDto {
 
     private Set<GameReleaseDateDto> releaseDates = new TreeSet<>();
 
+    private Set<DownloadableContentDto> downloadableContents = new TreeSet<>();
+
     private FranchiseDto franchise;
 }

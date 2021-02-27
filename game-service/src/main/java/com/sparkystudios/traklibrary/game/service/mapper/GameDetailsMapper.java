@@ -28,4 +28,8 @@ public interface GameDetailsMapper {
     default FranchiseDto franchiseToFranchiseDto(Franchise franchise) {
         return GameMappers.FRANCHISE_MAPPER.franchiseToFranchiseDto(franchise);
     }
+
+    default DownloadableContentDto downloadableContentToDownloadableContentDto(DownloadableContent downloadableContent) {
+        return GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentToDownloadableContentDto(downloadableContent);
+    }
 }

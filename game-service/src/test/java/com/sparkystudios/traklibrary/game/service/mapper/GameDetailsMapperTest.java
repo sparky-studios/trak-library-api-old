@@ -35,6 +35,10 @@ class GameDetailsMapperTest {
         gameReleaseDate.setReleaseDate(LocalDate.now());
         gameReleaseDate.setVersion(1L);
 
+        DownloadableContent downloadableContent = new DownloadableContent();
+        downloadableContent.setName("test-downloadable-content");
+        downloadableContent.setReleaseDate(LocalDate.now());
+
         Franchise franchise = new Franchise();
         franchise.setTitle("franchise-title");
 
@@ -50,6 +54,7 @@ class GameDetailsMapperTest {
         game.addPlatform(platform);
         game.addPublisher(publisher);
         game.addReleaseDate(gameReleaseDate);
+        game.addDownloadableContent(downloadableContent);
         game.setFranchise(franchise);
 
         // Act
@@ -67,6 +72,7 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getPlatforms()).hasSize(1);
         Assertions.assertThat(result.getPublishers()).hasSize(1);
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
+        Assertions.assertThat(result.getDownloadableContents()).hasSize(1);
         Assertions.assertThat(result.getFranchise().getTitle()).isEqualTo(franchise.getTitle());
     }
 }

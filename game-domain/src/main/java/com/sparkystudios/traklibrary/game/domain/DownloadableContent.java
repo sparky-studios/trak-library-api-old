@@ -34,6 +34,12 @@ public class DownloadableContent implements Comparable<DownloadableContent> {
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "game_id")
+    private Game game;
+
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -42,15 +48,6 @@ public class DownloadableContent implements Comparable<DownloadableContent> {
 
     @Column(name = "release_date")
     private LocalDate releaseDate;
-
-    @Column(name = "game_id", nullable = false, insertable = false, updatable = false)
-    private long gameId;
-
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "game_id", nullable = false)
-    private Game game;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
