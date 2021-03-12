@@ -54,7 +54,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             String username = claims.getSubject();
             if (!Strings.isNullOrEmpty(username)) {
                 @SuppressWarnings("unchecked")
-                List<SimpleGrantedAuthority> authorities = ((List<String>) claims.get("authorities"))
+                List<SimpleGrantedAuthority> authorities = ((List<String>) claims.get("scopes"))
                         .stream()
                         .map(SimpleGrantedAuthority::new)
                         .collect(Collectors.toList());

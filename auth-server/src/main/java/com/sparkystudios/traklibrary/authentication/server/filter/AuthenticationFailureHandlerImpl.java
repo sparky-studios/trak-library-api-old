@@ -1,0 +1,61 @@
+package com.sparkystudios.traklibrary.authentication.server.filter;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparkystudios.traklibrary.authentication.server.exception.AuthenticationMethodNotSupportedException;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+/**
+ * Simple handler class that is invoked by the {@link AuthenticationProcessingFilter} when an authentication request fails.
+ *
+ * @author Tucasi Ltd.
+ */
+@Component
+@RequiredArgsConstructor
+public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
+
+    private final MessageSource messageSource;
+    private final ObjectMapper objectMapper;
+
+    /**
+     * Invoked by the {@link AuthenticationProcessingFilter} when an authentication request fails. When the request fails
+     * an {@link ApiError} instance will be created with some additional error information and written to the response body
+     * of the request.
+     *
+     * @param httpServletRequest The {@link HttpServletRequest} instance of the request.
+     * @param httpServletResponse The {@link HttpServletResponse} instance of the request.
+     * @param e The exception that was thrown that failed authentication.
+     *
+     * @throws IOException Thrown if the {@link ApiError} instance cannot be written to the response.
+     */
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException {
+
+        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
+
+        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
+
+        if (e instanceof BadCredentialsException) {
+            apiError.setError(messageSource.getMessage("authentication.exception.bad-credentials", new Object[]{}, LocaleContextHolder.getLocale()));
+        } else if (e instanceof AuthenticationMethodNotSupportedException) {
+            apiError.setError(e.getMessage());
+        } else {
+            apiError.setError(messageSource.getMessage("authentication.exception.authentication-failed", new Object[]{}, LocaleContextHolder.getLocale()));
+        }
+
+        objectMapper.writeValue(httpServletResponse.getWriter(), apiError);
+    }
+}
