@@ -49,7 +49,7 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/", "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/token", "/token/**", "/users").permitAll()
                 .antMatchers(HttpMethod.PUT, "/users/recover", "/users").permitAll()
                 .anyRequest()
                 .authenticated()
