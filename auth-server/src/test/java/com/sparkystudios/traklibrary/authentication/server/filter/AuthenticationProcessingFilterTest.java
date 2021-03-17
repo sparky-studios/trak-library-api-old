@@ -1,7 +1,7 @@
 package com.sparkystudios.traklibrary.authentication.server.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparkystudios.traklibrary.authentication.server.exception.AuthenticationMethodNotSupportedException;
+import com.sparkystudios.traklibrary.security.exception.AuthenticationMethodNotSupportedException;
 import com.sparkystudios.traklibrary.authentication.service.dto.LoginRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

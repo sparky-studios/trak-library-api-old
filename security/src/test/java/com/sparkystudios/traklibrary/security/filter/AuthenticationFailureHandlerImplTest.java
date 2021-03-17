@@ -1,8 +1,9 @@
-package com.sparkystudios.traklibrary.authentication.server.filter;
+package com.sparkystudios.traklibrary.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparkystudios.traklibrary.authentication.server.exception.AuthenticationMethodNotSupportedException;
+import com.sparkystudios.traklibrary.security.exception.AuthenticationMethodNotSupportedException;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
+import com.sparkystudios.traklibrary.security.filter.AuthenticationFailureHandlerImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -24,21 +25,15 @@ import java.util.Locale;
 class AuthenticationFailureHandlerImplTest {
 
     @Mock
-    private MessageSource messageSource;
-
-    @Mock
     private ObjectMapper objectMapper;
 
     @InjectMocks
     private AuthenticationFailureHandlerImpl authenticationFailureHandler;
 
     @Test
-    public void onAuthenticationFailure_withBadCredentialsException_setsCorrectMessage() throws IOException {
+    void onAuthenticationFailure_withBadCredentialsException_setsCorrectMessage() throws IOException {
         // Arrange
         AuthenticationException authenticationException = new BadCredentialsException("");
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("authentication.exception.bad-credentials"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
 
         HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
         Mockito.when(httpServletResponse.getWriter())
@@ -48,15 +43,12 @@ class AuthenticationFailureHandlerImplTest {
         authenticationFailureHandler.onAuthenticationFailure(null, httpServletResponse, authenticationException);
 
         // Assert
-        Mockito.verify(messageSource, Mockito.atMostOnce())
-                .getMessage(ArgumentMatchers.eq("authentication.exception.bad-credentials"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class));
-
         Mockito.verify(objectMapper, Mockito.atMostOnce())
                 .writeValue(ArgumentMatchers.any(PrintWriter.class), ArgumentMatchers.any(ApiError.class));
     }
 
     @Test
-    public void onAuthenticationFailure_withAuthenticationMethodNotSupportedException_setsCorrectMessage() throws IOException {
+    void onAuthenticationFailure_withAuthenticationMethodNotSupportedException_setsCorrectMessage() throws IOException {
         // Arrange
         AuthenticationException authenticationException = Mockito.mock(AuthenticationMethodNotSupportedException.class);
 
@@ -76,12 +68,9 @@ class AuthenticationFailureHandlerImplTest {
     }
 
     @Test
-    public void onAuthenticationFailure_withOtherException_setsCorrectMessage() throws IOException {
+    void onAuthenticationFailure_withOtherException_setsCorrectMessage() throws IOException {
         // Arrange
         AuthenticationException authenticationException = new AuthenticationServiceException("");
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("authentication.exception.authentication-failed"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
 
         HttpServletResponse httpServletResponse = Mockito.mock(HttpServletResponse.class);
         Mockito.when(httpServletResponse.getWriter())
@@ -91,9 +80,6 @@ class AuthenticationFailureHandlerImplTest {
         authenticationFailureHandler.onAuthenticationFailure(null, httpServletResponse, authenticationException);
 
         // Assert
-        Mockito.verify(messageSource, Mockito.atMostOnce())
-                .getMessage(ArgumentMatchers.eq("authentication.exception.authentication-failed"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class));
-
         Mockito.verify(objectMapper, Mockito.atMostOnce())
                 .writeValue(ArgumentMatchers.any(PrintWriter.class), ArgumentMatchers.any(ApiError.class));
     }

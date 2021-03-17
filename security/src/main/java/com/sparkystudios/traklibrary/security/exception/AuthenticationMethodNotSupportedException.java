@@ -1,4 +1,4 @@
-package com.sparkystudios.traklibrary.authentication.server.exception;
+package com.sparkystudios.traklibrary.security.exception;
 
 import org.springframework.security.core.AuthenticationException;
 

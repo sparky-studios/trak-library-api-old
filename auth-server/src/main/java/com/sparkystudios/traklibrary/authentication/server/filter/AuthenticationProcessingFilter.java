@@ -2,7 +2,7 @@ package com.sparkystudios.traklibrary.authentication.server.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Strings;
-import com.sparkystudios.traklibrary.authentication.server.exception.AuthenticationMethodNotSupportedException;
+import com.sparkystudios.traklibrary.security.exception.AuthenticationMethodNotSupportedException;
 import com.sparkystudios.traklibrary.authentication.service.dto.LoginRequestDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;

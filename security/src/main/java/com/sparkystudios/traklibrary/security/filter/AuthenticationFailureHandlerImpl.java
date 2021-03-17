@@ -1,8 +1,8 @@
-package com.sparkystudios.traklibrary.authentication.server.filter;
+package com.sparkystudios.traklibrary.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparkystudios.traklibrary.authentication.server.exception.AuthenticationMethodNotSupportedException;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
+import com.sparkystudios.traklibrary.security.exception.AuthenticationMethodNotSupportedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Simple handler class that is invoked by the {@link AuthenticationProcessingFilter} when an authentication request fails.
+ * Simple handler class that is invoked by the authentication process when an authentication request fails.
  *
  * @author Tucasi Ltd.
  */
@@ -26,11 +26,10 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHandler {
 
-    private final MessageSource messageSource;
     private final ObjectMapper objectMapper;
 
     /**
-     * Invoked by the {@link AuthenticationProcessingFilter} when an authentication request fails. When the request fails
+     * Invoked by the authentication process when an authentication request fails. When the request fails
      * an {@link ApiError} instance will be created with some additional error information and written to the response body
      * of the request.
      *
@@ -49,11 +48,11 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
         ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
 
         if (e instanceof BadCredentialsException) {
-            apiError.setError(messageSource.getMessage("authentication.exception.bad-credentials", new Object[]{}, LocaleContextHolder.getLocale()));
+            apiError.setError("Invalid username or password");
         } else if (e instanceof AuthenticationMethodNotSupportedException) {
             apiError.setError(e.getMessage());
         } else {
-            apiError.setError(messageSource.getMessage("authentication.exception.authentication-failed", new Object[]{}, LocaleContextHolder.getLocale()));
+            apiError.setError("Authentication failed due to an internal error.");
         }
 
         objectMapper.writeValue(httpServletResponse.getWriter(), apiError);

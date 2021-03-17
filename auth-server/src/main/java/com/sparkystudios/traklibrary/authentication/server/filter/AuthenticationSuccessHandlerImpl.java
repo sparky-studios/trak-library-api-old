@@ -2,8 +2,8 @@ package com.sparkystudios.traklibrary.authentication.server.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparkystudios.traklibrary.authentication.service.dto.TokenPayloadDto;
-import com.sparkystudios.traklibrary.authentication.service.dto.UserDto;
 import com.sparkystudios.traklibrary.authentication.service.factory.JwtFactory;
+import com.sparkystudios.traklibrary.security.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,20 +35,20 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
      * request is successful, a JWT access token and refresh token will be generated and written to the response
      * body for use.
      *
-     * @param httpServletRequest The {@link HttpServletRequest} instance of the request.
-     * @param httpServletResponse The {@link HttpServletResponse} instance of the request.
+     * @param request The {@link HttpServletRequest} instance of the request.
+     * @param response The {@link HttpServletResponse} instance of the request.
      * @param authentication The authentication token used for successful authentication.
      *
      * @throws IOException Thrown if the {@link TokenPayloadDto} instance cannot be written to the response.
      */
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) throws IOException {
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // We'll need to retrieve user data to add to the token.
-        UserDto userDto = (UserDto) authentication.getPrincipal();
+        UserContext userContext = (UserContext) authentication.getPrincipal();
 
         // Create the access and refresh tokens.
-        String accessToken = jwtFactory.createAccessToken(userDto);
-        String refreshToken = jwtFactory.createRefreshToken(userDto);
+        String accessToken = jwtFactory.createAccessToken(userContext);
+        String refreshToken = jwtFactory.createRefreshToken(userContext);
 
         // Place the tokens in a payload to return them as a sensibly serialized type to the user.
         TokenPayloadDto tokenPayloadDto = new TokenPayloadDto();
@@ -56,17 +56,17 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         tokenPayloadDto.setRefreshToken(refreshToken);
 
         // Create a response that returns the jwt token.
-        httpServletResponse.setStatus(HttpStatus.OK.value());
-        httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
-        httpServletResponse.setCharacterEncoding(StandardCharsets.UTF_8.name());
+        response.setStatus(HttpStatus.OK.value());
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        objectMapper.writeValue(httpServletResponse.getWriter(), tokenPayloadDto);
+        response.getWriter().write(objectMapper.writeValueAsString(tokenPayloadDto));
 
         // Remove any temporary authentication related data which may have been stored within the session.
-        HttpSession httpSession = httpServletRequest.getSession();
-
-        if (httpSession != null) {
-            httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-        }
+//        HttpSession httpSession = request.getSession();
+//
+//        if (httpSession != null) {
+//            httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+//        }
     }
 }
