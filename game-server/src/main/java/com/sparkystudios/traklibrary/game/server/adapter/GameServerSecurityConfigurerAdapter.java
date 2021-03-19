@@ -37,8 +37,7 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
-                new JwtAuthenticationProcessingFilter(authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
-        jwtAuthenticationProcessingFilter.setAuthenticationManager(authenticationManager());
+                new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http
                 .authorizeRequests()

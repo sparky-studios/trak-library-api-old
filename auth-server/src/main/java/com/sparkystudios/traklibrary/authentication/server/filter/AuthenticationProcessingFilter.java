@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -41,17 +43,19 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
     /**
      * Default constructor used to inject the needed dependencies.
      *
+     * @param authenticationManager The {@link AuthenticationManager} instance to inject.
      * @param authenticationSuccessHandler The {@link AuthenticationSuccessHandler} instance to inject.
      * @param authenticationFailureHandler The {@link AuthenticationFailureHandler} instance to inject.
      * @param messageSource The {@link MessageSource} instance to inject.
      * @param objectMapper The {@link ObjectMapper} instance to inject.
      */
-    public AuthenticationProcessingFilter(AuthenticationSuccessHandler authenticationSuccessHandler,
+    public AuthenticationProcessingFilter(AuthenticationManager authenticationManager,
+                                          AuthenticationSuccessHandler authenticationSuccessHandler,
                                           AuthenticationFailureHandler authenticationFailureHandler,
                                           MessageSource messageSource,
                                           ObjectMapper objectMapper) {
         // Responds to any POST request made to /token
-        super("/token");
+        super(new AntPathRequestMatcher("/token", HttpMethod.POST.name()), authenticationManager);
         this.authenticationSuccessHandler = authenticationSuccessHandler;
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.messageSource = messageSource;
@@ -120,7 +124,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
      */
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
-        authenticationSuccessHandler.onAuthenticationSuccess(request, response, chain, authResult);
+        authenticationSuccessHandler.onAuthenticationSuccess(request, response, authResult);
     }
 
     /**

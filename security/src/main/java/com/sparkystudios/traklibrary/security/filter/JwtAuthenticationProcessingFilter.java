@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.security.filter;
 
 import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
 import org.springframework.http.HttpHeaders;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContext;
@@ -21,8 +22,11 @@ public class JwtAuthenticationProcessingFilter extends AbstractAuthenticationPro
     private final AuthenticationFailureHandler authenticationFailureHandler;
     private final JwtHeaderExtractor jwtHeaderExtractor;
 
-    public JwtAuthenticationProcessingFilter(AuthenticationFailureHandler authenticationFailureHandler, JwtHeaderExtractor jwtHeaderExtractor, RequestMatcher requestMatcher) {
-        super(requestMatcher);
+    public JwtAuthenticationProcessingFilter(AuthenticationManager authenticationManager,
+                                             AuthenticationFailureHandler authenticationFailureHandler,
+                                             JwtHeaderExtractor jwtHeaderExtractor,
+                                             RequestMatcher requestMatcher) {
+        super(requestMatcher, authenticationManager);
         this.authenticationFailureHandler = authenticationFailureHandler;
         this.jwtHeaderExtractor = jwtHeaderExtractor;
     }

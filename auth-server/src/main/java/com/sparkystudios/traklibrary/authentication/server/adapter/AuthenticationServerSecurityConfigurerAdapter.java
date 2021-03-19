@@ -43,8 +43,7 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
     protected void configure(HttpSecurity http) throws Exception {
         // Create the filter used to generate JWT's based on provided user credentials.
         AuthenticationProcessingFilter authenticationProcessingFilter =
-                new AuthenticationProcessingFilter(authenticationSuccessHandler, authenticationFailureHandler, messageSource, objectMapper);
-        authenticationProcessingFilter.setAuthenticationManager(authenticationManager());
+                new AuthenticationProcessingFilter(authenticationManager(), authenticationSuccessHandler, authenticationFailureHandler, messageSource, objectMapper);
 
         List<RequestMatcher> pathsToSkip = Arrays.asList(
                 new AntPathRequestMatcher("/token", HttpMethod.POST.name()),
@@ -55,8 +54,7 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
 
         SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
-                new JwtAuthenticationProcessingFilter(authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
-        jwtAuthenticationProcessingFilter.setAuthenticationManager(authenticationManager());
+                new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http
                 .csrf().disable()
@@ -72,8 +70,8 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
                 .anyRequest()
                 .authenticated()
                 .and()
-                .addFilterBefore(authenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
-                // .addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(authenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationProcessingFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override

@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
@@ -27,10 +28,11 @@ public class NotificationServerSecurityConfigurerAdapter extends WebSecurityConf
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(Collections.emptyList(), "/**");
+        SkipPathRequestMatcher skipPathRequestMatcher =
+                new SkipPathRequestMatcher(Collections.singletonList(new AntPathRequestMatcher("/non-existent-path")), "/**");
+
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
-                new JwtAuthenticationProcessingFilter(authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
-        jwtAuthenticationProcessingFilter.setAuthenticationManager(authenticationManager());
+                new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http
                 .authorizeRequests()

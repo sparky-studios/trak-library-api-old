@@ -3,6 +3,8 @@ package com.sparkystudios.traklibrary.authentication.server.provider;
 import com.sparkystudios.traklibrary.authentication.service.dto.UserDto;
 import com.sparkystudios.traklibrary.security.context.UserContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
@@ -18,13 +20,40 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The {@link RequestAuthenticationProvider} is an authentication provider that replaces the
+ * default {@link org.springframework.security.authentication.dao.DaoAuthenticationProvider} provided
+ * by Spring and focuses more on just retrieving user information that are mapped to the given
+ * credentials instead of focusing on additional behavior, such as remember me services and user
+ * caching.
+ *
+ * @author Sparky Studios
+ * @since 0.1.0
+ */
 @Component
 @RequiredArgsConstructor
 public class RequestAuthenticationProvider implements AuthenticationProvider {
 
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
+    private final MessageSource messageSource;
 
+    /**
+     * Checks whether the credentials contained within the {@link Authentication} are mapped against a
+     * valid user in the database and that they have valid roles and authorities assigned to them. If authentication
+     * was successful, a {@link UsernamePasswordAuthenticationToken} instance is passed along the authentication
+     * process containing a {@link UserContext} for user data and their associated authorities.
+     *
+     * If the credentials are incorrect, a {@link BadCredentialsException} exception is thrown and if they
+     * have no valid authorities, a {@link InsufficientAuthenticationException} exception is thrown and
+     * bubbled up the stack.
+     *
+     * @param authentication The {@link UsernamePasswordAuthenticationToken} to attempt authentication with.
+     *
+     * @return A {@link UsernamePasswordAuthenticationToken} with additional user data.
+     *
+     * @throws AuthenticationException Thrown if authentication fails or invalid data is provided.
+     */
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         // Retrieve the credentials passed into the token.
@@ -37,13 +66,19 @@ public class RequestAuthenticationProvider implements AuthenticationProvider {
 
         // Ensure the password is correct.
         if (!passwordEncoder.matches(password, userDto.getPassword())) {
-            throw new BadCredentialsException("Authentication failed. Username or password not valid.");
+            String errorMessage = messageSource
+                    .getMessage("authentication.exception.bad-credentials", new Object[] {}, LocaleContextHolder.getLocale());
+
+            throw new BadCredentialsException(errorMessage);
         }
 
         // This should never happen, but highlights an issue where there are no defined roles in the
         // database.
         if (userDto.getAuthorities() == null || userDto.getAuthorities().isEmpty()) {
-            throw new InsufficientAuthenticationException("User has no roles assigned");
+            String errorMessage = messageSource
+                    .getMessage("authentication.exception.insufficient-roles", new Object[] {}, LocaleContextHolder.getLocale());
+
+            throw new InsufficientAuthenticationException(errorMessage);
         }
 
         // Convert the authorities into something that can be interpreted further down the chain.
@@ -63,6 +98,14 @@ public class RequestAuthenticationProvider implements AuthenticationProvider {
         return new UsernamePasswordAuthenticationToken(userContext, null, authorities);
     }
 
+    /**
+     * Flags that that the {@link RequestAuthenticationProvider} will only be executed if the authentication
+     * type provided is assignable to a {@link UsernamePasswordAuthenticationToken}.
+     *
+     * @param aClass The class type to check for assignability.
+     *
+     * @return True if the argument is assignable to a {@link UsernamePasswordAuthenticationToken}.
+     */
     @Override
     public boolean supports(Class<?> aClass) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(aClass);

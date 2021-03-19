@@ -1,8 +1,8 @@
 package com.sparkystudios.traklibrary.authentication.server.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.sparkystudios.traklibrary.authentication.service.TokenService;
 import com.sparkystudios.traklibrary.authentication.service.dto.TokenPayloadDto;
-import com.sparkystudios.traklibrary.authentication.service.factory.JwtFactory;
 import com.sparkystudios.traklibrary.security.context.UserContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +27,7 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHandler {
 
-    private final JwtFactory jwtFactory;
+    private final TokenService tokenService;
     private final ObjectMapper objectMapper;
 
     /**
@@ -47,8 +47,8 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         UserContext userContext = (UserContext) authentication.getPrincipal();
 
         // Create the access and refresh tokens.
-        String accessToken = jwtFactory.createAccessToken(userContext);
-        String refreshToken = jwtFactory.createRefreshToken(userContext);
+        String accessToken = tokenService.createAccessToken(userContext);
+        String refreshToken = tokenService.createRefreshToken(userContext);
 
         // Place the tokens in a payload to return them as a sensibly serialized type to the user.
         TokenPayloadDto tokenPayloadDto = new TokenPayloadDto();
@@ -63,10 +63,10 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         response.getWriter().write(objectMapper.writeValueAsString(tokenPayloadDto));
 
         // Remove any temporary authentication related data which may have been stored within the session.
-//        HttpSession httpSession = request.getSession();
-//
-//        if (httpSession != null) {
-//            httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
-//        }
+        HttpSession httpSession = request.getSession();
+
+        if (httpSession != null) {
+            httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);
+        }
     }
 }
