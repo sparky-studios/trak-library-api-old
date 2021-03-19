@@ -1,13 +1,13 @@
 package com.sparkystudios.traklibrary.security.impl;
 
-import com.sparkystudios.traklibrary.security.dto.AuthenticatedUserDto;
+import com.sparkystudios.traklibrary.security.context.UserContext;
+import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
@@ -22,7 +22,7 @@ class AuthenticationServiceImplTest {
     private AuthenticationServiceImpl authenticationService;
 
     @Test
-    void getToken_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
+    void getToken_withNonJwtAuthenticationToken_returnsFalse() {
         // Arrange
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -34,19 +34,13 @@ class AuthenticationServiceImplTest {
         String result = authenticationService.getToken();
 
         // Assert
-        Assertions.assertEquals("", result, "The token should be false if no username and password token is found.");
+        Assertions.assertEquals("", result, "The token should be false if no jwt authentication token is found.");
     }
 
     @Test
     void getToken_withAuthenticationUser_returnsAuthenticationUserToken() {
         // Arrange
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
-
-        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
-        authenticatedUserDto.setToken("token-123");
-
-        token.setDetails(authenticatedUserDto);
+        JwtAuthenticationToken token = new JwtAuthenticationToken("token-123");
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -58,11 +52,11 @@ class AuthenticationServiceImplTest {
         String result = authenticationService.getToken();
 
         // Assert
-        Assertions.assertEquals(authenticatedUserDto.getToken(), result, "The token should be equal to the authenticated user token.");
+        Assertions.assertEquals(token.getCredentials(), result, "The token should be equal to the authenticated user token.");
     }
 
     @Test
-    void isCurrentAuthenticatedUser_withNonUsernamePasswordAuthenticationToken_returnsFalse() {
+    void isCurrentAuthenticatedUser_withJwtAuthenticationToken_returnsFalse() {
         // Arrange
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -74,14 +68,14 @@ class AuthenticationServiceImplTest {
         boolean result = authenticationService.isCurrentAuthenticatedUser(0L);
 
         // Assert
-        Assertions.assertFalse(result, "Authentication should be false if the token isn't a username and password.");
+        Assertions.assertFalse(result, "Authentication should be false if the token isn't a JWT authentication token.");
     }
 
     @Test
     void isCurrentAuthenticatedUser_withAdminRole_returnsTrue() {
         // Arrange
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(null, null, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+        JwtAuthenticationToken token =
+                new JwtAuthenticationToken(null, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -99,13 +93,10 @@ class AuthenticationServiceImplTest {
     @Test
     void isCurrentAuthenticatedUser_withDifferentUser_returnsFalse() {
         // Arrange
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
+        UserContext userContext = new UserContext();
+        userContext.setUserId(1L);
 
-        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
-        authenticatedUserDto.setUserId(1L);
-
-        token.setDetails(authenticatedUserDto);
+        JwtAuthenticationToken token = new JwtAuthenticationToken(userContext, Collections.emptySet());
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -123,13 +114,10 @@ class AuthenticationServiceImplTest {
     @Test
     void isCurrentAuthenticatedUser_withSameUser_returnsTrue() {
         // Arrange
-        UsernamePasswordAuthenticationToken token =
-                new UsernamePasswordAuthenticationToken(null, null, Collections.emptySet());
+        UserContext userContext = new UserContext();
+        userContext.setUserId(1L);
 
-        AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
-        authenticatedUserDto.setUserId(1L);
-
-        token.setDetails(authenticatedUserDto);
+        JwtAuthenticationToken token = new JwtAuthenticationToken(userContext, Collections.emptySet());
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())

@@ -13,7 +13,7 @@ import lombok.Data;
  * @author Sparky Studios
  */
 @Data
-public class UserCredentialsDto {
+public class LoginRequestDto {
 
     private String username;
 
