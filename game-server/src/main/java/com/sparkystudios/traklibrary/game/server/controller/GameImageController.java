@@ -3,14 +3,12 @@ package com.sparkystudios.traklibrary.game.server.controller;
 import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import com.sparkystudios.traklibrary.game.service.GameImageService;
-import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
-import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -78,12 +76,7 @@ public class GameImageController {
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeSmall(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
         ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.SMALL);
-
-        return ResponseEntity
-                .ok()
-                .contentLength(imageDataDto.getContent().length)
-                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename() + "\"")
-                .body(new ByteArrayResource(imageDataDto.getContent()));
+        return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
     }
 
     /**
@@ -102,12 +95,7 @@ public class GameImageController {
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeMedium(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
         ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.MEDIUM);
-
-        return ResponseEntity
-                .ok()
-                .contentLength(imageDataDto.getContent().length)
-                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename() + "\"")
-                .body(new ByteArrayResource(imageDataDto.getContent()));
+        return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
     }
 
     /**
@@ -126,11 +114,14 @@ public class GameImageController {
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeLarge(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
         ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.LARGE);
+        return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
+    }
 
+    private ResponseEntity<ByteArrayResource> getImageDataAsByteArrayResource(String filename, byte[] imageData) {
         return ResponseEntity
                 .ok()
-                .contentLength(imageDataDto.getContent().length)
-                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename() + "\"")
-                .body(new ByteArrayResource(imageDataDto.getContent()));
+                .contentLength(imageData.length)
+                .header("Content-Disposition", "attachment; filename=\"" + filename+ "\"")
+                .body(new ByteArrayResource(imageData));
     }
 }
