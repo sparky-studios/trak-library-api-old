@@ -7,6 +7,8 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -96,6 +98,11 @@ public class Game {
     @ToString.Exclude
     @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<DownloadableContent> downloadableContents = new TreeSet<>();
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
+    private Collection<GameImage> images = new ArrayList<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

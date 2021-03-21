@@ -3,6 +3,7 @@ package com.sparkystudios.traklibrary.game.repository;
 import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.domain.GameImage;
+import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,16 +22,16 @@ class GameImageRepositoryTest {
     private GameRepository gameRepository;
 
     @Test
-    void existsByGameId_withNonExistentGame_returnsFalse() {
+    void existsByGameIdAndImageSize_withNonExistentGameAndGameImageSize_returnsFalse() {
         // Act
-        boolean result = gameImageRepository.existsByGameId(1L);
+        boolean result = gameImageRepository.existsByGameIdAndImageSize(1L, GameImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isFalse();
     }
 
     @Test
-    void existsByGameId_withGame_returnsTrue() {
+    void existsByGameIdAndImageSize_withGameAndGameImageSize_returnsTrue() {
         // Arrange
         Game game = new Game();
         game.setTitle("game-title");
@@ -41,26 +42,27 @@ class GameImageRepositoryTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
+        gameImage.setImageSize(GameImageSize.MEDIUM);
         gameImageRepository.save(gameImage);
 
         // Act
-        boolean result = gameImageRepository.existsByGameId(game.getId());
+        boolean result = gameImageRepository.existsByGameIdAndImageSize(game.getId(), GameImageSize.MEDIUM);
 
         // Assert
         Assertions.assertThat(result).isTrue();
     }
 
     @Test
-    void findByGameId_withNonExistentGameImage_returnsEmptyOptional() {
+    void findByGameIdAndImageSize_withNonExistentGameImage_returnsEmptyOptional() {
         // Act
-        Optional<GameImage> result = gameImageRepository.findByGameId(1L);
+        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(1L, GameImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isEmpty();
     }
 
     @Test
-    void findByGameId_withGameImage_returnsGameImage() {
+    void findByGameIdAndImageSize_withGameImage_returnsGameImage() {
         // Arrange
         Game game = new Game();
         game.setTitle("game-title");
@@ -71,10 +73,11 @@ class GameImageRepositoryTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
+        gameImage.setImageSize(GameImageSize.SMALL);
         gameImageRepository.save(gameImage);
 
         // Act
-        Optional<GameImage> result = gameImageRepository.findByGameId(game.getId());
+        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(game.getId(), GameImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isNotEmpty();

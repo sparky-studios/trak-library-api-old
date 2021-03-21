@@ -43,7 +43,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/auth/token", "/auth/token/**", "/auth/users").permitAll()
                 .pathMatchers(HttpMethod.PUT, "/auth/users", "/auth/users/recover").permitAll()
                 .pathMatchers(HttpMethod.GET, "/images/**").permitAll()
-                .pathMatchers(HttpMethod.GET, "/games/*/image").permitAll()
+                .pathMatchers(HttpMethod.GET, "/games/*/images/small", "/games/*/images/medium", "/games/*/images/large").permitAll()
                 .anyExchange()
                 .authenticated()
                 .and()

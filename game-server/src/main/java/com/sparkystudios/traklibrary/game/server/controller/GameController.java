@@ -1,28 +1,54 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
-import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
-import com.sparkystudios.traklibrary.game.server.assembler.*;
-import com.sparkystudios.traklibrary.game.service.*;
-import com.sparkystudios.traklibrary.game.service.dto.*;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
+import com.sparkystudios.traklibrary.game.server.assembler.DeveloperRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.PlatformRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.service.DeveloperService;
+import com.sparkystudios.traklibrary.game.service.GameDetailsService;
+import com.sparkystudios.traklibrary.game.service.GameService;
+import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
+import com.sparkystudios.traklibrary.game.service.GenreService;
+import com.sparkystudios.traklibrary.game.service.PlatformService;
+import com.sparkystudios.traklibrary.game.service.PublisherService;
+import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
+import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
+import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.*;
+import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.MediaTypes;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
@@ -53,7 +79,6 @@ public class GameController {
     private final DeveloperService developerService;
     private final PublisherService publisherService;
     private final GameUserEntryService gameUserEntryService;
-    private final GameImageService gameImageService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GameDetailsRepresentationModelAssembler gameDetailsRepresentationModelAssembler;
     private final GenreRepresentationModelAssembler genreRepresentationModelAssembler;
@@ -80,24 +105,6 @@ public class GameController {
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> save(@Validated @RequestBody GameDto gameDto) {
         return gameRepresentationModelAssembler.toModel(gameService.save(gameDto));
-    }
-
-    /**
-     * End-point that create a {@link GameImage} instance and register
-     * the specified file with the chosen image provider. If the file is in a incorrect format or a
-     * image already exists for the given {@link GameDto}, an exception will be thrown and an {@link ApiError}
-     * will be returned to the callee.
-     *
-     * {@link GameImage}'s can only be created for users with admin privileges.
-     *
-     * @param id The ID of the {@link GameDto} to persist and image for.
-     * @param file The {@link MultipartFile} containing the image to upload.
-     */
-    @AllowedForAdmin
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void saveGameImageForGameId(@PathVariable long id, @RequestPart MultipartFile file) {
-        gameImageService.upload(id, file);
     }
 
     /**
@@ -376,29 +383,6 @@ public class GameController {
 
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, count), gameUserEntryRepresentationModelAssembler, link);
-    }
-
-    /**
-     * End-point that will retrieve a {@link ByteArrayResource} for the image that is associated with the given
-     * {@link GameDto} ID. If no image is associated with the {@link GameDto} or it fails to retrieve the data,
-     * an empty {@link ByteArrayResource} will be returned and the error will be logged.
-     *
-     * This end-point can be called anonymously by anyone without providing any authentication or credentials.
-     *
-     * @param id The ID of the {@link GameDto} to retrieve the associated image for.
-     *
-     * @return A {@link ByteArrayResource} representing the byte information of the image file.
-     */
-    @GetMapping(value = "/{id}/image", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
-    public ResponseEntity<ByteArrayResource> findGameImageByGameId(@PathVariable long id) {
-        // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
-        ImageDataDto imageDataDto = gameImageService.download(id);
-
-        return ResponseEntity
-                .ok()
-                .contentLength(imageDataDto.getContent().length)
-                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename() + "\"")
-                .body(new ByteArrayResource(imageDataDto.getContent()));
     }
 
     /**

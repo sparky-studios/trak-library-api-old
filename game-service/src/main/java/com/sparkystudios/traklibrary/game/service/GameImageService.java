@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.service;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
+import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
 import com.sparkystudios.traklibrary.game.service.exception.UploadFailedException;
@@ -23,17 +24,18 @@ public interface GameImageService {
      * will be thrown to the callee.
      *
      * @param gameId The ID of the {@link GameDto} to upload an image for.
+     * @param gameImageSize Which image size this image will be associated with.
      * @param multipartFile The image that is to be associated with the given {@link GameDto}.
      *
      * @throws UploadFailedException Thrown if image uploading fails.
      */
-    void upload(long gameId, MultipartFile multipartFile);
+    void upload(long gameId, GameImageSize gameImageSize, MultipartFile multipartFile);
 
     /**
      * Given the ID of a {@link GameDto}, this method will attempt to find the
-     * {@link GameImage} that is mapped to the given ID. If one is found, the method will
-     * invoke the image service to return the byte data of the given image file that is associated with the
-     * {@link GameImage} and return the byte data with additional information wrapped in
+     * {@link GameImage} that is mapped to the given ID with the specified {@link GameImageSize}. If one is found,
+     * the method will invoke the image service to return the byte data of the given image file that is
+     * associated with the {@link GameImage} and return the byte data with additional information wrapped in
      * a {@link ImageDataDto} object.
      *
      * If the download of the image data fails, an {@link ImageDataDto} is still returned, but the {@link ImageDataDto#getContent()}
@@ -43,5 +45,5 @@ public interface GameImageService {
      *
      * @return An {@link ImageDataDto} object that contains the image information for the given {@link GameDto}.
      */
-    ImageDataDto download(long gameId);
+    ImageDataDto download(long gameId, GameImageSize gameImageSize);
 }

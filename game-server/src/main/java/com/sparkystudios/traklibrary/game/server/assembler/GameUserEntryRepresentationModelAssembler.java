@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
+import com.sparkystudios.traklibrary.game.server.controller.GameImageController;
 import com.sparkystudios.traklibrary.game.server.controller.GameUserEntryController;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import org.springframework.hateoas.CollectionModel;
@@ -27,8 +28,12 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
                     .withRel("game_details"));
-            resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getGameId()))
-                    .withRel("image"));
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getId()))
+                    .withRel("small_image"));
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getId()))
+                    .withRel("medium_image"));
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getId()))
+                    .withRel("large_image"));
         }
     }
 

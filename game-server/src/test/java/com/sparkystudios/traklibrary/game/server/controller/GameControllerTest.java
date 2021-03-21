@@ -3,13 +3,31 @@ package com.sparkystudios.traklibrary.game.server.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
-import com.sparkystudios.traklibrary.game.server.assembler.*;
+import com.sparkystudios.traklibrary.game.server.assembler.DeveloperRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.PlatformRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.configuration.TrakHalJsonMediaTypeConfiguration;
 import com.sparkystudios.traklibrary.game.server.converter.JsonMergePatchHttpMessageConverter;
 import com.sparkystudios.traklibrary.game.server.exception.GlobalExceptionHandler;
 import com.sparkystudios.traklibrary.game.server.utils.ResponseVerifier;
-import com.sparkystudios.traklibrary.game.service.*;
-import com.sparkystudios.traklibrary.game.service.dto.*;
+import com.sparkystudios.traklibrary.game.service.DeveloperService;
+import com.sparkystudios.traklibrary.game.service.GameDetailsService;
+import com.sparkystudios.traklibrary.game.service.GameService;
+import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
+import com.sparkystudios.traklibrary.game.service.GenreService;
+import com.sparkystudios.traklibrary.game.service.PlatformService;
+import com.sparkystudios.traklibrary.game.service.PublisherService;
+import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
+import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
+import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
+import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -24,7 +42,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -67,9 +84,6 @@ class GameControllerTest {
 
     @MockBean
     private GameUserEntryService gameUserEntryService;
-
-    @MockBean
-    private GameImageService gameImageService;
 
     @TestConfiguration
     static class TestConfig {
@@ -153,41 +167,6 @@ class GameControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isCreated());
 
         ResponseVerifier.verifyGameDto("", resultActions, gameDto);
-    }
-
-    @Test
-    void saveGameImageForGameId_withInvalidFileData_returns400() throws Exception {
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/image")
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
-    }
-
-    @Test
-    void saveGameImageForGameId_withValidFileData_returns204() throws Exception {
-        // Arrange
-        MockMultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some xml".getBytes());
-
-        Mockito.doNothing()
-                .when(gameImageService).upload(ArgumentMatchers.anyLong(), ArgumentMatchers.any());
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/image")
-                .file(file)
-                .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test
@@ -902,25 +881,6 @@ class GameControllerTest {
 
         ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
         ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
-    }
-
-    @Test
-    void findGameImageByGameId_withValidId_returns200() throws Exception {
-        // Arrange
-        ImageDataDto imageDataDto = new ImageDataDto();
-        imageDataDto.setContent(new byte[] { 'a', 'b' });
-        imageDataDto.setFilename("filename.png");
-
-        Mockito.when(gameImageService.download(ArgumentMatchers.anyLong()))
-                .thenReturn(imageDataDto);
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/image")
-                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
     @Test
