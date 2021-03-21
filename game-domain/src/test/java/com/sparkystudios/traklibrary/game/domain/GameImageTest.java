@@ -38,6 +38,7 @@ class GameImageTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
+        gameImage.setImageSize(GameImageSize.MEDIUM);
 
         // Act
         GameImage result = testEntityManager.persistFlushFind(gameImage);

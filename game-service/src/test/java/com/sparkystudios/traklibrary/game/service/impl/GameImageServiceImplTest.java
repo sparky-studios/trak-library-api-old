@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
+import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import com.sparkystudios.traklibrary.game.repository.GameImageRepository;
 import com.sparkystudios.traklibrary.game.service.client.ImageClient;
 import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
@@ -38,7 +39,7 @@ class GameImageServiceImplTest {
     @Test
     void upload_withExistingGameImage_throwsEntityExistsException() {
         // Arrange
-        Mockito.when(gameImageRepository.existsByGameId(ArgumentMatchers.anyLong()))
+        Mockito.when(gameImageRepository.existsByGameIdAndImageSize(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(true);
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
@@ -47,13 +48,14 @@ class GameImageServiceImplTest {
         MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
 
         // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameImageService.upload(0L, multipartFile));
+        Assertions.assertThrows(EntityExistsException.class,
+                () -> gameImageService.upload(0L, GameImageSize.SMALL, multipartFile));
     }
 
     @Test
     void upload_withNewGameImage_invokesSaveAndImageClientUpload() {
         // Arrange
-        Mockito.when(gameImageRepository.existsByGameId(ArgumentMatchers.anyLong()))
+        Mockito.when(gameImageRepository.existsByGameIdAndImageSize(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(false);
 
         MultipartFile multipartFile = Mockito.mock(MultipartFile.class);
@@ -67,7 +69,7 @@ class GameImageServiceImplTest {
                 .uploadGameImage(ArgumentMatchers.any(), ArgumentMatchers.anyLong());
 
         // Act
-        gameImageService.upload(0L, multipartFile);
+        gameImageService.upload(0L, GameImageSize.MEDIUM, multipartFile);
 
         // Assert
         Mockito.verify(gameImageRepository, Mockito.atMostOnce())
@@ -80,14 +82,14 @@ class GameImageServiceImplTest {
     @Test
     void download_withNonExistentGameImage_throwsEntityNotFoundException() {
         // Arrange
-        Mockito.when(gameImageRepository.findByGameId(ArgumentMatchers.anyLong()))
+        Mockito.when(gameImageRepository.findByGameIdAndImageSize(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameImageService.download(0L));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameImageService.download(0L, GameImageSize.MEDIUM));
     }
 
     @Test
@@ -98,14 +100,14 @@ class GameImageServiceImplTest {
         GameImage gameImage = new GameImage();
         gameImage.setFilename("filename.txt");
 
-        Mockito.when(gameImageRepository.findByGameId(ArgumentMatchers.anyLong()))
+        Mockito.when(gameImageRepository.findByGameIdAndImageSize(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(Optional.of(gameImage));
 
         Mockito.when(imageClient.downloadGameImage(ArgumentMatchers.anyString(), ArgumentMatchers.anyLong()))
                 .thenReturn(imageData);
 
         // Act
-        ImageDataDto imageDataDto = gameImageService.download(0L);
+        ImageDataDto imageDataDto = gameImageService.download(0L, GameImageSize.MEDIUM);
 
         // Assert
         Mockito.verify(imageClient, Mockito.atMostOnce())

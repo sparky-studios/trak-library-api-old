@@ -46,7 +46,9 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)gameDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".release_dates").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.small_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.medium_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.large_image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platforms").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.genres").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.developers").exists())
@@ -76,7 +78,9 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".release_dates").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.small_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.medium_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.large_image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.platforms").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.genres").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.developers").exists())
@@ -113,7 +117,9 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.game").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.game_details").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists());
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.small_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.medium_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.large_image").exists());
     }
 
     public static void verifyGenreDto(String root, ResultActions resultActions, GenreDto genreDto) throws Exception {

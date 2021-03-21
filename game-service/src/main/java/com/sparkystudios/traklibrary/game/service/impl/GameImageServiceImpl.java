@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
+import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import com.sparkystudios.traklibrary.game.repository.GameImageRepository;
 import com.sparkystudios.traklibrary.game.service.GameImageService;
 import com.sparkystudios.traklibrary.game.service.client.ImageClient;
@@ -31,11 +32,11 @@ public class GameImageServiceImpl implements GameImageService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void upload(long gameId, MultipartFile multipartFile) {
+    public void upload(long gameId, GameImageSize gameImageSize, MultipartFile multipartFile) {
         // Can't upload additional images for the same game.
-        if (gameImageRepository.existsByGameId(gameId)) {
+        if (gameImageRepository.existsByGameIdAndImageSize(gameId, gameImageSize)) {
             String errorMessage = messageSource
-                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] {gameId}, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] {gameImageSize, gameId}, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -44,6 +45,7 @@ public class GameImageServiceImpl implements GameImageService {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(gameId);
         gameImage.setFilename(multipartFile.getOriginalFilename());
+        gameImage.setImageSize(gameImageSize);
 
         // Save the new game image to the database.
         gameImageRepository.save(gameImage);
@@ -54,10 +56,10 @@ public class GameImageServiceImpl implements GameImageService {
 
     @Override
     @Transactional(readOnly = true)
-    public ImageDataDto download(long gameId) {
-        Optional<GameImage> gameImage = gameImageRepository.findByGameId(gameId);
+    public ImageDataDto download(long gameId, GameImageSize gameImageSize) {
+        Optional<GameImage> gameImage = gameImageRepository.findByGameIdAndImageSize(gameId, gameImageSize);
 
-        if (!gameImage.isPresent()) {
+        if (gameImage.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_FOUND_MESSAGE, new Object[] {gameId}, LocaleContextHolder.getLocale());
 

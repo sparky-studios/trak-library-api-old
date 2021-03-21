@@ -33,6 +33,9 @@ public class GameImage {
     @Column(name = "filename", updatable = false)
     private String filename;
 
+    @Column(name = "size", nullable = false)
+    private GameImageSize imageSize;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

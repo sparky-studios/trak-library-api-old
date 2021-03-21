@@ -441,6 +441,9 @@
             <column name="filename" type="varchar(255)">
                 <constraints nullable="false"/>
             </column>
+            <column name="size" type="smallint">
+                <constraints nullable="false" />
+            </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -459,8 +462,8 @@
         <!-- game_image unique constraints -->
         <addUniqueConstraint
                 tableName="game_image"
-                columnNames="game_id"
-                constraintName="unq_game_image_game_id" />
+                columnNames="game_id,size"
+                constraintName="unq_game_image_game_id_size" />
 
         <!-- Create the game_barcode table -->
         <createTable tableName="game_barcode">

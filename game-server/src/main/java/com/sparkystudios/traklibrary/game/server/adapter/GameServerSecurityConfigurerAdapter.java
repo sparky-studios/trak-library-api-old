@@ -33,7 +33,7 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     protected void configure(HttpSecurity http) throws Exception {
 
         List<RequestMatcher> pathsToSkip = Collections.singletonList(
-                new AntPathRequestMatcher("/**/image", HttpMethod.GET.name()));
+                new AntPathRequestMatcher("/**/images/**", HttpMethod.GET.name()));
 
         SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
         JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
@@ -41,7 +41,7 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/**/image").permitAll()
+                .antMatchers(HttpMethod.GET, "/**/images/**").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

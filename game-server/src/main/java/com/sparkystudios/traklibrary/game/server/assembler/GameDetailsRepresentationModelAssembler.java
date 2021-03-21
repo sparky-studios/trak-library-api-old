@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.game.server.assembler;
 
 import com.sparkystudios.traklibrary.game.server.controller.FranchiseController;
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
+import com.sparkystudios.traklibrary.game.server.controller.GameImageController;
 import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import lombok.RequiredArgsConstructor;
@@ -32,8 +33,14 @@ public class GameDetailsRepresentationModelAssembler implements SimpleRepresenta
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getId()))
                     .withSelfRel());
 
-            resource.add(linkTo(methodOn(GameController.class).findGameImageByGameId(content.getId()))
-                    .withRel("image"));
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getId()))
+                    .withRel("small_image"));
+
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getId()))
+                    .withRel("medium_image"));
+
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getId()))
+                    .withRel("large_image"));
 
             resource.add(linkTo(methodOn(GameController.class).findPlatformsByGameId(content.getId()))
                     .withRel("platforms"));
