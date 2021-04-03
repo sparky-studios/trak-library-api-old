@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface FranchiseMapper {
 
-    FranchiseDto franchiseToFranchiseDto(Franchise franchise);
+    FranchiseDto fromFranchise(Franchise franchise);
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "games", ignore = true)
-    Franchise franchiseDtoToFranchise(FranchiseDto franchiseDto);
+    Franchise toFranchise(FranchiseDto franchiseDto);
 }

@@ -6,11 +6,13 @@ import com.sparkystudios.traklibrary.game.repository.GenreRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.mapper.GameDetailsMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -34,8 +36,8 @@ class GameDetailsServiceImplTest {
     @Mock
     private GenreRepository genreRepository;
 
-    @Spy
-    private final GameDetailsMapper gameDetailsMapper = GameMappers.GAME_DETAILS_MAPPER;
+    @Mock
+    private GameDetailsMapper gameDetailsMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -71,11 +73,17 @@ class GameDetailsServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(game));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         GameDetailsDto result = gameDetailsService.findByGameId(0L);
 
         // Assert
         Assertions.assertNotNull(result);
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -110,7 +118,7 @@ class GameDetailsServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameDetailsMapper, Mockito.never())
-                .gameToGameDetailsDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -131,7 +139,7 @@ class GameDetailsServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
-                .gameToGameDetailsDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -188,6 +196,9 @@ class GameDetailsServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages game results were found.");
+
+        Mockito.verify(gameDetailsMapper, Mockito.never())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -207,6 +218,9 @@ class GameDetailsServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned games.");
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test

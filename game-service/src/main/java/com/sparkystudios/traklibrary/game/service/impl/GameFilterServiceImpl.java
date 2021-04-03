@@ -122,7 +122,7 @@ public class GameFilterServiceImpl implements GameFilterService {
 
         // Get the age ratings from the filter query.
         return gameRepository.findAll(new GameSearchSpecification(platforms, genres, gameModes, ageRatings), pageable)
-                .map(gameDetailsMapper::gameToGameDetailsDto);
+                .map(gameDetailsMapper::fromGame);
     }
 
     @Override
@@ -155,7 +155,7 @@ public class GameFilterServiceImpl implements GameFilterService {
 
         // Get the age ratings from the filter query.
         return gameUserEntryRepository.findAll(new GameUserEntrySearchSpecification(platforms, genres, gameModes, ageRatings, statuses), pageable)
-                .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto);
+                .map(gameUserEntryMapper::fromGameUserEntry);
     }
 
     @Override

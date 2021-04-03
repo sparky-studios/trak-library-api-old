@@ -4,23 +4,34 @@ import com.sparkystudios.traklibrary.game.domain.Developer;
 import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        DeveloperMapperImpl.class,
+})
 class DeveloperMapperTest {
 
+    @Autowired
+    private DeveloperMapper developerMapper;
+
     @Test
-    void developerToDeveloperDto_withNull_returnsNull() {
+    void fromDeveloper_withNull_returnsNull() {
         // Act
-        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(null);
+        DeveloperDto result = developerMapper.fromDeveloper(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void developerToDeveloperDto_withDeveloper_mapsFields() {
+    void fromDeveloper_withDeveloper_mapsFields() {
         // Arrange
         Developer developer = new Developer();
         developer.setId(5L);
@@ -32,7 +43,7 @@ class DeveloperMapperTest {
         developer.setVersion(1L);
 
         // Act
-        DeveloperDto result = GameMappers.DEVELOPER_MAPPER.developerToDeveloperDto(developer);
+        DeveloperDto result = developerMapper.fromDeveloper(developer);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(developer.getId());
@@ -45,16 +56,16 @@ class DeveloperMapperTest {
     }
 
     @Test
-    void developerDtoToDeveloper_withNull_returnsNull() {
+    void toDeveloper_withNull_returnsNull() {
         // Act
-        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(null);
+        Developer result = developerMapper.toDeveloper(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void developerDtoToDeveloper_withDeveloperDto_mapsFields() {
+    void toDeveloper_withDeveloperDto_mapsFields() {
         // Arrange
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setId(5L);
@@ -66,7 +77,7 @@ class DeveloperMapperTest {
         developerDto.setVersion(1L);
 
         // Act
-        Developer result = GameMappers.DEVELOPER_MAPPER.developerDtoToDeveloper(developerDto);
+        Developer result = developerMapper.toDeveloper(developerDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(developerDto.getId());

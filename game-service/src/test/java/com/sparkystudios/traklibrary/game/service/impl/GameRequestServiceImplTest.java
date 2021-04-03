@@ -6,14 +6,16 @@ import com.sparkystudios.traklibrary.game.repository.specification.GameRequestSp
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.client.NotificationClient;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.GameRequestMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.exception.InvalidUserException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -37,8 +39,8 @@ class GameRequestServiceImplTest {
     @Mock
     private GameRequestRepository gameRequestRepository;
 
-    @Spy
-    private final GameRequestMapper gameRequestMapper = GameMappers.GAME_REQUEST_MAPPER;
+    @Mock
+    private GameRequestMapper gameRequestMapper;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -118,6 +120,9 @@ class GameRequestServiceImplTest {
         // Assert
         Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameRequestMapper, Mockito.atMostOnce())
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -152,11 +157,17 @@ class GameRequestServiceImplTest {
         Mockito.when(gameRequestRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(gameRequest));
 
+        Mockito.when(gameRequestMapper.fromGameRequest(ArgumentMatchers.any()))
+                .thenReturn(new GameRequestDto());
+
         // Act
         GameRequestDto result = gameRequestService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(gameRequestMapper, Mockito.atMostOnce())
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -183,6 +194,9 @@ class GameRequestServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages platform results were found.");
+
+        Mockito.verify(gameRequestMapper, Mockito.never())
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -202,6 +216,9 @@ class GameRequestServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned game requests.");
+
+        Mockito.verify(gameRequestMapper, Mockito.atMost(2))
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -287,6 +304,9 @@ class GameRequestServiceImplTest {
         // Assert
         Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameRequestMapper, Mockito.atMostOnce())
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -327,6 +347,9 @@ class GameRequestServiceImplTest {
 
         Mockito.verify(notificationClient, Mockito.atMostOnce())
                 .send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+
+        Mockito.verify(gameRequestMapper, Mockito.atMostOnce())
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test
@@ -387,6 +410,9 @@ class GameRequestServiceImplTest {
         // Assert
         Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameRequestMapper, Mockito.atMost(2))
+                .fromGameRequest(ArgumentMatchers.any());
     }
 
     @Test

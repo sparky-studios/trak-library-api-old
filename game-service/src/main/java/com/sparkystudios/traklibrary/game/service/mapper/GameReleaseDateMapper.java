@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface GameReleaseDateMapper {
 
-    GameReleaseDateDto gameReleaseDateToGameReleaseDateDto(GameReleaseDate gameReleaseDate);
+    GameReleaseDateDto fromGameReleaseDate(GameReleaseDate gameReleaseDate);
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "game", ignore = true)
-    GameReleaseDate gameReleaseDateDtoToGameReleaseDate(GameReleaseDateDto gameReleaseDateDto);
+    GameReleaseDate toReleaseDate(GameReleaseDateDto gameReleaseDateDto);
 }

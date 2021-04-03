@@ -98,7 +98,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             }
         });
 
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.save(gameUserEntry));
+        return gameUserEntryMapper.fromGameUserEntry(gameUserEntryRepository.save(gameUserEntry));
     }
 
     @Override
@@ -107,7 +107,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.findById(id)
+        return gameUserEntryMapper.fromGameUserEntry(gameUserEntryRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -126,7 +126,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
 
         return gameUserEntryRepository
                 .findAll(specification.and(gameUserEntrySpecification), pageable)
-                .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto);
+                .map(gameUserEntryMapper::fromGameUserEntry);
     }
 
     @Override
@@ -147,7 +147,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
     @Transactional(readOnly = true)
     public Iterable<GameUserEntryDto> findAll(GameUserEntrySpecification gameUserEntrySpecification, Pageable pageable) {
         return StreamSupport.stream(gameUserEntryRepository.findAll(gameUserEntrySpecification, pageable).spliterator(), false)
-                .map(gameUserEntryMapper::gameUserEntryToGameUserEntryDto)
+                .map(gameUserEntryMapper::fromGameUserEntry)
                 .collect(Collectors.toList());
     }
 
@@ -232,7 +232,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             }
         });
 
-        return gameUserEntryMapper.gameUserEntryToGameUserEntryDto(gameUserEntryRepository.save(gue));
+        return gameUserEntryMapper.fromGameUserEntry(gameUserEntryRepository.save(gue));
     }
 
     @Override

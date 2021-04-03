@@ -34,7 +34,7 @@ public class GameDetailsServiceImpl implements GameDetailsService {
         String errorMessage = messageSource
                 .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
-        return gameDetailsMapper.gameToGameDetailsDto(gameRepository.findById(gameId)
+        return gameDetailsMapper.fromGame(gameRepository.findById(gameId)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -49,7 +49,7 @@ public class GameDetailsServiceImpl implements GameDetailsService {
         }
 
         return gameRepository.findByGenresId(genreId, pageable)
-                .map(gameDetailsMapper::gameToGameDetailsDto);
+                .map(gameDetailsMapper::fromGame);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GameDetailsServiceImpl implements GameDetailsService {
         Objects.requireNonNull(pageable);
 
         return gameRepository.findAll(gameSpecification, pageable)
-                .map(gameDetailsMapper::gameToGameDetailsDto);
+                .map(gameDetailsMapper::fromGame);
     }
 
     @Override

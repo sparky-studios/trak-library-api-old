@@ -49,7 +49,7 @@ public class GenreServiceImpl implements GenreService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return genreMapper.genreToGenreDto(genreRepository.save(genreMapper.genreDtoToGenre(genreDto)));
+        return genreMapper.fromGenre(genreRepository.save(genreMapper.toGenre(genreDto)));
     }
 
     @Override
@@ -58,7 +58,7 @@ public class GenreServiceImpl implements GenreService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return genreMapper.genreToGenreDto(genreRepository.findById(id)
+        return genreMapper.fromGenre(genreRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -68,7 +68,7 @@ public class GenreServiceImpl implements GenreService {
         // Get the game as the developers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
 
-        if (!game.isPresent()) {
+        if (game.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
@@ -77,7 +77,7 @@ public class GenreServiceImpl implements GenreService {
 
         return game.get().getGenres()
                 .stream()
-                .map(genreMapper::genreToGenreDto)
+                .map(genreMapper::fromGenre)
                 .sorted(Comparator.comparing(GenreDto::getName))
                 .collect(Collectors.toList());
     }
@@ -88,7 +88,7 @@ public class GenreServiceImpl implements GenreService {
         Objects.requireNonNull(pageable);
 
         return genreRepository.findAll(genreSpecification, pageable)
-                .map(genreMapper::genreToGenreDto);
+                .map(genreMapper::fromGenre);
 }
 
     @Override
@@ -111,7 +111,7 @@ public class GenreServiceImpl implements GenreService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return genreMapper.genreToGenreDto(genreRepository.save(genreMapper.genreDtoToGenre(genreDto)));
+        return genreMapper.fromGenre(genreRepository.save(genreMapper.toGenre(genreDto)));
     }
 
     @Override
@@ -120,7 +120,7 @@ public class GenreServiceImpl implements GenreService {
         // Set the new Java object with the patch information.
         GenreDto patched = patchService.patch(jsonMergePatch, findById(id), GenreDto.class);
         // Save to the repository and convert it back to a GameDto.
-        return genreMapper.genreToGenreDto(genreRepository.save(genreMapper.genreDtoToGenre(patched)));
+        return genreMapper.fromGenre(genreRepository.save(genreMapper.toGenre(patched)));
     }
 
     @Override

@@ -8,7 +8,6 @@ import org.springframework.hateoas.server.core.Relation;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "gameDetails")
@@ -32,15 +31,15 @@ public class GameDetailsDto {
 
     private Long version;
 
-    private Set<PlatformDto> platforms = new TreeSet<>();
+    private Set<PlatformDto> platforms;
 
-    private Set<PublisherDto> publishers = new TreeSet<>();
+    private Set<PublisherDto> publishers;
 
-    private Set<GenreDto> genres = new TreeSet<>();
+    private Set<GenreDto> genres;
 
-    private Set<GameReleaseDateDto> releaseDates = new TreeSet<>();
+    private Set<GameReleaseDateDto> releaseDates;
 
-    private Set<DownloadableContentDto> downloadableContents = new TreeSet<>();
+    private Set<DownloadableContentDto> downloadableContents;
 
     private FranchiseDto franchise;
 }

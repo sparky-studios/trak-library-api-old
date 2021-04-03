@@ -49,10 +49,10 @@ public class PlatformServiceImpl implements PlatformService {
             throw new EntityExistsException(errorMessage);
         }
 
-        Platform platform = platformMapper.platformDtoToPlatform(platformDto);
+        Platform platform = platformMapper.toPlatform(platformDto);
         platform.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setPlatform(platform));
 
-        return platformMapper.platformToPlatformDto(platformRepository.save(platform));
+        return platformMapper.fromPlatform(platformRepository.save(platform));
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PlatformServiceImpl implements PlatformService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return platformMapper.platformToPlatformDto(platformRepository.findById(id)
+        return platformMapper.fromPlatform(platformRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -80,7 +80,7 @@ public class PlatformServiceImpl implements PlatformService {
 
         // Retrieve all associated platforms and just convert them to their DTO counterparts.
         return game.get().getPlatforms().stream()
-                .map(platformMapper::platformToPlatformDto)
+                .map(platformMapper::fromPlatform)
                 .collect(Collectors.toList());
     }
 
@@ -90,7 +90,7 @@ public class PlatformServiceImpl implements PlatformService {
         Objects.requireNonNull(pageable);
 
         return platformRepository.findAll(platformSpecification, pageable)
-                .map(platformMapper::platformToPlatformDto);
+                .map(platformMapper::fromPlatform);
     }
 
     @Override
@@ -113,10 +113,10 @@ public class PlatformServiceImpl implements PlatformService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        Platform platform = platformMapper.platformDtoToPlatform(platformDto);
+        Platform platform = platformMapper.toPlatform(platformDto);
         platform.getReleaseDates().forEach(platformReleaseDate -> platformReleaseDate.setPlatform(platform));
 
-        return platformMapper.platformToPlatformDto(platformRepository.save(platform));
+        return platformMapper.fromPlatform(platformRepository.save(platform));
     }
 
     @Override
@@ -125,7 +125,7 @@ public class PlatformServiceImpl implements PlatformService {
         // Set the new Java object with the patch information.
         PlatformDto patched = patchService.patch(jsonMergePatch, findById(id), PlatformDto.class);
         // Save to the repository and convert it back to a GameDto.
-        return platformMapper.platformToPlatformDto(platformRepository.save(platformMapper.platformDtoToPlatform(patched)));
+        return platformMapper.fromPlatform(platformRepository.save(platformMapper.toPlatform(patched)));
     }
 
     @Override

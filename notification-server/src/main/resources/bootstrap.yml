@@ -6,5 +6,8 @@ eureka:
 spring:
   application:
     name: trak-notification-server
-  config:
-    import: optional:configserver:http://${spring.cloud.config.username}:${spring.cloud.config.password}@config-server:8888
+  cloud:
+    config:
+      discovery:
+        enabled: true
+        service-id: trak-config-server

@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .authenticationManager(authenticationManager)
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
+                .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .pathMatchers(HttpMethod.POST, "/auth/token", "/auth/token/**", "/auth/users").permitAll()
                 .pathMatchers(HttpMethod.PUT, "/auth/users", "/auth/users/recover").permitAll()
                 .pathMatchers(HttpMethod.GET, "/images/**").permitAll()

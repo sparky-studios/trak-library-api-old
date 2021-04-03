@@ -48,7 +48,7 @@ public class DeveloperServiceImpl implements DeveloperService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return developerMapper.developerToDeveloperDto(developerRepository.save(developerMapper.developerDtoToDeveloper(developerDto)));
+        return developerMapper.fromDeveloper(developerRepository.save(developerMapper.toDeveloper(developerDto)));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return developerMapper.developerToDeveloperDto(developerRepository.findById(id)
+        return developerMapper.fromDeveloper(developerRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -76,7 +76,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         // Retrieve all associated developers and just convert them to their DTO counterparts.
         return game.get().getDevelopers().stream()
-                .map(developerMapper::developerToDeveloperDto)
+                .map(developerMapper::fromDeveloper)
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         Objects.requireNonNull(pageable);
 
         return developerRepository.findAll(developerSpecification, pageable)
-                .map(developerMapper::developerToDeveloperDto);
+                .map(developerMapper::fromDeveloper);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class DeveloperServiceImpl implements DeveloperService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return developerMapper.developerToDeveloperDto(developerRepository.save(developerMapper.developerDtoToDeveloper(companyDto)));
+        return developerMapper.fromDeveloper(developerRepository.save(developerMapper.toDeveloper(companyDto)));
     }
 
     @Override
@@ -118,7 +118,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         // Set the new Java object with the patch information.
         DeveloperDto patched = patchService.patch(jsonMergePatch, findById(id), DeveloperDto.class);
         // Save to the repository and convert it back to a DeveloperDto.
-        return developerMapper.developerToDeveloperDto(developerRepository.save(developerMapper.developerDtoToDeveloper(patched)));
+        return developerMapper.fromDeveloper(developerRepository.save(developerMapper.toDeveloper(patched)));
     }
 
     @Override

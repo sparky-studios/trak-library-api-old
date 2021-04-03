@@ -28,7 +28,7 @@ public class GameBarcodeServiceImpl implements GameBarcodeService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { barcode }, LocaleContextHolder.getLocale());
 
-        return gameBarcodeMapper.gameBarcodeToGameBarcodeDto(gameBarcodeRepository.findByBarcode(barcode)
+        return gameBarcodeMapper.fromGameBarcode(gameBarcodeRepository.findByBarcode(barcode)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 }

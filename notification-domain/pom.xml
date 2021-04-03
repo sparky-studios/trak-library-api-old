@@ -11,7 +11,7 @@
 
     <groupId>com.sparkystudios.traklibrary.notification</groupId>
     <artifactId>notification-domain</artifactId>
-    <name>Trak Library API Notification domain</name>
+    <name>Trak Library API Notification Domain</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>

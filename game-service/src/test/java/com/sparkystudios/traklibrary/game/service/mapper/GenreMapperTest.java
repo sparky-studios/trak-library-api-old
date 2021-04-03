@@ -4,22 +4,33 @@ import com.sparkystudios.traklibrary.game.domain.Genre;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GenreMapperImpl.class,
+})
 class GenreMapperTest {
 
+    @Autowired
+    private GenreMapper genreMapper;
+
     @Test
-    void genreToGenreDto_withNull_returnsNull() {
+    void fromGenre_withNull_returnsNull() {
         // Act
-        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(null);
+        GenreDto result = genreMapper.fromGenre(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void genreToGenreDto_withGenre_mapsFields() {
+    void fromGenre_withGenre_mapsFields() {
         // Arrange
         Genre genre = new Genre();
         genre.setId(5L);
@@ -30,7 +41,7 @@ class GenreMapperTest {
         genre.setVersion(1L);
 
         // Act
-        GenreDto result = GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
+        GenreDto result = genreMapper.fromGenre(genre);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(genre.getId());
@@ -42,16 +53,16 @@ class GenreMapperTest {
     }
 
     @Test
-    void genreDtoToGenre_withNull_returnsNull() {
+    void toGenre_withNull_returnsNull() {
         // Act
-        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(null);
+        Genre result = genreMapper.toGenre(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void genreDtoToGenre_withGenreDto_mapsFields() {
+    void toGenre_withGenreDto_mapsFields() {
         // Arrange
         GenreDto genreDto = new GenreDto();
         genreDto.setId(5L);
@@ -62,7 +73,7 @@ class GenreMapperTest {
         genreDto.setVersion(1L);
 
         // Act
-        Genre result = GameMappers.GENRE_MAPPER.genreDtoToGenre(genreDto);
+        Genre result = genreMapper.toGenre(genreDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(genreDto.getId());

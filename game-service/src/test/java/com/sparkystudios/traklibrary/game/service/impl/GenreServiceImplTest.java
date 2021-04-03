@@ -7,12 +7,14 @@ import com.sparkystudios.traklibrary.game.repository.GenreRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GenreSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.GenreMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -38,8 +40,8 @@ class GenreServiceImplTest {
     @Mock
     private GameRepository gameRepository;
 
-    @Spy
-    private final GenreMapper genreMapper = GameMappers.GENRE_MAPPER;
+    @Mock
+    private GenreMapper genreMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -86,6 +88,9 @@ class GenreServiceImplTest {
         // Assert
         Mockito.verify(genreRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(genreMapper, Mockito.atMostOnce())
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -116,11 +121,17 @@ class GenreServiceImplTest {
         Mockito.when(genreRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(genre));
 
+        Mockito.when(genreMapper.fromGenre(ArgumentMatchers.any()))
+                .thenReturn(new GenreDto());
+
         // Act
         GenreDto result = genreService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(genreMapper, Mockito.atMostOnce())
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -148,6 +159,9 @@ class GenreServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no genres are returned.");
+
+        Mockito.verify(genreMapper, Mockito.atMostOnce())
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -166,6 +180,18 @@ class GenreServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(game));
 
+        GenreDto genreDto1 = new GenreDto();
+        genreDto1.setName(genre1.getName());
+
+        Mockito.when(genreMapper.fromGenre(genre1))
+                .thenReturn(genreDto1);
+
+        GenreDto genreDto2 = new GenreDto();
+        genreDto2.setName(genre2.getName());
+
+        Mockito.when(genreMapper.fromGenre(genre2))
+                .thenReturn(genreDto2);
+
         // Act
         List<GenreDto> result = StreamSupport.stream(genreService.findGenresByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
@@ -173,6 +199,9 @@ class GenreServiceImplTest {
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result should be not be empty if they're game genres.");
         Assertions.assertEquals(2, result.size(), "There should be only two genres.");
+
+        Mockito.verify(genreMapper, Mockito.atMost(2))
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -199,6 +228,9 @@ class GenreServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no paged genre results were found.");
+
+        Mockito.verify(genreMapper, Mockito.never())
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -218,6 +250,9 @@ class GenreServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned genres.");
+
+        Mockito.verify(genreMapper, Mockito.atMost(2))
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -276,6 +311,9 @@ class GenreServiceImplTest {
         // Assert
         Mockito.verify(genreRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(genreMapper, Mockito.atMostOnce())
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test
@@ -311,6 +349,9 @@ class GenreServiceImplTest {
         // Assert
         Mockito.verify(genreRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(genreMapper, Mockito.atMost(2))
+                .fromGenre(ArgumentMatchers.any());
     }
 
     @Test

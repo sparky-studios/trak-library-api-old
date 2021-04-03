@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DownloadableContentMapper {
 
-    DownloadableContentDto downloadableContentToDownloadableContentDto(DownloadableContent downloadableContent);
+    DownloadableContentDto fromDownloadableContent(DownloadableContent downloadableContent);
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "game", ignore = true)
-    DownloadableContent downloadableContentDtoToDownloadableContent(DownloadableContentDto downloadableContentDto);
+    DownloadableContent toDownloadableContent(DownloadableContentDto downloadableContentDto);
 }

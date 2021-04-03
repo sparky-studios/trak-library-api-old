@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PlatformReleaseDateMapper {
 
-    PlatformReleaseDateDto platformReleaseDateToPlatformReleaseDateDto(PlatformReleaseDate platformReleaseDate);
+    PlatformReleaseDateDto fromPlatformReleaseDate(PlatformReleaseDate platformReleaseDate);
 
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "platform", ignore = true)
-    PlatformReleaseDate platformReleaseDateDtoToPlatformReleaseDate(PlatformReleaseDateDto platformReleaseDateDto);
+    PlatformReleaseDate toPlatformReleaseDate(PlatformReleaseDateDto platformReleaseDateDto);
 }

@@ -7,23 +7,35 @@ import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        PlatformMapperImpl.class,
+        PlatformReleaseDateMapperImpl.class
+})
 class PlatformMapperTest {
 
+    @Autowired
+    private PlatformMapper platformMapper;
+
     @Test
-    void platformToPlatformDto_withNull_returnsNull() {
+    void fromPlatform_withNull_returnsNull() {
         // Act
-        PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(null);
+        PlatformDto result = platformMapper.fromPlatform(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void platformToPlatformDto_withPlatform_mapsFields() {
+    void fromPlatform_withPlatform_mapsFields() {
         // Arrange
         PlatformReleaseDate platformReleaseDate = new PlatformReleaseDate();
         platformReleaseDate.setRegion(GameRegion.PAL);
@@ -40,7 +52,7 @@ class PlatformMapperTest {
         platform.addReleaseDate(platformReleaseDate);
 
         // Act
-        PlatformDto result = GameMappers.PLATFORM_MAPPER.platformToPlatformDto(platform);
+        PlatformDto result = platformMapper.fromPlatform(platform);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(platform.getId());
@@ -53,16 +65,16 @@ class PlatformMapperTest {
     }
 
     @Test
-    void platformDtoToPlatform_withNull_returnsNull() {
+    void toPlatform_withNull_returnsNull() {
         // Act
-        Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(null);
+        Platform result = platformMapper.toPlatform(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void platformToPlatformDto_withPlatformDto_mapsFields() {
+    void toPlatform_withPlatformDto_mapsFields() {
         // Arrange
         PlatformReleaseDateDto platformReleaseDateDto = new PlatformReleaseDateDto();
         platformReleaseDateDto.setRegion(GameRegion.PAL);
@@ -79,7 +91,7 @@ class PlatformMapperTest {
         platformDto.getReleaseDates().add(platformReleaseDateDto);
 
         // Act
-        Platform result = GameMappers.PLATFORM_MAPPER.platformDtoToPlatform(platformDto);
+        Platform result = platformMapper.toPlatform(platformDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(platformDto.getId());

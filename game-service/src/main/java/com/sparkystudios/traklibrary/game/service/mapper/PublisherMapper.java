@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface PublisherMapper {
 
-    PublisherDto publisherToPublisherDto(Publisher publisher);
+    PublisherDto fromPublisher(Publisher publisher);
 
     @Mapping(target = "games", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Publisher publisherDtoToPublisher(PublisherDto publisherDto);
+    Publisher toPublisher(PublisherDto publisherDto);
 }

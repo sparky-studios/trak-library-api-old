@@ -1,18 +1,22 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
-import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.Game;
-import com.sparkystudios.traklibrary.game.domain.GameReleaseDate;
-import com.sparkystudios.traklibrary.game.service.dto.DownloadableContentDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+import java.util.TreeSet;
+
+@Mapper(componentModel = "spring", uses ={
+        GameReleaseDateMapper.class,
+        DownloadableContentMapper.class
+}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface GameMapper {
 
-    GameDto gameToGameDto(Game game);
+    GameDto fromGame(Game game);
 
     @Mapping(target = "developers", ignore = true)
     @Mapping(target = "genres", ignore = true)
@@ -21,21 +25,11 @@ public interface GameMapper {
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "franchise", ignore = true)
-    Game gameDtoToGame(GameDto gameDto);
+    Game toGame(GameDto gameDto);
 
-    default GameReleaseDateDto gameReleaseDateToGameReleaseDateDto(GameReleaseDate gameReleaseDate) {
-        return GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(gameReleaseDate);
-    }
-
-    default GameReleaseDate gameReleaseDateDtoToGameReleaseDate(GameReleaseDateDto gameReleaseDateDto) {
-        return GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateDtoToGameReleaseDate(gameReleaseDateDto);
-    }
-
-    default DownloadableContentDto downloadableContentToDownloadableContentDto(DownloadableContent downloadableContent) {
-        return GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentToDownloadableContentDto(downloadableContent);
-    }
-
-    default DownloadableContent downloadableContentDtoToDownloadContent(DownloadableContentDto downloadableContentDto) {
-        return GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentDtoToDownloadableContent(downloadableContentDto);
+    @AfterMapping
+    default void afterMapping(@MappingTarget GameDto gameDetailsDto) {
+        gameDetailsDto.setReleaseDates(new TreeSet<>(gameDetailsDto.getReleaseDates()));
+        gameDetailsDto.setDownloadableContents(new TreeSet<>(gameDetailsDto.getDownloadableContents()));
     }
 }

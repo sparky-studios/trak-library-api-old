@@ -6,16 +6,16 @@ import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
-import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.PlatformMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -25,7 +25,6 @@ import org.springframework.data.domain.Pageable;
 import javax.json.JsonMergePatch;
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -42,8 +41,8 @@ class PlatformServiceImplTest {
     @Mock
     private GameRepository gameRepository;
 
-    @Spy
-    private final PlatformMapper platformMapper = GameMappers.PLATFORM_MAPPER;
+    @Mock
+    private PlatformMapper platformMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -88,12 +87,18 @@ class PlatformServiceImplTest {
         platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
         platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
 
+        Mockito.when(platformMapper.toPlatform(ArgumentMatchers.any()))
+                .thenReturn(new Platform());
+
         // Act
         platformService.save(platformDto);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(platformMapper, Mockito.atMostOnce())
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -124,11 +129,17 @@ class PlatformServiceImplTest {
         Mockito.when(platformRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(platform));
 
+        Mockito.when(platformMapper.fromPlatform(ArgumentMatchers.any()))
+                .thenReturn(new PlatformDto());
+
         // Act
         PlatformDto result = platformService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(platformMapper, Mockito.atMostOnce())
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -158,7 +169,7 @@ class PlatformServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no platforms are returned.");
 
         Mockito.verify(platformMapper, Mockito.never())
-                .platformToPlatformDto(ArgumentMatchers.any());
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -177,6 +188,18 @@ class PlatformServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(game));
 
+        PlatformDto platformDto1 = new PlatformDto();
+        platformDto1.setName(platform1.getName());
+
+        Mockito.when(platformMapper.fromPlatform(platform1))
+                .thenReturn(platformDto1);
+
+        PlatformDto platformDto2 = new PlatformDto();
+        platformDto2.setName(platform2.getName());
+
+        Mockito.when(platformMapper.fromPlatform(platform2))
+                .thenReturn(platformDto2);
+
         // Act
         List<PlatformDto> result = StreamSupport.stream(platformService.findPlatformsByGameId(0L).spliterator(), false)
                 .collect(Collectors.toList());
@@ -186,7 +209,7 @@ class PlatformServiceImplTest {
         Assertions.assertEquals(2, result.size(), "There should be only two platforms.");
 
         Mockito.verify(platformMapper, Mockito.atMost(2))
-                .platformToPlatformDto(ArgumentMatchers.any());
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -213,6 +236,9 @@ class PlatformServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages platform results were found.");
+
+        Mockito.verify(platformMapper, Mockito.never())
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -232,6 +258,9 @@ class PlatformServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned platforms.");
+
+        Mockito.verify(platformMapper, Mockito.atMost(2))
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -288,12 +317,18 @@ class PlatformServiceImplTest {
         platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
         platformDto.getReleaseDates().add(new PlatformReleaseDateDto());
 
+        Mockito.when(platformMapper.toPlatform(ArgumentMatchers.any()))
+                .thenReturn(new Platform());
+
         // Act
         platformService.update(platformDto);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(platformMapper, Mockito.atMostOnce())
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test
@@ -329,6 +364,9 @@ class PlatformServiceImplTest {
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(platformMapper, Mockito.atMost(2))
+                .fromPlatform(ArgumentMatchers.any());
     }
 
     @Test

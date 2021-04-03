@@ -4,23 +4,34 @@ import com.sparkystudios.traklibrary.game.domain.Publisher;
 import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        PublisherMapperImpl.class,
+})
 class PublisherMapperTest {
 
+    @Autowired
+    private PublisherMapper publisherMapper;
+
     @Test
-    void publisherToPublisherDto_withNull_returnsNull() {
+    void fromPublisher_withNull_returnsNull() {
         // Act
-        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(null);
+        PublisherDto result = publisherMapper.fromPublisher(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void publisherToPublisherDto_withPublisher_mapsFields() {
+    void fromPublisher_withPublisher_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setId(5L);
@@ -32,7 +43,7 @@ class PublisherMapperTest {
         publisher.setVersion(1L);
 
         // Act
-        PublisherDto result = GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
+        PublisherDto result = publisherMapper.fromPublisher(publisher);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(publisher.getId());
@@ -45,16 +56,16 @@ class PublisherMapperTest {
     }
 
     @Test
-    void publisherDtoToPublisher_withNull_returnsNull() {
+    void toPublisher_withNull_returnsNull() {
         // Act
-        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(null);
+        Publisher result = publisherMapper.toPublisher(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void publisherDtoToPublisher_withPublisherDto_mapsFields() {
+    void toPublisher_withPublisherDto_mapsFields() {
         // Arrange
         PublisherDto publisherDto = new PublisherDto();
         publisherDto.setId(5L);
@@ -66,7 +77,7 @@ class PublisherMapperTest {
         publisherDto.setVersion(1L);
 
         // Act
-        Publisher result = GameMappers.PUBLISHER_MAPPER.publisherDtoToPublisher(publisherDto);
+        Publisher result = publisherMapper.toPublisher(publisherDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(publisherDto.getId());

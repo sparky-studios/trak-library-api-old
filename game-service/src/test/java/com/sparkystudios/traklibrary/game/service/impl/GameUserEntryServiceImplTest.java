@@ -12,14 +12,16 @@ import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import com.sparkystudios.traklibrary.game.service.dto.request.GameUserEntryRequest;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.GameUserEntryMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.exception.InvalidUserException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -28,7 +30,12 @@ import org.springframework.data.domain.Pageable;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -47,8 +54,8 @@ class GameUserEntryServiceImplTest {
     @Mock
     private DownloadableContentRepository downloadableContentRepository;
 
-    @Spy
-    private final GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
+    @Mock
+    private GameUserEntryMapper gameUserEntryMapper;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -130,6 +137,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -160,6 +170,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -187,6 +200,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -217,6 +233,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -241,11 +260,17 @@ class GameUserEntryServiceImplTest {
         Mockito.when(gameUserEntryRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(new GameUserEntry()));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
+
         // Act
         GameUserEntryDto result = gameUserEntryService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -280,7 +305,10 @@ class GameUserEntryServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no game user entries are returned.");
 
         Mockito.verify(gameUserEntryMapper, Mockito.never())
-                .gameUserEntryToGameUserEntryDto(ArgumentMatchers.any());
+                .fromGameUserEntry(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.never())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -300,7 +328,7 @@ class GameUserEntryServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
-                .gameUserEntryToGameUserEntryDto(ArgumentMatchers.any());
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -331,6 +359,9 @@ class GameUserEntryServiceImplTest {
         // Assert
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .count(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -357,6 +388,9 @@ class GameUserEntryServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no paged game user entry results were found.");
+
+        Mockito.verify(gameUserEntryMapper, Mockito.never())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -376,6 +410,9 @@ class GameUserEntryServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned game user entries.");
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -468,6 +505,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -523,6 +563,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -550,6 +593,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -605,6 +651,9 @@ class GameUserEntryServiceImplTest {
 
         Mockito.verify(gameUserEntryRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMostOnce())
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test

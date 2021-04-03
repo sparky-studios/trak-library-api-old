@@ -59,7 +59,7 @@ public class GameRequestServiceImpl implements GameRequestService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(gameRequestDto)));
+        return gameRequestMapper.fromGameRequest(gameRequestRepository.save(gameRequestMapper.toGameRequest(gameRequestDto)));
     }
 
     @Override
@@ -68,7 +68,7 @@ public class GameRequestServiceImpl implements GameRequestService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.findById(id)
+        return gameRequestMapper.fromGameRequest(gameRequestRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -78,7 +78,7 @@ public class GameRequestServiceImpl implements GameRequestService {
         Objects.requireNonNull(pageable);
 
         return gameRequestRepository.findAll(gameRequestSpecification, pageable)
-                .map(gameRequestMapper::gameRequestToGameRequestDto);
+                .map(gameRequestMapper::fromGameRequest);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class GameRequestServiceImpl implements GameRequestService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(gameRequestDto)));
+        return gameRequestMapper.fromGameRequest(gameRequestRepository.save(gameRequestMapper.toGameRequest(gameRequestDto)));
     }
 
     @Override
@@ -119,7 +119,7 @@ public class GameRequestServiceImpl implements GameRequestService {
             gameRequestDto.setCompletedDate(LocalDateTime.now());
 
             // Save to the underlying persistence layer.
-            gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(gameRequestDto));
+            gameRequestRepository.save(gameRequestMapper.toGameRequest(gameRequestDto));
 
             // Grab the localized text for the notification.
             String title = messageSource
@@ -147,7 +147,7 @@ public class GameRequestServiceImpl implements GameRequestService {
         }
 
         // Save to the repository and convert it back to a GameDto.
-        return gameRequestMapper.gameRequestToGameRequestDto(gameRequestRepository.save(gameRequestMapper.gameRequestDtoToGameRequest(patched)));
+        return gameRequestMapper.fromGameRequest(gameRequestRepository.save(gameRequestMapper.toGameRequest(patched)));
     }
 
     @Override
