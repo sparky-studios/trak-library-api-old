@@ -7,12 +7,14 @@ import com.sparkystudios.traklibrary.game.repository.PublisherRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.PublisherSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.PublisherMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -41,8 +43,8 @@ class PublisherServiceImplTest {
     @Mock
     private MessageSource messageSource;
 
-    @Spy
-    private final PublisherMapper publisherMapper = GameMappers.PUBLISHER_MAPPER;
+    @Mock
+    private PublisherMapper publisherMapper;
 
     @Mock
     private PatchService patchService;
@@ -86,6 +88,9 @@ class PublisherServiceImplTest {
         // Assert
         Mockito.verify(publisherRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(publisherMapper, Mockito.atMostOnce())
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -113,11 +118,17 @@ class PublisherServiceImplTest {
         Mockito.when(publisherRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(publisher));
 
+        Mockito.when(publisherMapper.fromPublisher(ArgumentMatchers.any()))
+                .thenReturn(new PublisherDto());
+
         // Act
         PublisherDto result = publisherService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(publisherMapper, Mockito.atMostOnce())
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -147,7 +158,7 @@ class PublisherServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(publisherMapper, Mockito.never())
-                .publisherToPublisherDto(ArgumentMatchers.any());
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -175,7 +186,7 @@ class PublisherServiceImplTest {
         Assertions.assertEquals(2, result.size(), "There should be only two publishers if there are two xrefs");
 
         Mockito.verify(publisherMapper, Mockito.atMost(2))
-                .publisherToPublisherDto(ArgumentMatchers.any());
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -202,6 +213,9 @@ class PublisherServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no paged publisher results were found.");
+
+        Mockito.verify(publisherMapper, Mockito.never())
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -221,6 +235,9 @@ class PublisherServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned companies.");
+
+        Mockito.verify(publisherMapper, Mockito.atMost(2))
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -279,6 +296,9 @@ class PublisherServiceImplTest {
         // Assert
         Mockito.verify(publisherRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(publisherMapper, Mockito.atMostOnce())
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test
@@ -314,6 +334,9 @@ class PublisherServiceImplTest {
         // Assert
         Mockito.verify(publisherRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(publisherMapper, Mockito.atMost(2))
+                .fromPublisher(ArgumentMatchers.any());
     }
 
     @Test

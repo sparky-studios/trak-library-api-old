@@ -48,7 +48,7 @@ public class PublisherServiceImpl implements PublisherService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return publisherMapper.publisherToPublisherDto(publisherRepository.save(publisherMapper.publisherDtoToPublisher(publisherDto)));
+        return publisherMapper.fromPublisher(publisherRepository.save(publisherMapper.toPublisher(publisherDto)));
     }
 
     @Override
@@ -57,7 +57,7 @@ public class PublisherServiceImpl implements PublisherService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return publisherMapper.publisherToPublisherDto(publisherRepository.findById(id)
+        return publisherMapper.fromPublisher(publisherRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -76,7 +76,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         // Retrieve all associated developers and just convert them to their DTO counterparts.
         return game.get().getPublishers().stream()
-                .map(publisherMapper::publisherToPublisherDto)
+                .map(publisherMapper::fromPublisher)
                 .collect(Collectors.toList());
     }
 
@@ -86,7 +86,7 @@ public class PublisherServiceImpl implements PublisherService {
         Objects.requireNonNull(pageable);
 
         return publisherRepository.findAll(publisherSpecification, pageable)
-                .map(publisherMapper::publisherToPublisherDto);
+                .map(publisherMapper::fromPublisher);
     }
 
     @Override
@@ -109,7 +109,7 @@ public class PublisherServiceImpl implements PublisherService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return publisherMapper.publisherToPublisherDto(publisherRepository.save(publisherMapper.publisherDtoToPublisher(publisherDto)));
+        return publisherMapper.fromPublisher(publisherRepository.save(publisherMapper.toPublisher(publisherDto)));
     }
 
     @Override
@@ -118,7 +118,7 @@ public class PublisherServiceImpl implements PublisherService {
         // Set the new Java object with the patch information.
         PublisherDto patched = patchService.patch(jsonMergePatch, findById(id), PublisherDto.class);
         // Save to the repository and convert it back to a PublisherDto.
-        return publisherMapper.publisherToPublisherDto(publisherRepository.save(publisherMapper.publisherDtoToPublisher(patched)));
+        return publisherMapper.fromPublisher(publisherRepository.save(publisherMapper.toPublisher(patched)));
     }
 
     @Override

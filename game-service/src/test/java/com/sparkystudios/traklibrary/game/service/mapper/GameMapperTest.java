@@ -6,23 +6,35 @@ import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameMapperImpl.class,
+        GameReleaseDateMapperImpl.class,
+        DownloadableContentMapperImpl.class
+})
 class GameMapperTest {
 
+    @Autowired
+    private GameMapper gameMapper;
+
     @Test
-    void gameToGameDto_withNull_returnsNull() {
+    void fromGame_withNull_returnsNull() {
         // Act
-        GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(null);
+        GameDto result = gameMapper.fromGame(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameToGameDto_withGame_mapsFields() {
+    void fromGame_withGame_mapsFields() {
         // Arrange
         Game game = new Game();
         game.setId(5L);
@@ -38,7 +50,7 @@ class GameMapperTest {
         game.addDownloadableContent(new DownloadableContent());
 
         // Act
-        GameDto result = GameMappers.GAME_MAPPER.gameToGameDto(game);
+        GameDto result = gameMapper.fromGame(game);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(game.getId());
@@ -54,16 +66,16 @@ class GameMapperTest {
     }
 
     @Test
-    void gameDtoToGame_withNull_returnsNull() {
+    void toGame_withNull_returnsNull() {
         // Act`
-        Game result = GameMappers.GAME_MAPPER.gameDtoToGame(null);
+        Game result = gameMapper.toGame(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameDtoToGame_withGameDto_mapsFields() {
+    void toGame_withGameDto_mapsFields() {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
@@ -79,7 +91,7 @@ class GameMapperTest {
         gameDto.getDownloadableContents().add(new DownloadableContentDto());
 
         // Act
-        Game result = GameMappers.GAME_MAPPER.gameDtoToGame(gameDto);
+        Game result = gameMapper.toGame(gameDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameDto.getId());

@@ -1,31 +1,33 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.GameUserEntry;
-import com.sparkystudios.traklibrary.game.domain.GameUserEntryDownloadableContent;
-import com.sparkystudios.traklibrary.game.domain.GameUserEntryPlatform;
 import com.sparkystudios.traklibrary.game.domain.Publisher;
-import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDownloadableContentDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryPlatformDto;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+import java.util.TreeSet;
+
+@Mapper(componentModel = "spring", uses = {
+        GameUserEntryPlatformMapper.class,
+        GameUserEntryDownloadableContentMapper.class
+}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface GameUserEntryMapper {
 
     @Mapping(source = "game.title", target = "gameTitle")
     @Mapping(source = "game.publishers", target = "publishers")
-    GameUserEntryDto gameUserEntryToGameUserEntryDto(GameUserEntry gameUserEntry);
+    GameUserEntryDto fromGameUserEntry(GameUserEntry gameUserEntry);
 
     default String publisherToPublisherName(Publisher publisher) {
         return publisher.getName();
     }
 
-    default GameUserEntryPlatformDto gameUserEntryPlatformToGameUserEntryPlatformDto(GameUserEntryPlatform gameUserEntryPlatform) {
-        return GameMappers.GAME_USER_ENTRY_PLATFORM_MAPPER.gameUserEntryPlatformToGameUserEntryPlatformDto(gameUserEntryPlatform);
-    }
-
-    default GameUserEntryDownloadableContentDto gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto(GameUserEntryDownloadableContent gameUserEntryDownloadableContent) {
-        return GameMappers.GAME_USER_ENTRY_DOWNLOADABLE_CONTENT_MAPPER.gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto(gameUserEntryDownloadableContent);
+    @AfterMapping
+    default void afterMapping(@MappingTarget GameUserEntryDto gameUserEntryDto) {
+        gameUserEntryDto.setGameUserEntryPlatforms(new TreeSet<>(gameUserEntryDto.getGameUserEntryPlatforms()));
+        gameUserEntryDto.setGameUserEntryDownloadableContents(new TreeSet<>(gameUserEntryDto.getGameUserEntryDownloadableContents()));
     }
 }

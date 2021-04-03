@@ -5,22 +5,33 @@ import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryPlatformDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameUserEntryPlatformMapperImpl.class,
+})
 class GameUserEntryPlatformMapperTest {
 
+    @Autowired
+    private GameUserEntryPlatformMapper gameUserEntryPlatformMapper;
+
     @Test
-    void gameUserEntryPlatformToGameUserEntryPlatformDto_withNull_returnsNull() {
+    void fromGameUserEntryPlatform_withNull_returnsNull() {
         // Act
-        GameUserEntryPlatformDto result = GameMappers.GAME_USER_ENTRY_PLATFORM_MAPPER.gameUserEntryPlatformToGameUserEntryPlatformDto(null);
+        GameUserEntryPlatformDto result = gameUserEntryPlatformMapper.fromGameUserEntryPlatform(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameUserEntryPlatformToGameUserEntryPlatformDto_withGameUserEntryPlatform_mapsFields() {
+    void fromGameUserEntryPlatform_withGameUserEntryPlatform_mapsFields() {
         // Arrange
         Platform platform = new Platform();
         platform.setName("platform-name");
@@ -34,8 +45,8 @@ class GameUserEntryPlatformMapperTest {
         gameUserEntryPlatform.setVersion(4L);
 
         // Act
-        GameUserEntryPlatformDto result = GameMappers.GAME_USER_ENTRY_PLATFORM_MAPPER
-                .gameUserEntryPlatformToGameUserEntryPlatformDto(gameUserEntryPlatform);
+        GameUserEntryPlatformDto result = gameUserEntryPlatformMapper
+                .fromGameUserEntryPlatform(gameUserEntryPlatform);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameUserEntryPlatform.getId());

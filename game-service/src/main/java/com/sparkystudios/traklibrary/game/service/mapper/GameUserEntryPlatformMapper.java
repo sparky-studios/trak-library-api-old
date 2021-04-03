@@ -9,5 +9,5 @@ import org.mapstruct.Mapping;
 public interface GameUserEntryPlatformMapper {
 
     @Mapping(source = "platform.name", target = "platformName")
-    GameUserEntryPlatformDto gameUserEntryPlatformToGameUserEntryPlatformDto(GameUserEntryPlatform gameUserEntryPlatform);
+    GameUserEntryPlatformDto fromGameUserEntryPlatform(GameUserEntryPlatform gameUserEntryPlatform);
 }

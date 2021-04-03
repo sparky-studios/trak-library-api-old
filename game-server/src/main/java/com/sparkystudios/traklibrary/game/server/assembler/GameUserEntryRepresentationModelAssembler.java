@@ -28,11 +28,11 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
                     .withRel("game_details"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getGameId()))
                     .withRel("small_image"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getGameId()))
                     .withRel("medium_image"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getGameId()))
                     .withRel("large_image"));
         }
     }

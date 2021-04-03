@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface GenreMapper {
 
-    GenreDto genreToGenreDto(Genre genre);
+    GenreDto fromGenre(Genre genre);
 
     @Mapping(target = "games", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Genre genreDtoToGenre(GenreDto gameDto);
+    Genre toGenre(GenreDto gameDto);
 }

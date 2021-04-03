@@ -5,23 +5,34 @@ import com.sparkystudios.traklibrary.game.domain.GameUserEntryDownloadableConten
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDownloadableContentDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameUserEntryDownloadableContentMapperImpl.class,
+})
 class GameUserEntryDownloadableMapperTest {
 
+    @Autowired
+    private GameUserEntryDownloadableContentMapper gameUserEntryDownloadableContentMapper;
+
     @Test
-    void gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto_withNull_returnsNull() {
+    void fromGameUserEntryDownloadableContent_withNull_returnsNull() {
         // Act
-        GameUserEntryDownloadableContentDto result = GameMappers.GAME_USER_ENTRY_DOWNLOADABLE_CONTENT_MAPPER
-                .gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto(null);
+        GameUserEntryDownloadableContentDto result = gameUserEntryDownloadableContentMapper
+                .fromGameUserEntryDownloadableContent(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameUserEntryPlatformToGameUserEntryPlatformDto_withGameUserEntryPlatform_mapsFields() {
+    void fromGameUserEntryDownloadableContent_withGameUserEntryDownloadableContent_mapsFields() {
         // Arrange
         DownloadableContent downloadableContent = new DownloadableContent();
         downloadableContent.setName("dlc-name");
@@ -36,8 +47,8 @@ class GameUserEntryDownloadableMapperTest {
         gameUserEntryDownloadableContent.setVersion(4L);
 
         // Act
-        GameUserEntryDownloadableContentDto result = GameMappers.GAME_USER_ENTRY_DOWNLOADABLE_CONTENT_MAPPER
-                .gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto(gameUserEntryDownloadableContent);
+        GameUserEntryDownloadableContentDto result = gameUserEntryDownloadableContentMapper
+                .fromGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameUserEntryDownloadableContent.getId());

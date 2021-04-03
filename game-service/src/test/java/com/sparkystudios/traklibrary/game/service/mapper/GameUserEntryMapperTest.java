@@ -4,22 +4,35 @@ import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameUserEntryMapperImpl.class,
+        GameUserEntryPlatformMapperImpl.class,
+        GameUserEntryDownloadableContentMapperImpl.class
+})
 class GameUserEntryMapperTest {
 
+    @Autowired
+    private GameUserEntryMapper gameUserEntryMapper;
+
     @Test
-    void gameUserEntryToGameUserEntryDto_withNull_returnsNull() {
+    void fromGameUserEntry_withNull_returnsNull() {
         // Act
-        GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(null);
+        GameUserEntryDto result = gameUserEntryMapper.fromGameUserEntry(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameUserEntryToGameUserEntryDto_withGameUserEntry_mapsFields() {
+    void fromGameUserEntry_withGameUserEntry_mapsFields() {
         // Arrange
         Publisher publisher = new Publisher();
         publisher.setName("publisher-name");
@@ -52,7 +65,7 @@ class GameUserEntryMapperTest {
         gameUserEntry.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
 
         // Act
-        GameUserEntryDto result = GameMappers.GAME_USER_ENTRY_MAPPER.gameUserEntryToGameUserEntryDto(gameUserEntry);
+        GameUserEntryDto result = gameUserEntryMapper.fromGameUserEntry(gameUserEntry);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameUserEntry.getId());

@@ -1,27 +1,29 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
 import com.sparkystudios.traklibrary.game.domain.Platform;
-import com.sparkystudios.traklibrary.game.domain.PlatformReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
-import com.sparkystudios.traklibrary.game.service.dto.PlatformReleaseDateDto;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+import java.util.TreeSet;
+
+@Mapper(componentModel = "spring", uses = {
+        PlatformReleaseDateMapper.class
+}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface PlatformMapper {
 
-    PlatformDto platformToPlatformDto(Platform platform);
+    PlatformDto fromPlatform(Platform platform);
 
     @Mapping(target = "games", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Platform platformDtoToPlatform(PlatformDto platformDto);
+    Platform toPlatform(PlatformDto platformDto);
 
-    default PlatformReleaseDateDto platformReleaseDateToPlatformReleaseDateDto(PlatformReleaseDate platformReleaseDate) {
-        return GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateToPlatformReleaseDateDto(platformReleaseDate);
-    }
-
-    default PlatformReleaseDate gameReleaseDateDtoToGameReleaseDate(PlatformReleaseDateDto platformReleaseDateDto) {
-        return GameMappers.PLATFORM_RELEASE_DATE_MAPPER.platformReleaseDateDtoToPlatformReleaseDate(platformReleaseDateDto);
+    @AfterMapping
+    default void afterMapping(@MappingTarget PlatformDto platformDto) {
+        platformDto.setReleaseDates(new TreeSet<>(platformDto.getReleaseDates()));
     }
 }

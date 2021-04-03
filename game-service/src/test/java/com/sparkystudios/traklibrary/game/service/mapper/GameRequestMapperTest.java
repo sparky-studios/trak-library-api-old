@@ -4,22 +4,33 @@ import com.sparkystudios.traklibrary.game.domain.GameRequest;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameRequestMapperImpl.class,
+})
 class GameRequestMapperTest {
 
+    @Autowired
+    private GameRequestMapper gameRequestMapper;
+
     @Test
-    void gameRequestToGameRequestDto_withNull_returnsNull() {
+    void fromGameRequest_withNull_returnsNull() {
         // Act
-        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(null);
+        GameRequestDto result = gameRequestMapper.fromGameRequest(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameRequestToGameRequestDto_withGameRequest_mapsFields() {
+    void fromGameRequest_withGameRequest_mapsFields() {
         // Arrange
         GameRequest gameRequest = new GameRequest();
         gameRequest.setId(5L);
@@ -32,7 +43,7 @@ class GameRequestMapperTest {
         gameRequest.setVersion(2L);
 
         // Act
-        GameRequestDto result = GameMappers.GAME_REQUEST_MAPPER.gameRequestToGameRequestDto(gameRequest);
+        GameRequestDto result = gameRequestMapper.fromGameRequest(gameRequest);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameRequest.getId());
@@ -46,16 +57,16 @@ class GameRequestMapperTest {
     }
 
     @Test
-    void gameRequestDtoToGameRequest_withNull_returnsNull() {
+    void toGameRequest_withNull_returnsNull() {
         // Act
-        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(null);
+        GameRequest result = gameRequestMapper.toGameRequest(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameRequestDtoToGameRequest_withGameRequestDto_mapsFields() {
+    void toGameRequest_withGameRequestDto_mapsFields() {
         // Arrange
         GameRequestDto gameRequestDto = new GameRequestDto();
         gameRequestDto.setId(5L);
@@ -67,7 +78,7 @@ class GameRequestMapperTest {
         gameRequestDto.setVersion(2L);
 
         // Act
-        GameRequest result = GameMappers.GAME_REQUEST_MAPPER.gameRequestDtoToGameRequest(gameRequestDto);
+        GameRequest result = gameRequestMapper.toGameRequest(gameRequestDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameRequestDto.getId());

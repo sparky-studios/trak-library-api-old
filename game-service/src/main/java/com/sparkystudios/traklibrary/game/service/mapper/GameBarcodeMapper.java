@@ -7,5 +7,5 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface GameBarcodeMapper {
 
-    GameBarcodeDto gameBarcodeToGameBarcodeDto(GameBarcode gameBarcode);
+    GameBarcodeDto fromGameBarcode(GameBarcode gameBarcode);
 }

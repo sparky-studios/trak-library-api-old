@@ -1,35 +1,32 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
-import com.sparkystudios.traklibrary.game.domain.*;
-import com.sparkystudios.traklibrary.game.service.dto.*;
+import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.InjectionStrategy;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+import java.util.TreeSet;
+
+@Mapper(componentModel = "spring", uses = {
+        PlatformMapper.class,
+        PublisherMapper.class,
+        GenreMapper.class,
+        GameReleaseDateMapper.class,
+        FranchiseMapper.class,
+        DownloadableContentMapper.class
+}, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface GameDetailsMapper {
 
-    GameDetailsDto gameToGameDetailsDto(Game game);
+    GameDetailsDto fromGame(Game game);
 
-    default PlatformDto platformToPlatformDto(Platform platform) {
-        return GameMappers.PLATFORM_MAPPER.platformToPlatformDto(platform);
-    }
-
-    default PublisherDto publisherToPublisherDto(Publisher publisher) {
-        return GameMappers.PUBLISHER_MAPPER.publisherToPublisherDto(publisher);
-    }
-
-    default GenreDto genreToGenreDto(Genre genre) {
-        return GameMappers.GENRE_MAPPER.genreToGenreDto(genre);
-    }
-
-    default GameReleaseDateDto gameReleaseDateToGameReleaseDateDto(GameReleaseDate gameReleaseDate) {
-        return GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(gameReleaseDate);
-    }
-
-    default FranchiseDto franchiseToFranchiseDto(Franchise franchise) {
-        return GameMappers.FRANCHISE_MAPPER.franchiseToFranchiseDto(franchise);
-    }
-
-    default DownloadableContentDto downloadableContentToDownloadableContentDto(DownloadableContent downloadableContent) {
-        return GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentToDownloadableContentDto(downloadableContent);
+    @AfterMapping
+    default void afterMapping(@MappingTarget GameDetailsDto gameDetailsDto) {
+        gameDetailsDto.setPlatforms(new TreeSet<>(gameDetailsDto.getPlatforms()));
+        gameDetailsDto.setPublishers(new TreeSet<>(gameDetailsDto.getPublishers()));
+        gameDetailsDto.setGenres(new TreeSet<>(gameDetailsDto.getGenres()));
+        gameDetailsDto.setReleaseDates(new TreeSet<>(gameDetailsDto.getReleaseDates()));
+        gameDetailsDto.setDownloadableContents(new TreeSet<>(gameDetailsDto.getDownloadableContents()));
     }
 }

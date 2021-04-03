@@ -8,11 +8,13 @@ import com.sparkystudios.traklibrary.game.repository.specification.DeveloperSpec
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
 import com.sparkystudios.traklibrary.game.service.mapper.DeveloperMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -41,8 +43,8 @@ class DeveloperServiceImplTest {
     @Mock
     private MessageSource messageSource;
 
-    @Spy
-    private final DeveloperMapper developerMapper = GameMappers.DEVELOPER_MAPPER;
+    @Mock
+    private DeveloperMapper developerMapper;
 
     @Mock
     private PatchService patchService;
@@ -86,6 +88,9 @@ class DeveloperServiceImplTest {
         // Assert
         Mockito.verify(developerRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(developerMapper, Mockito.atMostOnce())
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test
@@ -113,11 +118,17 @@ class DeveloperServiceImplTest {
         Mockito.when(developerRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(developer));
 
+        Mockito.when(developerMapper.fromDeveloper(ArgumentMatchers.any()))
+                .thenReturn(new DeveloperDto());
+
         // Act
         DeveloperDto result = developerService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(developerMapper, Mockito.atMostOnce())
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test
@@ -147,7 +158,7 @@ class DeveloperServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(developerMapper, Mockito.never())
-                .developerToDeveloperDto(ArgumentMatchers.any());
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test
@@ -175,7 +186,7 @@ class DeveloperServiceImplTest {
         Assertions.assertEquals(2, result.size(), "There should be only two developers if there are two developers associated with the game.");
 
         Mockito.verify(developerMapper, Mockito.atMost(2))
-                .developerToDeveloperDto(ArgumentMatchers.any());
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test
@@ -279,6 +290,9 @@ class DeveloperServiceImplTest {
         // Assert
         Mockito.verify(developerRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(developerMapper, Mockito.atMostOnce())
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test
@@ -314,6 +328,9 @@ class DeveloperServiceImplTest {
         // Assert
         Mockito.verify(developerRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(developerMapper, Mockito.atMost(2))
+                .fromDeveloper(ArgumentMatchers.any());
     }
 
     @Test

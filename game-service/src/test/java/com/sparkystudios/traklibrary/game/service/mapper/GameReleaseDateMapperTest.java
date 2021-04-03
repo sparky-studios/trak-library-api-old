@@ -5,23 +5,34 @@ import com.sparkystudios.traklibrary.game.domain.GameReleaseDate;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameReleaseDateMapperImpl.class,
+})
 class GameReleaseDateMapperTest {
 
+    @Autowired
+    private GameReleaseDateMapper gameReleaseDateMapper;
+
     @Test
-    void gameReleaseDateToGameReleaseDateDto_withNull_returnsNull() {
+    void fromGameReleaseDate_withNull_returnsNull() {
         // Act
-        GameReleaseDateDto result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(null);
+        GameReleaseDateDto result = gameReleaseDateMapper.fromGameReleaseDate(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameReleaseDateToGameReleaseDateDto_withGameReleaseDate_mapsFields() {
+    void fromGameReleaseDate_withGameReleaseDate_mapsFields() {
         // Arrange
         GameReleaseDate gameReleaseDate = new GameReleaseDate();
         gameReleaseDate.setRegion(GameRegion.JAPAN);
@@ -31,7 +42,7 @@ class GameReleaseDateMapperTest {
         gameReleaseDate.setVersion(2L);
 
         // Act
-        GameReleaseDateDto result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateToGameReleaseDateDto(gameReleaseDate);
+        GameReleaseDateDto result = gameReleaseDateMapper.fromGameReleaseDate(gameReleaseDate);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameReleaseDate.getId());
@@ -42,16 +53,16 @@ class GameReleaseDateMapperTest {
     }
 
     @Test
-    void gameReleaseDateDtoToGameReleaseDate_withNull_returnsNull() {
+    void toReleaseDate_withNull_returnsNull() {
         // Act
-        GameReleaseDate result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateDtoToGameReleaseDate(null);
+        GameReleaseDate result = gameReleaseDateMapper.toReleaseDate(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameReleaseDateDtoToGameReleaseDate_withGameReleaseDateDto_mapsFields() {
+    void toReleaseDate_withGameReleaseDateDto_mapsFields() {
         // Arrange
         GameReleaseDateDto gameReleaseDateDto = new GameReleaseDateDto();
         gameReleaseDateDto.setRegion(GameRegion.JAPAN);
@@ -59,7 +70,7 @@ class GameReleaseDateMapperTest {
         gameReleaseDateDto.setVersion(2L);
 
         // Act
-        GameReleaseDate result = GameMappers.GAME_RELEASE_DATE_MAPPER.gameReleaseDateDtoToGameReleaseDate(gameReleaseDateDto);
+        GameReleaseDate result = gameReleaseDateMapper.toReleaseDate(gameReleaseDateDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(gameReleaseDateDto.getId());

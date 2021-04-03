@@ -11,7 +11,7 @@
 
     <groupId>com.sparkystudios.traklibrary.authentication</groupId>
     <artifactId>auth-domain</artifactId>
-    <name>Trak Library API Authentication domain</name>
+    <name>Trak Library API Authentication Domain</name>
 
     <properties>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>

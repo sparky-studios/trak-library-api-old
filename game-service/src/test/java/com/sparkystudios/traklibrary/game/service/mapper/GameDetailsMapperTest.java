@@ -1,25 +1,52 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
-import com.sparkystudios.traklibrary.game.domain.*;
+import com.sparkystudios.traklibrary.game.domain.AgeRating;
+import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
+import com.sparkystudios.traklibrary.game.domain.Franchise;
+import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.GameMode;
+import com.sparkystudios.traklibrary.game.domain.GameRegion;
+import com.sparkystudios.traklibrary.game.domain.GameReleaseDate;
+import com.sparkystudios.traklibrary.game.domain.Genre;
+import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.domain.Publisher;
 import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        GameDetailsMapperImpl.class,
+        PlatformMapperImpl.class,
+        PlatformReleaseDateMapperImpl.class,
+        PublisherMapperImpl.class,
+        GenreMapperImpl.class,
+        GameReleaseDateMapperImpl.class,
+        FranchiseMapperImpl.class,
+        DownloadableContentMapperImpl.class
+})
 class GameDetailsMapperTest {
 
+    @Autowired
+    private GameDetailsMapper gameDetailsMapper;
+
     @Test
-    void gameToGameDetailsDto_withNull_returnsNull() {
+    void fromGame_withNull_returnsNull() {
         // Act
-        GameDetailsDto result = GameMappers.GAME_DETAILS_MAPPER.gameToGameDetailsDto(null);
+        GameDetailsDto result = gameDetailsMapper.fromGame(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void gameToGameDetailsDto_withGame_mapsFields() {
+    void fromGame_withGame_mapsFields() {
         // Arrange
         Genre genre = new Genre();
         genre.setName("test-genre");
@@ -58,7 +85,7 @@ class GameDetailsMapperTest {
         game.setFranchise(franchise);
 
         // Act
-        GameDetailsDto result = GameMappers.GAME_DETAILS_MAPPER.gameToGameDetailsDto(game);
+        GameDetailsDto result = gameDetailsMapper.fromGame(game);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(game.getId());

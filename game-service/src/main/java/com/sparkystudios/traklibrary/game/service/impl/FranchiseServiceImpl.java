@@ -42,7 +42,7 @@ public class FranchiseServiceImpl implements FranchiseService {
             throw new EntityExistsException(errorMessage);
         }
 
-        return franchiseMapper.franchiseToFranchiseDto(franchiseRepository.save(franchiseMapper.franchiseDtoToFranchise(franchiseDto)));
+        return franchiseMapper.fromFranchise(franchiseRepository.save(franchiseMapper.toFranchise(franchiseDto)));
     }
 
     @Override
@@ -51,7 +51,7 @@ public class FranchiseServiceImpl implements FranchiseService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return franchiseMapper.franchiseToFranchiseDto(franchiseRepository.findById(id)
+        return franchiseMapper.fromFranchise(franchiseRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -61,7 +61,7 @@ public class FranchiseServiceImpl implements FranchiseService {
         Objects.requireNonNull(pageable);
 
         return franchiseRepository.findAll(franchiseSpecification, pageable)
-                .map(franchiseMapper::franchiseToFranchiseDto);
+                .map(franchiseMapper::fromFranchise);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class FranchiseServiceImpl implements FranchiseService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        return franchiseMapper.franchiseToFranchiseDto(franchiseRepository.save(franchiseMapper.franchiseDtoToFranchise(franchiseDto)));
+        return franchiseMapper.fromFranchise(franchiseRepository.save(franchiseMapper.toFranchise(franchiseDto)));
     }
 
     @Override
@@ -93,7 +93,7 @@ public class FranchiseServiceImpl implements FranchiseService {
         // Set the new Java object with the patch information.
         FranchiseDto patched = patchService.patch(jsonMergePatch, findById(id), FranchiseDto.class);
         // Save to the repository and convert it back to a GameDto.
-        return franchiseMapper.franchiseToFranchiseDto(franchiseRepository.save(franchiseMapper.franchiseDtoToFranchise(patched)));
+        return franchiseMapper.fromFranchise(franchiseRepository.save(franchiseMapper.toFranchise(patched)));
     }
 
     @Override

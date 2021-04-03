@@ -9,5 +9,5 @@ import org.mapstruct.Mapping;
 public interface GameUserEntryDownloadableContentMapper {
 
     @Mapping(source = "downloadableContent.name", target = "downloadableContentName")
-    GameUserEntryDownloadableContentDto gameUserEntryDownloadableContentToGameUserEntryDownloadableContentDto(GameUserEntryDownloadableContent gameUserEntryDownloadableContent);
+    GameUserEntryDownloadableContentDto fromGameUserEntryDownloadableContent(GameUserEntryDownloadableContent gameUserEntryDownloadableContent);
 }

@@ -4,23 +4,34 @@ import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
 import com.sparkystudios.traklibrary.game.service.dto.DownloadableContentDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        DownloadableContentMapperImpl.class,
+})
 class DownloadableContentMapperTest {
 
+    @Autowired
+    private DownloadableContentMapper downloadableContentMapper;
+
     @Test
-    void downloadableContentToDownloadableContentDto_withNull_returnsNull() {
+    void fromDownloadableContent_withNull_returnsNull() {
         // Act
-        DownloadableContentDto result = GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentToDownloadableContentDto(null);
+        DownloadableContentDto result = downloadableContentMapper.fromDownloadableContent(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void downloadableContentToDownloadableContentDto_withDownloadableContent_mapsFields() {
+    void fromDownloadableContent_withDownloadableContent_mapsFields() {
         // Arrange
         DownloadableContent downloadableContent = new DownloadableContent();
         downloadableContent.setId(5L);
@@ -32,7 +43,7 @@ class DownloadableContentMapperTest {
         downloadableContent.setVersion(1L);
 
         // Act
-        DownloadableContentDto result = GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentToDownloadableContentDto(downloadableContent);
+        DownloadableContentDto result = downloadableContentMapper.fromDownloadableContent(downloadableContent);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(downloadableContent.getId());
@@ -45,16 +56,16 @@ class DownloadableContentMapperTest {
     }
 
     @Test
-    void downloadableContentDtoToDownloadableContent_withNull_returnsNull() {
+    void toDownloadableContent_withNull_returnsNull() {
         // Act
-        DownloadableContent result = GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentDtoToDownloadableContent(null);
+        DownloadableContent result = downloadableContentMapper.toDownloadableContent(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void downloadableContentDtoToDownloadableContent_withDownloadableContentDto_mapsFields() {
+    void toDownloadableContent_withDownloadableContentDto_mapsFields() {
         // Arrange
         DownloadableContentDto downloadableContentDto = new DownloadableContentDto();
         downloadableContentDto.setId(5L);
@@ -66,7 +77,7 @@ class DownloadableContentMapperTest {
         downloadableContentDto.setVersion(1L);
 
         // Act
-        DownloadableContent result = GameMappers.DOWNLOADABLE_CONTENT_MAPPER.downloadableContentDtoToDownloadableContent(downloadableContentDto);
+        DownloadableContent result = downloadableContentMapper.toDownloadableContent(downloadableContentDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(downloadableContentDto.getId());

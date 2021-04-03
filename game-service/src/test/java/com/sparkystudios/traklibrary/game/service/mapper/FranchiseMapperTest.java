@@ -4,22 +4,33 @@ import com.sparkystudios.traklibrary.game.domain.Franchise;
 import com.sparkystudios.traklibrary.game.service.dto.FranchiseDto;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        FranchiseMapperImpl.class,
+})
 class FranchiseMapperTest {
 
+    @Autowired
+    private FranchiseMapper franchiseMapper;
+
     @Test
-    void franchiseToFranchiseDto_withNull_returnsNull() {
+    void fromFranchise_withNull_returnsNull() {
         // Act
-        FranchiseDto result = GameMappers.FRANCHISE_MAPPER.franchiseToFranchiseDto(null);
+        FranchiseDto result = franchiseMapper.fromFranchise(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void franchiseToFranchiseDto_withFranchise_mapsFields() {
+    void fromFranchise_withFranchise_mapsFields() {
         // Arrange
         Franchise franchise = new Franchise();
         franchise.setId(5L);
@@ -30,7 +41,7 @@ class FranchiseMapperTest {
         franchise.setVersion(1L);
 
         // Act
-        FranchiseDto result = GameMappers.FRANCHISE_MAPPER.franchiseToFranchiseDto(franchise);
+        FranchiseDto result = franchiseMapper.fromFranchise(franchise);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(franchise.getId());
@@ -42,16 +53,16 @@ class FranchiseMapperTest {
     }
 
     @Test
-    void franchiseDtoToFranchise_withNull_returnsNull() {
+    void toFranchise_withNull_returnsNull() {
         // Act
-        Franchise result = GameMappers.FRANCHISE_MAPPER.franchiseDtoToFranchise(null);
+        Franchise result = franchiseMapper.toFranchise(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void franchiseDtoToFranchise_withFranchiseDto_mapsFields() {
+    void toFranchise_withFranchiseDto_mapsFields() {
         // Arrange
         FranchiseDto franchiseDto = new FranchiseDto();
         franchiseDto.setId(5L);
@@ -62,7 +73,7 @@ class FranchiseMapperTest {
         franchiseDto.setVersion(1L);
 
         // Act
-        Franchise result = GameMappers.FRANCHISE_MAPPER.franchiseDtoToFranchise(franchiseDto);
+        Franchise result = franchiseMapper.toFranchise(franchiseDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(franchiseDto.getId());

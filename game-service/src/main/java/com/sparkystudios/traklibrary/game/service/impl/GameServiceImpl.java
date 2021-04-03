@@ -57,12 +57,12 @@ public class GameServiceImpl implements GameService {
             throw new EntityExistsException(errorMessage);
         }
 
-        Game game = gameMapper.gameDtoToGame(gameDto);
+        Game game = gameMapper.toGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
         // We need to retrieve the game by the new ID as we want the release dates joined to the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -71,7 +71,7 @@ public class GameServiceImpl implements GameService {
         String errorMessage = messageSource
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 
-        return gameMapper.gameToGameDto(gameRepository.findById(id)
+        return gameMapper.fromGame(gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -86,7 +86,7 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.findByGenresId(genreId, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -122,7 +122,7 @@ public class GameServiceImpl implements GameService {
         genres.forEach(game::addGenre);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -142,7 +142,7 @@ public class GameServiceImpl implements GameService {
         genres.forEach(game::addGenre);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -156,7 +156,7 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.findByPlatformsId(platformId, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -192,7 +192,7 @@ public class GameServiceImpl implements GameService {
         platforms.forEach(game::addPlatform);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -212,7 +212,7 @@ public class GameServiceImpl implements GameService {
         platforms.forEach(game::addPlatform);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -226,7 +226,7 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.findByDevelopersId(developerId, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -262,7 +262,7 @@ public class GameServiceImpl implements GameService {
         developers.forEach(game::addDeveloper);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -282,7 +282,7 @@ public class GameServiceImpl implements GameService {
         developers.forEach(game::addDeveloper);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -296,7 +296,7 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.findByPublishersId(publisherId, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -332,7 +332,7 @@ public class GameServiceImpl implements GameService {
         publishers.forEach(game::addPublisher);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -352,7 +352,7 @@ public class GameServiceImpl implements GameService {
         publishers.forEach(game::addPublisher);
 
         // Save the game and return the result.
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -366,7 +366,7 @@ public class GameServiceImpl implements GameService {
         }
 
         return gameRepository.findByFranchiseId(franchiseId, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -386,7 +386,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(readOnly = true)
     public Iterable<GameDto> findAll() {
         return StreamSupport.stream(gameRepository.findAll().spliterator(), false)
-                .map(gameMapper::gameToGameDto)
+                .map(gameMapper::fromGame)
                 .collect(Collectors.toList());
     }
 
@@ -396,7 +396,7 @@ public class GameServiceImpl implements GameService {
         Objects.requireNonNull(pageable);
 
         return gameRepository.findAll(gameSpecification, pageable)
-                .map(gameMapper::gameToGameDto);
+                .map(gameMapper::fromGame);
     }
 
     @Override
@@ -419,11 +419,11 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        Game game = gameMapper.gameDtoToGame(gameDto);
+        Game game = gameMapper.toGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
-        return gameMapper.gameToGameDto(gameRepository.save(game));
+        return gameMapper.fromGame(gameRepository.save(game));
     }
 
     @Override
@@ -432,7 +432,7 @@ public class GameServiceImpl implements GameService {
         // Set the new Java object with the patch information.
         GameDto patched = patchService.patch(jsonMergePatch, findById(id), GameDto.class);
         // Save to the repository and convert it back to a GameDto.
-        return gameMapper.gameToGameDto(gameRepository.save(gameMapper.gameDtoToGame(patched)));
+        return gameMapper.fromGame(gameRepository.save(gameMapper.toGame(patched)));
     }
 
     @Override

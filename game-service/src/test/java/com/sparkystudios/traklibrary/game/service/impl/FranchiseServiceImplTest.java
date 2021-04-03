@@ -6,11 +6,13 @@ import com.sparkystudios.traklibrary.game.repository.specification.FranchiseSpec
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.FranchiseDto;
 import com.sparkystudios.traklibrary.game.service.mapper.FranchiseMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
@@ -33,8 +35,8 @@ class FranchiseServiceImplTest {
     @Mock
     private FranchiseRepository franchiseRepository;
 
-    @Spy
-    private final FranchiseMapper franchiseMapper = GameMappers.FRANCHISE_MAPPER;
+    @Mock
+    private FranchiseMapper franchiseMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -81,6 +83,9 @@ class FranchiseServiceImplTest {
         // Assert
         Mockito.verify(franchiseRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(franchiseMapper, Mockito.atMostOnce())
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test
@@ -111,11 +116,17 @@ class FranchiseServiceImplTest {
         Mockito.when(franchiseRepository.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Optional.of(franchise));
 
+        Mockito.when(franchiseMapper.fromFranchise(ArgumentMatchers.any()))
+                .thenReturn(new FranchiseDto());
+
         // Act
         FranchiseDto result = franchiseService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(franchiseMapper, Mockito.atMostOnce())
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test
@@ -142,6 +153,9 @@ class FranchiseServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no paged franchise results were found.");
+
+        Mockito.verify(franchiseMapper, Mockito.never())
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test
@@ -161,6 +175,9 @@ class FranchiseServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned franchises.");
+
+        Mockito.verify(franchiseMapper, Mockito.atMost(2))
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test
@@ -219,6 +236,9 @@ class FranchiseServiceImplTest {
         // Assert
         Mockito.verify(franchiseRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(franchiseMapper, Mockito.atMostOnce())
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test
@@ -254,6 +274,9 @@ class FranchiseServiceImplTest {
         // Assert
         Mockito.verify(franchiseRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(franchiseMapper, Mockito.atMost(2))
+                .fromFranchise(ArgumentMatchers.any());
     }
 
     @Test

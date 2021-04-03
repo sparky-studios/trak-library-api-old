@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface DeveloperMapper {
 
-    DeveloperDto developerToDeveloperDto(Developer developer);
+    DeveloperDto fromDeveloper(Developer developer);
 
     @Mapping(target = "games", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    Developer developerDtoToDeveloper(DeveloperDto developerDto);
+    Developer toDeveloper(DeveloperDto developerDto);
 }

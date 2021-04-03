@@ -4,11 +4,13 @@ import com.sparkystudios.traklibrary.game.domain.GameBarcode;
 import com.sparkystudios.traklibrary.game.repository.GameBarcodeRepository;
 import com.sparkystudios.traklibrary.game.service.dto.GameBarcodeDto;
 import com.sparkystudios.traklibrary.game.service.mapper.GameBarcodeMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.*;
+import org.mockito.ArgumentMatchers;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.MessageSource;
 
@@ -22,8 +24,8 @@ class GameBarcodeServiceImplTest {
     @Mock
     private GameBarcodeRepository gameBarcodeRepository;
 
-    @Spy
-    private final GameBarcodeMapper gameBarcodeMapper = GameMappers.GAME_BARCODE_MAPPER;
+    @Mock
+    private GameBarcodeMapper gameBarcodeMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -53,10 +55,16 @@ class GameBarcodeServiceImplTest {
         Mockito.when(gameBarcodeRepository.findByBarcode(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new GameBarcode()));
 
+        Mockito.when(gameBarcodeMapper.fromGameBarcode(ArgumentMatchers.any()))
+                .thenReturn(new GameBarcodeDto());
+
         // Act
         GameBarcodeDto result = gameBarcodeService.findByBarcode("barcode");
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null if the barcode was found.");
+
+        Mockito.verify(gameBarcodeMapper, Mockito.atMostOnce())
+                .fromGameBarcode(ArgumentMatchers.any());
     }
 }

@@ -48,8 +48,8 @@ class GameServiceImplTest {
     @Mock
     private PatchService patchService;
 
-    @Spy
-    private final GameMapper gameMapper = GameMappers.GAME_MAPPER;
+    @Mock
+    private GameMapper gameMapper;
 
     @Mock
     private MessageSource messageSource;
@@ -91,12 +91,18 @@ class GameServiceImplTest {
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
 
+        Mockito.when(gameMapper.toGame(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
         // Act
         gameService.save(gameDto);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -127,11 +133,17 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))
             .thenReturn(Optional.of(game));
 
+        Mockito.when(gameMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDto());
+
         // Act
         GameDto result = gameService.findById(0L);
 
         // Assert
         Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -166,7 +178,10 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -186,7 +201,10 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -260,6 +278,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -303,6 +324,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -337,7 +361,10 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -357,7 +384,10 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -431,6 +461,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -474,6 +507,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -508,7 +544,10 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -528,7 +567,10 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -602,6 +644,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -645,6 +690,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -679,7 +727,7 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -699,7 +747,7 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -773,6 +821,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -816,6 +867,9 @@ class GameServiceImplTest {
 
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -850,7 +904,7 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no games are returned.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -870,7 +924,7 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "The result should not be empty if games are returned.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -917,7 +971,7 @@ class GameServiceImplTest {
         Assertions.assertTrue(result.isEmpty(), "There should be no game dto's if no games were found.");
 
         Mockito.verify(gameMapper, Mockito.never())
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -934,7 +988,7 @@ class GameServiceImplTest {
         Assertions.assertFalse(result.isEmpty(), "There should be game dto's if games were found.");
 
         Mockito.verify(gameMapper, Mockito.atMost(2))
-                .gameToGameDto(ArgumentMatchers.any());
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -961,6 +1015,9 @@ class GameServiceImplTest {
 
         // Assert
         Assertions.assertTrue(result.isEmpty(), "The result should be empty if no pages game results were found.");
+
+        Mockito.verify(gameMapper, Mockito.never())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -980,6 +1037,9 @@ class GameServiceImplTest {
 
         // Assert
         Assertions.assertFalse(result.isEmpty(), "The result shouldn't be empty if the repository returned games.");
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -1036,12 +1096,18 @@ class GameServiceImplTest {
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
 
+        Mockito.when(gameMapper.toGame(ArgumentMatchers.any()))
+                .thenReturn(new Game());
+
         // Act
         gameService.update(gameDto);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -1087,6 +1153,9 @@ class GameServiceImplTest {
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
+
+        Mockito.verify(gameMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test

@@ -7,10 +7,11 @@ import com.sparkystudios.traklibrary.game.repository.GenreRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSearchSpecification;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySearchSpecification;
+import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameFiltersDto;
+import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryFiltersDto;
 import com.sparkystudios.traklibrary.game.service.mapper.GameDetailsMapper;
-import com.sparkystudios.traklibrary.game.service.mapper.GameMappers;
 import com.sparkystudios.traklibrary.game.service.mapper.GameUserEntryMapper;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -39,11 +40,11 @@ class GameFilterServiceImplTest {
     @Mock
     private GameUserEntryRepository gameUserEntryRepository;
 
-    @Spy
-    private GameDetailsMapper gameDetailsMapper = GameMappers.GAME_DETAILS_MAPPER;
+    @Mock
+    private GameDetailsMapper gameDetailsMapper;
 
-    @Spy
-    private GameUserEntryMapper gameUserEntryMapper = GameMappers.GAME_USER_ENTRY_MAPPER;
+    @Mock
+    private GameUserEntryMapper gameUserEntryMapper;
 
     @InjectMocks
     private GameFilterServiceImpl gameFilterService;
@@ -136,12 +137,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         gameFilterService.findGamesByFilters(null, genreIds, gameModes, ageRatings, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -158,12 +165,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -179,12 +192,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         gameFilterService.findGamesByFilters(platformIds, null, gameModes, ageRatings, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -201,12 +220,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -220,6 +245,9 @@ class GameFilterServiceImplTest {
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
 
+        Mockito.when(gameDetailsMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDetailsDto());
+
         // Act
         gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
 
@@ -229,6 +257,9 @@ class GameFilterServiceImplTest {
 
         Mockito.verify(genreRepository, Mockito.atMostOnce())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameDetailsMapper, Mockito.atMost(2))
+                .fromGame(ArgumentMatchers.any());
     }
 
     @Test
@@ -353,12 +384,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new GameUserEntry(), new GameUserEntry())));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
+
         // Act
         gameFilterService.findGameUserEntriesByFilters(null, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -376,12 +413,17 @@ class GameFilterServiceImplTest {
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new GameUserEntry(), new GameUserEntry())));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
         // Act
         gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -398,12 +440,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new GameUserEntry(), new GameUserEntry())));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
+
         // Act
         gameFilterService.findGameUserEntriesByFilters(platformIds, null, gameModes, ageRatings, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -421,12 +469,18 @@ class GameFilterServiceImplTest {
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new GameUserEntry(), new GameUserEntry())));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
+
         // Act
         gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
@@ -441,6 +495,9 @@ class GameFilterServiceImplTest {
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new GameUserEntry(), new GameUserEntry())));
 
+        Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
+                .thenReturn(new GameUserEntryDto());
+
         // Act
         gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
 
@@ -450,6 +507,9 @@ class GameFilterServiceImplTest {
 
         Mockito.verify(genreRepository, Mockito.atMostOnce())
                 .findAllById(ArgumentMatchers.anyIterable());
+
+        Mockito.verify(gameUserEntryMapper, Mockito.atMost(2))
+                .fromGameUserEntry(ArgumentMatchers.any());
     }
 
     @Test
