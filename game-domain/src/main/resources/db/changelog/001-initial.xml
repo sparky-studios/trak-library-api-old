@@ -23,6 +23,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="franchise_id" type="bigint" />
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_game_slug" />
+            </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -43,6 +46,9 @@
             </column>
             <column name="release_date" type="date" />
             <column name="game_id" type="bigint" />
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_dlc_slug" />
+            </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -91,6 +97,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_genre_slug" />
+            </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -146,6 +155,9 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_platform_slug" />
+            </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
@@ -334,6 +346,9 @@
             <column name="description" type="varchar(4096)"/>
             <column name="founded_date" type="date">
                 <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_company_slug" />
             </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
@@ -579,6 +594,9 @@
             <column name="description" type="varchar(4096)"/>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
+            </column>
+            <column name="slug" type="varchar(255)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="unq_franchise_slug" />
             </column>
             <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
