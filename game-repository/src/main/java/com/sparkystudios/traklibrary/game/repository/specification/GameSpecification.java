@@ -10,7 +10,8 @@ import org.springframework.data.jpa.domain.Specification;
 @And({
         @Spec(path = "id", spec = Equal.class),
         @Spec(path = "title", spec = StartingWithIgnoreCase.class),
-        @Spec(path = "ageRating", params = "age-rating", spec = Equal.class)
+        @Spec(path = "ageRating", params = "age-rating", spec = Equal.class),
+        @Spec(path = "slug", spec = StartingWithIgnoreCase.class)
 })
 public interface GameSpecification extends Specification<Game> {
 }

@@ -1,17 +1,27 @@
 package com.sparkystudios.traklibrary.game.repository;
 
-import com.sparkystudios.traklibrary.game.domain.*;
+import com.sparkystudios.traklibrary.game.domain.AgeRating;
+import com.sparkystudios.traklibrary.game.domain.Developer;
+import com.sparkystudios.traklibrary.game.domain.Game;
+import com.sparkystudios.traklibrary.game.domain.GameMode;
+import com.sparkystudios.traklibrary.game.domain.Genre;
+import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.domain.Publisher;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSearchSpecification;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.Optional;
 
+@ExtendWith(SpringExtension.class)
 @DataJpaTest
 class GameRepositoryTest {
 
@@ -709,5 +719,33 @@ class GameRepositoryTest {
 
         // Assert
         Assertions.assertThat(result).isNotZero();
+    }
+
+    @Test
+    void findBySlug_withNonExistentGame_returnsEmptyOptional() {
+        // Act
+        Optional<Game> result = gameRepository.findBySlug("test-slug");
+
+        // Assert
+        Assertions.assertThat(result).isNotPresent();
+    }
+
+    @Test
+    void findBySlug_withGame_returnsGame() {
+        // Arrange
+        Game game = new Game();
+        game.setTitle("test-title");
+        game.setDescription("test-description");
+        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
+        game = gameRepository.save(game);
+
+        // Act
+        Optional<Game> result = gameRepository.findBySlug("test-slug");
+
+        // Assert
+        Assertions.assertThat(result).isPresent()
+                .isEqualTo(Optional.of(game));
     }
 }
