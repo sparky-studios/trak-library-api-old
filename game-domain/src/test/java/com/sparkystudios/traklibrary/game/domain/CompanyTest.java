@@ -23,6 +23,7 @@ class CompanyTest {
         company.setName(null);
         company.setDescription("test-description");
         company.setFoundedDate(LocalDate.now());
+        company.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -36,6 +37,7 @@ class CompanyTest {
         company.setName(String.join("", Collections.nCopies(300, "t")));
         company.setDescription("test-description");
         company.setFoundedDate(LocalDate.now());
+        company.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -49,6 +51,7 @@ class CompanyTest {
         company.setName("test-name");
         company.setDescription(String.join("", Collections.nCopies(5000, "t")));
         company.setFoundedDate(LocalDate.now());
+        company.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -62,6 +65,35 @@ class CompanyTest {
         company.setName("test-name");
         company.setDescription("test-description");
         company.setFoundedDate(null);
+        company.setSlug("test-slug");
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(company));
+    }
+
+    @Test
+    void persist_withNullSlug_throwsPersistenceException() {
+        // Arrange
+        Company company = new Company();
+        company.setName("test-name");
+        company.setDescription("test-description");
+        company.setFoundedDate(LocalDate.now());
+        company.setSlug(null);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(company));
+    }
+
+    @Test
+    void persist_withSlugExceedingLength_throwsPersistenceException() {
+        // Arrange
+        Company company = new Company();
+        company.setName("test-name");
+        company.setDescription("test-description");
+        company.setFoundedDate(LocalDate.now());
+        company.setSlug(String.join("", Collections.nCopies(5000, "t")));
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -75,6 +107,7 @@ class CompanyTest {
         company.setName("test-name");
         company.setDescription("test-description");
         company.setFoundedDate(LocalDate.now());
+        company.setSlug("test-slug");
 
         // Act
         Company result = testEntityManager.persistFlushFind(company);
@@ -84,6 +117,7 @@ class CompanyTest {
         Assertions.assertThat(result.getName()).isEqualTo(company.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(company.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(company.getFoundedDate());
+        Assertions.assertThat(result.getSlug()).isEqualTo(company.getSlug());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();

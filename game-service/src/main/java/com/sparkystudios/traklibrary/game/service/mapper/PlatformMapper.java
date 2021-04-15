@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
+import com.github.slugify.Slugify;
 import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
 import org.mapstruct.AfterMapping;
@@ -25,5 +26,10 @@ public interface PlatformMapper {
     @AfterMapping
     default void afterMapping(@MappingTarget PlatformDto platformDto) {
         platformDto.setReleaseDates(new TreeSet<>(platformDto.getReleaseDates()));
+    }
+
+    @AfterMapping
+    default void afterMapping(@MappingTarget Platform platform) {
+        platform.setSlug(new Slugify().slugify(platform.getName()));
     }
 }

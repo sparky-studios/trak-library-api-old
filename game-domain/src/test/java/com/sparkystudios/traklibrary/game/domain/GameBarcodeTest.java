@@ -21,6 +21,7 @@ class GameBarcodeTest {
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -40,6 +41,7 @@ class GameBarcodeTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -59,11 +61,13 @@ class GameBarcodeTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -84,11 +88,13 @@ class GameBarcodeTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();
@@ -109,11 +115,13 @@ class GameBarcodeTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameBarcode gameBarcode = new GameBarcode();

@@ -35,6 +35,9 @@ public class Company {
     @Column(name = "founded_date", nullable = false)
     private LocalDate foundedDate;
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

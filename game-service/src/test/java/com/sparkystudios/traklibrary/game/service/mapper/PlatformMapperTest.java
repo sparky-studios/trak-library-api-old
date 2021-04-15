@@ -83,7 +83,7 @@ class PlatformMapperTest {
 
         PlatformDto platformDto = new PlatformDto();
         platformDto.setId(5L);
-        platformDto.setName("test-name");
+        platformDto.setName("Test Name");
         platformDto.setDescription("test-description");
         platformDto.setCreatedAt(LocalDateTime.now());
         platformDto.setUpdatedAt(LocalDateTime.now());
@@ -97,6 +97,7 @@ class PlatformMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(platformDto.getId());
         Assertions.assertThat(result.getName()).isEqualTo(platformDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(platformDto.getDescription());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-name");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(platformDto.getVersion());

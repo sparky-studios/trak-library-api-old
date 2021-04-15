@@ -25,6 +25,7 @@ class PlatformReleaseDateTest {
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform.addReleaseDate(platformReleaseDate);
 
         // Assert
@@ -42,6 +43,7 @@ class PlatformReleaseDateTest {
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform.addReleaseDate(platformReleaseDate);
 
         // Act

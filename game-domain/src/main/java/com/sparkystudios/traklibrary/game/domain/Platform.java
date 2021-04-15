@@ -40,6 +40,9 @@ public class Platform {
     @OneToMany(mappedBy = "platform", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
     private Set<PlatformReleaseDate> releaseDates = new TreeSet<>();
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

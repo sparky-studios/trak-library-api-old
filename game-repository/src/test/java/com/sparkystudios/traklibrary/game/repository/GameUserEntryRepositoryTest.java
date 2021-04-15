@@ -31,6 +31,7 @@ class GameUserEntryRepositoryTest {
         Genre genre = new Genre();
         genre.setName("genre-1");
         genre.setDescription("description");
+        genre.setSlug("test-slug");
         genre = genreRepository.save(genre);
 
         Game game = new Game();
@@ -38,17 +39,20 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre);
         game = gameRepository.save(game);
 
         Platform platform1 = new Platform();
         platform1.setName("platform-1");
         platform1.setDescription("description-1");
+        platform1.setSlug("test-slug-1");
         platform1 = platformRepository.save(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("platform-1");
         platform2.setDescription("description-1");
+        platform2.setSlug("test-slug-2");
         platform2 = platformRepository.save(platform2);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -76,11 +80,13 @@ class GameUserEntryRepositoryTest {
         Genre genre1 = new Genre();
         genre1.setName("genre-1");
         genre1.setDescription("description");
+        genre1.setSlug("test-slug-1");
         genre1 = genreRepository.save(genre1);
 
         Genre genre2 = new Genre();
         genre2.setName("genre-2");
         genre2.setDescription("description");
+        genre2.setSlug("test-slug-2");
         genre2 = genreRepository.save(genre2);
 
         Game game = new Game();
@@ -88,12 +94,14 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre1);
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("platform-1");
         platform.setDescription("description-1");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -121,6 +129,7 @@ class GameUserEntryRepositoryTest {
         Genre genre = new Genre();
         genre.setName("genre-1");
         genre.setDescription("description");
+        genre.setSlug("test-slug");
         genre = genreRepository.save(genre);
 
         Game game = new Game();
@@ -128,12 +137,14 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre);
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("platform-1");
         platform.setDescription("description-1");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -161,6 +172,7 @@ class GameUserEntryRepositoryTest {
         Genre genre = new Genre();
         genre.setName("genre-1");
         genre.setDescription("description");
+        genre.setSlug("test-slug");
         genre = genreRepository.save(genre);
 
         Game game = new Game();
@@ -168,12 +180,14 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre);
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("platform-1");
         platform.setDescription("description-1");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -201,6 +215,7 @@ class GameUserEntryRepositoryTest {
         Genre genre = new Genre();
         genre.setName("genre-1");
         genre.setDescription("description");
+        genre.setSlug("test-slug");
         genre = genreRepository.save(genre);
 
         Game game = new Game();
@@ -208,12 +223,14 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre);
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("platform-1");
         platform.setDescription("description-1");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -241,6 +258,7 @@ class GameUserEntryRepositoryTest {
         Genre genre = new Genre();
         genre.setName("genre-1");
         genre.setDescription("description");
+        genre.setSlug("test-slug");
         genre = genreRepository.save(genre);
 
         Game game = new Game();
@@ -248,12 +266,14 @@ class GameUserEntryRepositoryTest {
         game.setDescription("description");
         game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
+        game.setSlug("test-slug");
         game.addGenre(genre);
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("platform-1");
         platform.setDescription("description-1");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();

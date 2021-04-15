@@ -37,6 +37,7 @@ class GameImageRepositoryTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = gameRepository.save(game);
 
         GameImage gameImage = new GameImage();
@@ -68,6 +69,7 @@ class GameImageRepositoryTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = gameRepository.save(game);
 
         GameImage gameImage = new GameImage();

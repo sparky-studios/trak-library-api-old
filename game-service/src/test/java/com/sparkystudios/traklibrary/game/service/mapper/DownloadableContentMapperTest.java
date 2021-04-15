@@ -69,7 +69,7 @@ class DownloadableContentMapperTest {
         // Arrange
         DownloadableContentDto downloadableContentDto = new DownloadableContentDto();
         downloadableContentDto.setId(5L);
-        downloadableContentDto.setName("test-name");
+        downloadableContentDto.setName("Test Name");
         downloadableContentDto.setDescription("test-description");
         downloadableContentDto.setReleaseDate(LocalDate.now());
         downloadableContentDto.setCreatedAt(LocalDateTime.now());
@@ -84,6 +84,7 @@ class DownloadableContentMapperTest {
         Assertions.assertThat(result.getName()).isEqualTo(downloadableContentDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(downloadableContentDto.getDescription());
         Assertions.assertThat(result.getReleaseDate()).isEqualTo(downloadableContentDto.getReleaseDate());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-name");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(downloadableContentDto.getVersion());

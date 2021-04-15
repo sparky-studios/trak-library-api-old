@@ -25,6 +25,8 @@ public class DownloadableContentDto implements Comparable<DownloadableContentDto
 
     private LocalDate releaseDate;
 
+    private String slug;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

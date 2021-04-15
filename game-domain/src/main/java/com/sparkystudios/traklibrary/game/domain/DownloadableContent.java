@@ -49,6 +49,9 @@ public class DownloadableContent implements Comparable<DownloadableContent> {
     @Column(name = "release_date")
     private LocalDate releaseDate;
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

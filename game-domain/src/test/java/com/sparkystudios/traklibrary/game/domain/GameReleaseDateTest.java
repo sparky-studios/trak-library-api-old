@@ -26,6 +26,7 @@ class GameReleaseDateTest {
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate);
 
         // Assert
@@ -44,6 +45,7 @@ class GameReleaseDateTest {
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate);
 
         // Act

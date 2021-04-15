@@ -25,6 +25,7 @@ class GameTest {
         game.setTitle(null);
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -38,6 +39,7 @@ class GameTest {
         game.setTitle(String.join("", Collections.nCopies(300, "t")));
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -51,6 +53,7 @@ class GameTest {
         game.setTitle("test-title");
         game.setDescription(String.join("", Collections.nCopies(5000, "t")));
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -64,11 +67,41 @@ class GameTest {
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(null);
+        game.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
                 .isThrownBy(() -> testEntityManager.persistFlushFind(game));
     }
+
+    @Test
+    void persist_withNullSlug_throwsPersistenceException() {
+        // Arrange
+        Game game = new Game();
+        game.setTitle("test-title");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug(null);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(game));
+    }
+
+    @Test
+    void persist_withSlugExceedingLength_throwsPersistenceException() {
+        // Arrange
+        Game game = new Game();
+        game.setTitle("test-title");
+        game.setDescription("game-description-1");
+        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug(String.join("", Collections.nCopies(300, "t")));
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(game));
+    }
+
 
     @Test
     void persist_withValidGame_mapsGame() {
@@ -77,6 +110,7 @@ class GameTest {
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.getGameModes().add(GameMode.SINGLE_PLAYER);
         game.getGameModes().add(GameMode.MULTI_PLAYER);
 
@@ -89,6 +123,7 @@ class GameTest {
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
         Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
+        Assertions.assertThat(result.getSlug()).isEqualTo(game.getSlug());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
@@ -100,17 +135,20 @@ class GameTest {
         Genre genre1 = new Genre();
         genre1.setName("test-name-1");
         genre1.setDescription("test-description-1");
+        genre1.setSlug("test-slug-1");
         genre1 = testEntityManager.persistFlushFind(genre1);
 
         Genre genre2 = new Genre();
         genre2.setName("test-name-2");
         genre2.setDescription("test-description-2");
+        genre2.setSlug("test-slug-2");
         genre2 = testEntityManager.persistFlushFind(genre2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addGenre(genre1);
         game.addGenre(genre2);
 
@@ -127,17 +165,20 @@ class GameTest {
         Genre genre1 = new Genre();
         genre1.setName("test-name-1");
         genre1.setDescription("test-description-1");
+        genre1.setSlug("test-slug-1");
         genre1 = testEntityManager.persistFlushFind(genre1);
 
         Genre genre2 = new Genre();
         genre2.setName("test-name-2");
         genre2.setDescription("test-description-2");
+        genre2.setSlug("test-slug-2");
         genre2 = testEntityManager.persistFlushFind(genre2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addGenre(genre1);
         game.addGenre(genre2);
         game = testEntityManager.persistFlushFind(game);
@@ -159,17 +200,20 @@ class GameTest {
         Platform platform1 = new Platform();
         platform1.setName("test-name-1");
         platform1.setDescription("test-description-1");
+        platform1.setSlug("test-slug-1");
         platform1 = testEntityManager.persistFlushFind(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("test-name-2");
         platform2.setDescription("test-description-2");
+        platform2.setSlug("test-slug-2");
         platform2 = testEntityManager.persistFlushFind(platform2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addPlatform(platform1);
         game.addPlatform(platform2);
 
@@ -186,17 +230,20 @@ class GameTest {
         Platform platform1 = new Platform();
         platform1.setName("test-name-1");
         platform1.setDescription("test-description-1");
+        platform1.setSlug("test-slug-1");
         platform1 = testEntityManager.persistFlushFind(platform1);
 
         Platform platform2 = new Platform();
         platform2.setName("test-name-2");
         platform2.setDescription("test-description-2");
+        platform2.setSlug("test-slug-2");
         platform2 = testEntityManager.persistFlushFind(platform2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addPlatform(platform1);
         game.addPlatform(platform2);
         game = testEntityManager.persistFlushFind(game);
@@ -219,18 +266,21 @@ class GameTest {
         publisher1.setName("test-name-1");
         publisher1.setDescription("test-description-1");
         publisher1.setFoundedDate(LocalDate.now());
+        publisher1.setSlug("test-slug-1");
         publisher1 = testEntityManager.persistFlushFind(publisher1);
 
         Publisher publisher2 = new Publisher();
         publisher2.setName("test-name-2");
         publisher2.setDescription("test-description-2");
         publisher2.setFoundedDate(LocalDate.now());
+        publisher2.setSlug("test-slug-2");
         publisher2 = testEntityManager.persistFlushFind(publisher2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addPublisher(publisher1);
         game.addPublisher(publisher2);
 
@@ -248,18 +298,21 @@ class GameTest {
         publisher1.setName("test-name-1");
         publisher1.setDescription("test-description-1");
         publisher1.setFoundedDate(LocalDate.now());
+        publisher1.setSlug("test-slug-1");
         publisher1 = testEntityManager.persistFlushFind(publisher1);
 
         Publisher publisher2 = new Publisher();
         publisher2.setName("test-name-2");
         publisher2.setDescription("test-description-2");
         publisher2.setFoundedDate(LocalDate.now());
+        publisher2.setSlug("test-slug-2");
         publisher2 = testEntityManager.persistFlushFind(publisher2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addPublisher(publisher1);
         game.addPublisher(publisher2);
         game = testEntityManager.persistFlushFind(game);
@@ -282,18 +335,21 @@ class GameTest {
         developer1.setName("test-name-1");
         developer1.setDescription("test-description-1");
         developer1.setFoundedDate(LocalDate.now());
+        developer1.setSlug("test-slug-1");
         developer1 = testEntityManager.persistFlushFind(developer1);
 
         Developer developer2 = new Developer();
         developer2.setName("test-name-2");
         developer2.setDescription("test-description-2");
         developer2.setFoundedDate(LocalDate.now());
+        developer2.setSlug("test-slug-2");
         developer2 = testEntityManager.persistFlushFind(developer2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDeveloper(developer1);
         game.addDeveloper(developer2);
 
@@ -311,18 +367,21 @@ class GameTest {
         developer1.setName("test-name-1");
         developer1.setDescription("test-description-1");
         developer1.setFoundedDate(LocalDate.now());
+        developer1.setSlug("test-slug-1");
         developer1 = testEntityManager.persistFlushFind(developer1);
 
         Developer developer2 = new Developer();
         developer2.setName("test-name-2");
         developer2.setDescription("test-description-2");
         developer2.setFoundedDate(LocalDate.now());
+        developer2.setSlug("test-slug-2");
         developer2 = testEntityManager.persistFlushFind(developer2);
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDeveloper(developer1);
         game.addDeveloper(developer1);
         game = testEntityManager.persistFlushFind(game);
@@ -360,6 +419,7 @@ class GameTest {
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate1);
         game.addReleaseDate(gameReleaseDate2);
         game.addReleaseDate(gameReleaseDate3);
@@ -392,6 +452,7 @@ class GameTest {
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate1);
         game.addReleaseDate(gameReleaseDate2);
         game.addReleaseDate(gameReleaseDate3);
@@ -415,17 +476,20 @@ class GameTest {
         DownloadableContent downloadableContent1 = new DownloadableContent();
         downloadableContent1.setName("test-name-1");
         downloadableContent1.setDescription("test-description-1");
+        downloadableContent1.setSlug("test-slug-1");
         downloadableContent1.setReleaseDate(LocalDate.now());
 
         DownloadableContent downloadableContent2 = new DownloadableContent();
         downloadableContent2.setName("test-name-2");
         downloadableContent2.setDescription("test-description-2");
+        downloadableContent2.setSlug("test-slug-2");
         downloadableContent2.setReleaseDate(LocalDate.now());
 
         Game game = new Game();
         game.setTitle("game-title-1");
         game.setDescription("game-description-1");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent1);
         game.addDownloadableContent(downloadableContent2);
         game = testEntityManager.persistFlushFind(game);
@@ -445,17 +509,20 @@ class GameTest {
         DownloadableContent downloadableContent1 = new DownloadableContent();
         downloadableContent1.setName("test-name-1");
         downloadableContent1.setDescription("test-description-1");
+        downloadableContent1.setSlug("test-slug-1");
         downloadableContent1.setReleaseDate(LocalDate.now());
 
         DownloadableContent downloadableContent2 = new DownloadableContent();
         downloadableContent2.setName("test-name-2");
         downloadableContent2.setDescription("test-description-2");
+        downloadableContent2.setSlug("test-slug-2");
         downloadableContent2.setReleaseDate(LocalDate.now());
 
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent1);
         game.addDownloadableContent(downloadableContent2);
         game = testEntityManager.persistFlushFind(game);
@@ -477,12 +544,14 @@ class GameTest {
         Franchise franchise = new Franchise();
         franchise.setTitle("test-franchise");
         franchise.setDescription("test-franchise-description");
+        franchise.setSlug("test-slug");
         franchise = testEntityManager.persistFlushFind(franchise);
 
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.setFranchiseId(franchise.getId());
 
         // Act

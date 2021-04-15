@@ -66,7 +66,7 @@ class GenreMapperTest {
         // Arrange
         GenreDto genreDto = new GenreDto();
         genreDto.setId(5L);
-        genreDto.setName("test-name");
+        genreDto.setName("Test Name");
         genreDto.setDescription("test-description");
         genreDto.setCreatedAt(LocalDateTime.now());
         genreDto.setUpdatedAt(LocalDateTime.now());
@@ -79,6 +79,7 @@ class GenreMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(genreDto.getId());
         Assertions.assertThat(result.getName()).isEqualTo(genreDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(genreDto.getDescription());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-name");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(genreDto.getVersion());

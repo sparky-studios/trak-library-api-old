@@ -23,6 +23,7 @@ class PublisherTest {
         publisher.setName(null);
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -36,6 +37,7 @@ class PublisherTest {
         publisher.setName(String.join("", Collections.nCopies(300, "t")));
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -49,6 +51,7 @@ class PublisherTest {
         publisher.setName("test-name");
         publisher.setDescription(String.join("", Collections.nCopies(5000, "t")));
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -62,6 +65,35 @@ class PublisherTest {
         publisher.setName("test-name");
         publisher.setDescription("test-description");
         publisher.setFoundedDate(null);
+        publisher.setSlug("test-slug");
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(publisher));
+    }
+
+    @Test
+    void persist_withNullSlug_throwsPersistenceException() {
+        // Arrange
+        Publisher publisher = new Publisher();
+        publisher.setName("test-name");
+        publisher.setDescription("test-description");
+        publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug(null);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(publisher));
+    }
+
+    @Test
+    void persist_withSlugExceedingLength_throwsPersistenceException() {
+        // Arrange
+        Publisher publisher = new Publisher();
+        publisher.setName("test-name");
+        publisher.setDescription("test-description");
+        publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug(String.join("", Collections.nCopies(300, "t")));
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -75,6 +107,7 @@ class PublisherTest {
         publisher.setName("test-name");
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
 
         // Act
         Publisher result = testEntityManager.persistFlushFind(publisher);
@@ -96,18 +129,21 @@ class PublisherTest {
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game1.setSlug("test-slug-1");
         game1 = testEntityManager.persistFlushFind(game1);
 
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
+        game2.setSlug("test-slug-2");
         game2 = testEntityManager.persistFlushFind(game2);
 
         Publisher publisher = new Publisher();
         publisher.setName("test-name");
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
         publisher.addGame(game1);
         publisher.addGame(game2);
 
@@ -125,18 +161,21 @@ class PublisherTest {
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game1.setSlug("test-slug-1");
         game1 = testEntityManager.persistFlushFind(game1);
 
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
+        game2.setSlug("test-slug-2");
         game2 = testEntityManager.persistFlushFind(game2);
 
         Publisher publisher = new Publisher();
         publisher.setName("test-name");
         publisher.setDescription("test-description");
         publisher.setFoundedDate(LocalDate.now());
+        publisher.setSlug("test-slug");
         publisher.addGame(game1);
         publisher.addGame(game2);
         publisher = testEntityManager.persistFlushFind(publisher);
