@@ -1,13 +1,13 @@
 package com.sparkystudios.traklibrary.game.repository;
 
-import org.springframework.boot.SpringBootConfiguration;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-@SpringBootConfiguration
-@EnableAutoConfiguration
+@SpringBootApplication
 @EntityScan("com.sparkystudios.traklibrary.game.domain")
+@EnableJpaRepositories(basePackages = {"com.sparkystudios.traklibrary.game.repository"})
 @EnableJpaAuditing
 public class GameRepositoryTestConfiguration {
 }
