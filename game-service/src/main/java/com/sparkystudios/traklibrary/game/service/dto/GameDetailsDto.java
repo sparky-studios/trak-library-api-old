@@ -29,6 +29,8 @@ public class GameDetailsDto {
 
     private Long franchiseId;
 
+    private String slug;
+
     private Long version;
 
     private Set<PlatformDto> platforms;

@@ -66,7 +66,7 @@ class FranchiseMapperTest {
         // Arrange
         FranchiseDto franchiseDto = new FranchiseDto();
         franchiseDto.setId(5L);
-        franchiseDto.setTitle("test-title");
+        franchiseDto.setTitle("Test Title");
         franchiseDto.setDescription("test-description");
         franchiseDto.setCreatedAt(LocalDateTime.now());
         franchiseDto.setUpdatedAt(LocalDateTime.now());
@@ -79,6 +79,7 @@ class FranchiseMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(franchiseDto.getId());
         Assertions.assertThat(result.getTitle()).isEqualTo(franchiseDto.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(franchiseDto.getDescription());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-title");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(franchiseDto.getVersion());

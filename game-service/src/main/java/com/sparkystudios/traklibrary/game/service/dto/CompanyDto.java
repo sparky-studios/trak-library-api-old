@@ -22,6 +22,8 @@ public abstract class CompanyDto {
     @NotNull(message = "{company.validation.founded-date.not-null}")
     private LocalDate foundedDate;
 
+    private String slug;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

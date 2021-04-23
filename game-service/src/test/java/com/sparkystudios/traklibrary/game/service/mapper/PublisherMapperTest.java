@@ -69,7 +69,7 @@ class PublisherMapperTest {
         // Arrange
         PublisherDto publisherDto = new PublisherDto();
         publisherDto.setId(5L);
-        publisherDto.setName("test-name");
+        publisherDto.setName("Test Name");
         publisherDto.setDescription("test-description");
         publisherDto.setFoundedDate(LocalDate.now());
         publisherDto.setCreatedAt(LocalDateTime.now());
@@ -84,6 +84,7 @@ class PublisherMapperTest {
         Assertions.assertThat(result.getName()).isEqualTo(publisherDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(publisherDto.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(publisherDto.getFoundedDate());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-name");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(publisherDto.getVersion());

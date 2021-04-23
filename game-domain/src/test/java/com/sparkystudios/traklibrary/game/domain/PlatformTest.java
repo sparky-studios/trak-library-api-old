@@ -22,6 +22,7 @@ class PlatformTest {
         Platform platform = new Platform();
         platform.setName(null);
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -34,6 +35,7 @@ class PlatformTest {
         Platform platform = new Platform();
         platform.setName(String.join("", Collections.nCopies(300, "t")));
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -46,6 +48,33 @@ class PlatformTest {
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription(String.join("", Collections.nCopies(5000, "t")));
+        platform.setSlug("test-slug");
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(platform));
+    }
+
+    @Test
+    void persist_withNullSlug_throwsPersistenceException() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("test-name");
+        platform.setDescription("test-description");
+        platform.setSlug(null);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(platform));
+    }
+
+    @Test
+    void persist_withSlugExceedingLength_throwsPersistenceException() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setName("test-name");
+        platform.setDescription("test-description");
+        platform.setSlug(String.join("", Collections.nCopies(300, "t")));
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -58,6 +87,7 @@ class PlatformTest {
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
 
         // Act
         Platform result = testEntityManager.persistFlushFind(platform);
@@ -78,17 +108,20 @@ class PlatformTest {
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game1.setSlug("test-slug-1");
         game1 = testEntityManager.persistFlushFind(game1);
 
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
+        game2.setSlug("test-slug-2");
         game2 = testEntityManager.persistFlushFind(game2);
 
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform.addGame(game1);
         platform.addGame(game2);
 
@@ -106,17 +139,20 @@ class PlatformTest {
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
         game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game1.setSlug("test-slug-1");
         game1 = testEntityManager.persistFlushFind(game1);
 
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
         game2.setAgeRating(AgeRating.ADULTS_ONLY);
+        game2.setSlug("test-slug-2");
         game2 = testEntityManager.persistFlushFind(game2);
 
         Platform platform = new Platform();
         platform.setName("test-name");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform.addGame(game1);
         platform.addGame(game2);
         platform = testEntityManager.persistFlushFind(platform);

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface GameRepository extends PagingAndSortingRepository<Game, Long>, JpaSpecificationExecutor<Game> {
 
@@ -29,4 +31,6 @@ public interface GameRepository extends PagingAndSortingRepository<Game, Long>, 
     Page<Game> findByPlatformsId(long platformId, Pageable pageable);
 
     long countByPlatformsId(long platformId);
+
+    Optional<Game> findBySlug(String slug);
 }

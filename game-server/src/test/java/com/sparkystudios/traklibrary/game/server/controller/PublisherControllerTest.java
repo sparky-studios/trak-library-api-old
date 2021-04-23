@@ -91,6 +91,7 @@ class PublisherControllerTest {
         publisherDto.setId(5L);
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
+        publisherDto.setSlug("test-slug");
         publisherDto.setFoundedDate(LocalDate.now());
         publisherDto.setCreatedAt(LocalDateTime.now());
         publisherDto.setUpdatedAt(LocalDateTime.now());
@@ -119,6 +120,7 @@ class PublisherControllerTest {
         publisherDto.setId(5L);
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
+        publisherDto.setSlug("test-slug");
         publisherDto.setFoundedDate(LocalDate.now());
         publisherDto.setCreatedAt(LocalDateTime.now());
         publisherDto.setUpdatedAt(LocalDateTime.now());
@@ -129,6 +131,33 @@ class PublisherControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/publishers/1")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ResponseVerifier.verifyPublisherDto("", resultActions, publisherDto);
+    }
+
+    @Test
+    void findBySlug_withValidSlug_return200AndValidResponse() throws Exception {
+        // Arrange
+        PublisherDto publisherDto = new PublisherDto();
+        publisherDto.setId(5L);
+        publisherDto.setName("test-name");
+        publisherDto.setDescription("test-description");
+        publisherDto.setSlug("test-slug");
+        publisherDto.setFoundedDate(LocalDate.now());
+        publisherDto.setCreatedAt(LocalDateTime.now());
+        publisherDto.setUpdatedAt(LocalDateTime.now());
+        publisherDto.setVersion(1L);
+
+        Mockito.when(publisherService.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(publisherDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/publishers/slug/test-slug")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -173,6 +202,7 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -182,6 +212,7 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -220,6 +251,7 @@ class PublisherControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -229,6 +261,7 @@ class PublisherControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -294,6 +327,7 @@ class PublisherControllerTest {
         publisherDto1.setName("test-publisher-1");
         publisherDto1.setDescription("test-description-1");
         publisherDto1.setFoundedDate(LocalDate.now());
+        publisherDto1.setSlug("test-slug-1");
         publisherDto1.setCreatedAt(LocalDateTime.now());
         publisherDto1.setUpdatedAt(LocalDateTime.now());
         publisherDto1.setVersion(1L);
@@ -303,6 +337,7 @@ class PublisherControllerTest {
         publisherDto2.setName("test-publisher-2");
         publisherDto2.setDescription("test-description-2");
         publisherDto2.setFoundedDate(LocalDate.now());
+        publisherDto2.setSlug("test-slug-2");
         publisherDto2.setCreatedAt(LocalDateTime.now());
         publisherDto2.setUpdatedAt(LocalDateTime.now());
         publisherDto2.setVersion(2L);
@@ -341,6 +376,7 @@ class PublisherControllerTest {
         publisherDto1.setName("test-publisher-1");
         publisherDto1.setDescription("test-description-1");
         publisherDto1.setFoundedDate(LocalDate.now());
+        publisherDto1.setSlug("test-slug-1");
         publisherDto1.setCreatedAt(LocalDateTime.now());
         publisherDto1.setUpdatedAt(LocalDateTime.now());
         publisherDto1.setVersion(1L);
@@ -350,6 +386,7 @@ class PublisherControllerTest {
         publisherDto2.setName("test-publisher-2");
         publisherDto2.setDescription("test-description-2");
         publisherDto2.setFoundedDate(LocalDate.now());
+        publisherDto2.setSlug("test-slug-2");
         publisherDto2.setCreatedAt(LocalDateTime.now());
         publisherDto2.setUpdatedAt(LocalDateTime.now());
         publisherDto2.setVersion(2L);
@@ -404,6 +441,7 @@ class PublisherControllerTest {
         publisherDto.setId(5L);
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
+        publisherDto.setSlug("test-slug");
         publisherDto.setFoundedDate(LocalDate.now());
         publisherDto.setCreatedAt(LocalDateTime.now());
         publisherDto.setUpdatedAt(LocalDateTime.now());
@@ -432,6 +470,7 @@ class PublisherControllerTest {
         publisherDto.setId(5L);
         publisherDto.setName("test-name");
         publisherDto.setDescription("test-description");
+        publisherDto.setSlug("test-slug");
         publisherDto.setFoundedDate(LocalDate.now());
         publisherDto.setCreatedAt(LocalDateTime.now());
         publisherDto.setUpdatedAt(LocalDateTime.now());

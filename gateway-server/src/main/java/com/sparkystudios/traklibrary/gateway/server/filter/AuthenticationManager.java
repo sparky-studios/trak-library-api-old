@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.gateway.server.filter;
 
 import com.google.common.base.Strings;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -24,11 +23,11 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
     public Mono<Authentication> authenticate(Authentication authentication) {
 
         // Get the current credentials, which should be the JWT at this stage.
-        String token = authentication.getCredentials().toString();
+        var token = authentication.getCredentials().toString();
 
         try {
             // Validate the token.
-            Claims claims = Jwts.parser()
+            var claims = Jwts.parser()
                     .setSigningKey(secretKey.getBytes())
                     .parseClaimsJws(token)
                     .getBody();
@@ -43,13 +42,13 @@ public class AuthenticationManager implements ReactiveAuthenticationManager {
                         .collect(Collectors.toList());
 
                 // Create the authenticated user, which stores some details about the user that made the request.
-                AuthenticatedUserDto authenticatedUserDto = new AuthenticatedUserDto();
+                var authenticatedUserDto = new AuthenticatedUserDto();
                 authenticatedUserDto.setUserId(claims.get("userId", Long.class));
                 authenticatedUserDto.setVerified(claims.get("verified", Boolean.class));
                 authenticatedUserDto.setToken(token);
 
                 // Create the authenticated object, which includes the username and the authorities associated with the user.
-                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
+                var auth = new UsernamePasswordAuthenticationToken(username, null, authorities);
                 auth.setDetails(authenticatedUserDto);
 
                 // Authentication the user.

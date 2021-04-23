@@ -81,6 +81,22 @@ public class GenreController {
     }
 
     /**
+     * End-point that will retrieve a {@link GenreDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link GenreDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link GenreDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link GenreDto} to retrieve.
+     *
+     * @return The {@link GenreDto} that matches the given ID as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}")
+    public EntityModel<GenreDto> findBySlug(@PathVariable String slug) {
+        return genreRepresentationModelAssembler.toModel(genreService.findBySlug(slug));
+    }
+
+    /**
      * End-point that will retrieve a {@link PagedModel} of {@link GameDto}s that have a link to the specified
      * {@link GenreDto}. If the ID doesn't match an existing {@link GenreDto}, then an {@link ApiError} will be
      * returned with additional error details. If the {@link GenreDto} exists but has no associated
@@ -98,7 +114,7 @@ public class GenreController {
                                                                @PageableDefault Pageable pageable,
                                                                PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -132,7 +148,7 @@ public class GenreController {
                                                                             @PageableDefault Pageable pageable,
                                                                             PagedResourcesAssembler<GameDetailsDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -169,7 +185,7 @@ public class GenreController {
                                                     @PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GenreDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

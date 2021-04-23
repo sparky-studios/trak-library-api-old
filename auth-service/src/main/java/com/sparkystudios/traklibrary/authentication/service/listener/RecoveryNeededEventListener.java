@@ -22,7 +22,7 @@ public class RecoveryNeededEventListener implements ApplicationListener<OnRecove
         String recoveryToken = userService.createRecoveryToken(onRecoveryNeededEvent.getUsername());
         // Only send the recovery token email if a new valid token has been created.
         if (!Strings.isNullOrEmpty(recoveryToken)) {
-            EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+            var emailRecoveryRequestDto = new EmailRecoveryRequestDto();
             emailRecoveryRequestDto.setEmailAddress(onRecoveryNeededEvent.getEmailAddress());
             emailRecoveryRequestDto.setRecoveryToken(recoveryToken);
 

@@ -21,6 +21,8 @@ public class GenreDto implements Comparable<GenreDto> {
     @Size(max = 4096, message = "{genre.validation.description.size}")
     private String description;
 
+    private String slug;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

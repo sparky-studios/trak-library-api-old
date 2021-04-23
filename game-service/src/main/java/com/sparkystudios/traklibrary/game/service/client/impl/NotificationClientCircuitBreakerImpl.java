@@ -37,7 +37,7 @@ public class NotificationClientCircuitBreakerImpl implements NotificationClient 
     @Override
     public void send(long userId, String title, String content) {
         // Ensure we specify the authentication in the headers.
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
         httpHeaders.setBearerAuth(authenticationService.getToken());
 
@@ -46,8 +46,8 @@ public class NotificationClientCircuitBreakerImpl implements NotificationClient 
                 = new HttpEntity<>(null, httpHeaders);
 
         // Encode the title and message to UTF-8 to prevent any issues with string being passed as request parameters.
-        String encodedTitle = StringUtils.newStringUtf8(title.getBytes());
-        String encodedContent = StringUtils.newStringUtf8(content.getBytes());
+        var encodedTitle = StringUtils.newStringUtf8(title.getBytes());
+        var encodedContent = StringUtils.newStringUtf8(content.getBytes());
 
         // Send the request using the circuit breaker pattern.
         notificationServerCircuitBreaker.run(() ->

@@ -28,10 +28,10 @@ public class NotificationServerSecurityConfigurerAdapter extends WebSecurityConf
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        SkipPathRequestMatcher skipPathRequestMatcher =
+        var skipPathRequestMatcher =
                 new SkipPathRequestMatcher(Collections.singletonList(new AntPathRequestMatcher("/non-existent-path")), "/**");
 
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
+        var jwtAuthenticationProcessingFilter =
                 new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http

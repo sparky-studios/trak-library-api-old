@@ -79,7 +79,7 @@ class GameMapperTest {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
-        gameDto.setTitle("test-title");
+        gameDto.setTitle("Test Title");
         gameDto.setDescription("test-description");
         gameDto.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         gameDto.getGameModes().add(GameMode.MULTI_PLAYER);
@@ -100,6 +100,7 @@ class GameMapperTest {
         Assertions.assertThat(result.getAgeRating()).isEqualTo(gameDto.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(gameDto.getGameModes());
         Assertions.assertThat(result.getFranchiseId()).isEqualTo(gameDto.getFranchiseId());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-title");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(gameDto.getVersion());

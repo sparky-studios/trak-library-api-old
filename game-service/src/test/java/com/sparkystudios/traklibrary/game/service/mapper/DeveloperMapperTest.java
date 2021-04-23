@@ -69,7 +69,7 @@ class DeveloperMapperTest {
         // Arrange
         DeveloperDto developerDto = new DeveloperDto();
         developerDto.setId(5L);
-        developerDto.setName("test-name");
+        developerDto.setName("Test Name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
         developerDto.setCreatedAt(LocalDateTime.now());
@@ -84,6 +84,7 @@ class DeveloperMapperTest {
         Assertions.assertThat(result.getName()).isEqualTo(developerDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(developerDto.getDescription());
         Assertions.assertThat(result.getFoundedDate()).isEqualTo(developerDto.getFoundedDate());
+        Assertions.assertThat(result.getSlug()).isEqualTo("test-name");
         Assertions.assertThat(result.getCreatedAt()).isNull();
         Assertions.assertThat(result.getUpdatedAt()).isNull();
         Assertions.assertThat(result.getVersion()).isEqualTo(developerDto.getVersion());

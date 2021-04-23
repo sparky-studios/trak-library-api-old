@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.Game;
-import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.repository.GameRepository;
 import com.sparkystudios.traklibrary.game.repository.PlatformRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
@@ -49,7 +48,7 @@ public class PlatformServiceImpl implements PlatformService {
             throw new EntityExistsException(errorMessage);
         }
 
-        Platform platform = platformMapper.toPlatform(platformDto);
+        var platform = platformMapper.toPlatform(platformDto);
         platform.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setPlatform(platform));
 
         return platformMapper.fromPlatform(platformRepository.save(platform));
@@ -59,9 +58,19 @@ public class PlatformServiceImpl implements PlatformService {
     @Transactional(readOnly = true)
     public PlatformDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return platformMapper.fromPlatform(platformRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PlatformDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return platformMapper.fromPlatform(platformRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -108,12 +117,12 @@ public class PlatformServiceImpl implements PlatformService {
 
         if (!platformRepository.existsById(platformDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { platformDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", platformDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        Platform platform = platformMapper.toPlatform(platformDto);
+        var platform = platformMapper.toPlatform(platformDto);
         platform.getReleaseDates().forEach(platformReleaseDate -> platformReleaseDate.setPlatform(platform));
 
         return platformMapper.fromPlatform(platformRepository.save(platform));
@@ -133,7 +142,7 @@ public class PlatformServiceImpl implements PlatformService {
     public void deleteById(long id) {
         if (!platformRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

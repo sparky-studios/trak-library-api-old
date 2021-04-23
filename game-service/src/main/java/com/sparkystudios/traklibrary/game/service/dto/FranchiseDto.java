@@ -19,6 +19,8 @@ public class FranchiseDto {
 
     private String description;
 
+    private String slug;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

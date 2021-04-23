@@ -23,6 +23,8 @@ public class PlatformDto implements Comparable<PlatformDto> {
     @Size(max = 4096, message = "{platform.validation.description.size}")
     private String description;
 
+    private String slug;
+
     private Long version;
 
     private LocalDateTime createdAt;

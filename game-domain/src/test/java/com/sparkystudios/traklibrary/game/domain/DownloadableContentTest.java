@@ -23,11 +23,13 @@ class DownloadableContentTest {
         downloadableContent.setName(null);
         downloadableContent.setDescription("test-description");
         downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug("test-slug");
 
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
         // Assert
@@ -42,11 +44,13 @@ class DownloadableContentTest {
         downloadableContent.setName(String.join("", Collections.nCopies(300, "t")));
         downloadableContent.setDescription("test-description");
         downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug("test-slug");
 
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
         // Assert
@@ -61,11 +65,13 @@ class DownloadableContentTest {
         downloadableContent.setName("test-name");
         downloadableContent.setDescription(null);
         downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug("test-slug");
 
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
         // Assert
@@ -81,11 +87,56 @@ class DownloadableContentTest {
         downloadableContent.setName("test-name");
         downloadableContent.setDescription(String.join("", Collections.nCopies(5000, "t")));
         downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug("test-slug");
 
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
+        game.addDownloadableContent(downloadableContent);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(game));
+    }
+
+    @Test
+    void persist_withNullSlug_throwsPersistenceException() {
+        // Arrange
+        DownloadableContent downloadableContent = new DownloadableContent();
+        downloadableContent.setName("test-name");
+        downloadableContent.setDescription("test-description");
+        downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug(null);
+
+        Game game = new Game();
+        game.setTitle("test-title");
+        game.setDescription("test-description");
+        game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
+        game.addDownloadableContent(downloadableContent);
+
+        // Assert
+        Assertions.assertThatExceptionOfType(PersistenceException.class)
+                .isThrownBy(() -> testEntityManager.persistFlushFind(game));
+    }
+
+
+    @Test
+    void persist_withSlugExceedingLength_throwsPersistenceException() {
+        // Arrange
+        DownloadableContent downloadableContent = new DownloadableContent();
+        downloadableContent.setName("test-name");
+        downloadableContent.setDescription("test-description");
+        downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug(String.join("", Collections.nCopies(5000, "t")));
+
+        Game game = new Game();
+        game.setTitle("test-title");
+        game.setDescription("test-description");
+        game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
         // Assert
@@ -100,11 +151,13 @@ class DownloadableContentTest {
         downloadableContent.setName("test-name");
         downloadableContent.setDescription("test-description");
         downloadableContent.setReleaseDate(LocalDate.now());
+        downloadableContent.setSlug("test-slug");
 
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
         game.setAgeRating(AgeRating.MATURE);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
         // Act
@@ -115,7 +168,8 @@ class DownloadableContentTest {
         Assertions.assertThat(result.getId()).isPositive();
         Assertions.assertThat(result.getName()).isEqualTo(downloadableContent.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(downloadableContent.getDescription());
-        Assertions.assertThat(result.getReleaseDate()).isEqualTo(result.getReleaseDate());
+        Assertions.assertThat(result.getReleaseDate()).isEqualTo(downloadableContent.getReleaseDate());
+        Assertions.assertThat(result.getSlug()).isEqualTo(downloadableContent.getSlug());
         Assertions.assertThat(result.getGame().getId())
                 .isEqualTo(game.getId());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();

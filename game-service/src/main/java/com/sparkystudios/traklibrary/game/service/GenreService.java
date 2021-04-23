@@ -53,6 +53,19 @@ public interface GenreService {
     GenreDto findById(long id);
 
     /**
+     * Given a slug of a {@link Genre} entity, this service method will query the underlying persistence layer and try and
+     * retrieve the {@link Genre} entity that matches the given slug and map it to a {@link GenreDto}. If the slug provided does not
+     * map to any known {@link Genre} entity, then an exception will be thrown specifying that it can't be found.
+     *
+     * @param slug The slug of the {@link Genre} entity to try and retrieve.
+     *
+     * @return The {@link Genre} entity matching the slug mapped to a {@link GenreDto}.
+     *
+     * @throws javax.persistence.EntityNotFoundException Thrown if the ID doesn't match an existing {@link Genre}.
+     */
+    GenreDto findBySlug(String slug);
+
+    /**
      * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Genre}s entities that are associated
      * with this {@link Game}, which is mapped by a reference table. If no {@link Genre}s are associated with a given
      * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a

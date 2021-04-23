@@ -21,12 +21,14 @@ class GameUserEntryDownloadableContentTest {
         DownloadableContent downloadableContent = new DownloadableContent();
         downloadableContent.setName("test-name-1");
         downloadableContent.setDescription("test-description-1");
+        downloadableContent.setSlug("test-slug");
         downloadableContent.setReleaseDate(LocalDate.now());
 
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
         game = testEntityManager.persistFlushFind(game);
 
@@ -46,6 +48,7 @@ class GameUserEntryDownloadableContentTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         GameUserEntry gameUserEntry = new GameUserEntry();
@@ -70,12 +73,14 @@ class GameUserEntryDownloadableContentTest {
         DownloadableContent downloadableContent = new DownloadableContent();
         downloadableContent.setName("test-name-1");
         downloadableContent.setDescription("test-description-1");
+        downloadableContent.setSlug("test-slug");
         downloadableContent.setReleaseDate(LocalDate.now());
 
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
         game = testEntityManager.persistFlushFind(game);
 

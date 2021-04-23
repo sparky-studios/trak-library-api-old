@@ -55,9 +55,19 @@ public class DeveloperServiceImpl implements DeveloperService {
     @Transactional(readOnly = true)
     public DeveloperDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return developerMapper.fromDeveloper(developerRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public DeveloperDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return developerMapper.fromDeveloper(developerRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -67,7 +77,7 @@ public class DeveloperServiceImpl implements DeveloperService {
         // Get the game as the developers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
 
-        if (!game.isPresent()) {
+        if (game.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
@@ -104,7 +114,7 @@ public class DeveloperServiceImpl implements DeveloperService {
 
         if (!developerRepository.existsById(companyDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { companyDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", companyDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -126,7 +136,7 @@ public class DeveloperServiceImpl implements DeveloperService {
     public void deleteById(long id) {
         if (!developerRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

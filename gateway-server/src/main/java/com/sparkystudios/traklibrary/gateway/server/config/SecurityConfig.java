@@ -32,8 +32,8 @@ public class SecurityConfig {
     @Bean
     SecurityWebFilterChain jwtSecurityWebFilterChain(ServerHttpSecurity http) {
 
-        AuthenticationManager authenticationManager = new AuthenticationManager(secretKey);
-        SecurityContextRepository securityContextRepository = new SecurityContextRepository(authenticationManager);
+        var authenticationManager = new AuthenticationManager(secretKey);
+        var securityContextRepository = new SecurityContextRepository(authenticationManager);
 
         http
                 .securityMatcher(ServerWebExchangeMatchers.pathMatchers("/auth/**", "/games/**", "/images/**", "/notifications/**"))

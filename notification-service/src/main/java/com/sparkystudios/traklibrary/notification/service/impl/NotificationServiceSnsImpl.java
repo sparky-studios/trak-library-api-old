@@ -31,7 +31,7 @@ public class NotificationServiceSnsImpl implements NotificationService {
 
         for (MobileDeviceLink mobileDeviceLink : mobileDeviceLinks) {
             // Create the push notification.
-            PublishRequest publishRequest = new PublishRequest()
+            var publishRequest = new PublishRequest()
                     .withSubject(title)
                     .withMessage(message)
                     .withTargetArn(mobileDeviceLink.getEndpointArn());

@@ -143,6 +143,47 @@ class PlatformServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(platformRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> platformService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidPlatform_returnsPlatformDto() {
+        // Arrange
+        Platform platform = new Platform();
+        platform.setId(1L);
+        platform.setName("test-name");
+        platform.setDescription("test-description");
+        platform.setVersion(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(platformRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(platform));
+
+        Mockito.when(platformMapper.fromPlatform(ArgumentMatchers.any()))
+                .thenReturn(new PlatformDto());
+
+        // Act
+        PlatformDto result = platformService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(platformMapper, Mockito.atMostOnce())
+                .fromPlatform(ArgumentMatchers.any());
+    }
+
+    @Test
     void findPlatformsByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))

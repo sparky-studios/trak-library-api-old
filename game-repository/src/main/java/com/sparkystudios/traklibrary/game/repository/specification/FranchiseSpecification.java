@@ -9,7 +9,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 @And({
         @Spec(path = "id", spec = Equal.class),
-        @Spec(path = "title", spec = StartingWithIgnoreCase.class)
+        @Spec(path = "title", spec = StartingWithIgnoreCase.class),
+        @Spec(path = "slug", spec = StartingWithIgnoreCase.class)
 })
 public interface FranchiseSpecification extends Specification<Franchise> {
 }

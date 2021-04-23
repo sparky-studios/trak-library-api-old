@@ -24,7 +24,7 @@ public class MobileDeviceLinkListener {
         log.info("Deleting AWS endpoint: " + event.getEndpointArn());
 
         try {
-            DeleteEndpointRequest deleteEndpointRequest = new DeleteEndpointRequest()
+            var deleteEndpointRequest = new DeleteEndpointRequest()
                     .withEndpointArn(event.getEndpointArn());
 
             amazonSNS.deleteEndpoint(deleteEndpointRequest);

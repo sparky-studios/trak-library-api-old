@@ -77,6 +77,22 @@ public class FranchiseController {
     }
 
     /**
+     * End-point that will retrieve a {@link FranchiseDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link FranchiseDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link FranchiseDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link FranchiseDto} to retrieve.
+     *
+     * @return The {@link FranchiseDto} that matches the given slug as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}")
+    public EntityModel<FranchiseDto> findBySlug(@PathVariable String slug) {
+        return franchiseRepresentationModelAssembler.toModel(franchiseService.findBySlug(slug));
+    }
+
+    /**
      * End-point that will retrieve a {@link PagedModel} of {@link GameDto}s that have a link to the specified
      * {@link FranchiseDto}. If the ID doesn't match an existing {@link FranchiseDto}, then an {@link ApiError} will be
      * returned with additional error details. If the {@link FranchiseDto} exists but has no associated
@@ -94,7 +110,7 @@ public class FranchiseController {
                                                                    @PageableDefault Pageable pageable,
                                                                    PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -131,7 +147,7 @@ public class FranchiseController {
                                                          @PageableDefault Pageable pageable,
                                                          PagedResourcesAssembler<FranchiseDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

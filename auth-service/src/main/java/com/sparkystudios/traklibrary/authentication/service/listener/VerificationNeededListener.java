@@ -22,7 +22,7 @@ public class VerificationNeededListener implements ApplicationListener<OnVerific
         String verificationCode = userService.createVerificationCode(onVerificationNeededEvent.getUsername());
         // Only send a new email if a new valid has been created.
         if (!Strings.isNullOrEmpty(verificationCode)) {
-            EmailVerificationRequestDto emailVerificationRequestDto = new EmailVerificationRequestDto();
+            var emailVerificationRequestDto = new EmailVerificationRequestDto();
             emailVerificationRequestDto.setEmailAddress(onVerificationNeededEvent.getEmailAddress());
             emailVerificationRequestDto.setVerificationCode(verificationCode);
 

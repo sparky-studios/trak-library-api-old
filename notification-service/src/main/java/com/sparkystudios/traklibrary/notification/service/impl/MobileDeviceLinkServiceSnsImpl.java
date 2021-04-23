@@ -94,7 +94,7 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
 
         // Once the information has been generated in AWS, we need to keep a reference so that push
         // notifications can be dispatched to the devices.
-        MobileDeviceLink mobileDeviceLink = existingDeviceLink.orElse(new MobileDeviceLink());
+        var mobileDeviceLink = existingDeviceLink.orElse(new MobileDeviceLink());
         mobileDeviceLink.setUserId(mobileDeviceLinkRegistrationRequestDto.getUserId());
         mobileDeviceLink.setDeviceGuid(mobileDeviceLinkRegistrationRequestDto.getDeviceGuid());
         mobileDeviceLink.setToken(mobileDeviceLinkRegistrationRequestDto.getToken());
@@ -125,7 +125,7 @@ public class MobileDeviceLinkServiceSnsImpl implements MobileDeviceLinkService {
 
         // Check to see if there is any mobile device link that matches the given criteria, if not throw
         // an exception.
-        MobileDeviceLink mobileDeviceLink = mobileDeviceLinkRepository.findByUserIdAndDeviceGuid(userId, deviceGuid)
+        var mobileDeviceLink = mobileDeviceLinkRepository.findByUserIdAndDeviceGuid(userId, deviceGuid)
                 .orElseThrow(() -> new EntityNotFoundException(""));
 
         // We'll want to delete the device link, regardless of whether it failed deleting in AWS.

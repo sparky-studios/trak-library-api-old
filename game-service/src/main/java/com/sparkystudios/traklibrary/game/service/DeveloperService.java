@@ -49,8 +49,19 @@ public interface DeveloperService {
     DeveloperDto findById(long id);
 
     /**
+     * Given a slug of a {@link Developer} entity, this service method will query the underlying persistence layer and try and
+     * retrieve the {@link Developer} entity that matches the given slug and map it to a {@link DeveloperDto}. If the slug provided does not
+     * map to any known {@link Developer} entity, then an exception will be thrown specifying that it can't be found.
+     *
+     * @param slug The slug of the {@link Developer} entity to try and retrieve.
+     *
+     * @return The {@link Developer} entity matching the ID mapped to a {@link DeveloperDto}.
+     */
+    DeveloperDto findBySlug(String slug);
+
+    /**
      * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Developer}s entities that are associated
-     * with this {@link Game}, which is mapped by {@link GameDeveloperXref} entities. If no {@link Developer}s are associated with a given
+     * with this {@link Game}, which is mapped by a conjunction table. If no {@link Developer}s are associated with a given
      * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a
      * {@link javax.persistence.EntityNotFoundException} exception will be thrown. The {@link Developer}'s within the list are returned
      * in name ascending order.

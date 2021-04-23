@@ -104,6 +104,9 @@ public class Game {
     @OneToMany(mappedBy = "game", fetch = FetchType.LAZY)
     private Collection<GameImage> images = new ArrayList<>();
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

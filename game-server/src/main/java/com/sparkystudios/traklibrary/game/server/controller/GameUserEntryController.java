@@ -91,7 +91,7 @@ public class GameUserEntryController {
                                                              PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
 
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

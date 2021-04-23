@@ -29,6 +29,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
 
+    private static final String USERS_PATH = "/users";
+
     private final MessageSource messageSource;
     private final ObjectMapper objectMapper;
 
@@ -42,18 +44,18 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // Create the filter used to generate JWT's based on provided user credentials.
-        AuthenticationProcessingFilter authenticationProcessingFilter =
+        var authenticationProcessingFilter =
                 new AuthenticationProcessingFilter(authenticationManager(), authenticationSuccessHandler, authenticationFailureHandler, messageSource, objectMapper);
 
         List<RequestMatcher> pathsToSkip = Arrays.asList(
                 new AntPathRequestMatcher("/token", HttpMethod.POST.name()),
                 new AntPathRequestMatcher("/token/**", HttpMethod.POST.name()),
-                new AntPathRequestMatcher("/users", HttpMethod.POST.name()),
-                new AntPathRequestMatcher("/users", HttpMethod.PUT.name()),
-                new AntPathRequestMatcher("/users/recover", HttpMethod.POST.name()));
+                new AntPathRequestMatcher(USERS_PATH, HttpMethod.POST.name()),
+                new AntPathRequestMatcher(USERS_PATH, HttpMethod.PUT.name()),
+                new AntPathRequestMatcher(USERS_PATH + "/recover", HttpMethod.POST.name()));
 
-        SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
+        var skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
+        var jwtAuthenticationProcessingFilter =
                 new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http
@@ -65,8 +67,8 @@ public class AuthenticationServerSecurityConfigurerAdapter extends WebSecurityCo
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/token", "/token/**", "/users").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/recover", "/users").permitAll()
+                .antMatchers(HttpMethod.POST, "/token", "/token/**", USERS_PATH).permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/recover", USERS_PATH).permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

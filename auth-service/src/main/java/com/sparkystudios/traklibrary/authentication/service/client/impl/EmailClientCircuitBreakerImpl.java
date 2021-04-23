@@ -45,7 +45,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
 
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
-        String url = "http://trak-email-server/verification";
+        var url = "http://trak-email-server/verification";
 
         sendVerificationEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(emailVerificationRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send verification email", throwable);
@@ -55,7 +55,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
 
     @Override
     public void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
-        String url = "http://trak-email-server/recovery";
+        var url = "http://trak-email-server/recovery";
 
         sendRecoveryEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(emailRecoveryRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send account recovery email", throwable);
@@ -65,7 +65,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
 
     @Override
     public void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
-        String url = "http://trak-email-server/change-password";
+        var url = "http://trak-email-server/change-password";
 
         sendChangePasswordEmailCircuitBreaker.run(() -> restTemplate.exchange(url, HttpMethod.PUT,  new HttpEntity<>(emailRecoveryRequestDto, getHeaders()), Void.class), throwable -> {
             log.error("failed to send change password email", throwable);
@@ -74,7 +74,7 @@ public class EmailClientCircuitBreakerImpl implements EmailClient {
     }
 
     private HttpHeaders getHeaders() {
-        HttpHeaders headers = new HttpHeaders();
+        var headers = new HttpHeaders();
         headers.setBasicAuth(username, password);
         headers.set(HttpHeaders.ACCEPT, "application/vnd.traklibrary.v1+json");
         headers.setContentType(MediaType.APPLICATION_JSON);

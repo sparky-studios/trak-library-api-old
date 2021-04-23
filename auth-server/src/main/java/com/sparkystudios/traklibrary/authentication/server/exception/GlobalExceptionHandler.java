@@ -31,7 +31,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleEntityNotFound(EntityNotFoundException ex) {
         log.error("Entity not found", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.NOT_FOUND);
+        var apiError = new ApiError(HttpStatus.NOT_FOUND);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.NOT_FOUND);
@@ -41,7 +41,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleEntityExists(EntityExistsException ex) {
         log.error("Entity exists", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         log.error("HTTP message not readable", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, headers, status);
@@ -63,7 +63,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         log.error("Method argument not valid", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         // Stream through each sub-error and add all of them to the response.
@@ -79,7 +79,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException ex) {
         log.error("Constraint violation", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         apiError.getDetails().addAll(ex.getConstraintViolations()

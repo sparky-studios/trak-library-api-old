@@ -32,6 +32,8 @@ public class GameDto {
 
     private Long franchiseId;
 
+    private String slug;
+
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;

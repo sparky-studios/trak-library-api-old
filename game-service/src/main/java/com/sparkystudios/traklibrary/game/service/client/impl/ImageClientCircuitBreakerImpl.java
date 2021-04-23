@@ -53,9 +53,9 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
     public void uploadGameImage(MultipartFile multipartFile, long gameId) {
         // Create a temporary directory for the file to ensure the name doesn't clash with any other files.
         @SuppressWarnings("UnstableApiUsage")
-        File file = new File(Files.createTempDir(), Objects.requireNonNull(multipartFile.getOriginalFilename()));
+        var file = new File(Files.createTempDir(), Objects.requireNonNull(multipartFile.getOriginalFilename()));
         // Write the contents of the file to the new temporary file created.
-        try (FileOutputStream stream = new FileOutputStream(file)) {
+        try (var stream = new FileOutputStream(file)) {
             stream.write(multipartFile.getBytes());
         } catch (IOException e) {
             String errorMessage = messageSource
@@ -65,7 +65,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
         }
 
         // Create the http headers with the multi-part file for the image service request.
-        HttpHeaders httpHeaders = new HttpHeaders();
+        var httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.MULTIPART_FORM_DATA);
         httpHeaders.setBearerAuth(authenticationService.getToken());
 

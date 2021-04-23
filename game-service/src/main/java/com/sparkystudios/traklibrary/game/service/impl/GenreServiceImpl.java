@@ -56,9 +56,19 @@ public class GenreServiceImpl implements GenreService {
     @Transactional(readOnly = true)
     public GenreDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return genreMapper.fromGenre(genreRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GenreDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return genreMapper.fromGenre(genreRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -106,7 +116,7 @@ public class GenreServiceImpl implements GenreService {
 
         if (!genreRepository.existsById(genreDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { genreDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", genreDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -128,7 +138,7 @@ public class GenreServiceImpl implements GenreService {
     public void deleteById(long id) {
         if (!genreRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

@@ -52,6 +52,17 @@ public interface FranchiseService {
     FranchiseDto findById(long id);
 
     /**
+     * Given a slug of a {@link Franchise} entity, this service method will query the underlying persistence layer and try and
+     * retrieve the {@link Franchise} entity that matches the given slug and map it to a {@link FranchiseDto}. If the slug provided does not
+     * map to any known {@link Franchise} entity, then an exception will be thrown specifying that it can't be found.
+     *
+     * @param slug The slug of the {@link Franchise} entity to try and retrieve.
+     *
+     * @return The {@link Franchise} entity matching the ID mapped to a {@link FranchiseDto}.
+     */
+    FranchiseDto findBySlug(String slug);
+
+    /**
      * This method will retrieve an {@link Iterable} of {@link FranchiseDto} with a response size specified by the {@link Pageable}. The
      * results can be queried and filtered by utilising the exposed specifications on the {@link FranchiseSpecification} object. If the response
      * from the specifications is that none match, an empty {@link Iterable} will be returned.

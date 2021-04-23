@@ -49,6 +49,17 @@ public interface PublisherService {
     PublisherDto findById(long id);
 
     /**
+     * Given an slug of a {@link Publisher} entity, this service method will query the underlying persistence layer and try and
+     * retrieve the {@link Publisher} entity that matches the given slug and map it to a {@link PublisherDto}. If the slug provided does not
+     * map to any known {@link Publisher} entity, then an exception will be thrown specifying that it can't be found.
+     *
+     * @param slug The slug of the {@link Publisher} entity to try and retrieve.
+     *
+     * @return The {@link Publisher} entity matching the slug mapped to a {@link PublisherDto}.
+     */
+    PublisherDto findBySlug(String slug);
+
+    /**
      * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Publisher}s entities that are associated
      * with this {@link Game}, which is mapped by {@link GamePlatformXref} entities. If no {@link Publisher}s are associated with a given
      * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a

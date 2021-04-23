@@ -60,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userRepository.findByUsername(username);
-        if (!user.isPresent()) {
+        if (user.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_FOUND_MESSAGE, new Object[]{username}, LocaleContextHolder.getLocale());
 
@@ -93,7 +93,7 @@ public class UserServiceImpl implements UserService {
 
         // Create the link between the ROLE_USER and the new user.
         Optional<UserRole> userRole = userRoleRepository.findByRole("ROLE_USER");
-        if (!userRole.isPresent()) {
+        if (userRole.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(USER_ROLE_XREF_NOT_FOUND_MESSAGE, new Object[]{"ROLE_USER"}, LocaleContextHolder.getLocale());
 
@@ -101,13 +101,13 @@ public class UserServiceImpl implements UserService {
         }
 
         // Create a new user and assign it the ROLE_USER by default, but ensure it's not yet verified.
-        User newUser = new User();
+        var newUser = new User();
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
         newUser.addUserRole(userRole.get());
 
-        User user = userRepository.save(newUser);
+        var user = userRepository.save(newUser);
 
         // Dispatch an event to generate the verification token and send the email.
         applicationEventPublisher
@@ -122,14 +122,14 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findByUsername(recoveryRequestDto.getUsername());
 
         // If the user has provided an incorrect username, return an error message stating it can't be found.
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_EXISTENT_USERNAME_MESSAGE, new Object[]{recoveryRequestDto.getUsername()}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
 
-        User user = optionalUser.get();
+        var user = optionalUser.get();
         // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
         if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(recoveryRequestDto.getRecoveryToken())) {
             String errorMessage = messageSource
@@ -156,7 +156,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUsername(String username) {
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         // The user won't be null at this point, so we don't need to do any additional checking before deleting.
         // We need to remove its roles first before deleting otherwise it'll fail due to a foreign key constraint.
@@ -170,12 +170,12 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String createVerificationCode(String username) {
-        User user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsername(username)
                 .orElse(null);
 
         if (user != null) {
-            String chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            StringBuilder verificationCode = new StringBuilder();
+            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var verificationCode = new StringBuilder();
             Random random = new SecureRandom();
 
             IntStream.range(0, 5).forEach(i -> verificationCode.append(chars.charAt(random.nextInt(chars.length()))));
@@ -195,7 +195,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public String createRecoveryToken(String username) {
-        User user = userRepository.findByUsername(username)
+        var user = userRepository.findByUsername(username)
                 .orElse(null);
 
         if (user != null) {
@@ -218,7 +218,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CheckedResponse<Boolean> verify(String username, String verificationCode) {
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         // No point verifying for a user that's already verified.
         if (!user.isVerified()) {
@@ -244,7 +244,7 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void reverify(String username) {
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         // Resend the verification request to generate a new verification code and email.
         applicationEventPublisher
@@ -257,7 +257,7 @@ public class UserServiceImpl implements UserService {
         Optional<User> optionalUser = userRepository.findByEmailAddress(emailAddress);
         // The user has an email address registered with the system, process the reset request.
         if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
+            var user = optionalUser.get();
 
             // Publish a reset password event to send an email.
             applicationEventPublisher
@@ -270,7 +270,7 @@ public class UserServiceImpl implements UserService {
     public void requestChangePassword(String username) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         // Publish a change password event to send an email.
         applicationEventPublisher
@@ -282,7 +282,7 @@ public class UserServiceImpl implements UserService {
     public CheckedResponse<Boolean> changePassword(String username, ChangePasswordRequestDto changePasswordRequestDto) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
         if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(changePasswordRequestDto.getRecoveryToken())) {
@@ -308,7 +308,7 @@ public class UserServiceImpl implements UserService {
     public CheckedResponse<Boolean> changeEmailAddress(String username, String emailAddress) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        User user = getUserFromUsername(username);
+        var user = getUserFromUsername(username);
 
         if (user.getEmailAddress().equals(emailAddress)) {
             String errorMessage = messageSource
@@ -331,14 +331,14 @@ public class UserServiceImpl implements UserService {
     private User getUserFromUsername(String username) {
         Optional<User> optionalUser = userRepository.findByUsername(username);
         // Can't verify a user if it doesn't exist.
-        if (!optionalUser.isPresent()) {
+        if (optionalUser.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_FOUND_MESSAGE, new Object[]{username}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        User user = optionalUser.get();
+        var user = optionalUser.get();
 
         if (!authenticationService.isCurrentAuthenticatedUser(user.getId())) {
             String errorMessage = messageSource

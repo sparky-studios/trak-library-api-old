@@ -62,7 +62,7 @@ public class RequestAuthenticationProvider implements AuthenticationProvider {
 
         // Check to see if the credentials are linked to an existing user, if not it'll throw
         // a username not found exception.
-        UserDto userDto = (UserDto)userDetailsService.loadUserByUsername(username);
+        var userDto = (UserDto)userDetailsService.loadUserByUsername(username);
 
         // Ensure the password is correct.
         if (!passwordEncoder.matches(password, userDto.getPassword())) {
@@ -87,7 +87,7 @@ public class RequestAuthenticationProvider implements AuthenticationProvider {
                 .collect(Collectors.toList());
 
         // Create the user context, which contains hand-picked user data to pass between services.
-        UserContext userContext = new UserContext();
+        var userContext = new UserContext();
         userContext.setUserId(userDto.getId());
         userContext.setUsername(userDto.getUsername());
         userContext.setVerified(userDto.isVerified());

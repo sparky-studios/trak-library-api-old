@@ -130,6 +130,47 @@ class FranchiseServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(franchiseRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> franchiseService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidFranchise_returnsFranchiseDto() {
+        // Arrange
+        Franchise franchise = new Franchise();
+        franchise.setId(1L);
+        franchise.setTitle("test-title");
+        franchise.setDescription("test-description");
+        franchise.setVersion(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(franchiseRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(franchise));
+
+        Mockito.when(franchiseMapper.fromFranchise(ArgumentMatchers.any()))
+                .thenReturn(new FranchiseDto());
+
+        // Act
+        FranchiseDto result = franchiseService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(franchiseMapper, Mockito.atMostOnce())
+                .fromFranchise(ArgumentMatchers.any());
+    }
+
+    @Test
     void findAll_withNullPageable_throwsNullPointerException() {
         // Arrange
         FranchiseSpecification franchiseSpecification = Mockito.mock(FranchiseSpecification.class);

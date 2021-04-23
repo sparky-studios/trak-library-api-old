@@ -33,6 +33,9 @@ public class Franchise {
     @OneToMany(mappedBy = "franchise", fetch = FetchType.LAZY)
     private Collection<Game> games = new ArrayList<>();
 
+    @Column(name = "slug", nullable = false, unique = true)
+    private String slug;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;

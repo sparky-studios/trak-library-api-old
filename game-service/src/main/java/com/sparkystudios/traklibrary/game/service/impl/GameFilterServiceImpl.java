@@ -35,12 +35,12 @@ public class GameFilterServiceImpl implements GameFilterService {
     @Transactional(readOnly = true)
     public GameFiltersDto getGameFilters() {
         // Create the game filter to return to the callee.
-        GameFiltersDto gameFiltersDto = new GameFiltersDto();
+        var gameFiltersDto = new GameFiltersDto();
 
         // Retrieve every type of platform within the system and convert it into a filter.
         Set<GameFilterDto> platformFilters = StreamSupport.stream(platformRepository.findAll().spliterator(), false)
             .map(p -> {
-                GameFilterDto gameFilterDto = new GameFilterDto();
+                var gameFilterDto = new GameFilterDto();
                 gameFilterDto.setName(p.getName());
                 gameFilterDto.setId(p.getId());
 
@@ -54,7 +54,7 @@ public class GameFilterServiceImpl implements GameFilterService {
         // Retrieve every type of genre within the system and convert it into a filter.
         Set<GameFilterDto> genreFilters = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(p -> {
-                    GameFilterDto gameFilterDto = new GameFilterDto();
+                    var gameFilterDto = new GameFilterDto();
                     gameFilterDto.setName(p.getName());
                     gameFilterDto.setId(p.getId());
 
@@ -72,12 +72,12 @@ public class GameFilterServiceImpl implements GameFilterService {
     @Transactional(readOnly = true)
     public GameUserEntryFiltersDto getGameUserEntryFilters() {
         // Create the game filter to return to the callee.
-        GameUserEntryFiltersDto gameUserEntryFiltersDto = new GameUserEntryFiltersDto();
+        var gameUserEntryFiltersDto = new GameUserEntryFiltersDto();
 
         // Retrieve every type of platform within the system and convert it into a filter.
         Set<GameFilterDto> platformFilters = StreamSupport.stream(platformRepository.findAll().spliterator(), false)
                 .map(p -> {
-                    GameFilterDto gameFilterDto = new GameFilterDto();
+                    var gameFilterDto = new GameFilterDto();
                     gameFilterDto.setName(p.getName());
                     gameFilterDto.setId(p.getId());
 
@@ -91,7 +91,7 @@ public class GameFilterServiceImpl implements GameFilterService {
         // Retrieve every type of genre within the system and convert it into a filter.
         Set<GameFilterDto> genreFilters = StreamSupport.stream(genreRepository.findAll().spliterator(), false)
                 .map(p -> {
-                    GameFilterDto gameFilterDto = new GameFilterDto();
+                    var gameFilterDto = new GameFilterDto();
                     gameFilterDto.setName(p.getName());
                     gameFilterDto.setId(p.getId());
 

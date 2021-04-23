@@ -92,6 +92,7 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setSlug("test-slug");
         developerDto.setCreatedAt(LocalDateTime.now());
         developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
@@ -120,6 +121,7 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setSlug("test-slug");
         developerDto.setCreatedAt(LocalDateTime.now());
         developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
@@ -129,6 +131,33 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ResponseVerifier.verifyDeveloperDto("", resultActions, developerDto);
+    }
+
+    @Test
+    void findBySlug_withValidSlug_return200AndValidResponse() throws Exception {
+        // Arrange
+        DeveloperDto developerDto = new DeveloperDto();
+        developerDto.setId(5L);
+        developerDto.setName("test-name");
+        developerDto.setDescription("test-description");
+        developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setSlug("test-slug");
+        developerDto.setCreatedAt(LocalDateTime.now());
+        developerDto.setUpdatedAt(LocalDateTime.now());
+        developerDto.setVersion(1L);
+
+        Mockito.when(developerService.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(developerDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/slug/test-slug")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -173,6 +202,7 @@ class DeveloperControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -182,6 +212,7 @@ class DeveloperControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -220,6 +251,7 @@ class DeveloperControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -229,6 +261,7 @@ class DeveloperControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -294,6 +327,7 @@ class DeveloperControllerTest {
         developerDto1.setName("test-developer-1");
         developerDto1.setDescription("test-description-1");
         developerDto1.setFoundedDate(LocalDate.now());
+        developerDto1.setSlug("test-slug-1");
         developerDto1.setCreatedAt(LocalDateTime.now());
         developerDto1.setUpdatedAt(LocalDateTime.now());
         developerDto1.setVersion(1L);
@@ -303,6 +337,7 @@ class DeveloperControllerTest {
         developerDto2.setName("test-developer-2");
         developerDto2.setDescription("test-description-2");
         developerDto2.setFoundedDate(LocalDate.now());
+        developerDto2.setSlug("test-slug-2");
         developerDto2.setCreatedAt(LocalDateTime.now());
         developerDto2.setUpdatedAt(LocalDateTime.now());
         developerDto2.setVersion(2L);
@@ -341,6 +376,7 @@ class DeveloperControllerTest {
         developerDto1.setName("test-developer-1");
         developerDto1.setDescription("test-description-1");
         developerDto1.setFoundedDate(LocalDate.now());
+        developerDto1.setSlug("test-slug-1");
         developerDto1.setCreatedAt(LocalDateTime.now());
         developerDto1.setUpdatedAt(LocalDateTime.now());
         developerDto1.setVersion(1L);
@@ -350,6 +386,7 @@ class DeveloperControllerTest {
         developerDto2.setName("test-developer-2");
         developerDto2.setDescription("test-description-2");
         developerDto2.setFoundedDate(LocalDate.now());
+        developerDto2.setSlug("test-slug-2");
         developerDto2.setCreatedAt(LocalDateTime.now());
         developerDto2.setUpdatedAt(LocalDateTime.now());
         developerDto2.setVersion(2L);
@@ -405,6 +442,7 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setSlug("test-slug");
         developerDto.setCreatedAt(LocalDateTime.now());
         developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);
@@ -433,6 +471,7 @@ class DeveloperControllerTest {
         developerDto.setName("test-name");
         developerDto.setDescription("test-description");
         developerDto.setFoundedDate(LocalDate.now());
+        developerDto.setSlug("test-slug");
         developerDto.setCreatedAt(LocalDateTime.now());
         developerDto.setUpdatedAt(LocalDateTime.now());
         developerDto.setVersion(1L);

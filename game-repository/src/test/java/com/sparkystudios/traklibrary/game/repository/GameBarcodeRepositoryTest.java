@@ -38,11 +38,13 @@ class GameBarcodeRepositoryTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = gameRepository.save(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform");
         platform.setDescription("test-description");
+        platform.setSlug("test-slug");
         platform = platformRepository.save(platform);
 
         GameBarcode gameBarcode = new GameBarcode();

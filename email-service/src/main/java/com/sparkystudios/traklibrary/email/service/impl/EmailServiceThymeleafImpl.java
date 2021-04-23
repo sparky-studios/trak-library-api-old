@@ -44,7 +44,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
     @Override
     public void sendVerificationEmail(EmailVerificationRequestDto emailVerificationRequestDto) {
         // Create the Email template and all the data it needs before sending.
-        EmailDto emailDto = new EmailDto();
+        var emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailVerificationRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(VERIFICATION_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
@@ -61,7 +61,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
     @Override
     public void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
         // Create the Email template and all the data it needs before sending.
-        EmailDto emailDto = new EmailDto();
+        var emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailRecoveryRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(RECOVERY_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
@@ -78,7 +78,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
     @Override
     public void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
         // Create the Email template and all the data it needs before sending.
-        EmailDto emailDto = new EmailDto();
+        var emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
         emailDto.setTo(emailRecoveryRequestDto.getEmailAddress());
         emailDto.setSubject(messageSource.getMessage(CHANGE_PASSWORD_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
@@ -92,10 +92,10 @@ public class EmailServiceThymeleafImpl implements EmailService {
     }
 
     private MimeMessage getMimeMessage(EmailDto emailDto, String template) throws MessagingException, UnsupportedEncodingException {
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
+        var mimeMessage = javaMailSender.createMimeMessage();
+        var mimeMessageHelper = new MimeMessageHelper(mimeMessage, MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED, StandardCharsets.UTF_8.name());
 
-        Context context = new Context();
+        var context = new Context();
         context.setVariables(emailDto.getData());
 
         String html = templateEngine.process(template, context);

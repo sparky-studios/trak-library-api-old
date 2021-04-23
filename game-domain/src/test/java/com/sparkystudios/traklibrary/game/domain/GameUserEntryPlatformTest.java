@@ -19,6 +19,7 @@ class GameUserEntryPlatformTest {
         // Arrange
         Platform platform = new Platform();
         platform.setName("test-platform");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
@@ -37,6 +38,7 @@ class GameUserEntryPlatformTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         GameUserEntry gameUserEntry = new GameUserEntry();
@@ -62,10 +64,12 @@ class GameUserEntryPlatformTest {
         game.setTitle("game-title");
         game.setDescription("game-description");
         game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
         Platform platform = new Platform();
         platform.setName("test-platform-1");
+        platform.setSlug("test-slug");
         platform = testEntityManager.persistFlushFind(platform);
 
         GameUserEntry gameUserEntry = new GameUserEntry();

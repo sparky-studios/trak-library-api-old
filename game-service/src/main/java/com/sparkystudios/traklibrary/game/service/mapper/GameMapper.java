@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.service.mapper;
 
+import com.github.slugify.Slugify;
 import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import org.mapstruct.AfterMapping;
@@ -28,8 +29,13 @@ public interface GameMapper {
     Game toGame(GameDto gameDto);
 
     @AfterMapping
-    default void afterMapping(@MappingTarget GameDto gameDetailsDto) {
-        gameDetailsDto.setReleaseDates(new TreeSet<>(gameDetailsDto.getReleaseDates()));
-        gameDetailsDto.setDownloadableContents(new TreeSet<>(gameDetailsDto.getDownloadableContents()));
+    default void afterMapping(@MappingTarget GameDto gameDto) {
+        gameDto.setReleaseDates(new TreeSet<>(gameDto.getReleaseDates()));
+        gameDto.setDownloadableContents(new TreeSet<>(gameDto.getDownloadableContents()));
+    }
+
+    @AfterMapping
+    default void afterMapping(@MappingTarget Game game) {
+        game.setSlug(new Slugify().slugify(game.getTitle()));
     }
 }

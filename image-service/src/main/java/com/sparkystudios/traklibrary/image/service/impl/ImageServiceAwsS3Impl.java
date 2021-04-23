@@ -9,14 +9,11 @@ import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.WritableResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Arrays;
 
 @RequiredArgsConstructor
@@ -47,7 +44,7 @@ public class ImageServiceAwsS3Impl implements ImageService {
 
         WritableResource resource = (WritableResource) resourceLoader.getResource("s3://" + bucketName + "/" + folder + "/" + filename);
 
-        try (OutputStream outputStream = resource.getOutputStream()) {
+        try (var outputStream = resource.getOutputStream()) {
             outputStream.write(content);
         } catch (IOException e) {
             String errorMessage = messageSource
@@ -59,9 +56,9 @@ public class ImageServiceAwsS3Impl implements ImageService {
 
     @Override
     public byte[] download(String folder, String filename) {
-        Resource resource = resourceLoader.getResource("s3://" + bucketName + "/" + folder + "/" + filename);
+        var resource = resourceLoader.getResource("s3://" + bucketName + "/" + folder + "/" + filename);
 
-        try (InputStream inputStream = resource.getInputStream()) {
+        try (var inputStream = resource.getInputStream()) {
             return IOUtils.toByteArray(inputStream);
         } catch (IOException e) {
             String errorMessage = messageSource

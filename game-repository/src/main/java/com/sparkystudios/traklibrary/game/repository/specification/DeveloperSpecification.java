@@ -10,7 +10,8 @@ import org.springframework.data.jpa.domain.Specification;
 @And({
         @Spec(path = "id", spec = Equal.class),
         @Spec(path = "name", spec = StartingWithIgnoreCase.class),
-        @Spec(path = "companyType", params = "company-type", spec = Equal.class)
+        @Spec(path = "companyType", params = "company-type", spec = Equal.class),
+        @Spec(path = "slug", spec = StartingWithIgnoreCase.class)
 })
 public interface DeveloperSpecification extends Specification<Developer> {
 }
