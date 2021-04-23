@@ -135,6 +135,47 @@ class GenreServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(genreRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> genreService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidGenre_returnsGenreDto() {
+        // Arrange
+        Genre genre = new Genre();
+        genre.setId(1L);
+        genre.setName("test-name");
+        genre.setDescription("test-description");
+        genre.setVersion(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(genreRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(genre));
+
+        Mockito.when(genreMapper.fromGenre(ArgumentMatchers.any()))
+                .thenReturn(new GenreDto());
+
+        // Act
+        GenreDto result = genreService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(genreMapper, Mockito.atMostOnce())
+                .fromGenre(ArgumentMatchers.any());
+    }
+
+    @Test
     void findGenresByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))

@@ -49,9 +49,19 @@ public class FranchiseServiceImpl implements FranchiseService {
     @Transactional(readOnly = true)
     public FranchiseDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return franchiseMapper.fromFranchise(franchiseRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public FranchiseDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return franchiseMapper.fromFranchise(franchiseRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -79,7 +89,7 @@ public class FranchiseServiceImpl implements FranchiseService {
 
         if (!franchiseRepository.existsById(franchiseDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { franchiseDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", franchiseDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -101,7 +111,7 @@ public class FranchiseServiceImpl implements FranchiseService {
     public void deleteById(long id) {
         if (!franchiseRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

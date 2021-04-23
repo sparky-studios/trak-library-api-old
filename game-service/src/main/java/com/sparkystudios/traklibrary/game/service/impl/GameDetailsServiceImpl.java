@@ -32,9 +32,19 @@ public class GameDetailsServiceImpl implements GameDetailsService {
     @Transactional(readOnly = true)
     public GameDetailsDto findByGameId(long gameId) {
         String errorMessage = messageSource
-                .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
+                .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { "id", gameId }, LocaleContextHolder.getLocale());
 
         return gameDetailsMapper.fromGame(gameRepository.findById(gameId)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GameDetailsDto findByGameSlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return gameDetailsMapper.fromGame(gameRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 

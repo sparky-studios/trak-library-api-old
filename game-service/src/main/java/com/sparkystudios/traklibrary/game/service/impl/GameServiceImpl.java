@@ -69,9 +69,19 @@ public class GameServiceImpl implements GameService {
     @Transactional(readOnly = true)
     public GameDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return gameMapper.fromGame(gameRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public GameDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return gameMapper.fromGame(gameRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -106,7 +116,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto saveGenresForGameId(long id, @NonNull Collection<Long> genreIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -129,7 +139,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto updateGenresForGameId(long id, @NonNull Collection<Long> genreIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -176,7 +186,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto savePlatformsForGameId(long id, @NonNull Collection<Long> platformsIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -199,7 +209,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto updatePlatformsForGameId(long id, @NonNull Collection<Long> platformIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -246,7 +256,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto saveDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -269,7 +279,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto updateDevelopersForGameId(long id, @NonNull Collection<Long> developerId) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -316,7 +326,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto savePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -339,7 +349,7 @@ public class GameServiceImpl implements GameService {
     @Transactional(rollbackFor = Exception.class)
     public GameDto updatePublishersForGameId(long id, @NonNull Collection<Long> publisherIds) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
         Game game = gameRepository.findById(id)
@@ -414,7 +424,7 @@ public class GameServiceImpl implements GameService {
 
         if (!gameRepository.existsById(gameDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", gameDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -440,7 +450,7 @@ public class GameServiceImpl implements GameService {
     public void deleteById(long id) {
         if (!gameRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

@@ -132,6 +132,44 @@ class PublisherServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(publisherRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> publisherService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidPublisher_returnsPublisherDto() {
+        // Arrange
+        Publisher publisher = new Publisher();
+        publisher.setId(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(publisherRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(publisher));
+
+        Mockito.when(publisherMapper.fromPublisher(ArgumentMatchers.any()))
+                .thenReturn(new PublisherDto());
+
+        // Act
+        PublisherDto result = publisherService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(publisherMapper, Mockito.atMostOnce())
+                .fromPublisher(ArgumentMatchers.any());
+    }
+
+    @Test
     void findPublishersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))

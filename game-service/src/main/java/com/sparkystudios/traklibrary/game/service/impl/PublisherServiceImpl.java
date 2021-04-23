@@ -55,9 +55,19 @@ public class PublisherServiceImpl implements PublisherService {
     @Transactional(readOnly = true)
     public PublisherDto findById(long id) {
         String errorMessage = messageSource
-                .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         return publisherMapper.fromPublisher(publisherRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PublisherDto findBySlug(String slug) {
+        String errorMessage = messageSource
+                .getMessage(NOT_FOUND_MESSAGE, new Object[] { "slug", slug }, LocaleContextHolder.getLocale());
+
+        return publisherMapper.fromPublisher(publisherRepository.findBySlug(slug)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage)));
     }
 
@@ -67,7 +77,7 @@ public class PublisherServiceImpl implements PublisherService {
         // Get the game as the publishers can be lazily loaded from it.
         Optional<Game> game = gameRepository.findById(gameId);
 
-        if (!game.isPresent()) {
+        if (game.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(GAME_NOT_FOUND_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
 
@@ -104,7 +114,7 @@ public class PublisherServiceImpl implements PublisherService {
 
         if (!publisherRepository.existsById(publisherDto.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { publisherDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", publisherDto.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
@@ -126,7 +136,7 @@ public class PublisherServiceImpl implements PublisherService {
     public void deleteById(long id) {
         if (!publisherRepository.existsById(id)) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

@@ -132,6 +132,44 @@ class DeveloperServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(developerRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> developerService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidDeveloper_returnsDeveloperDto() {
+        // Arrange
+        Developer developer = new Developer();
+        developer.setId(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(developerRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(developer));
+
+        Mockito.when(developerMapper.fromDeveloper(ArgumentMatchers.any()))
+                .thenReturn(new DeveloperDto());
+
+        // Act
+        DeveloperDto result = developerService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(developerMapper, Mockito.atMostOnce())
+                .fromDeveloper(ArgumentMatchers.any());
+    }
+
+    @Test
     void findDevelopersByGameId_withNonExistentGame_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(gameRepository.findById(ArgumentMatchers.anyLong()))

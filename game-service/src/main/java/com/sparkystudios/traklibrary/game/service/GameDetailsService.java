@@ -22,6 +22,18 @@ public interface GameDetailsService {
     GameDetailsDto findByGameId(long gameId);
 
     /**
+     * Given an slug of a {@link Game} entity, this service method will query the underlying persistence layer and try and
+     * retrieve the {@link Game} entity that matches the given slug and map it to a {@link GameDetailsDto}, which contains information
+     * about the game as well as a small amount of additional information.. If the slug provided does not
+     * map to any known {@link Game} entity, then an exception will be thrown specifying that it can't be found.
+     *
+     * @param slug The slug of the {@link Game} entity to try and retrieve.
+     *
+     * @return The {@link Game} entity matching the slug mapped to a {@link GameDetailsDto}.
+     */
+    GameDetailsDto findByGameSlug(String slug);
+
+    /**
      * Given the ID of a {@link Genre}, this method will retrieve a {@link Page} of {@link GameDetailsDto}s that are associated with
      * the given {@link Genre}. If the ID provided does not map to any {@link Genre}, a {@link javax.persistence.EntityNotFoundException}
      * will be thrown. If there are no {@link GameDetailsDto}s associated with the {@link Genre}, an empty {@link Iterable} will be returned.

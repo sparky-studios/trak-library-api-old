@@ -147,6 +147,47 @@ class GameServiceImplTest {
     }
 
     @Test
+    void findBySlug_withEmptyOptional_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.empty());
+
+        // Assert
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.findBySlug("slug"));
+    }
+
+    @Test
+    void findBySlug_withValidGame_returnsGameDto() {
+        // Arrange
+        Game game = new Game();
+        game.setId(1L);
+        game.setTitle("test-title");
+        game.setDescription("test-description");
+        game.setVersion(1L);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        Mockito.when(gameRepository.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(Optional.of(game));
+
+        Mockito.when(gameMapper.fromGame(ArgumentMatchers.any()))
+                .thenReturn(new GameDto());
+
+        // Act
+        GameDto result = gameService.findBySlug("slug");
+
+        // Assert
+        Assertions.assertNotNull(result, "The mapped result should not be null.");
+
+        Mockito.verify(gameMapper, Mockito.atMostOnce())
+                .fromGame(ArgumentMatchers.any());
+    }
+
+    @Test
     void findGamesByGenreId_withNonExistentGenre_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(genreRepository.existsById(ArgumentMatchers.anyLong()))
