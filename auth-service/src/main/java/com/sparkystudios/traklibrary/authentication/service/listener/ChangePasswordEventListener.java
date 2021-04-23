@@ -22,7 +22,7 @@ public class ChangePasswordEventListener implements ApplicationListener<OnChange
         String recoveryToken = userService.createRecoveryToken(onChangePasswordEvent.getUsername());
         // Only send the recovery token email if a new valid token has been created.
         if (!Strings.isNullOrEmpty(recoveryToken)) {
-            EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+            var emailRecoveryRequestDto = new EmailRecoveryRequestDto();
             emailRecoveryRequestDto.setEmailAddress(onChangePasswordEvent.getEmailAddress());
             emailRecoveryRequestDto.setRecoveryToken(recoveryToken);
 

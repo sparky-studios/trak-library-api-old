@@ -90,6 +90,7 @@ class FranchiseControllerTest {
         franchiseDto.setId(1L);
         franchiseDto.setTitle("test-name-1");
         franchiseDto.setDescription("test-description-1");
+        franchiseDto.setSlug("test-slug");
         franchiseDto.setCreatedAt(LocalDateTime.now());
         franchiseDto.setUpdatedAt(LocalDateTime.now());
         franchiseDto.setVersion(1L);
@@ -117,6 +118,7 @@ class FranchiseControllerTest {
         franchiseDto.setId(1L);
         franchiseDto.setTitle("test-title-1");
         franchiseDto.setDescription("test-description-1");
+        franchiseDto.setSlug("test-slug");
         franchiseDto.setCreatedAt(LocalDateTime.now());
         franchiseDto.setUpdatedAt(LocalDateTime.now());
         franchiseDto.setVersion(1L);
@@ -126,6 +128,32 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/1")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ResponseVerifier.verifyFranchiseDto("", resultActions, franchiseDto);
+    }
+
+    @Test
+    void findBySlug_withValidSlug_return200AndValidResponse() throws Exception {
+        // Arrange
+        FranchiseDto franchiseDto = new FranchiseDto();
+        franchiseDto.setId(1L);
+        franchiseDto.setTitle("test-title-1");
+        franchiseDto.setDescription("test-description-1");
+        franchiseDto.setSlug("test-slug");
+        franchiseDto.setCreatedAt(LocalDateTime.now());
+        franchiseDto.setUpdatedAt(LocalDateTime.now());
+        franchiseDto.setVersion(1L);
+
+        Mockito.when(franchiseService.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(franchiseDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/slug/test-slug")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -170,6 +198,7 @@ class FranchiseControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -179,6 +208,7 @@ class FranchiseControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -217,6 +247,7 @@ class FranchiseControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -226,6 +257,7 @@ class FranchiseControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -290,6 +322,7 @@ class FranchiseControllerTest {
         franchiseDto1.setId(1L);
         franchiseDto1.setTitle("test-title-1");
         franchiseDto1.setDescription("test-description-1");
+        franchiseDto1.setSlug("test-slug-1");
         franchiseDto1.setCreatedAt(LocalDateTime.now());
         franchiseDto1.setUpdatedAt(LocalDateTime.now());
         franchiseDto1.setVersion(1L);
@@ -298,6 +331,7 @@ class FranchiseControllerTest {
         franchiseDto2.setId(2L);
         franchiseDto2.setTitle("test-title-2");
         franchiseDto2.setDescription("test-description-2");
+        franchiseDto2.setSlug("test-slug-2");
         franchiseDto2.setCreatedAt(LocalDateTime.now());
         franchiseDto2.setUpdatedAt(LocalDateTime.now());
         franchiseDto2.setVersion(2L);
@@ -335,6 +369,7 @@ class FranchiseControllerTest {
         franchiseDto1.setId(1L);
         franchiseDto1.setTitle("test-title-1");
         franchiseDto1.setDescription("test-description-1");
+        franchiseDto1.setSlug("test-slug-1");
         franchiseDto1.setCreatedAt(LocalDateTime.now());
         franchiseDto1.setUpdatedAt(LocalDateTime.now());
         franchiseDto1.setVersion(1L);
@@ -343,6 +378,7 @@ class FranchiseControllerTest {
         franchiseDto2.setId(2L);
         franchiseDto2.setTitle("test-title-2");
         franchiseDto2.setDescription("test-description-2");
+        franchiseDto2.setSlug("test-slug-2");
         franchiseDto2.setCreatedAt(LocalDateTime.now());
         franchiseDto2.setUpdatedAt(LocalDateTime.now());
         franchiseDto2.setVersion(2L);
@@ -397,6 +433,7 @@ class FranchiseControllerTest {
         franchiseDto.setId(1L);
         franchiseDto.setTitle("test-title-1");
         franchiseDto.setDescription("test-description-1");
+        franchiseDto.setSlug("test-slug");
         franchiseDto.setCreatedAt(LocalDateTime.now());
         franchiseDto.setUpdatedAt(LocalDateTime.now());
         franchiseDto.setVersion(1L);
@@ -424,6 +461,7 @@ class FranchiseControllerTest {
         franchiseDto.setId(1L);
         franchiseDto.setTitle("test-title-1");
         franchiseDto.setDescription("test-description-1");
+        franchiseDto.setSlug("test-slug");
         franchiseDto.setCreatedAt(LocalDateTime.now());
         franchiseDto.setUpdatedAt(LocalDateTime.now());
         franchiseDto.setVersion(1L);

@@ -124,6 +124,22 @@ public class GameController {
     }
 
     /**
+     * End-point that will retrieve a {@link GameDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link GameDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link GameDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link GameDto} to retrieve.
+     *
+     * @return The {@link GameDto} that matches the given slug as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}")
+    public EntityModel<GameDto> findBySlug(@PathVariable String slug) {
+        return gameRepresentationModelAssembler.toModel(gameService.findBySlug(slug));
+    }
+
+    /**
      * End-point that will retrieve a {@link GameDetailsDto} instance that matches the given Id and convert
      * it into a consumable HATEOAS response. If a {@link GameDetailsDto} instance is found that matches the Id, then
      * that data is returned with a status of 200, however if the {@link GameDetailsDto} cannot be found the method
@@ -137,6 +153,22 @@ public class GameController {
     @GetMapping("/{id}/details")
     public EntityModel<GameDetailsDto> findGameDetailsByGameId(@PathVariable long id) {
         return gameDetailsRepresentationModelAssembler.toModel(gameDetailsService.findByGameId(id));
+    }
+
+    /**
+     * End-point that will retrieve a {@link GameDetailsDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link GameDetailsDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link GameDetailsDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link GameDetailsDto} to retrieve.
+     *
+     * @return The {@link GameDetailsDto} that matches the given slug as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}/details")
+    public EntityModel<GameDetailsDto> findGameDetailsByGameSlug(@PathVariable String slug) {
+        return gameDetailsRepresentationModelAssembler.toModel(gameDetailsService.findByGameSlug(slug));
     }
 
     /**
@@ -370,7 +402,7 @@ public class GameController {
                                                                                  @PageableDefault Pageable pageable,
                                                                                  PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -406,7 +438,7 @@ public class GameController {
                                                     @PageableDefault Pageable pageable,
                                                     PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -442,7 +474,7 @@ public class GameController {
                                                                       @PageableDefault Pageable pageable,
                                                                       PagedResourcesAssembler<GameDetailsDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

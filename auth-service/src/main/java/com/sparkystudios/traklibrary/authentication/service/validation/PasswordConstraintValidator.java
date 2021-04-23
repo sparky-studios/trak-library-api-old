@@ -30,7 +30,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
      */
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        PasswordValidator passwordValidator = new PasswordValidator(Arrays.asList(
+        var passwordValidator = new PasswordValidator(Arrays.asList(
                 new LengthRule(8, 30),
                 new CharacterRule(EnglishCharacterData.UpperCase, 1),
                 new CharacterRule(EnglishCharacterData.LowerCase, 1),
@@ -38,7 +38,7 @@ public class PasswordConstraintValidator implements ConstraintValidator<ValidPas
                 new WhitespaceRule()
         ));
 
-        RuleResult ruleResult = passwordValidator.validate(new PasswordData(Strings.isNullOrEmpty(s) ? "" : s));
+        var ruleResult = passwordValidator.validate(new PasswordData(Strings.isNullOrEmpty(s) ? "" : s));
         if (ruleResult.isValid()) {
             return true;
         }

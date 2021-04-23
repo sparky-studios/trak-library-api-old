@@ -57,7 +57,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityExistsException(errorMessage);
         }
 
-        Game game = gameMapper.toGame(gameDto);
+        var game = gameMapper.toGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
@@ -119,7 +119,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Clear all existing genres before updating them with the new ID's provided.
@@ -142,7 +142,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Get all of the matching genres for the ID's provided.
@@ -189,7 +189,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Clear all existing platforms before updating them with the new ID's provided.
@@ -212,7 +212,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Get all of the matching platforms for the ID's provided.
@@ -259,7 +259,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Clear all existing developers before updating them with the new ID's provided.
@@ -282,7 +282,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Get all of the matching developers for the ID's provided.
@@ -329,7 +329,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Clear all existing developers before updating them with the new ID's provided.
@@ -352,7 +352,7 @@ public class GameServiceImpl implements GameService {
                 .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", id }, LocaleContextHolder.getLocale());
 
         // Get the game by the supplied ID, if it doesn't exist an exception will be thrown.
-        Game game = gameRepository.findById(id)
+        var game = gameRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(errorMessage));
 
         // Get all of the matching publishers for the ID's provided.
@@ -429,7 +429,7 @@ public class GameServiceImpl implements GameService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        Game game = gameMapper.toGame(gameDto);
+        var game = gameMapper.toGame(gameDto);
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 

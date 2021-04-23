@@ -29,7 +29,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleImageFailed(ImageFailedException ex) {
         log.error("Image failure", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
@@ -40,7 +40,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleHttpMessageNotReadable(@NonNull HttpMessageNotReadableException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         log.error("HTTP message not readable", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, headers, status);
@@ -51,7 +51,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMethodArgumentNotValid(@NonNull MethodArgumentNotValidException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         log.error("Method argument not valid", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         // Stream through each sub-error and add all of them to the response.
@@ -68,7 +68,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleMissingServletRequestPart(@NonNull MissingServletRequestPartException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status, @NonNull WebRequest request) {
         log.error("Missing request part", ex);
 
-        ApiError apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());
 
         return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);

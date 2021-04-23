@@ -42,7 +42,7 @@ public class GameImageServiceImpl implements GameImageService {
         }
 
         // Create a reference to the new game image.
-        GameImage gameImage = new GameImage();
+        var gameImage = new GameImage();
         gameImage.setGameId(gameId);
         gameImage.setFilename(multipartFile.getOriginalFilename());
         gameImage.setImageSize(gameImageSize);
@@ -66,7 +66,7 @@ public class GameImageServiceImpl implements GameImageService {
             throw new EntityNotFoundException(errorMessage);
         }
 
-        ImageDataDto imageDataDto = new ImageDataDto();
+        var imageDataDto = new ImageDataDto();
         imageDataDto.setFilename(gameImage.get().getFilename());
         // Download the image data from the image service, if available.
         imageDataDto.setContent(imageClient.downloadGameImage(gameImage.get().getFilename(), gameId));

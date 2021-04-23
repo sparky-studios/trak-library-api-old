@@ -35,10 +35,10 @@ public class RestTemplateConfig {
 
     @Bean
     public MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter() {
-        MediaType customMediaType1 = new MediaType("application", "vnd.traklibrary.v1+json");
-        MediaType customMediaType2 = new MediaType("application", "vnd.traklibrary.v1.hal+json");
+        var customMediaType1 = new MediaType("application", "vnd.traklibrary.v1+json");
+        var customMediaType2 = new MediaType("application", "vnd.traklibrary.v1.hal+json");
 
-        MappingJackson2HttpMessageConverter mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(objectMapper());
+        var mappingJackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter(objectMapper());
         mappingJackson2HttpMessageConverter.setObjectMapper(objectMapper());
         mappingJackson2HttpMessageConverter.setSupportedMediaTypes(List.of(MediaType.APPLICATION_JSON, customMediaType1, customMediaType2));
 

@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
@@ -44,14 +43,14 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         // We'll need to retrieve user data to add to the token.
-        UserContext userContext = (UserContext) authentication.getPrincipal();
+        var userContext = (UserContext) authentication.getPrincipal();
 
         // Create the access and refresh tokens.
         String accessToken = tokenService.createAccessToken(userContext);
         String refreshToken = tokenService.createRefreshToken(userContext);
 
         // Place the tokens in a payload to return them as a sensibly serialized type to the user.
-        TokenPayloadDto tokenPayloadDto = new TokenPayloadDto();
+        var tokenPayloadDto = new TokenPayloadDto();
         tokenPayloadDto.setAccessToken(accessToken);
         tokenPayloadDto.setRefreshToken(refreshToken);
 
@@ -63,7 +62,7 @@ public class AuthenticationSuccessHandlerImpl implements AuthenticationSuccessHa
         response.getWriter().write(objectMapper.writeValueAsString(tokenPayloadDto));
 
         // Remove any temporary authentication related data which may have been stored within the session.
-        HttpSession httpSession = request.getSession();
+        var httpSession = request.getSession();
 
         if (httpSession != null) {
             httpSession.removeAttribute(WebAttributes.AUTHENTICATION_EXCEPTION);

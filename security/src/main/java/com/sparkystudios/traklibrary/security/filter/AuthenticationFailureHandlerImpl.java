@@ -43,7 +43,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
         httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
         httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
 
-        ApiError apiError = new ApiError(HttpStatus.UNAUTHORIZED);
+        var apiError = new ApiError(HttpStatus.UNAUTHORIZED);
 
         if (e instanceof BadCredentialsException) {
             apiError.setError("Invalid username or password");

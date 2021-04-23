@@ -53,7 +53,7 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
         Subquery<GameUserEntryPlatform> subquery = criteriaQuery.subquery(GameUserEntryPlatform.class);
         Root<GameUserEntryPlatform> subqueryRoot = subquery.from(GameUserEntryPlatform.class);
 
-        Predicate idPredicate = criteriaBuilder.equal(subqueryRoot.get(GameUserEntryPlatform_.gameUserEntryId), root.get(GameUserEntry_.id));
+        var idPredicate = criteriaBuilder.equal(subqueryRoot.get(GameUserEntryPlatform_.gameUserEntryId), root.get(GameUserEntry_.id));
         CriteriaBuilder.In<Platform> inPredicate = criteriaBuilder.in(subqueryRoot.get(GameUserEntryPlatform_.platform));
 
         for (Platform platform : platforms) {
@@ -71,7 +71,7 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
         Subquery<Game> subquery = criteriaQuery.subquery(Game.class);
         Root<Game> subqueryRoot = subquery.from(Game.class);
 
-        Predicate idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
+        var idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
         Collection<Predicate> genrePredicates = new ArrayList<>();
         genrePredicates.add(idPredicate);
 
@@ -90,7 +90,7 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
         Subquery<Game> subquery = criteriaQuery.subquery(Game.class);
         Root<Game> subqueryRoot = subquery.from(Game.class);
 
-        Predicate idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
+        var idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
         Collection<Predicate> gameModePredicates = new ArrayList<>();
         gameModePredicates.add(idPredicate);
 
@@ -112,7 +112,7 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
         CriteriaBuilder.In<AgeRating> ageRatingInClause = criteriaBuilder.in(subqueryRoot.get(Game_.ageRating));
         ageRatings.forEach(ageRatingInClause::value);
 
-        Predicate idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
+        var idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
 
         subquery
                 .select(subqueryRoot)

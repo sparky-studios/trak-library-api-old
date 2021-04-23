@@ -87,6 +87,22 @@ public class DeveloperController {
     }
 
     /**
+     * End-point that will retrieve a {@link DeveloperDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link DeveloperDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link DeveloperDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link DeveloperDto} to retrieve.
+     *
+     * @return The {@link DeveloperDto} that matches the given slug as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}")
+    public EntityModel<DeveloperDto> findBySlug(@PathVariable String slug) {
+        return developerRepresentationModelAssembler.toModel(developerService.findBySlug(slug));
+    }
+
+    /**
      * End-point that will retrieve a {@link PagedModel} of {@link GameDto}s that have a link to the specified
      * {@link DeveloperDto}. If the ID doesn't match an existing {@link DeveloperDto}, then an {@link ApiError} will be
      * returned with additional error details. If the {@link DeveloperDto} exists but has no associated
@@ -105,7 +121,7 @@ public class DeveloperController {
                                                                    PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
 
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -142,7 +158,7 @@ public class DeveloperController {
                                                          @PageableDefault Pageable pageable,
                                                          PagedResourcesAssembler<DeveloperDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

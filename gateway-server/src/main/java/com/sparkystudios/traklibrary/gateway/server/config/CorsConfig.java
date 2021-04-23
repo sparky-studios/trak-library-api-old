@@ -24,8 +24,8 @@ public class CorsConfig {
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        CorsConfiguration config = new CorsConfiguration();
+        var source = new UrlBasedCorsConfigurationSource();
+        var config = new CorsConfiguration();
         config.setAllowedOrigins(List.of(allowedOrigins));
         config.setAllowedMethods(List.of(
                 HttpMethod.DELETE.name(),

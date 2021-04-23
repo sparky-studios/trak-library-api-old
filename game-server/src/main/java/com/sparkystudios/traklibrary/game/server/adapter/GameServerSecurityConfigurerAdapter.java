@@ -35,8 +35,8 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
         List<RequestMatcher> pathsToSkip = Collections.singletonList(
                 new AntPathRequestMatcher("/**/images/**", HttpMethod.GET.name()));
 
-        SkipPathRequestMatcher skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
-        JwtAuthenticationProcessingFilter jwtAuthenticationProcessingFilter =
+        var skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
+        var jwtAuthenticationProcessingFilter =
                 new JwtAuthenticationProcessingFilter(authenticationManager(), authenticationFailureHandler, jwtHeaderExtractor, skipPathRequestMatcher);
 
         http

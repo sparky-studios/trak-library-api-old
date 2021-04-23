@@ -102,6 +102,7 @@ class GenreControllerTest {
         genreDto.setId(1L);
         genreDto.setName("test-name-1");
         genreDto.setDescription("test-description-1");
+        genreDto.setSlug("test-slug");
         genreDto.setCreatedAt(LocalDateTime.now());
         genreDto.setUpdatedAt(LocalDateTime.now());
         genreDto.setVersion(1L);
@@ -129,6 +130,7 @@ class GenreControllerTest {
         genreDto.setId(1L);
         genreDto.setName("test-name-1");
         genreDto.setDescription("test-description-1");
+        genreDto.setSlug("test-slug");
         genreDto.setCreatedAt(LocalDateTime.now());
         genreDto.setUpdatedAt(LocalDateTime.now());
         genreDto.setVersion(1L);
@@ -138,6 +140,32 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ResponseVerifier.verifyGenreDto("", resultActions, genreDto);
+    }
+
+    @Test
+    void findBySlug_withValidSlug_return200AndValidResponse() throws Exception {
+        // Arrange
+        GenreDto genreDto = new GenreDto();
+        genreDto.setId(1L);
+        genreDto.setName("test-name-1");
+        genreDto.setDescription("test-description-1");
+        genreDto.setSlug("test-slug");
+        genreDto.setCreatedAt(LocalDateTime.now());
+        genreDto.setUpdatedAt(LocalDateTime.now());
+        genreDto.setVersion(1L);
+
+        Mockito.when(genreService.findBySlug(ArgumentMatchers.anyString()))
+                .thenReturn(genreDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/slug/test-slug")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -182,6 +210,7 @@ class GenreControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -191,6 +220,7 @@ class GenreControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -229,6 +259,7 @@ class GenreControllerTest {
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
         gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
+        gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
         gameDto1.setVersion(1L);
@@ -238,6 +269,7 @@ class GenreControllerTest {
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
         gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
+        gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
         gameDto2.setVersion(2L);
@@ -303,6 +335,7 @@ class GenreControllerTest {
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
         gameDetailsDto1.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto1.setSlug("test-slug-1");
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -312,6 +345,7 @@ class GenreControllerTest {
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
         gameDetailsDto2.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto2.setSlug("test-slug-2");
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
@@ -350,6 +384,7 @@ class GenreControllerTest {
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
         gameDetailsDto1.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto1.setSlug("test-slug-1");
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -359,6 +394,7 @@ class GenreControllerTest {
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
         gameDetailsDto2.setAgeRating(AgeRating.MATURE);
+        gameDetailsDto2.setSlug("test-slug-2");
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
@@ -423,6 +459,7 @@ class GenreControllerTest {
         genreDto1.setId(1L);
         genreDto1.setName("test-name-1");
         genreDto1.setDescription("test-description-1");
+        genreDto1.setSlug("test-slug-1");
         genreDto1.setCreatedAt(LocalDateTime.now());
         genreDto1.setUpdatedAt(LocalDateTime.now());
         genreDto1.setVersion(1L);
@@ -431,6 +468,7 @@ class GenreControllerTest {
         genreDto2.setId(2L);
         genreDto2.setName("test-name-2");
         genreDto2.setDescription("test-description-2");
+        genreDto2.setSlug("test-slug-2");
         genreDto2.setCreatedAt(LocalDateTime.now());
         genreDto2.setUpdatedAt(LocalDateTime.now());
         genreDto2.setVersion(2L);
@@ -468,6 +506,7 @@ class GenreControllerTest {
         genreDto1.setId(1L);
         genreDto1.setName("test-name-1");
         genreDto1.setDescription("test-description-1");
+        genreDto1.setSlug("test-slug-1");
         genreDto1.setCreatedAt(LocalDateTime.now());
         genreDto1.setUpdatedAt(LocalDateTime.now());
         genreDto1.setVersion(1L);
@@ -476,6 +515,7 @@ class GenreControllerTest {
         genreDto2.setId(2L);
         genreDto2.setName("test-name-2");
         genreDto2.setDescription("test-description-2");
+        genreDto2.setSlug("test-slug-2");
         genreDto2.setCreatedAt(LocalDateTime.now());
         genreDto2.setUpdatedAt(LocalDateTime.now());
         genreDto2.setVersion(2L);
@@ -530,6 +570,7 @@ class GenreControllerTest {
         genreDto.setId(1L);
         genreDto.setName("test-name-1");
         genreDto.setDescription("test-description-1");
+        genreDto.setSlug("test-slug");
         genreDto.setCreatedAt(LocalDateTime.now());
         genreDto.setUpdatedAt(LocalDateTime.now());
         genreDto.setVersion(1L);
@@ -557,6 +598,7 @@ class GenreControllerTest {
         genreDto.setId(1L);
         genreDto.setName("test-name-1");
         genreDto.setDescription("test-description-1");
+        genreDto.setSlug("test-slug");
         genreDto.setCreatedAt(LocalDateTime.now());
         genreDto.setUpdatedAt(LocalDateTime.now());
         genreDto.setVersion(1L);

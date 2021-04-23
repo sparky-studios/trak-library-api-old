@@ -14,7 +14,7 @@ public class MessageConfig {
 
     @Bean
     public MessageSource messageSource() {
-        ReloadableResourceBundleMessageSource reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
+        var reloadableResourceBundleMessageSource = new ReloadableResourceBundleMessageSource();
         reloadableResourceBundleMessageSource.setBasenames("classpath:i18n/exception", "classpath:i18n/validation", "classpath:i18n/messages");
         reloadableResourceBundleMessageSource.setDefaultEncoding(StandardCharsets.UTF_8.displayName());
 
@@ -23,7 +23,7 @@ public class MessageConfig {
 
     @Bean
     public LocalValidatorFactoryBean localValidatorFactoryBean() {
-        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        var localValidatorFactoryBean = new LocalValidatorFactoryBean();
         localValidatorFactoryBean.setValidationMessageSource(messageSource());
 
         return localValidatorFactoryBean;
@@ -31,7 +31,7 @@ public class MessageConfig {
 
     @Bean
     public CommonsRequestLoggingFilter logFilter() {
-        CommonsRequestLoggingFilter filter = new CommonsRequestLoggingFilter();
+        var filter = new CommonsRequestLoggingFilter();
         filter.setIncludeQueryString(true);
         filter.setIncludePayload(false);
         filter.setIncludeHeaders(false);

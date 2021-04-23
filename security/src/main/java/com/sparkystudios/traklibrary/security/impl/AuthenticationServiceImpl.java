@@ -18,7 +18,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String getToken() {
         // We can't inject this, so it has to be grabbed directly from the current context.
-        Authentication authentication = getAuthentication();
+        var authentication = getAuthentication();
         // We only check the authentication if the principal provided is the one we're expecting for authentication.
         return authentication instanceof JwtAuthenticationToken ? (String) authentication.getCredentials() : "";
     }
@@ -26,7 +26,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public boolean isCurrentAuthenticatedUser(long userId) {
         // We can't inject this, so it has to be grabbed directly from the current context.
-        Authentication authentication = getAuthentication();
+        var authentication = getAuthentication();
 
         // We only check the authentication if the principal provided is the one we're expecting for authentication.
         if (authentication instanceof JwtAuthenticationToken) {
@@ -38,8 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
             // Get the authenticated user details.
-            UserContext userContext = (UserContext) token.getPrincipal();
-
+            var userContext = (UserContext) token.getPrincipal();
             return isAdmin || userContext.getUserId() == userId;
         }
 

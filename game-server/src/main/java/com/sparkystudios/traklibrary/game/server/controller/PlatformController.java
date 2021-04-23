@@ -76,6 +76,22 @@ public class PlatformController {
     }
 
     /**
+     * End-point that will retrieve a {@link PlatformDto} instance that matches the given slug and convert
+     * it into a consumable HATEOAS response. If a {@link PlatformDto} instance is found that matches the slug, then
+     * that data is returned with a status of 200, however if the {@link PlatformDto} cannot be found the method
+     * will return a 404 and wrap the exception details in a {@link ApiError} with additional information.
+     *
+     * @param slug The slug of the {@link PlatformDto} to retrieve.
+     *
+     * @return The {@link PlatformDto} that matches the given slug as a HATEOAS response.
+     */
+    @AllowedForUser
+    @GetMapping("/slug/{slug}")
+    public EntityModel<PlatformDto> findById(@PathVariable String slug) {
+        return platformRepresentationModelAssembler.toModel(platformService.findBySlug(slug));
+    }
+
+    /**
      * End-point that will retrieve a {@link PagedModel} of {@link GameDto}s that have a link to the specified
      * {@link PlatformDto}. If the ID doesn't match an existing {@link PlatformDto}, then an {@link ApiError} will be
      * returned with additional error details. If the {@link PlatformDto} exists but has no associated
@@ -93,7 +109,7 @@ public class PlatformController {
                                                                  @PageableDefault Pageable pageable,
                                                                  PagedResourcesAssembler<GameDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 
@@ -130,7 +146,7 @@ public class PlatformController {
                                                         @PageableDefault Pageable pageable,
                                                         PagedResourcesAssembler<PlatformDto> pagedResourcesAssembler) {
         // The self, next and prev links won't include query parameters if not built manually.
-        Link link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
+        var link = Link.of(ServletUriComponentsBuilder.fromCurrentRequest().build()
                 .toUriString())
                 .withSelfRel();
 

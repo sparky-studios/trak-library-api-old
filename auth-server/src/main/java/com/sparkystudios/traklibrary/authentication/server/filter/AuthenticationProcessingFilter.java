@@ -90,7 +90,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
         }
 
         // Retrieve the login request which is supplied as the request body.
-        LoginRequestDto loginRequestDto = objectMapper.readValue(httpServletRequest.getReader(), LoginRequestDto.class);
+        var loginRequestDto = objectMapper.readValue(httpServletRequest.getReader(), LoginRequestDto.class);
 
         // Trim any whitespace from the trailing ends of the credentials.
         String username = Strings.nullToEmpty(loginRequestDto.getUsername()).trim();
@@ -103,7 +103,7 @@ public class AuthenticationProcessingFilter extends AbstractAuthenticationProces
         }
 
         // Create the authentication token to try and generate a JWT for.
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
+        var usernamePasswordAuthenticationToken =
                 new UsernamePasswordAuthenticationToken(loginRequestDto.getUsername(), loginRequestDto.getPassword());
 
         // Attempt authentication.

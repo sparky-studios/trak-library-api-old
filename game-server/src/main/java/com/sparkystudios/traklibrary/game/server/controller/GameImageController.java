@@ -4,7 +4,6 @@ import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.domain.GameImageSize;
 import com.sparkystudios.traklibrary.game.service.GameImageService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -75,7 +74,7 @@ public class GameImageController {
     @GetMapping(value = "/small", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeSmall(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
-        ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.SMALL);
+        var imageDataDto = gameImageService.download(id, GameImageSize.SMALL);
         return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
     }
 
@@ -94,7 +93,7 @@ public class GameImageController {
     @GetMapping(value = "/medium", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeMedium(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
-        ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.MEDIUM);
+        var imageDataDto = gameImageService.download(id, GameImageSize.MEDIUM);
         return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
     }
 
@@ -113,7 +112,7 @@ public class GameImageController {
     @GetMapping(value = "/large", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
     public ResponseEntity<ByteArrayResource> findGameImageByGameIdAndImageSizeLarge(@PathVariable long id) {
         // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
-        ImageDataDto imageDataDto = gameImageService.download(id, GameImageSize.LARGE);
+        var imageDataDto = gameImageService.download(id, GameImageSize.LARGE);
         return getImageDataAsByteArrayResource(imageDataDto.getFilename(), imageDataDto.getContent());
     }
 

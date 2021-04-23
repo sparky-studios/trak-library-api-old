@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.security.provider;
 
 import com.sparkystudios.traklibrary.security.context.UserContext;
 import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
-import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,7 +53,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String accessToken = (String) authentication.getCredentials();
 
         // Try to parse the JWT, if it fails an exception will be bubbled up the stack.
-        Claims claims = Jwts.parser()
+        var claims = Jwts.parser()
                 .setSigningKey(secretKey.getBytes())
                 .parseClaimsJws(accessToken)
                 .getBody();
@@ -74,7 +73,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        UserContext userContext = new UserContext();
+        var userContext = new UserContext();
         userContext.setUserId(claims.get("userId", Long.class));
         userContext.setUsername(username);
         userContext.setVerified(claims.get("verified", Boolean.class));

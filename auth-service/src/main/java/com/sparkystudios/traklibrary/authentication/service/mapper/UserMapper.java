@@ -23,7 +23,7 @@ public interface UserMapper {
                 .map(userRole -> new SimpleGrantedAuthority(userRole.getRole()))
                 .collect(Collectors.toList());
 
-        UserDto userDto = new UserDto();
+        var userDto = new UserDto();
         userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setEmailAddress(user.getEmailAddress());

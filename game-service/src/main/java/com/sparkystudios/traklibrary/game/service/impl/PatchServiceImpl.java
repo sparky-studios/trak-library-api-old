@@ -26,7 +26,7 @@ public class PatchServiceImpl implements PatchService {
         JsonValue patchedJson = jsonMergePatch.apply(targetJson);
 
         // Set the new Java object with the patch information.
-        T patched = objectMapper.convertValue(patchedJson, clazz);
+        var patched = objectMapper.convertValue(patchedJson, clazz);
 
         // Validate the patched bean.
         Set<ConstraintViolation<T>> violations = validator.validate(patched);

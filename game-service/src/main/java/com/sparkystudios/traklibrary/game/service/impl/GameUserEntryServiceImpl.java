@@ -68,7 +68,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
         }
 
         // Create the game user entry entity from the request and persist it.
-        GameUserEntry gameUserEntry = new GameUserEntry();
+        var gameUserEntry = new GameUserEntry();
         gameUserEntry.setUserId(gameUserEntryRequest.getUserId());
         gameUserEntry.setGameId(gameUserEntryRequest.getGameId());
         gameUserEntry.setRating(gameUserEntryRequest.getRating());
@@ -79,7 +79,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             Optional<Platform> platform = platformRepository.findById(platformId);
             // Create a platform reference and add it to the game user entry entity if the platform exists.
             if (platform.isPresent()) {
-                GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
+                var gameUserEntryPlatform = new GameUserEntryPlatform();
                 gameUserEntryPlatform.setPlatform(platform.get());
 
                 gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform);
@@ -91,7 +91,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
             Optional<DownloadableContent> downloadableContent = downloadableContentRepository.findById(downloadableContentId);
             // Create a platform reference and add it to the game user entry entity if the platform exists.
             if (downloadableContent.isPresent()) {
-                GameUserEntryDownloadableContent gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
+                var gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
                 gameUserEntryDownloadableContent.setDownloadableContent(downloadableContent.get());
 
                 gameUserEntry.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
@@ -180,7 +180,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
         }
 
         // Update the basic information of the existing game user entry entity.
-        GameUserEntry gue = gameUserEntry.get();
+        var gue = gameUserEntry.get();
         gue.setUserId(gameUserEntryRequest.getUserId());
         gue.setGameId(gameUserEntryRequest.getGameId());
         gue.setRating(gameUserEntryRequest.getRating());
@@ -201,7 +201,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
                 Optional<Platform> platform = platformRepository.findById(platformId);
                 // Create a platform reference and add it to the game user entry entity if the platform exists.
                 if (platform.isPresent()) {
-                    GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
+                    var gameUserEntryPlatform = new GameUserEntryPlatform();
                     gameUserEntryPlatform.setPlatform(platform.get());
 
                     gue.addGameUserEntryPlatform(gameUserEntryPlatform);
@@ -224,7 +224,7 @@ public class GameUserEntryServiceImpl implements GameUserEntryService {
                 Optional<DownloadableContent> downloadableContent = downloadableContentRepository.findById(gameUserEntryDownloadableContentId);
                 // Create a downloadable content reference and add it to the game user entry entity if the platform exists.
                 if (downloadableContent.isPresent()) {
-                    GameUserEntryDownloadableContent gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
+                    var gameUserEntryDownloadableContent = new GameUserEntryDownloadableContent();
                     gameUserEntryDownloadableContent.setDownloadableContent(downloadableContent.get());
 
                     gue.addGameUserEntryDownloadableContent(gameUserEntryDownloadableContent);
