@@ -58,6 +58,7 @@ public class GameServiceImpl implements GameService {
         }
 
         var game = gameMapper.toGame(gameDto);
+        game.getAgeRatings().forEach(ageRating -> ageRating.setGame(game));
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 
@@ -430,6 +431,7 @@ public class GameServiceImpl implements GameService {
         }
 
         var game = gameMapper.toGame(gameDto);
+        game.getAgeRatings().forEach(ageRating -> ageRating.setGame(game));
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
 

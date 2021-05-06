@@ -148,7 +148,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
@@ -176,7 +175,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -205,7 +203,6 @@ class GameControllerTest {
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
         gameDto.setSlug("test-slug");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
@@ -231,7 +228,6 @@ class GameControllerTest {
         gameDetailsDto.setId(1L);
         gameDetailsDto.setTitle("test-title-1");
         gameDetailsDto.setDescription("test-description-1");
-        gameDetailsDto.setAgeRating(AgeRating.MATURE);
         gameDetailsDto.setSlug("test-slug");
         gameDetailsDto.setCreatedAt(LocalDateTime.now());
         gameDetailsDto.setUpdatedAt(LocalDateTime.now());
@@ -258,7 +254,6 @@ class GameControllerTest {
         gameDetailsDto.setId(1L);
         gameDetailsDto.setTitle("test-title-1");
         gameDetailsDto.setDescription("test-description-1");
-        gameDetailsDto.setAgeRating(AgeRating.MATURE);
         gameDetailsDto.setSlug("test-slug");
         gameDetailsDto.setCreatedAt(LocalDateTime.now());
         gameDetailsDto.setUpdatedAt(LocalDateTime.now());
@@ -353,7 +348,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -396,7 +390,6 @@ class GameControllerTest {
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
         gameDto.setSlug("test-slug");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
@@ -489,7 +482,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -531,7 +523,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -627,7 +618,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -669,7 +659,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -766,7 +755,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -808,7 +796,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -990,7 +977,6 @@ class GameControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setAgeRating(AgeRating.MATURE);
         gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
@@ -1000,7 +986,6 @@ class GameControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setAgeRating(AgeRating.MATURE);
         gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
@@ -1039,7 +1024,6 @@ class GameControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setAgeRating(AgeRating.MATURE);
         gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
@@ -1049,7 +1033,6 @@ class GameControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setAgeRating(AgeRating.MATURE);
         gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
@@ -1115,7 +1098,6 @@ class GameControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setSlug("test-slug-1");
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
@@ -1125,7 +1107,6 @@ class GameControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setSlug("test-slug-2");
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
@@ -1164,7 +1145,6 @@ class GameControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setSlug("test-slug-1");
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
@@ -1174,7 +1154,6 @@ class GameControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setSlug("test-slug-2");
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
@@ -1230,7 +1209,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());
@@ -1259,7 +1237,6 @@ class GameControllerTest {
         gameDto.setId(5L);
         gameDto.setTitle("test-title");
         gameDto.setDescription("test-description");
-        gameDto.setAgeRating(AgeRating.MATURE);
         gameDto.setSlug("test-slug");
         gameDto.setCreatedAt(LocalDateTime.now());
         gameDto.setUpdatedAt(LocalDateTime.now());

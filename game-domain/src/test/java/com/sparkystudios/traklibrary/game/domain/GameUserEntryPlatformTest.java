@@ -37,7 +37,6 @@ class GameUserEntryPlatformTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 
@@ -63,7 +62,6 @@ class GameUserEntryPlatformTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.setSlug("test-slug");
         game = testEntityManager.persistFlushFind(game);
 

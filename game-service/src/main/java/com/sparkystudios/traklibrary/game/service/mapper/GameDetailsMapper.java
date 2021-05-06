@@ -23,6 +23,7 @@ public interface GameDetailsMapper {
 
     @AfterMapping
     default void afterMapping(@MappingTarget GameDetailsDto gameDetailsDto) {
+        gameDetailsDto.setAgeRatings(new TreeSet<>(gameDetailsDto.getAgeRatings()));
         gameDetailsDto.setPlatforms(new TreeSet<>(gameDetailsDto.getPlatforms()));
         gameDetailsDto.setPublishers(new TreeSet<>(gameDetailsDto.getPublishers()));
         gameDetailsDto.setGenres(new TreeSet<>(gameDetailsDto.getGenres()));

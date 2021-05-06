@@ -83,7 +83,6 @@ class GameFilterServiceImplTest {
                 .isEqualTo(genre.getName());
 
         Assertions.assertThat(result.getGameModes()).hasSize(GameMode.values().length);
-        Assertions.assertThat(result.getAgeRatings()).hasSize(AgeRating.values().length);
     }
 
     @Test
@@ -120,7 +119,6 @@ class GameFilterServiceImplTest {
                 .isEqualTo(genre.getName());
 
         Assertions.assertThat(result.getGameModes()).hasSize(GameMode.values().length);
-        Assertions.assertThat(result.getAgeRatings()).hasSize(AgeRating.values().length);
         Assertions.assertThat(result.getStatuses()).hasSize(GameUserEntryStatus.values().length);
     }
 
@@ -129,7 +127,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Genre()));
@@ -141,7 +138,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameDetailsDto());
 
         // Act
-        gameFilterService.findGamesByFilters(null, genreIds, gameModes, ageRatings, Pageable.unpaged());
+        gameFilterService.findGamesByFilters(null, genreIds, gameModes, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -157,7 +154,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.emptySet();
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Genre()));
@@ -169,7 +165,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameDetailsDto());
 
         // Act
-        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
+        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -184,7 +180,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> platformIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Platform()));
@@ -196,7 +191,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameDetailsDto());
 
         // Act
-        gameFilterService.findGamesByFilters(platformIds, null, gameModes, ageRatings, Pageable.unpaged());
+        gameFilterService.findGamesByFilters(platformIds, null, gameModes, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -212,7 +207,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Platform()));
@@ -224,7 +218,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameDetailsDto());
 
         // Act
-        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
+        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -240,7 +234,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(gameRepository.findAll(ArgumentMatchers.any(GameSearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
                 .thenReturn(new PageImpl<>(List.of(new Game(), new Game())));
@@ -249,7 +242,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameDetailsDto());
 
         // Act
-        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, Pageable.unpaged());
+        gameFilterService.findGamesByFilters(platformIds, genreIds, gameModes, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
@@ -267,7 +260,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Genre()));
@@ -276,7 +268,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGamesByFilters(null, genreIds, gameModes, ageRatings);
+        gameFilterService.countGamesByFilters(null, genreIds, gameModes);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -289,7 +281,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.emptySet();
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Genre()));
@@ -298,7 +289,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes, ageRatings);
+        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -310,7 +301,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> platformIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Platform()));
@@ -319,7 +309,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGamesByFilters(platformIds, null, gameModes, ageRatings);
+        gameFilterService.countGamesByFilters(platformIds, null, gameModes);
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -332,7 +322,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
                 .thenReturn(Collections.singletonList(new Platform()));
@@ -341,7 +330,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes, ageRatings);
+        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes);
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -354,13 +343,12 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
 
         Mockito.when(gameRepository.count(ArgumentMatchers.any(GameSearchSpecification.class)))
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes, ageRatings);
+        gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
@@ -375,7 +363,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -388,7 +375,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameUserEntryDto());
 
         // Act
-        gameFilterService.findGameUserEntriesByFilters(null, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
+        gameFilterService.findGameUserEntriesByFilters(null, genreIds, gameModes, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -404,7 +391,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.emptySet();
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -415,8 +401,9 @@ class GameFilterServiceImplTest {
 
         Mockito.when(gameUserEntryMapper.fromGameUserEntry(ArgumentMatchers.any()))
                 .thenReturn(new GameUserEntryDto());
+
         // Act
-        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
+        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -431,7 +418,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> platformIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -444,7 +430,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameUserEntryDto());
 
         // Act
-        gameFilterService.findGameUserEntriesByFilters(platformIds, null, gameModes, ageRatings, statuses, Pageable.unpaged());
+        gameFilterService.findGameUserEntriesByFilters(platformIds, null, gameModes, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -460,7 +446,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -473,7 +458,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameUserEntryDto());
 
         // Act
-        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
+        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -489,7 +474,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(gameUserEntryRepository.findAll(ArgumentMatchers.any(GameUserEntrySearchSpecification.class), ArgumentMatchers.any(Pageable.class)))
@@ -499,7 +483,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(new GameUserEntryDto());
 
         // Act
-        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, Pageable.unpaged());
+        gameFilterService.findGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses, Pageable.unpaged());
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())
@@ -517,7 +501,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -527,7 +510,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGameUserEntriesByFilters(null, genreIds, gameModes, ageRatings, statuses);
+        gameFilterService.countGameUserEntriesByFilters(null, genreIds, gameModes, statuses);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -540,7 +523,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.emptySet();
         Set<Long> genreIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(genreRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -550,7 +532,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses);
+        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.never())
@@ -562,7 +544,6 @@ class GameFilterServiceImplTest {
         // Arrange
         Set<Long> platformIds = Collections.singleton(1L);
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -572,7 +553,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGameUserEntriesByFilters(platformIds, null, gameModes, ageRatings, statuses);
+        gameFilterService.countGameUserEntriesByFilters(platformIds, null, gameModes, statuses);
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -585,7 +566,6 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(platformRepository.findAllById(ArgumentMatchers.anyIterable()))
@@ -595,7 +575,7 @@ class GameFilterServiceImplTest {
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses);
+        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses);
 
         // Assert
         Mockito.verify(genreRepository, Mockito.never())
@@ -608,14 +588,13 @@ class GameFilterServiceImplTest {
         Set<Long> platformIds = Collections.singleton(1L);
         Set<Long> genreIds = Collections.emptySet();
         Set<GameMode> gameModes = Collections.emptySet();
-        Set<AgeRating> ageRatings = Collections.emptySet();
         Set<GameUserEntryStatus> statuses = Collections.emptySet();
 
         Mockito.when(gameUserEntryRepository.count(ArgumentMatchers.any(GameUserEntrySearchSpecification.class)))
                 .thenReturn(0L);
 
         // Act
-        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses);
+        gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses);
 
         // Assert
         Mockito.verify(platformRepository, Mockito.atMostOnce())

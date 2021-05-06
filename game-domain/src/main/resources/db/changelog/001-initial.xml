@@ -19,9 +19,6 @@
                 <constraints nullable="false"/>
             </column>
             <column name="description" type="varchar(4096)"/>
-            <column name="age_rating" type="smallint" defaultValueNumeric="5">
-                <constraints nullable="false"/>
-            </column>
             <column name="franchise_id" type="bigint" />
             <column name="slug" type="varchar(255)">
                 <constraints nullable="false" unique="true" uniqueConstraintName="unq_game_slug" />
@@ -87,6 +84,39 @@
                 constraintName="fk_game_mode_game_id"
                 referencedTableName="game"
                 referencedColumnNames="id" />
+
+        <!-- Create the age ratings table -->
+        <createTable tableName="age_rating">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_age_rating" />
+            </column>
+            <column name="game_id" type="bigint" />
+            <column name="classification" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="rating" type="smallint" defaultValueNumeric="0">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- age_rating foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="age_rating"
+                baseColumnNames="game_id"
+                constraintName="fk_age_rating_game_id"
+                referencedTableName="game"
+                referencedColumnNames="id" />
+
+        <!-- age_rating unique constraints -->
+        <addUniqueConstraint
+                tableName="age_rating"
+                columnNames="game_id,classification"
+                constraintName="unq_age_rating_game_id_classification" />
 
         <!-- Create the genre table -->
         <createTable tableName="genre">
@@ -629,6 +659,7 @@
             <dropTable tableName="platform" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
+            <dropTable tableName="age_rating" />
             <dropTable tableName="game_mode" />
             <dropTable tableName="dlc" />
             <dropTable tableName="game" />

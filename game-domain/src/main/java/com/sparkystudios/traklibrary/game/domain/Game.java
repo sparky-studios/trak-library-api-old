@@ -31,8 +31,10 @@ public class Game {
     @Column(name = "description", length = 4096)
     private String description;
 
-    @Column(name = "age_rating", nullable = false)
-    private AgeRating ageRating;
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "game", cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true)
+    private Set<AgeRating> ageRatings = new TreeSet<>();
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -118,6 +120,32 @@ public class Game {
     @Version
     @Column(name = "op_lock_version")
     private Long version;
+
+    /**
+     * Convenience method that is used to add a {@link AgeRating} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link AgeRating} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param ageRating The {@link AgeRating} to add to the {@link Game}.
+     */
+    public void addAgeRating(AgeRating ageRating) {
+        ageRatings.add(ageRating);
+        ageRating.setGame(this);
+    }
+
+    /**
+     * Convenience method that is used to remove a {@link AgeRating} to the {@link Game}. As
+     * the relationship between the {@link Game} and {@link AgeRating} is bi-directional,
+     * it needs to be added and associated with on both sides of the relationship, which
+     * this method achieved.
+     *
+     * @param ageRating The {@link AgeRating} to remove to the {@link Game}.
+     */
+    public void removeAgeRating(AgeRating ageRating) {
+        ageRatings.remove(ageRating);
+        ageRating.setGame(null);
+    }
 
     /**
      * Convenience method that is used to add a {@link Genre} to the {@link Game}. As

@@ -28,7 +28,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -49,7 +48,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -70,7 +68,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -92,7 +89,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -113,7 +109,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -135,7 +130,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 
@@ -156,7 +150,6 @@ class DownloadableContentTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addDownloadableContent(downloadableContent);
 

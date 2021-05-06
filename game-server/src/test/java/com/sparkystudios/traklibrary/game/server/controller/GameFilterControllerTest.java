@@ -1,6 +1,5 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GameFilterRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryFilterRepresentationModelAssembler;
@@ -114,7 +113,7 @@ class GameFilterControllerTest {
     @Test
     void findGamesByFilters_withNoRequestParameters_returns200AndEmptyCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
                 .thenReturn(Collections.emptyList());
 
         // Act
@@ -134,7 +133,6 @@ class GameFilterControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -143,12 +141,11 @@ class GameFilterControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
                 .thenReturn(List.of(gameDetailsDto1, gameDetailsDto2));
 
         // Act
@@ -170,7 +167,6 @@ class GameFilterControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -179,12 +175,11 @@ class GameFilterControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
                 .thenReturn(List.of(gameDetailsDto1, gameDetailsDto2));
 
         // Act
@@ -206,7 +201,6 @@ class GameFilterControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -215,52 +209,15 @@ class GameFilterControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
                 .thenReturn(List.of(gameDetailsDto1, gameDetailsDto2));
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?game-modes=SINGLE_PLAYER")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        ResponseVerifier.verifyGameDetailsDto("._embedded.data[0]", resultActions, gameDetailsDto1);
-        ResponseVerifier.verifyGameDetailsDto("._embedded.data[1]", resultActions, gameDetailsDto2);
-    }
-
-    @Test
-    void findGamesByFilters_withAgeRatings_returns200AndCollection() throws Exception {
-        // Arrange
-        GameDetailsDto gameDetailsDto1 = new GameDetailsDto();
-        gameDetailsDto1.setId(1L);
-        gameDetailsDto1.setTitle("test-title-1");
-        gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
-        gameDetailsDto1.setCreatedAt(LocalDateTime.now());
-        gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
-        gameDetailsDto1.setVersion(1L);
-
-        GameDetailsDto gameDetailsDto2 = new GameDetailsDto();
-        gameDetailsDto2.setId(2L);
-        gameDetailsDto2.setTitle("test-title-2");
-        gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
-        gameDetailsDto2.setCreatedAt(LocalDateTime.now());
-        gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
-        gameDetailsDto2.setVersion(2L);
-
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
-                .thenReturn(List.of(gameDetailsDto1, gameDetailsDto2));
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?age-ratings=EVERYONE")
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
         // Assert
@@ -278,7 +235,6 @@ class GameFilterControllerTest {
         gameDetailsDto1.setId(1L);
         gameDetailsDto1.setTitle("test-title-1");
         gameDetailsDto1.setDescription("test-description-1");
-        gameDetailsDto1.setAgeRating(AgeRating.MATURE);
         gameDetailsDto1.setCreatedAt(LocalDateTime.now());
         gameDetailsDto1.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto1.setVersion(1L);
@@ -287,12 +243,11 @@ class GameFilterControllerTest {
         gameDetailsDto2.setId(2L);
         gameDetailsDto2.setTitle("test-title-2");
         gameDetailsDto2.setDescription("test-description-2");
-        gameDetailsDto2.setAgeRating(AgeRating.MATURE);
         gameDetailsDto2.setCreatedAt(LocalDateTime.now());
         gameDetailsDto2.setUpdatedAt(LocalDateTime.now());
         gameDetailsDto2.setVersion(2L);
 
-        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGamesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
                 .thenReturn(List.of(gameDetailsDto1, gameDetailsDto2));
 
         // Act
@@ -310,7 +265,7 @@ class GameFilterControllerTest {
     @Test
     void findGameUserEntriesByFilters_withPlatformIds_returns200AndCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
 
         // Act
@@ -328,7 +283,7 @@ class GameFilterControllerTest {
     @Test
     void findGameUserEntriesByFilters_withGenreIds_returns200AndCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
 
         // Act
@@ -346,7 +301,7 @@ class GameFilterControllerTest {
     @Test
     void findGameUserEntriesByFilters_returns200AndCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
 
         // Act
@@ -362,27 +317,9 @@ class GameFilterControllerTest {
     }
 
     @Test
-    void findGameUserEntriesByFilters_withAgeRatings_returns200AndCollection() throws Exception {
-        // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.isNull(), ArgumentMatchers.any()))
-                .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?age-ratings=EVERYONE")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
-
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[0]", resultActions);
-        ResponseVerifier.verifyGameUserEntryDto("._embedded.data[1]", resultActions);
-    }
-
-    @Test
     void findGameUserEntriesByFilters_withStatuses_returns200AndCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.isNull(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
 
         // Act
@@ -400,7 +337,7 @@ class GameFilterControllerTest {
     @Test
     void findGameUserEntriesByFilters_withAllData_returns200AndCollection() throws Exception {
         // Arrange
-        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
+        Mockito.when(gameFilterService.findGameUserEntriesByFilters(ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.anySet(), ArgumentMatchers.any()))
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?platform-ids=1,2&genre-ids=1,2&game-modes=SINGLE_PLAYER&age-ratings=EVERYONE&statuses=BACKLOG")

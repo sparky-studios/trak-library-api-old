@@ -8,6 +8,7 @@ import org.springframework.hateoas.server.core.Relation;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 @Data
 @Relation(collectionRelation = "data", itemRelation = "gameDetails")
@@ -18,6 +19,8 @@ public class GameDetailsDto {
     private String title;
 
     private String description;
+
+    private Set<AgeRatingDto> ageRatings = new TreeSet<>();
 
     private AgeRating ageRating;
 
