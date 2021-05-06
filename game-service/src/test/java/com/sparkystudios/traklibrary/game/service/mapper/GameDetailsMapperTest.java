@@ -22,6 +22,7 @@ import java.time.LocalDate;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {
+        AgeRatingMapperImpl.class,
         GameDetailsMapperImpl.class,
         PlatformMapperImpl.class,
         PlatformReleaseDateMapperImpl.class,
@@ -73,7 +74,6 @@ class GameDetailsMapperTest {
         game.setId(5L);
         game.setTitle("test-title");
         game.setDescription("sure is a description.");
-        game.setAgeRating(AgeRating.TEEN);
         game.getGameModes().add(GameMode.MULTI_PLAYER);
         game.setFranchiseId(5L);
         game.setVersion(5L);
@@ -83,6 +83,7 @@ class GameDetailsMapperTest {
         game.addReleaseDate(gameReleaseDate);
         game.addDownloadableContent(downloadableContent);
         game.setFranchise(franchise);
+        game.addAgeRating(new AgeRating());
 
         // Act
         GameDetailsDto result = gameDetailsMapper.fromGame(game);
@@ -91,7 +92,6 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getId()).isEqualTo(game.getId());
         Assertions.assertThat(result.getTitle()).isEqualTo(game.getTitle());
         Assertions.assertThat(result.getDescription()).isEqualTo(game.getDescription());
-        Assertions.assertThat(result.getAgeRating()).isEqualTo(game.getAgeRating());
         Assertions.assertThat(result.getGameModes()).isEqualTo(game.getGameModes());
         Assertions.assertThat(result.getFranchiseId()).isEqualTo(game.getFranchiseId());
         Assertions.assertThat(result.getVersion()).isEqualTo(game.getVersion());
@@ -100,6 +100,7 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getPublishers()).hasSize(1);
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
         Assertions.assertThat(result.getDownloadableContents()).hasSize(1);
+        Assertions.assertThat(result.getAgeRatings()).hasSize(1);
         Assertions.assertThat(result.getFranchise().getTitle()).isEqualTo(franchise.getTitle());
     }
 }

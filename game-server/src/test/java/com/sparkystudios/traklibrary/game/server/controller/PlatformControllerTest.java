@@ -197,7 +197,6 @@ class PlatformControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
@@ -207,7 +206,6 @@ class PlatformControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
         gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());
@@ -246,7 +244,6 @@ class PlatformControllerTest {
         gameDto1.setId(1L);
         gameDto1.setTitle("test-title-1");
         gameDto1.setDescription("test-description-1");
-        gameDto1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         gameDto1.setSlug("test-slug-1");
         gameDto1.setCreatedAt(LocalDateTime.now());
         gameDto1.setUpdatedAt(LocalDateTime.now());
@@ -256,7 +253,6 @@ class PlatformControllerTest {
         gameDto2.setId(2L);
         gameDto2.setTitle("test-title-2");
         gameDto2.setDescription("test-description-2");
-        gameDto2.setAgeRating(AgeRating.ADULTS_ONLY);
         gameDto2.setSlug("test-slug-2");
         gameDto2.setCreatedAt(LocalDateTime.now());
         gameDto2.setUpdatedAt(LocalDateTime.now());

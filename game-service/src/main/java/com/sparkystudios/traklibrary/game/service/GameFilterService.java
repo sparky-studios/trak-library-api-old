@@ -1,6 +1,5 @@
 package com.sparkystudios.traklibrary.game.service;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.GameMode;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
 import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
@@ -55,7 +54,6 @@ public interface GameFilterService {
      * @param platformIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Platform} to search against.
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      * @param pageable Which page of {@link GameDetailsDto} results to retrieve.
      *
      * @return An {@link Iterable} of filtered {@link GameDetailsDto} that match the given criteria.
@@ -63,7 +61,6 @@ public interface GameFilterService {
     Iterable<GameDetailsDto> findGamesByFilters(Set<Long> platformIds,
                                                 Set<Long> genreIds,
                                                 Set<GameMode> gameModes,
-                                                Set<AgeRating> ageRatings,
                                                 Pageable pageable);
 
     /**
@@ -74,14 +71,12 @@ public interface GameFilterService {
      * @param platformIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Platform} to search against.
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      *
      * @return A {@link Long} that contains the count of all {@link GameDetailsDto} that match the given criteria.
      */
     long countGamesByFilters(Set<Long> platformIds,
                              Set<Long> genreIds,
-                             Set<GameMode> gameModes,
-                             Set<AgeRating> ageRatings);
+                             Set<GameMode> gameModes);
 
     /**
      * Retrieves an {@link Iterable} of all {@link GameUserEntryDto} that matches the given criteria within the different provided
@@ -91,7 +86,6 @@ public interface GameFilterService {
      * @param platformIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Platform} to search against.
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      * @param statuses The {@link com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus}'s to search against.
      * @param pageable Which page of {@link GameUserEntryDto} results to retrieve.
      *
@@ -100,7 +94,6 @@ public interface GameFilterService {
     Iterable<GameUserEntryDto> findGameUserEntriesByFilters(Set<Long> platformIds,
                                                             Set<Long> genreIds,
                                                             Set<GameMode> gameModes,
-                                                            Set<AgeRating> ageRatings,
                                                             Set<GameUserEntryStatus> statuses,
                                                             Pageable pageable);
 
@@ -113,13 +106,11 @@ public interface GameFilterService {
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
      * @param statuses The {@link com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      *
      * @return A {@link Long} that contains the count of all {@link GameDetailsDto} that match the given criteria.
      */
     long countGameUserEntriesByFilters(Set<Long> platformIds,
                                        Set<Long> genreIds,
                                        Set<GameMode> gameModes,
-                                       Set<AgeRating> ageRatings,
                                        Set<GameUserEntryStatus> statuses);
 }

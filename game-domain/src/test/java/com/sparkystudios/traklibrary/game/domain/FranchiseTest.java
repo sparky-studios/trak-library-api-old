@@ -115,7 +115,6 @@ class FranchiseTest {
         Game game1 = new Game();
         game1.setTitle("game-title-1");
         game1.setDescription("game-description-1");
-        game1.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game1.setFranchiseId(franchise.getId());
         game1.setSlug("test-slug-1");
         game1 = testEntityManager.persistFlushFind(game1);
@@ -123,7 +122,6 @@ class FranchiseTest {
         Game game2 = new Game();
         game2.setTitle("game-title-2");
         game2.setDescription("game-description-2");
-        game2.setAgeRating(AgeRating.ADULTS_ONLY);
         game2.setFranchiseId(franchise.getId());
         game2.setSlug("test-slug-2");
         game2 = testEntityManager.persistFlushFind(game2);

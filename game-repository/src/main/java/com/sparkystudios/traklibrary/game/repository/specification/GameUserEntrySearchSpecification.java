@@ -16,7 +16,6 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
     private final transient Set<Platform> platforms;
     private final transient Set<Genre> genres;
     private final Set<GameMode> gameModes;
-    private final Set<AgeRating> ageRatings;
     private final Set<GameUserEntryStatus> statuses;
 
     @Override
@@ -33,10 +32,6 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
 
         if (gameModes != null && !gameModes.isEmpty()) {
             predicates.add(getGameModePredicate(root, criteriaQuery, criteriaBuilder));
-        }
-
-        if (ageRatings != null && !ageRatings.isEmpty()) {
-            predicates.add(getAgeRatingPredicate(root, criteriaQuery, criteriaBuilder));
         }
 
         if (statuses != null && !statuses.isEmpty()) {
@@ -101,22 +96,6 @@ public class GameUserEntrySearchSpecification implements Specification<GameUserE
         subquery
                 .select(subqueryRoot)
                 .where(gameModePredicates.toArray(new Predicate[0]));
-
-        return criteriaBuilder.exists(subquery);
-    }
-
-    private Predicate getAgeRatingPredicate(Root<GameUserEntry> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-        Subquery<Game> subquery = criteriaQuery.subquery(Game.class);
-        Root<Game> subqueryRoot = subquery.from(Game.class);
-
-        CriteriaBuilder.In<AgeRating> ageRatingInClause = criteriaBuilder.in(subqueryRoot.get(Game_.ageRating));
-        ageRatings.forEach(ageRatingInClause::value);
-
-        var idPredicate = criteriaBuilder.equal(subqueryRoot.get(Game_.id), root.get(GameUserEntry_.gameId));
-
-        subquery
-                .select(subqueryRoot)
-                .where(idPredicate, ageRatingInClause);
 
         return criteriaBuilder.exists(subquery);
     }

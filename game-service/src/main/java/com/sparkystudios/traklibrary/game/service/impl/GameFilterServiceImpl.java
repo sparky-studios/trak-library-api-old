@@ -110,7 +110,6 @@ public class GameFilterServiceImpl implements GameFilterService {
     public Iterable<GameDetailsDto> findGamesByFilters(Set<Long> platformIds,
                                                        Set<Long> genreIds,
                                                        Set<GameMode> gameModes,
-                                                       Set<AgeRating> ageRatings,
                                                        Pageable pageable) {
         // Get the platforms from the filter query.
         Set<Platform> platforms = platformIds != null && !platformIds.isEmpty() ?
@@ -121,7 +120,7 @@ public class GameFilterServiceImpl implements GameFilterService {
                 StreamSupport.stream(genreRepository.findAllById(genreIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
 
         // Get the age ratings from the filter query.
-        return gameRepository.findAll(new GameSearchSpecification(platforms, genres, gameModes, ageRatings), pageable)
+        return gameRepository.findAll(new GameSearchSpecification(platforms, genres, gameModes), pageable)
                 .map(gameDetailsMapper::fromGame);
     }
 
@@ -129,8 +128,7 @@ public class GameFilterServiceImpl implements GameFilterService {
     @Transactional(readOnly = true)
     public long countGamesByFilters(Set<Long> platformIds,
                                     Set<Long> genreIds,
-                                    Set<GameMode> gameModes,
-                                    Set<AgeRating> ageRatings) {
+                                    Set<GameMode> gameModes) {
         // Get the platforms from the filter query.
         Set<Platform> platforms = platformIds != null && !platformIds.isEmpty() ?
                 StreamSupport.stream(platformRepository.findAllById(platformIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
@@ -139,12 +137,12 @@ public class GameFilterServiceImpl implements GameFilterService {
         Set<Genre> genres = genreIds != null && !genreIds.isEmpty() ?
                 StreamSupport.stream(genreRepository.findAllById(genreIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
 
-        return gameRepository.count(new GameSearchSpecification(platforms, genres, gameModes, ageRatings));
+        return gameRepository.count(new GameSearchSpecification(platforms, genres, gameModes));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Iterable<GameUserEntryDto> findGameUserEntriesByFilters(Set<Long> platformIds, Set<Long> genreIds, Set<GameMode> gameModes, Set<AgeRating> ageRatings, Set<GameUserEntryStatus> statuses, Pageable pageable) {
+    public Iterable<GameUserEntryDto> findGameUserEntriesByFilters(Set<Long> platformIds, Set<Long> genreIds, Set<GameMode> gameModes, Set<GameUserEntryStatus> statuses, Pageable pageable) {
         // Get the platforms from the filter query.
         Set<Platform> platforms = platformIds != null && !platformIds.isEmpty() ?
                 StreamSupport.stream(platformRepository.findAllById(platformIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
@@ -154,13 +152,13 @@ public class GameFilterServiceImpl implements GameFilterService {
                 StreamSupport.stream(genreRepository.findAllById(genreIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
 
         // Get the age ratings from the filter query.
-        return gameUserEntryRepository.findAll(new GameUserEntrySearchSpecification(platforms, genres, gameModes, ageRatings, statuses), pageable)
+        return gameUserEntryRepository.findAll(new GameUserEntrySearchSpecification(platforms, genres, gameModes, statuses), pageable)
                 .map(gameUserEntryMapper::fromGameUserEntry);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public long countGameUserEntriesByFilters(Set<Long> platformIds, Set<Long> genreIds, Set<GameMode> gameModes, Set<AgeRating> ageRatings, Set<GameUserEntryStatus> statuses) {
+    public long countGameUserEntriesByFilters(Set<Long> platformIds, Set<Long> genreIds, Set<GameMode> gameModes, Set<GameUserEntryStatus> statuses) {
         // Get the platforms from the filter query.
         Set<Platform> platforms = platformIds != null && !platformIds.isEmpty() ?
                 StreamSupport.stream(platformRepository.findAllById(platformIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
@@ -169,6 +167,6 @@ public class GameFilterServiceImpl implements GameFilterService {
         Set<Genre> genres = genreIds != null && !genreIds.isEmpty() ?
                 StreamSupport.stream(genreRepository.findAllById(genreIds).spliterator(), false).collect(Collectors.toSet()) : Collections.emptySet();
 
-        return gameUserEntryRepository.count(new GameUserEntrySearchSpecification(platforms, genres, gameModes, ageRatings, statuses));
+        return gameUserEntryRepository.count(new GameUserEntrySearchSpecification(platforms, genres, gameModes, statuses));
     }
 }

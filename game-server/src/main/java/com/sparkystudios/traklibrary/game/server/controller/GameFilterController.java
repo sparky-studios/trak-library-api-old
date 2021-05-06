@@ -1,6 +1,5 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.GameMode;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
 import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
@@ -101,7 +100,6 @@ public class GameFilterController {
      * @param platformIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Platform} to search against.
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      * @param pageable Which page of {@link GameDetailsDto} results to retrieve.
      * @param pagedResourcesAssembler Injected, used to convert the {@link GameDetailsDto}s into a {@link PagedModel}.
      *
@@ -112,7 +110,6 @@ public class GameFilterController {
     public PagedModel<EntityModel<GameDetailsDto>> findGamesByFilters(@RequestParam(name = "platform-ids", required = false) Set<Long> platformIds,
                                                                       @RequestParam(name = "genre-ids", required = false) Set<Long> genreIds,
                                                                       @RequestParam(name = "game-modes", required = false) Set<GameMode> gameModes,
-                                                                      @RequestParam(name = "age-ratings", required = false) Set<AgeRating> ageRatings,
                                                                       @PageableDefault Pageable pageable,
                                                                       PagedResourcesAssembler<GameDetailsDto> pagedResourcesAssembler) {
 
@@ -123,11 +120,11 @@ public class GameFilterController {
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameDetailsDto> gameDetailsDtos = StreamSupport.stream(gameFilterService
-                .findGamesByFilters(platformIds, genreIds, gameModes, ageRatings, pageable).spliterator(), false)
+                .findGamesByFilters(platformIds, genreIds, gameModes, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Get the total number of entities that match the given criteria, dis-regarding page sizing.
-        long count = gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes, ageRatings);
+        long count = gameFilterService.countGamesByFilters(platformIds, genreIds, gameModes);
 
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler.toModel(new PageImpl<>(gameDetailsDtos, pageable, count), gameDetailsRepresentationModelAssembler, link);
@@ -145,7 +142,6 @@ public class GameFilterController {
      * @param platformIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Platform} to search against.
      * @param genreIds The ID's of the {@link com.sparkystudios.traklibrary.game.domain.Genre} to search against.
      * @param gameModes The {@link GameMode}'s to search against.
-     * @param ageRatings The {@link AgeRating}'s to search against.
      * @param statuses The {@link GameUserEntryStatus}'s to search against.
      * @param pageable Which page of {@link GameUserEntryDto} results to retrieve.
      * @param pagedResourcesAssembler Injected, used to convert the {@link GameDetailsDto}s into a {@link PagedModel}.
@@ -157,7 +153,6 @@ public class GameFilterController {
     public PagedModel<EntityModel<GameUserEntryDto>> findGameUserEntriesByFilters(@RequestParam(name = "platform-ids", required = false) Set<Long> platformIds,
                                                                                   @RequestParam(name = "genre-ids", required = false) Set<Long> genreIds,
                                                                                   @RequestParam(name = "game-modes", required = false) Set<GameMode> gameModes,
-                                                                                  @RequestParam(name = "age-ratings", required = false) Set<AgeRating> ageRatings,
                                                                                   @RequestParam(required = false) Set<GameUserEntryStatus> statuses,
                                                                                   @PageableDefault Pageable pageable,
                                                                                   PagedResourcesAssembler<GameUserEntryDto> pagedResourcesAssembler) {
@@ -169,11 +164,11 @@ public class GameFilterController {
 
         // Get the paged data from the service and convert into a list so it can be added to a page object.
         List<GameUserEntryDto> gameUserEntryDtos = StreamSupport.stream(gameFilterService
-                .findGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses, pageable).spliterator(), false)
+                .findGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses, pageable).spliterator(), false)
                 .collect(Collectors.toList());
 
         // Get the total number of entities that match the given criteria, dis-regarding page sizing.
-        long count = gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, ageRatings, statuses);
+        long count = gameFilterService.countGameUserEntriesByFilters(platformIds, genreIds, gameModes, statuses);
 
         // Wrap the page in a HATEOAS response.
         return pagedResourcesAssembler.toModel(new PageImpl<>(gameUserEntryDtos, pageable, count), gameUserEntryRepresentationModelAssembler, link);

@@ -1,12 +1,10 @@
 package com.sparkystudios.traklibrary.game.service.dto;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.GameMode;
 import lombok.Data;
 import org.springframework.hateoas.server.core.Relation;
 
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
@@ -25,8 +23,7 @@ public class GameDto {
     @Size(max = 4096, message = "{game.validation.description.size}")
     private String description;
 
-    @NotNull(message = "{game.validation.age-rating.not-null}")
-    private AgeRating ageRating;
+    private Set<AgeRatingDto> ageRatings = new TreeSet<>();
 
     private Set<GameMode> gameModes = EnumSet.noneOf(GameMode.class);
 

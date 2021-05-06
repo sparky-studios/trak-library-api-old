@@ -25,7 +25,6 @@ class GameReleaseDateTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate);
 
@@ -44,7 +43,6 @@ class GameReleaseDateTest {
         Game game = new Game();
         game.setTitle("test-title");
         game.setDescription("test-description");
-        game.setAgeRating(AgeRating.MATURE);
         game.setSlug("test-slug");
         game.addReleaseDate(gameReleaseDate);
 

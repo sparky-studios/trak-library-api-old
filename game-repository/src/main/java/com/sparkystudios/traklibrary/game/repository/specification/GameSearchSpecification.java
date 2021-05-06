@@ -19,7 +19,6 @@ public class GameSearchSpecification implements Specification<Game> {
     private final transient Set<Platform> platforms;
     private final transient Set<Genre> genres;
     private final Set<GameMode> gameModes;
-    private final Set<AgeRating> ageRatings;
 
     @Override
     public Predicate toPredicate(@NonNull Root<Game> root, @NonNull CriteriaQuery<?> criteriaQuery, @NonNull CriteriaBuilder criteriaBuilder) {
@@ -41,13 +40,6 @@ public class GameSearchSpecification implements Specification<Game> {
             for (GameMode gameMode : gameModes) {
                 predicates.add(criteriaBuilder.or(criteriaBuilder.isMember(gameMode, root.get(Game_.gameModes))));
             }
-        }
-
-        if (ageRatings != null) {
-            CriteriaBuilder.In<AgeRating> ageRatingInClause = criteriaBuilder.in(root.get(Game_.ageRating));
-            ageRatings.forEach(ageRatingInClause::value);
-
-            predicates.add(ageRatingInClause);
         }
 
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));

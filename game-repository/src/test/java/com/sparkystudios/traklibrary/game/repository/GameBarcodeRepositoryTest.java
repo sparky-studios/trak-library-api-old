@@ -37,7 +37,6 @@ class GameBarcodeRepositoryTest {
         Game game = new Game();
         game.setTitle("game-title");
         game.setDescription("game-description");
-        game.setAgeRating(AgeRating.EVERYONE_TEN_PLUS);
         game.setSlug("test-slug");
         game = gameRepository.save(game);
 

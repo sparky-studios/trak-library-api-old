@@ -40,7 +40,6 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)gameDto.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".age_rating", Matchers.is(gameDto.getAgeRating().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".game_modes").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchise_id", Matchers.is(gameDto.getFranchiseId() != null ? gameDto.getFranchiseId().intValue() : null)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".created_at").exists())
@@ -69,7 +68,6 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int) gameDetailsDto.getId())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".title", Matchers.is(gameDetailsDto.getTitle())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(gameDetailsDto.getDescription())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".age_rating", Matchers.is(gameDetailsDto.getAgeRating().name())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".game_modes").hasJsonPath())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchise_id", Matchers.is(gameDetailsDto.getFranchiseId() != null ? gameDetailsDto.getFranchiseId().intValue() : null)))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".franchise").hasJsonPath())
@@ -173,7 +171,6 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platforms").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".game_modes").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".age_ratings").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists());
     }
 
@@ -182,7 +179,6 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".platforms").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".genres").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".game_modes").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".age_ratings").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".statuses").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists());
     }

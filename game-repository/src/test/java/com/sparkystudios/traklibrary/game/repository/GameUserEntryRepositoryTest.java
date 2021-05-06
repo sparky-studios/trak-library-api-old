@@ -37,7 +37,6 @@ class GameUserEntryRepositoryTest {
         Game game = new Game();
         game.setTitle("title");
         game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
         game.setSlug("test-slug");
         game.addGenre(genre);
@@ -68,7 +67,7 @@ class GameUserEntryRepositoryTest {
 
         // Act
         Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform2), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()), Collections.singleton(gameUserEntry.getStatus())));
+                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform2), Collections.singleton(genre), game.getGameModes(), Collections.singleton(gameUserEntry.getStatus())));
 
         // Assert
         Assertions.assertThat(result).isEmpty();
@@ -92,7 +91,6 @@ class GameUserEntryRepositoryTest {
         Game game = new Game();
         game.setTitle("title");
         game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
         game.setSlug("test-slug");
         game.addGenre(genre1);
@@ -117,7 +115,7 @@ class GameUserEntryRepositoryTest {
 
         // Act
         Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre2), game.getGameModes(), Collections.singleton(game.getAgeRating()), Collections.singleton(gameUserEntry.getStatus())));
+                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre2), game.getGameModes(), Collections.singleton(gameUserEntry.getStatus())));
 
         // Assert
         Assertions.assertThat(result).isEmpty();
@@ -135,7 +133,6 @@ class GameUserEntryRepositoryTest {
         Game game = new Game();
         game.setTitle("title");
         game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
         game.setSlug("test-slug");
         game.addGenre(genre);
@@ -160,50 +157,7 @@ class GameUserEntryRepositoryTest {
 
         // Act
         Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), Collections.singleton(GameMode.MULTI_PLAYER), Collections.singleton(game.getAgeRating()), Collections.singleton(gameUserEntry.getStatus())));
-
-        // Assert
-        Assertions.assertThat(result).isEmpty();
-    }
-
-    @Test
-    void findAllWithGameUserEntrySearchSpecification_withNoMatchingAgeRatings_returnsEmpty() {
-        // Arrange
-        Genre genre = new Genre();
-        genre.setName("genre-1");
-        genre.setDescription("description");
-        genre.setSlug("test-slug");
-        genre = genreRepository.save(genre);
-
-        Game game = new Game();
-        game.setTitle("title");
-        game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
-        game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
-        game.setSlug("test-slug");
-        game.addGenre(genre);
-        game = gameRepository.save(game);
-
-        Platform platform = new Platform();
-        platform.setName("platform-1");
-        platform.setDescription("description-1");
-        platform.setSlug("test-slug");
-        platform = platformRepository.save(platform);
-
-        GameUserEntryPlatform gameUserEntryPlatform = new GameUserEntryPlatform();
-        gameUserEntryPlatform.setPlatform(platform);
-
-        GameUserEntry gameUserEntry = new GameUserEntry();
-        gameUserEntry.setUserId(1L);
-        gameUserEntry.setRating((short)3);
-        gameUserEntry.setStatus(GameUserEntryStatus.BACKLOG);
-        gameUserEntry.setGameId(game.getId());
-        gameUserEntry.addGameUserEntryPlatform(gameUserEntryPlatform);
-        gameUserEntryRepository.save(gameUserEntry);
-
-        // Act
-        Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(AgeRating.ADULTS_ONLY), Collections.singleton(gameUserEntry.getStatus())));
+                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), Collections.singleton(GameMode.MULTI_PLAYER), Collections.singleton(gameUserEntry.getStatus())));
 
         // Assert
         Assertions.assertThat(result).isEmpty();
@@ -221,7 +175,6 @@ class GameUserEntryRepositoryTest {
         Game game = new Game();
         game.setTitle("title");
         game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
         game.setSlug("test-slug");
         game.addGenre(genre);
@@ -246,7 +199,7 @@ class GameUserEntryRepositoryTest {
 
         // Act
         Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()), Collections.singleton(GameUserEntryStatus.COMPLETED)));
+                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(GameUserEntryStatus.COMPLETED)));
 
         // Assert
         Assertions.assertThat(result).isEmpty();
@@ -264,7 +217,6 @@ class GameUserEntryRepositoryTest {
         Game game = new Game();
         game.setTitle("title");
         game.setDescription("description");
-        game.setAgeRating(AgeRating.EVERYONE);
         game.setGameModes(Collections.singleton(GameMode.SINGLE_PLAYER));
         game.setSlug("test-slug");
         game.addGenre(genre);
@@ -289,7 +241,7 @@ class GameUserEntryRepositoryTest {
 
         // Act
         Collection<GameUserEntry> result = gameUserEntryRepository
-                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(game.getAgeRating()), Collections.singleton(gameUserEntry.getStatus())));
+                .findAll(new GameUserEntrySearchSpecification(Collections.singleton(platform), Collections.singleton(genre), game.getGameModes(), Collections.singleton(gameUserEntry.getStatus())));
 
         // Assert
         Assertions.assertThat(result).isNotEmpty();
