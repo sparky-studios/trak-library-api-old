@@ -6,6 +6,8 @@ import com.sparkystudios.traklibrary.game.repository.specification.GameSpecifica
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameReleaseDateDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
+import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
 import com.sparkystudios.traklibrary.game.service.mapper.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -49,6 +51,12 @@ class GameServiceImplTest {
     private PatchService patchService;
 
     @Mock
+    private NewGameRequestMapper newGameRequestMapper;
+
+    @Mock
+    private UpdateGameRequestMapper updateGameRequestMapper;
+
+    @Mock
     private GameMapper gameMapper;
 
     @Mock
@@ -58,32 +66,14 @@ class GameServiceImplTest {
     private GameServiceImpl gameService;
 
     @Test
-    void save_withNullGameDto_throwsNullPointerException() {
+    void save_withNullNewGameRequest_throwsNullPointerException() {
         // Assert
         Assertions.assertThrows(NullPointerException.class, () -> gameService.save(null));
     }
 
     @Test
-    void save_withExistingEntity_throwsEntityExistsException() {
+    void save_withNewGameRequest_savesGameDto() {
         // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        GameDto gameDto = new GameDto();
-
-        // Assert
-        Assertions.assertThrows(EntityExistsException.class, () -> gameService.save(gameDto));
-    }
-
-    @Test
-    void save_withNewGameDto_savesGameDto() {
-        // Arrange
-        Mockito.when(gameRepository.existsById(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
         Mockito.when(gameRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
@@ -91,11 +81,11 @@ class GameServiceImplTest {
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
 
-        Mockito.when(gameMapper.toGame(ArgumentMatchers.any()))
+        Mockito.when(newGameRequestMapper.toGame(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
         // Act
-        gameService.save(gameDto);
+        gameService.save(new NewGameRequest());
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())
@@ -1118,10 +1108,10 @@ class GameServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        GameDto gameDto = new GameDto();
+        UpdateGameRequest updateGameRequest = new UpdateGameRequest();
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(gameDto));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameService.update(updateGameRequest));
     }
 
     @Test
@@ -1133,15 +1123,15 @@ class GameServiceImplTest {
         Mockito.when(gameRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
-        GameDto gameDto = new GameDto();
-        gameDto.getReleaseDates().add(new GameReleaseDateDto());
-        gameDto.getReleaseDates().add(new GameReleaseDateDto());
+        UpdateGameRequest updateGameRequest = new UpdateGameRequest();
+        updateGameRequest.getReleaseDates().add(new GameReleaseDateDto());
+        updateGameRequest.getReleaseDates().add(new GameReleaseDateDto());
 
-        Mockito.when(gameMapper.toGame(ArgumentMatchers.any()))
+        Mockito.when(updateGameRequestMapper.toGame(ArgumentMatchers.any()))
                 .thenReturn(new Game());
 
         // Act
-        gameService.update(gameDto);
+        gameService.update(updateGameRequest);
 
         // Assert
         Mockito.verify(gameRepository, Mockito.atMostOnce())

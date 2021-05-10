@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.server.controller.FranchiseController;
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
 import com.sparkystudios.traklibrary.game.server.controller.GameImageController;
@@ -33,13 +34,13 @@ public class GameDetailsRepresentationModelAssembler implements SimpleRepresenta
             resource.add(WebMvcLinkBuilder.linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getId()))
                     .withSelfRel());
 
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getId(), ImageSize.SMALL))
                     .withRel("small_image"));
 
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getId(), ImageSize.MEDIUM))
                     .withRel("medium_image"));
 
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getId(), ImageSize.LARGE))
                     .withRel("large_image"));
 
             resource.add(linkTo(methodOn(GameController.class).findPlatformsByGameId(content.getId()))
@@ -56,6 +57,9 @@ public class GameDetailsRepresentationModelAssembler implements SimpleRepresenta
 
             resource.add(linkTo(methodOn(GameController.class).findGameUserEntriesByGameId(content.getId(), null, Pageable.unpaged(), gameUserEntryDtoPagedResourcesAssembler))
                     .withRel("entries"));
+
+            resource.add(linkTo(methodOn(GameController.class).findDownloadableContentsByGameId(content.getId()))
+                    .withRel("downloadable_content"));
 
             if (content.getFranchiseId() != null) {
                 resource.add(linkTo(methodOn(FranchiseController.class).findById(content.getFranchiseId()))

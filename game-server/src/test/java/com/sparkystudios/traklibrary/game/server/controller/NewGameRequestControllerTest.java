@@ -34,7 +34,7 @@ import java.util.Collections;
 @Import({GameRequestController.class, TrakHalJsonMediaTypeConfiguration.class, GlobalExceptionHandler.class, JsonMergePatchHttpMessageConverter.class})
 @WebMvcTest(controllers = GameRequestController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class, useDefaultFilters = false)
 @AutoConfigureMockMvc(addFilters = false)
-class GameRequestControllerTest {
+class NewGameRequestControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

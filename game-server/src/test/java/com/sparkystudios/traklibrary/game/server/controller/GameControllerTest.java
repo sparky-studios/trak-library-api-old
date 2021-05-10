@@ -2,32 +2,17 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sparkystudios.traklibrary.game.domain.AgeRating;
+import com.sparkystudios.traklibrary.game.domain.DownloadableContent;
 import com.sparkystudios.traklibrary.game.domain.GameUserEntryStatus;
-import com.sparkystudios.traklibrary.game.server.assembler.DeveloperRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.PlatformRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.server.assembler.*;
 import com.sparkystudios.traklibrary.game.server.configuration.TrakHalJsonMediaTypeConfiguration;
 import com.sparkystudios.traklibrary.game.server.converter.JsonMergePatchHttpMessageConverter;
 import com.sparkystudios.traklibrary.game.server.exception.GlobalExceptionHandler;
 import com.sparkystudios.traklibrary.game.server.utils.ResponseVerifier;
-import com.sparkystudios.traklibrary.game.service.DeveloperService;
-import com.sparkystudios.traklibrary.game.service.GameDetailsService;
-import com.sparkystudios.traklibrary.game.service.GameService;
-import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
-import com.sparkystudios.traklibrary.game.service.GenreService;
-import com.sparkystudios.traklibrary.game.service.PlatformService;
-import com.sparkystudios.traklibrary.game.service.PublisherService;
-import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
-import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
-import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
-import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
+import com.sparkystudios.traklibrary.game.service.*;
+import com.sparkystudios.traklibrary.game.service.dto.*;
+import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
+import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -83,6 +68,9 @@ class GameControllerTest {
     private PublisherService publisherService;
 
     @MockBean
+    private DownloadableContentService downloadableContentService;
+
+    @MockBean
     private GameUserEntryService gameUserEntryService;
 
     @TestConfiguration
@@ -122,15 +110,20 @@ class GameControllerTest {
         public GameUserEntryRepresentationModelAssembler gameUserEntryRepresentationModelAssembler() {
             return new GameUserEntryRepresentationModelAssembler();
         }
+
+        @Bean
+        public DownloadableContentRepresentationModelAssembler downloadableContentRepresentationModelAssembler() {
+            return new DownloadableContentRepresentationModelAssembler();
+        }
     }
 
     @Test
-    void save_withInvalidGameDto_returns400() throws Exception {
+    void save_withInvalidNewGameRequest_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(new GameDto())));
+                .content(objectMapper.writeValueAsString(new NewGameRequest())));
 
         // Assert
         resultActions
@@ -142,7 +135,7 @@ class GameControllerTest {
     }
 
     @Test
-    void save_withValidGameDto_returns201AndValidResponse() throws Exception {
+    void save_withValidNewGameRequest_returns201AndValidResponse() throws Exception {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
@@ -155,11 +148,15 @@ class GameControllerTest {
         Mockito.when(gameService.save(ArgumentMatchers.any()))
                 .thenReturn(gameDto);
 
+        NewGameRequest newGameRequest = new NewGameRequest();
+        newGameRequest.setTitle("test-title");
+        newGameRequest.setDescription("test-description");
+
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(gameDto)));
+                .content(objectMapper.writeValueAsString(newGameRequest)));
 
         // Assert
         resultActions
@@ -731,7 +728,6 @@ class GameControllerTest {
         ResponseVerifier.verifyPublisherDto("._embedded.data[1]", resultActions, publisherDto2);
     }
 
-
     @Test
     void savePublishersForGameId_withNoBody_returns400() throws Exception {
         // Act
@@ -812,6 +808,60 @@ class GameControllerTest {
 
         // Assert
         ResponseVerifier.verifyGameDto("", resultActions, gameDto);
+    }
+
+    @Test
+    void findDownloadableContentsByGameId_withNoData_returns200AndEmptyCollection() throws Exception {
+        // Arrange
+        Mockito.when(downloadableContentService.findDownloadableContentsByGameId(ArgumentMatchers.anyLong()))
+                .thenReturn(Collections.emptyList());
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/dlc")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string("{}"));
+    }
+
+    @Test
+    void findDownloadableContentsByGameId_withData_returns200AndCollection() throws Exception {
+        // Arrange
+        DownloadableContentDto downloadableContentDto1 = new DownloadableContentDto();
+        downloadableContentDto1.setId(1L);
+        downloadableContentDto1.setName("test-name-1");
+        downloadableContentDto1.setDescription("test-description-1");
+        downloadableContentDto1.setReleaseDate(LocalDate.now());
+        downloadableContentDto1.setSlug("test-slug-1");
+        downloadableContentDto1.setCreatedAt(LocalDateTime.now());
+        downloadableContentDto1.setUpdatedAt(LocalDateTime.now());
+        downloadableContentDto1.setVersion(1L);
+
+        DownloadableContentDto downloadableContentDto2 = new DownloadableContentDto();
+        downloadableContentDto2.setId(2L);
+        downloadableContentDto2.setName("test-name-2");
+        downloadableContentDto2.setDescription("test-description-2");
+        downloadableContentDto2.setReleaseDate(LocalDate.now());
+        downloadableContentDto2.setSlug("test-slug-2");
+        downloadableContentDto2.setCreatedAt(LocalDateTime.now());
+        downloadableContentDto2.setUpdatedAt(LocalDateTime.now());
+        downloadableContentDto2.setVersion(2L);
+
+        Mockito.when(downloadableContentService.findDownloadableContentsByGameId(ArgumentMatchers.anyLong()))
+                .thenReturn(Arrays.asList(downloadableContentDto1, downloadableContentDto2));
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/dlc")
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+
+        ResponseVerifier.verifyDownloadableContentDto("._embedded.data[0]", resultActions, downloadableContentDto1);
+        ResponseVerifier.verifyDownloadableContentDto("._embedded.data[1]", resultActions, downloadableContentDto2);
     }
 
     @Test
@@ -1186,12 +1236,12 @@ class GameControllerTest {
     }
 
     @Test
-    void update_withInvalidGameDto_returns400() throws Exception {
+    void update_withInvalidUpdateGameRequest_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(new GameDto())));
+                .content(objectMapper.writeValueAsString(new UpdateGameRequest())));
 
         // Assert
         resultActions
@@ -1203,7 +1253,7 @@ class GameControllerTest {
     }
 
     @Test
-    void update_withValidGameDto_returns200AndValidResponse() throws Exception {
+    void update_withValidUpdateGameRequest_returns200AndValidResponse() throws Exception {
         // Arrange
         GameDto gameDto = new GameDto();
         gameDto.setId(5L);
@@ -1217,11 +1267,15 @@ class GameControllerTest {
         Mockito.when(gameService.update(ArgumentMatchers.any()))
                 .thenReturn(gameDto);
 
+        UpdateGameRequest updateGameRequest = new UpdateGameRequest();
+        updateGameRequest.setTitle("test-title");
+        updateGameRequest.setDescription("test-description");
+
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1.hal+json")
-                .content(objectMapper.writeValueAsString(gameDto)));
+                .content(objectMapper.writeValueAsString(updateGameRequest)));
 
         // Assert
         resultActions

@@ -67,6 +67,41 @@
                 columnNames="name,game_id"
                 constraintName="unq_dlc_name_game_id" />
 
+        <!-- Create the dlc_image table -->
+        <createTable tableName="dlc_image">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_dlc_image" />
+            </column>
+            <column name="dlc_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="filename" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="size" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- dlc_image foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="dlc_image"
+                baseColumnNames="dlc_id"
+                constraintName="fk_dlc_image_dlc_id"
+                referencedTableName="dlc"
+                referencedColumnNames="id" />
+
+        <!-- dlc_image unique constraints -->
+        <addUniqueConstraint
+                tableName="dlc_image"
+                columnNames="dlc_id,size"
+                constraintName="unq_dlc_image_dlc_id_size" />
+
         <!-- Create the game mode tables -->
         <createTable tableName="game_mode">
             <column name="mode" type="varchar(30)">
@@ -228,6 +263,38 @@
                 columnNames="game_id,platform_id"
                 constraintName="unq_game_platform_xref_game_id_platform_id" />
 
+        <!-- Create the platform_image table -->
+        <createTable tableName="platform_image">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_platform_image" />
+            </column>
+            <column name="platform_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="filename" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- platform_image foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="platform_image"
+                baseColumnNames="platform_id"
+                constraintName="fk_platform_image_platform_id"
+                referencedTableName="platform"
+                referencedColumnNames="id" />
+
+        <!-- platform_image unique constraints -->
+        <addUniqueConstraint
+                tableName="platform_image"
+                columnNames="platform_id"
+                constraintName="unq_platform_image_platform_id" />
+
         <!-- game_user_entry table -->
         <createTable tableName="game_user_entry">
             <column name="id" type="bigint" autoIncrement="true">
@@ -387,6 +454,39 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
+        <!-- Create the company_image table -->
+        <createTable tableName="company_image">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_company_image" />
+            </column>
+            <column name="company_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="filename" type="varchar(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- company_image foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="company_image"
+                baseColumnNames="company_id"
+                constraintName="fk_company_image_company_id"
+                referencedTableName="company"
+                referencedColumnNames="id" />
+
+        <!-- company_image unique constraints -->
+        <addUniqueConstraint
+                tableName="company_image"
+                columnNames="company_id"
+                constraintName="unq_company_image_company_id" />
+
+        <!-- Create the developer table -->
         <createTable tableName="developer" remarks="Extends from company table.">
             <column name="id" type="bigint">
                 <constraints
@@ -398,6 +498,7 @@
             </column>
         </createTable>
 
+        <!-- Create the publisher table -->
         <createTable tableName="publisher" remarks="Extends from company table.">
             <column name="id" type="bigint">
                 <constraints
@@ -650,17 +751,20 @@
             <dropTable tableName="game_publisher_xref" />
             <dropTable tableName="publisher" />
             <dropTable tableName="developer" />
+            <dropTable tableName="company_image" />
             <dropTable tableName="company" />
             <dropTable tableName="game_request" />
             <dropTable tableName="game_user_entry_dlc" />
             <dropTable tableName="game_user_entry_platform" />
             <dropTable tableName="game_user_entry" />
+            <dropTable tableName="platform_image" />
             <dropTable tableName="game_platform_xref" />
             <dropTable tableName="platform" />
             <dropTable tableName="game_genre_xref" />
             <dropTable tableName="genre" />
             <dropTable tableName="age_rating" />
             <dropTable tableName="game_mode" />
+            <dropTable tableName="dlc_image" />
             <dropTable tableName="dlc" />
             <dropTable tableName="game" />
         </rollback>

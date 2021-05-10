@@ -2,27 +2,11 @@ package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.repository.specification.GameUserEntrySpecification;
-import com.sparkystudios.traklibrary.game.server.assembler.DeveloperRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameDetailsRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GameUserEntryRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.GenreRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.PlatformRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
-import com.sparkystudios.traklibrary.game.service.DeveloperService;
-import com.sparkystudios.traklibrary.game.service.GameDetailsService;
-import com.sparkystudios.traklibrary.game.service.GameService;
-import com.sparkystudios.traklibrary.game.service.GameUserEntryService;
-import com.sparkystudios.traklibrary.game.service.GenreService;
-import com.sparkystudios.traklibrary.game.service.PlatformService;
-import com.sparkystudios.traklibrary.game.service.PublisherService;
-import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.GameUserEntryDto;
-import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
-import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
-import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
+import com.sparkystudios.traklibrary.game.server.assembler.*;
+import com.sparkystudios.traklibrary.game.service.*;
+import com.sparkystudios.traklibrary.game.service.dto.*;
+import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
+import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
@@ -78,6 +62,7 @@ public class GameController {
     private final PlatformService platformService;
     private final DeveloperService developerService;
     private final PublisherService publisherService;
+    private final DownloadableContentService downloadableContentService;
     private final GameUserEntryService gameUserEntryService;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
     private final GameDetailsRepresentationModelAssembler gameDetailsRepresentationModelAssembler;
@@ -85,26 +70,23 @@ public class GameController {
     private final PlatformRepresentationModelAssembler platformRepresentationModelAssembler;
     private final DeveloperRepresentationModelAssembler developerRepresentationModelAssembler;
     private final PublisherRepresentationModelAssembler publisherRepresentationModelAssembler;
+    private final DownloadableContentRepresentationModelAssembler downloadableContentRepresentationModelAssembler;
     private final GameUserEntryRepresentationModelAssembler gameUserEntryRepresentationModelAssembler;
 
     /**
-     * End-point that will attempt to save the given {@link GameDto} request body to the underlying
-     * persistence layer. The {@link GameDto} must either be valid or have all of the required fields meet
+     * End-point that will attempt to save the given {@link NewGameRequest} request body to the underlying
+     * persistence layer. The {@link NewGameRequest} must either be valid or have all of the required fields meet
      * its pre-requisite conditions in order to attempt a save to the persistence layer.
      *
-     * If the {@link GameDto} being saved contains an ID that matches an existing entity in the persistence layer,
-     * the {@link GameDto} will not be saved and a {@link ApiError} will
-     * be returned with appropriate exceptions details.
-     *
-     * @param gameDto The {@link GameDto} to save.
+     * @param newGameRequest The {@link NewGameRequest} to save.
      *
      * @return The saved {@link GameDto} instance as a HATEOAS response.
      */
     @AllowedForModerator
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EntityModel<GameDto> save(@Validated @RequestBody GameDto gameDto) {
-        return gameRepresentationModelAssembler.toModel(gameService.save(gameDto));
+    public EntityModel<GameDto> save(@Validated @RequestBody NewGameRequest newGameRequest) {
+        return gameRepresentationModelAssembler.toModel(gameService.save(newGameRequest));
     }
 
     /**
@@ -395,6 +377,22 @@ public class GameController {
         return gameRepresentationModelAssembler.toModel(gameService.updatePublishersForGameId(id, publisherIds));
     }
 
+    /**
+     * End-point that will retrieve a {@link CollectionModel} of {@link DownloadableContentDto}s that are directly associated
+     * with the {@link GameDto} that matches the given ID. If the ID doesn't match an existing {@link GameDto},
+     * then an {@link ApiError} will be returned with additional error details. If the {@link GameDto} exists but
+     * has no associated {@link DownloadableContentDto}'s, then an empty {@link CollectionModel} will be returned.
+     *
+     * @param id The ID of the {@link GameDto} to retrieve genre information for.
+     *
+     * @return A {@link CollectionModel} of {@link DownloadableContentDto}'s that are associated with the given {@link GameDto}.
+     */
+    @AllowedForUser
+    @GetMapping("/{id}/dlc")
+    public CollectionModel<EntityModel<DownloadableContentDto>> findDownloadableContentsByGameId(@PathVariable long id) {
+        return downloadableContentRepresentationModelAssembler.toCollectionModel(downloadableContentService.findDownloadableContentsByGameId(id));
+    }
+
     @AllowedForUser
     @GetMapping("/{id}/entries")
     public PagedModel<EntityModel<GameUserEntryDto>> findGameUserEntriesByGameId(@PathVariable long id,
@@ -490,22 +488,21 @@ public class GameController {
     }
 
     /**
-     * End-point that will attempt to updated the given {@link GameDto} request body to the underlying
-     * persistence layer. The {@link GameDto} must either be valid or have all of the required fields meet
+     * End-point that will attempt to updated the given {@link UpdateGameRequest} request body to the underlying
+     * persistence layer. The {@link UpdateGameRequest} must either be valid or have all of the required fields meet
      * its pre-requisite conditions in order to attempt an update in the persistence layer.
      *
      * If the {@link GameDto} being saved doesn't contain an ID that matches an existing entity in the persistence layer,
-     * the {@link GameDto} will not be updated and a {@link ApiError} will
-     * be returned with appropriate exceptions details.
+     * the {@link GameDto} will not be updated and a {@link ApiError} will be returned with appropriate exceptions details.
      *
-     * @param gameDto The {@link GameDto} to updated.
+     * @param updateGameRequest The {@link UpdateGameRequest} to update.
      *
      * @return The updated {@link GameDto} instance as a HATEOAS response.
      */
     @AllowedForModerator
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public EntityModel<GameDto> update(@Validated @RequestBody GameDto gameDto) {
-        return gameRepresentationModelAssembler.toModel(gameService.update(gameDto));
+    public EntityModel<GameDto> update(@Validated @RequestBody UpdateGameRequest updateGameRequest) {
+        return gameRepresentationModelAssembler.toModel(gameService.update(updateGameRequest));
     }
 
     /**

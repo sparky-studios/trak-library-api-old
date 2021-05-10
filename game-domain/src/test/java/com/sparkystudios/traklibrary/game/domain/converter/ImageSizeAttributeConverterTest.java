@@ -1,10 +1,10 @@
 package com.sparkystudios.traklibrary.game.domain.converter;
 
-import com.sparkystudios.traklibrary.game.domain.GameImageSize;
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-class GameImageSizeAttributeConverterTest {
+class ImageSizeAttributeConverterTest {
 
     @Test
     void convertToDatabaseColumn_withNullGameImageSize_returnsSmallId() {
@@ -12,25 +12,25 @@ class GameImageSizeAttributeConverterTest {
         Short result = new GameImageSizeAttributeConverter().convertToDatabaseColumn(null);
 
         // Assert
-        Assertions.assertEquals(GameImageSize.SMALL.getId(), result, "If null is provided, it should default to the id of SMALL.");
+        Assertions.assertEquals(ImageSize.SMALL.getId(), result, "If null is provided, it should default to the id of SMALL.");
     }
 
     @Test
     void convertToDatabaseColumn_withValidGameImageSize_returnsIdOfGameImageSize() {
         // Act
-        Short result = new GameImageSizeAttributeConverter().convertToDatabaseColumn(GameImageSize.LARGE);
+        Short result = new GameImageSizeAttributeConverter().convertToDatabaseColumn(ImageSize.LARGE);
 
         // Assert
-        Assertions.assertEquals(GameImageSize.LARGE.getId(), result, "The id should match the GameImageSize provided.");
+        Assertions.assertEquals(ImageSize.LARGE.getId(), result, "The id should match the GameImageSize provided.");
     }
 
     @Test
     void convertToEntityAttribute_withNullId_returnsAgeRatingPending() {
         // Act
-        GameImageSize result = new GameImageSizeAttributeConverter().convertToEntityAttribute(null);
+        ImageSize result = new GameImageSizeAttributeConverter().convertToEntityAttribute(null);
 
         // Assert
-        Assertions.assertEquals(GameImageSize.SMALL, result, "If null is provided, it should default to SMALL.");
+        Assertions.assertEquals(ImageSize.SMALL, result, "If null is provided, it should default to SMALL.");
     }
 
     @Test
@@ -45,9 +45,9 @@ class GameImageSizeAttributeConverterTest {
     @Test
     void convertToEntityAttribute_withValidGameSizeImageId_returnsCorrectAgeRating() {
         // Act
-        GameImageSize result = new GameImageSizeAttributeConverter().convertToEntityAttribute(GameImageSize.MEDIUM.getId());
+        ImageSize result = new GameImageSizeAttributeConverter().convertToEntityAttribute(ImageSize.MEDIUM.getId());
 
         // Assert
-        Assertions.assertEquals(GameImageSize.MEDIUM, result, "The GameImageSize should match the id provided.");
+        Assertions.assertEquals(ImageSize.MEDIUM, result, "The GameImageSize should match the id provided.");
     }
 }

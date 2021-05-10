@@ -33,6 +33,9 @@ public class DeveloperRepresentationModelAssembler implements SimpleRepresentati
 
             resource.add(linkTo(methodOn(DeveloperController.class).findGamesByDeveloperId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                     .withRel("games"));
+
+            resource.add(linkTo(methodOn(DeveloperController.class).findCompanyImageByCompanyId(content.getId()))
+                    .withRel("image"));
         }
     }
 

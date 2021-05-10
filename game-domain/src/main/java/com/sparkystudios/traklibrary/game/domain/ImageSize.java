@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum GameImageSize {
+public enum ImageSize {
 
     SMALL((short)0),
     MEDIUM((short)1),

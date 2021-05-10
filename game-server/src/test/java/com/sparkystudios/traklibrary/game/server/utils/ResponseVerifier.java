@@ -2,7 +2,6 @@ package com.sparkystudios.traklibrary.game.server.utils;
 
 import com.sparkystudios.traklibrary.game.service.dto.*;
 import org.hamcrest.Matchers;
-import org.mockito.Mock;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -56,6 +55,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.developers").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.publishers").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.entries").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.downloadable_content").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.info").exists());
 
         if (gameDto.getFranchiseId() != null) {
@@ -87,6 +87,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.genres").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.developers").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.publishers").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.downloadable_content").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.entries").exists());
     }
 
@@ -149,6 +150,7 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)platformDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".release_dates").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
     }
 
@@ -163,7 +165,26 @@ public class ResponseVerifier {
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updated_at").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)publisherDto.getVersion().longValue())))
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.image").exists())
                 .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.games").exists());
+    }
+
+    public static void verifyDownloadableContentDto(String root, ResultActions resultActions, DownloadableContentDto downloadableContentDto) throws Exception {
+        resultActions
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".id", Matchers.is((int)downloadableContentDto.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".game_id", Matchers.is((int)downloadableContentDto.getGameId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".name", Matchers.is(downloadableContentDto.getName())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".description", Matchers.is(downloadableContentDto.getDescription())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".release_date", Matchers.is(downloadableContentDto.getReleaseDate().toString())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".slug", Matchers.is(downloadableContentDto.getSlug())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".created_at").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".updated_at").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + ".version", Matchers.is((int)downloadableContentDto.getVersion().longValue())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.self").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.small_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.medium_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.large_image").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$" + root + "._links.game").exists());
     }
 
     public static void verifyGameFiltersDto(String root, ResultActions resultActions) throws Exception {

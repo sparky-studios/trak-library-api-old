@@ -7,7 +7,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import javax.persistence.PersistenceException;
-import java.time.LocalDate;
 
 @DataJpaTest
 class GameImageTest {
@@ -20,6 +19,7 @@ class GameImageTest {
         // Arrange
         GameImage gameImage = new GameImage();
         gameImage.setFilename("filename.png");
+        gameImage.setImageSize(ImageSize.MEDIUM);
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -38,7 +38,7 @@ class GameImageTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
-        gameImage.setImageSize(GameImageSize.MEDIUM);
+        gameImage.setImageSize(ImageSize.MEDIUM);
 
         // Act
         GameImage result = testEntityManager.persistFlushFind(gameImage);

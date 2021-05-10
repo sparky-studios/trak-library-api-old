@@ -33,7 +33,10 @@ import java.util.Objects;
 @Component
 public class ImageClientCircuitBreakerImpl implements ImageClient {
 
-    private static final String UPLOAD_FAILED_MESSAGE = "game-image.exception.upload-failed";
+    private static final String COMPANY_UPLOAD_FAILED_MESSAGE = "company-image.exception.upload-failed";
+    private static final String DOWNLOADABLE_CONTENT_UPLOAD_FAILED_MESSAGE = "downloadable-content-image.exception.upload-failed";
+    private static final String GAME_UPLOAD_FAILED_MESSAGE = "game-image.exception.upload-failed";
+    private static final String PLATFORM_UPLOAD_FAILED_MESSAGE = "platform-image.exception.upload-failed";
 
     private final AuthenticationService authenticationService;
     @SuppressWarnings("all")
@@ -50,7 +53,26 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
     }
 
     @Override
+    public void uploadCompanyImage(MultipartFile multipartFile, long companyId) {
+        uploadImage(multipartFile, COMPANY_UPLOAD_FAILED_MESSAGE, companyId, "/companies");
+    }
+
+    @Override
+    public void uploadDownloadableContentImage(MultipartFile multipartFile, long downloadableContentId) {
+        uploadImage(multipartFile, DOWNLOADABLE_CONTENT_UPLOAD_FAILED_MESSAGE, downloadableContentId, "/dlc");
+    }
+
+    @Override
     public void uploadGameImage(MultipartFile multipartFile, long gameId) {
+        uploadImage(multipartFile, GAME_UPLOAD_FAILED_MESSAGE, gameId, "");
+    }
+
+    @Override
+    public void uploadPlatformImage(MultipartFile multipartFile, long platformId) {
+        uploadImage(multipartFile, PLATFORM_UPLOAD_FAILED_MESSAGE, platformId, "/platforms");
+    }
+
+    private void uploadImage(MultipartFile multipartFile, String failureMessage, long id, String folder) {
         // Create a temporary directory for the file to ensure the name doesn't clash with any other files.
         @SuppressWarnings("UnstableApiUsage")
         var file = new File(Files.createTempDir(), Objects.requireNonNull(multipartFile.getOriginalFilename()));
@@ -59,7 +81,7 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
             stream.write(multipartFile.getBytes());
         } catch (IOException e) {
             String errorMessage = messageSource
-                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(failureMessage, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new UploadFailedException(errorMessage, e);
         }
@@ -79,24 +101,43 @@ public class ImageClientCircuitBreakerImpl implements ImageClient {
         // Send the request. We'll fail the call if the image can't be uploaded to keep the table
         // and image provider in sync with one another.
         imageServerCircuitBreaker.run(() ->
-                restTemplate.postForEntity("http://trak-image-server/games", requestEntity, Void.class), throwable -> {
+                restTemplate.postForEntity("http://trak-image-server/games" + folder, requestEntity, Void.class), throwable -> {
             String errorMessage = messageSource
-                    .getMessage(UPLOAD_FAILED_MESSAGE, new Object[] { gameId }, LocaleContextHolder.getLocale());
+                    .getMessage(failureMessage, new Object[] { id }, LocaleContextHolder.getLocale());
 
             throw new UploadFailedException(errorMessage, throwable);
         });
     }
 
     @Override
-    public byte[] downloadGameImage(String filename, long gameId) {
+    public byte[] downloadCompanyImage(String filename) {
+        return downloadImage("/companies", filename);
+    }
+
+    @Override
+    public byte[] downloadDownloadableContentImage(String filename) {
+        return downloadImage("/dlc", filename);
+    }
+
+    @Override
+    public byte[] downloadGameImage(String filename) {
+        return downloadImage("", filename);
+    }
+
+    @Override
+    public byte[] downloadPlatformImage(String filename) {
+        return downloadImage("/platforms", filename);
+    }
+
+    private byte[] downloadImage(String folder, String filename) {
         return imageServerCircuitBreaker.run(() -> {
                     ByteArrayResource resource = restTemplate
-                            .getForObject("http://trak-image-server/games/{filename}", ByteArrayResource.class, filename);
+                            .getForObject("http://trak-image-server/games" + folder + "/{filename}", ByteArrayResource.class, filename);
 
                     return resource != null ? resource.getByteArray() : new byte[0];
                 },
                 throwable -> {
-                    log.error("Failed to retrieve image for Game: " + gameId, throwable);
+                    log.error("Failed to retrieve image: " + folder + "/" + filename, throwable);
                     return new byte[0];
                 });
     }

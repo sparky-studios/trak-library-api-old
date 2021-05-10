@@ -3,6 +3,8 @@ package com.sparkystudios.traklibrary.game.service;
 import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.dto.*;
+import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
+import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.lang.NonNull;
@@ -33,11 +35,11 @@ public interface GameService {
      * The method does not allow <code>null</code> entities to be inserted, if null is provided, a {@link NullPointerException}
      * will be thrown.
      *
-     * @param gameDto The {@link GameDto} instance to persist.
+     * @param newGameRequest The {@link NewGameRequest} instance to persist.
      *
      * @return The updated persisted entity as a {@link GameDto}.
      */
-    GameDto save(GameDto gameDto);
+    GameDto save(NewGameRequest newGameRequest);
 
     /**
      * Given an ID of a {@link Game} entity, this service method will query the underlying persistence layer and try and
@@ -339,19 +341,19 @@ public interface GameService {
     long count(GameSpecification gameSpecification);
 
     /**
-     * Given a {@link GameDto} instance, the service will attempt to the update the persisted data which matches the given {@link GameDto}
-     * in the underlying persistence layer. If the {@link GameDto} supplied contains an ID that doesn't match any existing entities, then
+     * Given a {@link UpdateGameRequest} instance, the service will attempt to the update the persisted data which matches the given {@link GameDto}
+     * in the underlying persistence layer. If the {@link UpdateGameRequest} supplied contains an ID that doesn't match any existing entities, then
      * the update will fail and a {@link javax.persistence.EntityNotFoundException} will be thrown. If persistence succeeds, the relevant
      * record is updated and the updated entity is returned as a {@link GameDto}.
      *
      * The method does not allow <code>null</code> entities to be inserted, if null is provided, a {@link NullPointerException}
      * will be thrown.
      *
-     * @param gameDto The {@link GameDto} instance to update.
+     * @param updateGameRequest The {@link UpdateGameRequest} instance to update.
      *
      * @return The updated persisted entity as a {@link GameDto}.
      */
-    GameDto update(GameDto gameDto);
+    GameDto update(UpdateGameRequest updateGameRequest);
 
     /**
      * Given a {@link JsonMergePatch} which will contain JSON information pertaining to a {@link GameDto}, this method will attempt to retrieve

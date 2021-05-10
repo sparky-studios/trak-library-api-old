@@ -1,7 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
-import com.sparkystudios.traklibrary.game.domain.GameImageSize;
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.repository.GameImageRepository;
 import com.sparkystudios.traklibrary.game.service.GameImageService;
 import com.sparkystudios.traklibrary.game.service.client.ImageClient;
@@ -32,11 +32,11 @@ public class GameImageServiceImpl implements GameImageService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void upload(long gameId, GameImageSize gameImageSize, MultipartFile multipartFile) {
+    public void upload(long gameId, ImageSize imageSize, MultipartFile multipartFile) {
         // Can't upload additional images for the same game.
-        if (gameImageRepository.existsByGameIdAndImageSize(gameId, gameImageSize)) {
+        if (gameImageRepository.existsByGameIdAndImageSize(gameId, imageSize)) {
             String errorMessage = messageSource
-                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] {gameImageSize, gameId}, LocaleContextHolder.getLocale());
+                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] {imageSize, gameId}, LocaleContextHolder.getLocale());
 
             throw new EntityExistsException(errorMessage);
         }
@@ -45,7 +45,7 @@ public class GameImageServiceImpl implements GameImageService {
         var gameImage = new GameImage();
         gameImage.setGameId(gameId);
         gameImage.setFilename(multipartFile.getOriginalFilename());
-        gameImage.setImageSize(gameImageSize);
+        gameImage.setImageSize(imageSize);
 
         // Save the new game image to the database.
         gameImageRepository.save(gameImage);
@@ -56,8 +56,8 @@ public class GameImageServiceImpl implements GameImageService {
 
     @Override
     @Transactional(readOnly = true)
-    public ImageDataDto download(long gameId, GameImageSize gameImageSize) {
-        Optional<GameImage> gameImage = gameImageRepository.findByGameIdAndImageSize(gameId, gameImageSize);
+    public ImageDataDto download(long gameId, ImageSize imageSize) {
+        Optional<GameImage> gameImage = gameImageRepository.findByGameIdAndImageSize(gameId, imageSize);
 
         if (gameImage.isEmpty()) {
             String errorMessage = messageSource
@@ -69,7 +69,7 @@ public class GameImageServiceImpl implements GameImageService {
         var imageDataDto = new ImageDataDto();
         imageDataDto.setFilename(gameImage.get().getFilename());
         // Download the image data from the image service, if available.
-        imageDataDto.setContent(imageClient.downloadGameImage(gameImage.get().getFilename(), gameId));
+        imageDataDto.setContent(imageClient.downloadGameImage(gameImage.get().getFilename()));
 
         return imageDataDto;
     }

@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-class GameRequestServiceImplTest {
+class NewGameRequestServiceImplTest {
 
     @Mock
     private GameRequestRepository gameRequestRepository;

@@ -1,16 +1,17 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.configuration.TrakHalJsonMediaTypeConfiguration;
 import com.sparkystudios.traklibrary.game.server.converter.JsonMergePatchHttpMessageConverter;
 import com.sparkystudios.traklibrary.game.server.exception.GlobalExceptionHandler;
 import com.sparkystudios.traklibrary.game.server.utils.ResponseVerifier;
+import com.sparkystudios.traklibrary.game.service.CompanyImageService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PublisherService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
 import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -26,6 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -49,6 +51,9 @@ class PublisherControllerTest {
 
     @MockBean
     private PublisherService publisherService;
+
+    @MockBean
+    private CompanyImageService companyImageService;
 
     @MockBean
     private GameService gameService;
@@ -165,6 +170,60 @@ class PublisherControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
 
         ResponseVerifier.verifyPublisherDto("", resultActions, publisherDto);
+    }
+
+    @Test
+    void findCompanyImageByCompanyId_withValidId_returns200() throws Exception {
+        // Arrange
+        ImageDataDto imageDataDto = new ImageDataDto();
+        imageDataDto.setContent(new byte[] { 'a', 'b' });
+        imageDataDto.setFilename("filename.png");
+
+        Mockito.when(companyImageService.download(ArgumentMatchers.anyLong()))
+                .thenReturn(imageDataDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/publishers/1/image")
+                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
+
+    @Test
+    void saveCompanyImageForCompanyId_withInvalidFileData_returns400() throws Exception {
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/publishers/1/image")
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
+    }
+
+    @Test
+    void saveCompanyImageForCompanyId_withValidFileData_returns204() throws Exception {
+        // Arrange
+        MockMultipartFile file = new MockMultipartFile("file", "filename.txt", "text/plain", "some xml".getBytes());
+
+        Mockito.doNothing()
+                .when(companyImageService).upload(ArgumentMatchers.anyLong(), ArgumentMatchers.any());
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/publishers/1/image")
+                .file(file)
+                .contentType(MediaType.MULTIPART_FORM_DATA)
+                .accept("application/vnd.traklibrary.v1.hal+json"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isNoContent());
     }
 
     @Test

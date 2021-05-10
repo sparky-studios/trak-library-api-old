@@ -1,12 +1,19 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
-import com.sparkystudios.traklibrary.game.domain.*;
+import com.sparkystudios.traklibrary.game.domain.Developer;
+import com.sparkystudios.traklibrary.game.domain.Genre;
+import com.sparkystudios.traklibrary.game.domain.Platform;
+import com.sparkystudios.traklibrary.game.domain.Publisher;
 import com.sparkystudios.traklibrary.game.repository.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSpecification;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PatchService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
+import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
+import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
 import com.sparkystudios.traklibrary.game.service.mapper.GameMapper;
+import com.sparkystudios.traklibrary.game.service.mapper.NewGameRequestMapper;
+import com.sparkystudios.traklibrary.game.service.mapper.UpdateGameRequestMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -16,7 +23,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.json.JsonMergePatch;
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
 import java.util.Collection;
 import java.util.Objects;
@@ -41,23 +47,18 @@ public class GameServiceImpl implements GameService {
     private final DeveloperRepository developerRepository;
     private final PublisherRepository publisherRepository;
     private final FranchiseRepository franchiseRepository;
+    private final NewGameRequestMapper newGameRequestMapper;
+    private final UpdateGameRequestMapper updateGameRequestMapper;
     private final GameMapper gameMapper;
     private final MessageSource messageSource;
     private final PatchService patchService;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public GameDto save(GameDto gameDto) {
-        Objects.requireNonNull(gameDto);
+    public GameDto save(NewGameRequest newGameRequest) {
+        Objects.requireNonNull(newGameRequest);
 
-        if (gameRepository.existsById(gameDto.getId())) {
-            String errorMessage = messageSource
-                    .getMessage(ENTITY_EXISTS_MESSAGE, new Object[] { gameDto.getId() }, LocaleContextHolder.getLocale());
-
-            throw new EntityExistsException(errorMessage);
-        }
-
-        var game = gameMapper.toGame(gameDto);
+        var game = newGameRequestMapper.toGame(newGameRequest);
         game.getAgeRatings().forEach(ageRating -> ageRating.setGame(game));
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));
@@ -420,17 +421,17 @@ public class GameServiceImpl implements GameService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public GameDto update(GameDto gameDto) {
-        Objects.requireNonNull(gameDto);
+    public GameDto update(UpdateGameRequest updateGameRequest) {
+        Objects.requireNonNull(updateGameRequest);
 
-        if (!gameRepository.existsById(gameDto.getId())) {
+        if (!gameRepository.existsById(updateGameRequest.getId())) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", gameDto.getId() }, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[] { "id", updateGameRequest.getId() }, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }
 
-        var game = gameMapper.toGame(gameDto);
+        var game = updateGameRequestMapper.toGame(updateGameRequest);
         game.getAgeRatings().forEach(ageRating -> ageRating.setGame(game));
         game.getReleaseDates().forEach(gameReleaseDate -> gameReleaseDate.setGame(game));
         game.getDownloadableContents().forEach(downloadableContent -> downloadableContent.setGame(game));

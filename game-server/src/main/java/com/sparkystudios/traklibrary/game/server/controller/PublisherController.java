@@ -1,9 +1,11 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
+import com.sparkystudios.traklibrary.game.domain.PlatformImage;
 import com.sparkystudios.traklibrary.game.repository.specification.DeveloperSpecification;
 import com.sparkystudios.traklibrary.game.repository.specification.PublisherSpecification;
 import com.sparkystudios.traklibrary.game.server.assembler.GameRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.server.assembler.PublisherRepresentationModelAssembler;
+import com.sparkystudios.traklibrary.game.service.CompanyImageService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PublisherService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
@@ -12,6 +14,7 @@ import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -22,8 +25,10 @@ import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
@@ -47,6 +52,7 @@ import java.util.stream.StreamSupport;
 public class PublisherController {
 
     private final PublisherService publisherService;
+    private final CompanyImageService companyImageService;
     private final GameService gameService;
     private final PublisherRepresentationModelAssembler publisherRepresentationModelAssembler;
     private final GameRepresentationModelAssembler gameRepresentationModelAssembler;
@@ -101,6 +107,45 @@ public class PublisherController {
     @GetMapping("/slug/{slug}")
     public EntityModel<PublisherDto> findById(@PathVariable String slug) {
         return publisherRepresentationModelAssembler.toModel(publisherService.findBySlug(slug));
+    }
+
+    /**
+     * End-point that will retrieve a {@link ByteArrayResource} for the image that is associated with the given
+     * {@link PublisherDto} ID. If no image is associated with the {@link PublisherDto} or it fails to retrieve the data,
+     * an empty {@link ByteArrayResource} will be returned and the error will be logged.
+     *
+     * This end-point can be called anonymously by anyone without providing any authentication or credentials.
+     *
+     * @param id The ID of the {@link PublisherDto} to retrieve the associated image for.
+     *
+     * @return A {@link ByteArrayResource} representing the byte information of the image file.
+     */
+    @GetMapping(value = "/{id}/image", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<ByteArrayResource> findCompanyImageByCompanyId(@PathVariable long id) {
+        // Get the image data, all images are stored as *.png so it's safe to assume the file extension.
+        var imageDataDto = companyImageService.download(id);
+        return ResponseEntity
+                .ok()
+                .contentLength(imageDataDto.getContent().length)
+                .header("Content-Disposition", "attachment; filename=\"" + imageDataDto.getFilename()+ "\"")
+                .body(new ByteArrayResource(imageDataDto.getContent()));
+    }
+
+    /**
+     * End-point that create a {@link PlatformImage} instance and register the specified file with the chosen image provider.
+     * If the file is in a incorrect format or a image already exists for the given {@link PublisherDto}, an exception
+     * will be thrown and an {@link ApiError} will be returned to the callee.
+     *
+     * {@link PublisherDto}'s can only be created for users with moderator privileges.
+     *
+     * @param id The ID of the {@link PublisherDto} to persist and image for.
+     * @param file The {@link MultipartFile} containing the image to upload.
+     */
+    @AllowedForModerator
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void saveCompanyImageForCompanyId(@PathVariable long id, @RequestPart MultipartFile file) {
+        companyImageService.upload(id, file);
     }
 
     /**

@@ -34,7 +34,7 @@ public class GameImage {
     private String filename;
 
     @Column(name = "size", nullable = false)
-    private GameImageSize imageSize;
+    private ImageSize imageSize;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

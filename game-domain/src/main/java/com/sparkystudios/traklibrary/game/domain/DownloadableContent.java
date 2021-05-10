@@ -34,6 +34,9 @@ public class DownloadableContent implements Comparable<DownloadableContent> {
     @Column(name = "id", unique = true, nullable = false, updatable = false)
     private long id;
 
+    @Column(name = "game_id", insertable = false, updatable = false)
+    private long gameId;
+
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.LAZY)

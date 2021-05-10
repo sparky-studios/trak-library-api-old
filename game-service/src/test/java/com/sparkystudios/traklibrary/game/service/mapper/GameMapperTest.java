@@ -18,8 +18,7 @@ import java.time.LocalDateTime;
 @ContextConfiguration(classes = {
         AgeRatingMapperImpl.class,
         GameMapperImpl.class,
-        GameReleaseDateMapperImpl.class,
-        DownloadableContentMapperImpl.class
+        GameReleaseDateMapperImpl.class
 })
 class GameMapperTest {
 
@@ -89,7 +88,6 @@ class GameMapperTest {
         gameDto.setUpdatedAt(LocalDateTime.now());
         gameDto.setVersion(1L);
         gameDto.getReleaseDates().add(new GameReleaseDateDto());
-        gameDto.getDownloadableContents().add(new DownloadableContentDto());
         gameDto.getAgeRatings().add(new AgeRatingDto());
 
         // Act
