@@ -1,7 +1,6 @@
 package com.sparkystudios.traklibrary.game.service;
 
 import com.sparkystudios.traklibrary.game.domain.Game;
-import com.sparkystudios.traklibrary.game.domain.Genre;
 import com.sparkystudios.traklibrary.game.domain.Platform;
 import com.sparkystudios.traklibrary.game.repository.specification.PlatformSpecification;
 import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
@@ -62,12 +61,12 @@ public interface PlatformService {
 
     /**
      * Given an ID of a {@link Game} entity, this service method will retrieve all of the {@link Platform}s entities that are associated
-     * with this {@link Game}, which is mapped by {@link GamePlatformXref} entities. If no {@link Platform}s are associated with a given
+     * with this {@link Game}, which is mapped by a conjunction table. If no {@link Platform}s are associated with a given
      * {@link Game}, then an empty {@link Iterable} is returned. If a {@link Game} with the specified ID doesn't exist, then a
      * {@link javax.persistence.EntityNotFoundException} exception will be thrown. The {@link Platform}'s within the list are returned
      * in name ascending order.
      *
-     * @param gameId The ID of the {@link Game} to retrieve {@link Genre}s for.
+     * @param gameId The ID of the {@link Game} to retrieve {@link Platform}s for.
      *
      * @return The {@link Platform} entities mapped to the {@link Game}, converted to {@link PlatformDto}'s.
      *

@@ -16,6 +16,8 @@ public class DownloadableContentDto implements Comparable<DownloadableContentDto
 
     private long id;
 
+    private long gameId;
+
     @NotEmpty(message = "{downloadable-content.validation.title.not-empty}")
     @Size(max = 255, message = "{downloadable-content.validation.title.size}")
     private String name;

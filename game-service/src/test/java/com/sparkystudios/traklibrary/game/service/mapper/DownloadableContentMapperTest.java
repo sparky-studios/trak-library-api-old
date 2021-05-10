@@ -35,6 +35,7 @@ class DownloadableContentMapperTest {
         // Arrange
         DownloadableContent downloadableContent = new DownloadableContent();
         downloadableContent.setId(5L);
+        downloadableContent.setGameId(6L);
         downloadableContent.setName("test-name");
         downloadableContent.setDescription("test-description");
         downloadableContent.setReleaseDate(LocalDate.now());
@@ -47,6 +48,7 @@ class DownloadableContentMapperTest {
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(downloadableContent.getId());
+        Assertions.assertThat(result.getGameId()).isEqualTo(downloadableContent.getGameId());
         Assertions.assertThat(result.getName()).isEqualTo(downloadableContent.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(downloadableContent.getDescription());
         Assertions.assertThat(result.getReleaseDate()).isEqualTo(downloadableContent.getReleaseDate());
@@ -69,6 +71,7 @@ class DownloadableContentMapperTest {
         // Arrange
         DownloadableContentDto downloadableContentDto = new DownloadableContentDto();
         downloadableContentDto.setId(5L);
+        downloadableContentDto.setGameId(6L);
         downloadableContentDto.setName("Test Name");
         downloadableContentDto.setDescription("test-description");
         downloadableContentDto.setReleaseDate(LocalDate.now());
@@ -81,6 +84,7 @@ class DownloadableContentMapperTest {
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(downloadableContentDto.getId());
+        Assertions.assertThat(result.getGameId()).isEqualTo(downloadableContentDto.getGameId());
         Assertions.assertThat(result.getName()).isEqualTo(downloadableContentDto.getName());
         Assertions.assertThat(result.getDescription()).isEqualTo(downloadableContentDto.getDescription());
         Assertions.assertThat(result.getReleaseDate()).isEqualTo(downloadableContentDto.getReleaseDate());

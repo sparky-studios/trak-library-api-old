@@ -29,8 +29,7 @@ import java.time.LocalDate;
         PublisherMapperImpl.class,
         GenreMapperImpl.class,
         GameReleaseDateMapperImpl.class,
-        FranchiseMapperImpl.class,
-        DownloadableContentMapperImpl.class
+        FranchiseMapperImpl.class
 })
 class GameDetailsMapperTest {
 
@@ -99,7 +98,6 @@ class GameDetailsMapperTest {
         Assertions.assertThat(result.getPlatforms()).hasSize(1);
         Assertions.assertThat(result.getPublishers()).hasSize(1);
         Assertions.assertThat(result.getReleaseDates()).hasSize(1);
-        Assertions.assertThat(result.getDownloadableContents()).hasSize(1);
         Assertions.assertThat(result.getAgeRatings()).hasSize(1);
         Assertions.assertThat(result.getFranchise().getTitle()).isEqualTo(franchise.getTitle());
     }

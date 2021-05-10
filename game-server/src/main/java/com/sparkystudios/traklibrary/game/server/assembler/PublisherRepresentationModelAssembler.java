@@ -32,6 +32,9 @@ public class PublisherRepresentationModelAssembler implements SimpleRepresentati
 
             resource.add(linkTo(methodOn(PublisherController.class).findGamesByPublisherId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                     .withRel("games"));
+
+            resource.add(linkTo(methodOn(PublisherController.class).findCompanyImageByCompanyId(content.getId()))
+                    .withRel("image"));
         }
     }
 

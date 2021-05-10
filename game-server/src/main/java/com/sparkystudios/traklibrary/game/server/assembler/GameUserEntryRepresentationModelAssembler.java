@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.assembler;
 
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.server.controller.GameController;
 import com.sparkystudios.traklibrary.game.server.controller.GameImageController;
 import com.sparkystudios.traklibrary.game.server.controller.GameUserEntryController;
@@ -28,11 +29,11 @@ public class GameUserEntryRepresentationModelAssembler implements SimpleRepresen
                     .withRel("game"));
             resource.add(linkTo(methodOn(GameController.class).findGameDetailsByGameId(content.getGameId()))
                     .withRel("game_details"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeSmall(content.getGameId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getGameId(), ImageSize.SMALL))
                     .withRel("small_image"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeMedium(content.getGameId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getGameId(), ImageSize.MEDIUM))
                     .withRel("medium_image"));
-            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSizeLarge(content.getGameId()))
+            resource.add(linkTo(methodOn(GameImageController.class).findGameImageByGameIdAndImageSize(content.getGameId(), ImageSize.LARGE))
                     .withRel("large_image"));
         }
     }

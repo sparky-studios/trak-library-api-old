@@ -14,8 +14,7 @@ import java.util.TreeSet;
         PublisherMapper.class,
         GenreMapper.class,
         GameReleaseDateMapper.class,
-        FranchiseMapper.class,
-        DownloadableContentMapper.class
+        FranchiseMapper.class
 }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface GameDetailsMapper {
 
@@ -28,6 +27,5 @@ public interface GameDetailsMapper {
         gameDetailsDto.setPublishers(new TreeSet<>(gameDetailsDto.getPublishers()));
         gameDetailsDto.setGenres(new TreeSet<>(gameDetailsDto.getGenres()));
         gameDetailsDto.setReleaseDates(new TreeSet<>(gameDetailsDto.getReleaseDates()));
-        gameDetailsDto.setDownloadableContents(new TreeSet<>(gameDetailsDto.getDownloadableContents()));
     }
 }

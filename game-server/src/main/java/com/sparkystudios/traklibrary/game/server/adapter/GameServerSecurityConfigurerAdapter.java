@@ -17,7 +17,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -32,8 +32,9 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
-        List<RequestMatcher> pathsToSkip = Collections.singletonList(
-                new AntPathRequestMatcher("/**/images/**", HttpMethod.GET.name()));
+        List<RequestMatcher> pathsToSkip = new ArrayList<>();
+        pathsToSkip.add(new AntPathRequestMatcher("/*/image", HttpMethod.GET.name()));
+        pathsToSkip.add(new AntPathRequestMatcher("/dlc/*/image", HttpMethod.GET.name()));
 
         var skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
         var jwtAuthenticationProcessingFilter =
@@ -41,7 +42,7 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/**/images/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/*/image", "/dlc/*/image").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

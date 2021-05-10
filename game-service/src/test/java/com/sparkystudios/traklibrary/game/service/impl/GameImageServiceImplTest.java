@@ -1,7 +1,7 @@
 package com.sparkystudios.traklibrary.game.service.impl;
 
 import com.sparkystudios.traklibrary.game.domain.GameImage;
-import com.sparkystudios.traklibrary.game.domain.GameImageSize;
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.repository.GameImageRepository;
 import com.sparkystudios.traklibrary.game.service.client.ImageClient;
 import com.sparkystudios.traklibrary.game.service.dto.ImageDataDto;
@@ -49,7 +49,7 @@ class GameImageServiceImplTest {
 
         // Assert
         Assertions.assertThrows(EntityExistsException.class,
-                () -> gameImageService.upload(0L, GameImageSize.SMALL, multipartFile));
+                () -> gameImageService.upload(0L, ImageSize.SMALL, multipartFile));
     }
 
     @Test
@@ -69,7 +69,7 @@ class GameImageServiceImplTest {
                 .uploadGameImage(ArgumentMatchers.any(), ArgumentMatchers.anyLong());
 
         // Act
-        gameImageService.upload(0L, GameImageSize.MEDIUM, multipartFile);
+        gameImageService.upload(0L, ImageSize.MEDIUM, multipartFile);
 
         // Assert
         Mockito.verify(gameImageRepository, Mockito.atMostOnce())
@@ -89,7 +89,7 @@ class GameImageServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> gameImageService.download(0L, GameImageSize.MEDIUM));
+        Assertions.assertThrows(EntityNotFoundException.class, () -> gameImageService.download(0L, ImageSize.MEDIUM));
     }
 
     @Test
@@ -103,15 +103,15 @@ class GameImageServiceImplTest {
         Mockito.when(gameImageRepository.findByGameIdAndImageSize(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(Optional.of(gameImage));
 
-        Mockito.when(imageClient.downloadGameImage(ArgumentMatchers.anyString(), ArgumentMatchers.anyLong()))
+        Mockito.when(imageClient.downloadGameImage(ArgumentMatchers.anyString()))
                 .thenReturn(imageData);
 
         // Act
-        ImageDataDto imageDataDto = gameImageService.download(0L, GameImageSize.MEDIUM);
+        ImageDataDto imageDataDto = gameImageService.download(0L, ImageSize.MEDIUM);
 
         // Assert
         Mockito.verify(imageClient, Mockito.atMostOnce())
-                .downloadGameImage(ArgumentMatchers.anyString(), ArgumentMatchers.anyLong());
+                .downloadGameImage(ArgumentMatchers.anyString());
 
         Assertions.assertEquals(gameImage.getFilename(), imageDataDto.getFilename(), "The filenames should match.");
         Assertions.assertEquals(imageData, imageDataDto.getContent(), "The contents of the file should match what the image client returns.");

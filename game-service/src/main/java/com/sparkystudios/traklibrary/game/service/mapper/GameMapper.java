@@ -13,8 +13,7 @@ import java.util.TreeSet;
 
 @Mapper(componentModel = "spring", uses ={
         AgeRatingMapper.class,
-        GameReleaseDateMapper.class,
-        DownloadableContentMapper.class
+        GameReleaseDateMapper.class
 }, injectionStrategy = InjectionStrategy.CONSTRUCTOR)
 public interface GameMapper {
 
@@ -24,6 +23,7 @@ public interface GameMapper {
     @Mapping(target = "genres", ignore = true)
     @Mapping(target = "platforms", ignore = true)
     @Mapping(target = "publishers", ignore = true)
+    @Mapping(target = "downloadableContents", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     @Mapping(target = "franchise", ignore = true)
@@ -34,7 +34,6 @@ public interface GameMapper {
     default void afterMapping(@MappingTarget GameDto gameDto) {
         gameDto.setAgeRatings(new TreeSet<>(gameDto.getAgeRatings()));
         gameDto.setReleaseDates(new TreeSet<>(gameDto.getReleaseDates()));
-        gameDto.setDownloadableContents(new TreeSet<>(gameDto.getDownloadableContents()));
     }
 
     @AfterMapping

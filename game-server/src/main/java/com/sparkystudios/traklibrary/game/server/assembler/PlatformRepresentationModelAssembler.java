@@ -33,6 +33,10 @@ public class PlatformRepresentationModelAssembler implements SimpleRepresentatio
             resource.add(linkTo(methodOn(PlatformController.class)
                     .findGamesByPlatformId(content.getId(), Pageable.unpaged(), gameDtoPagedResourcesAssembler))
                     .withRel("games"));
+
+            resource.add(linkTo(methodOn(PlatformController.class)
+                    .findPlatformImageByPlatformId(content.getId()))
+                    .withRel("image"));
         }
     }
 

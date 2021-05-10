@@ -38,6 +38,4 @@ public class GameDto {
     private Long version;
 
     private Set<GameReleaseDateDto> releaseDates = new TreeSet<>();
-
-    private Set<DownloadableContentDto> downloadableContents = new TreeSet<>();
 }

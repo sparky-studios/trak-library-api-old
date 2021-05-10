@@ -1,15 +1,13 @@
 package com.sparkystudios.traklibrary.game.repository;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
 import com.sparkystudios.traklibrary.game.domain.Game;
 import com.sparkystudios.traklibrary.game.domain.GameImage;
-import com.sparkystudios.traklibrary.game.domain.GameImageSize;
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.time.LocalDate;
 import java.util.Optional;
 
 @DataJpaTest
@@ -24,7 +22,7 @@ class GameImageRepositoryTest {
     @Test
     void existsByGameIdAndImageSize_withNonExistentGameAndGameImageSize_returnsFalse() {
         // Act
-        boolean result = gameImageRepository.existsByGameIdAndImageSize(1L, GameImageSize.SMALL);
+        boolean result = gameImageRepository.existsByGameIdAndImageSize(1L, ImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isFalse();
@@ -42,11 +40,11 @@ class GameImageRepositoryTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
-        gameImage.setImageSize(GameImageSize.MEDIUM);
+        gameImage.setImageSize(ImageSize.MEDIUM);
         gameImageRepository.save(gameImage);
 
         // Act
-        boolean result = gameImageRepository.existsByGameIdAndImageSize(game.getId(), GameImageSize.MEDIUM);
+        boolean result = gameImageRepository.existsByGameIdAndImageSize(game.getId(), ImageSize.MEDIUM);
 
         // Assert
         Assertions.assertThat(result).isTrue();
@@ -55,7 +53,7 @@ class GameImageRepositoryTest {
     @Test
     void findByGameIdAndImageSize_withNonExistentGameImage_returnsEmptyOptional() {
         // Act
-        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(1L, GameImageSize.SMALL);
+        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(1L, ImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isEmpty();
@@ -73,11 +71,11 @@ class GameImageRepositoryTest {
         GameImage gameImage = new GameImage();
         gameImage.setGameId(game.getId());
         gameImage.setFilename("filename.png");
-        gameImage.setImageSize(GameImageSize.SMALL);
+        gameImage.setImageSize(ImageSize.SMALL);
         gameImageRepository.save(gameImage);
 
         // Act
-        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(game.getId(), GameImageSize.SMALL);
+        Optional<GameImage> result = gameImageRepository.findByGameIdAndImageSize(game.getId(), ImageSize.SMALL);
 
         // Assert
         Assertions.assertThat(result).isNotEmpty();

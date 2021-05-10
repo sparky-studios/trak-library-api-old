@@ -1,6 +1,6 @@
 package com.sparkystudios.traklibrary.game.server.controller;
 
-import com.sparkystudios.traklibrary.game.domain.GameImageSize;
+import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.server.configuration.TrakHalJsonMediaTypeConfiguration;
 import com.sparkystudios.traklibrary.game.server.converter.JsonMergePatchHttpMessageConverter;
 import com.sparkystudios.traklibrary.game.server.exception.GlobalExceptionHandler;
@@ -38,8 +38,8 @@ class GameImageControllerTest {
     @Test
     void saveGameImageForGameIdAndGameImageSize_withInvalidFileData_returns400() throws Exception {
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/images")
-                .param("image-size", GameImageSize.SMALL.name())
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/image")
+                .param("image-size", ImageSize.SMALL.name())
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
@@ -52,7 +52,6 @@ class GameImageControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
     }
 
-
     @Test
     void saveGameImageForGameIdAndGameImageSize_withValidFileData_returns204() throws Exception {
         // Arrange
@@ -62,9 +61,9 @@ class GameImageControllerTest {
                 .when(gameImageService).upload(ArgumentMatchers.anyLong(), ArgumentMatchers.any(), ArgumentMatchers.any());
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/images")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/1/image")
                 .file(file)
-                .param("image-size", GameImageSize.SMALL.name())
+                .param("image-size", ImageSize.SMALL.name())
                 .contentType(MediaType.MULTIPART_FORM_DATA)
                 .accept("application/vnd.traklibrary.v1.hal+json"));
 
@@ -74,60 +73,22 @@ class GameImageControllerTest {
     }
 
     @Test
-    void findGameImageByGameIdAndImageSizeSmall_withValidId_returns200() throws Exception {
+    void findGameImageByGameIdAndImageSize_withValidId_returns200() throws Exception {
         // Arrange
         ImageDataDto imageDataDto = new ImageDataDto();
         imageDataDto.setContent(new byte[] { 'a', 'b' });
         imageDataDto.setFilename("filename.png");
 
-        Mockito.when(gameImageService.download(ArgumentMatchers.anyLong(), ArgumentMatchers.eq(GameImageSize.SMALL)))
+        Mockito.when(gameImageService.download(ArgumentMatchers.anyLong(), ArgumentMatchers.eq(ImageSize.SMALL)))
                 .thenReturn(imageDataDto);
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/images/small")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/image")
+                .param("image-size", ImageSize.SMALL.name())
                 .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE));
 
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
-
-    @Test
-    void findGameImageByGameIdAndImageSizeMedium_withValidId_returns200() throws Exception {
-        // Arrange
-        ImageDataDto imageDataDto = new ImageDataDto();
-        imageDataDto.setContent(new byte[] { 'a', 'b' });
-        imageDataDto.setFilename("filename.png");
-
-        Mockito.when(gameImageService.download(ArgumentMatchers.anyLong(), ArgumentMatchers.eq(GameImageSize.MEDIUM)))
-                .thenReturn(imageDataDto);
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/images/medium")
-                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
-    @Test
-    void findGameImageByGameIdAndImageSizeLarge_withValidId_returns200() throws Exception {
-        // Arrange
-        ImageDataDto imageDataDto = new ImageDataDto();
-        imageDataDto.setContent(new byte[] { 'a', 'b' });
-        imageDataDto.setFilename("filename.png");
-
-        Mockito.when(gameImageService.download(ArgumentMatchers.anyLong(), ArgumentMatchers.eq(GameImageSize.LARGE)))
-                .thenReturn(imageDataDto);
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/1/images/large")
-                .accept(MediaType.APPLICATION_OCTET_STREAM_VALUE));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
-
 }
