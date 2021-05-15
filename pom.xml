@@ -382,18 +382,17 @@
                         <excludes>
                             <!-- auth-server -->
                             <exclude>com/sparkystudios/traklibrary/authentication/server/adapter/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/annotation/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/authentication/server/configuration/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/authentication/server/exception/**/*</exclude>
-                            <exclude>com/sparkystudios/traklibrary/authentication/server/filter/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/authentication/server/AuthServerApplication.class</exclude>
                             <!-- auth-service -->
-                            <exclude>com/sparkystudios/traklibrary/authentication/service/client/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/authentication/service/configuration/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/authentication/service/exception/**/*</exclude>
                             <!-- config-server -->
+                            <exclude>com/sparkystudios/traklibrary/config/server/adapter/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/config/server/ConfigServerApplication.class</exclude>
                             <!-- discovery server -->
+                            <exclude>com/sparkystudios/traklibrary/discovery/server/adapter/**/*</exclude>
                             <exclude>com/sparkystudios/traklibrary/discovery/server/DiscoveryServerApplication.class</exclude>
                             <!-- email-server -->
                             <exclude>com/sparkystudios/traklibrary/email/server/adapter/**/*</exclude>

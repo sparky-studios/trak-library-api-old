@@ -43,7 +43,7 @@ public class RemoveExpiredRecoveryTokensJob implements Job {
 
         // Retrieve all of the accounts that have recovery tokens whose expiry date have eclipsed 24 hours..
         Collection<User> users = userRepository
-                .findByRecoveryTokenExpiryDateBefore(LocalDateTime.now().minusDays(1));
+                .findByRecoveryTokenExpiryDateBefore(LocalDateTime.now());
 
         // Loop through each user that matches the criteria and remove both the expiry date and the recovery token.
         // A new recovery token won't be automatically generated, the user will have to request a new one.

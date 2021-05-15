@@ -4,8 +4,8 @@ import com.sparkystudios.traklibrary.game.domain.GameRequest;
 import com.sparkystudios.traklibrary.game.repository.GameRequestRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameRequestSpecification;
 import com.sparkystudios.traklibrary.game.service.PatchService;
-import com.sparkystudios.traklibrary.game.service.client.NotificationClient;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
+import com.sparkystudios.traklibrary.game.service.event.NotificationEvent;
 import com.sparkystudios.traklibrary.game.service.mapper.GameRequestMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.exception.InvalidUserException;
@@ -17,6 +17,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.MessageSource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -34,7 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @ExtendWith(MockitoExtension.class)
-class NewGameRequestServiceImplTest {
+class GameRequestServiceImplTest {
 
     @Mock
     private GameRequestRepository gameRequestRepository;
@@ -52,7 +53,7 @@ class NewGameRequestServiceImplTest {
     private PatchService patchService;
 
     @Mock
-    private NotificationClient notificationClient;
+    private StreamBridge streamBridge;
 
     @InjectMocks
     private GameRequestServiceImpl gameRequestService;
@@ -322,8 +323,8 @@ class NewGameRequestServiceImplTest {
         Mockito.verify(gameRequestRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
 
-        Mockito.verify(notificationClient, Mockito.never())
-                .send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+        Mockito.verify(streamBridge, Mockito.never())
+                .send(ArgumentMatchers.eq("trak-notification-send"), ArgumentMatchers.any(NotificationEvent.class));
     }
 
     @Test
@@ -335,8 +336,8 @@ class NewGameRequestServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("");
 
-        Mockito.doNothing()
-                .when(notificationClient).send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+        Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any(NotificationEvent.class)))
+                .thenReturn(true);
 
         // Act
         gameRequestService.complete(new GameRequestDto());
@@ -345,8 +346,8 @@ class NewGameRequestServiceImplTest {
         Mockito.verify(gameRequestRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
-        Mockito.verify(notificationClient, Mockito.atMostOnce())
-                .send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-notification-send"), ArgumentMatchers.any(NotificationEvent.class));
 
         Mockito.verify(gameRequestMapper, Mockito.atMostOnce())
                 .fromGameRequest(ArgumentMatchers.any());

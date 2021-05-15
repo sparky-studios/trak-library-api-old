@@ -5,9 +5,9 @@ import com.sparkystudios.traklibrary.authentication.domain.UserRole;
 import com.sparkystudios.traklibrary.authentication.repository.UserRepository;
 import com.sparkystudios.traklibrary.authentication.repository.UserRoleRepository;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
-import com.sparkystudios.traklibrary.authentication.service.event.OnChangePasswordEvent;
-import com.sparkystudios.traklibrary.authentication.service.event.OnRecoveryNeededEvent;
-import com.sparkystudios.traklibrary.authentication.service.event.OnVerificationNeededEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.ChangePasswordEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.RecoveryEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.VerificationEvent;
 import com.sparkystudios.traklibrary.authentication.service.exception.InvalidUserException;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserMapper;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserResponseMapper;
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.MessageSource;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -48,7 +48,7 @@ class UserServiceImplTest {
     private MessageSource messageSource;
 
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private StreamBridge streamBridge;
 
     @Mock
     private AuthenticationService authenticationService;
@@ -171,8 +171,8 @@ class UserServiceImplTest {
         Mockito.when(userRoleRepository.findByRole(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new UserRole()));
 
-        Mockito.doNothing()
-                .when(applicationEventPublisher).publishEvent(ArgumentMatchers.any());
+        Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(true);
 
         User user = new User();
         user.setEmailAddress("random-address@trak.com");
@@ -199,8 +199,8 @@ class UserServiceImplTest {
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
-        Mockito.verify(applicationEventPublisher)
-                .publishEvent(ArgumentMatchers.any());
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-email-verification"), ArgumentMatchers.any(VerificationEvent.class));
     }
 
     @Test
@@ -373,116 +373,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    void findByUsername_withNoMatchingUser_throwsEntityNotFoundException() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.empty());
-
-        // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.findByUsername("username"));
-    }
-
-    @Test
-    void findByUsername_withDifferentUser_throwsInvalidUserException() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(new User()));
-
-        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
-                .thenReturn(false);
-
-        Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
-                .thenReturn("");
-
-        // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.findByUsername("username"));
-    }
-
-    @Test
-    void findByUsername_withMatchingUser_returnsUserResponse() {
-        // Arrange
-        User user = new User();
-        user.setId(5L);
-        user.setUsername("test-username");
-        user.setVerified(true);
-
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(user));
-
-        Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
-                .thenReturn(true);
-
-        // Act
-        userService.findByUsername("username");
-
-        // Assert
-        Mockito.verify(userResponseMapper, Mockito.atMostOnce())
-                .userToUserResponseDto(ArgumentMatchers.any());
-    }
-
-    @Test
-    void createVerificationCode_withNullUser_returnsEmptyString() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.empty());
-
-        // Act
-        String result = userService.createVerificationCode("username");
-
-        // Assert
-        Assertions.assertEquals("", result, "The string should be empty if no user is found.");
-    }
-
-    @Test
-    void createVerificationCode_withExistingUser_savesAndReturnsToken() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(new User()));
-
-        Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(new User());
-
-        // Act
-        String result = userService.createVerificationCode("username");
-
-        // Assert
-        Assertions.assertEquals(5, result.length(), "The token should contain 5 characters.");
-        Mockito.verify(userRepository, Mockito.atMostOnce())
-                .save(ArgumentMatchers.any());
-    }
-
-    @Test
-    void createRecoveryToken_withNullUser_returnsEmptyString() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.empty());
-
-        // Act
-        String result = userService.createRecoveryToken("username");
-
-        // Assert
-        Assertions.assertEquals("", result, "The recovery token should be empty if no user is found.");
-    }
-
-    @Test
-    void createRecoveryToken_withExistingUser_savesAndReturnsToken() {
-        // Arrange
-        Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(new User()));
-
-        Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(new User());
-
-        // Act
-        String result = userService.createRecoveryToken("username");
-
-        // Assert
-        Assertions.assertEquals(30, result.length(), "The recovery token should contain 30 characters.");
-        Mockito.verify(userRepository, Mockito.atMostOnce())
-                .save(ArgumentMatchers.any());
-    }
-
-    @Test
     void verify_withNoMatchingUser_throwsEntityNotFoundException() {
         // Arrange
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
@@ -651,18 +541,21 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
 
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.doNothing().when(applicationEventPublisher)
-                .publishEvent(ArgumentMatchers.any());
+        Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(true);
 
         // Act
         userService.reverify("username");
 
         // Assert
-        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
-                .publishEvent(ArgumentMatchers.any());
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-email-verification"), ArgumentMatchers.any(VerificationEvent.class));
     }
 
     @Test
@@ -675,8 +568,8 @@ class UserServiceImplTest {
         userService.requestRecovery("email");
 
         // Assert
-        Mockito.verify(applicationEventPublisher, Mockito.never())
-                .publishEvent(ArgumentMatchers.any(OnRecoveryNeededEvent.class));
+        Mockito.verify(streamBridge, Mockito.never())
+                .send(ArgumentMatchers.eq("trak-email-recovery"), ArgumentMatchers.any(RecoveryEvent.class));
     }
 
     @Test
@@ -685,12 +578,15 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(new User()));
 
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
         // Act
         userService.requestRecovery("email");
 
         // Assert
-        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
-                .publishEvent(ArgumentMatchers.any(OnRecoveryNeededEvent.class));
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-email-recovery"), ArgumentMatchers.any(RecoveryEvent.class));
     }
 
     @Test
@@ -719,18 +615,21 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.of(user));
 
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
-        Mockito.doNothing().when(applicationEventPublisher)
-                .publishEvent(ArgumentMatchers.any(OnChangePasswordEvent.class));
+        Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(true);
 
         // Act
         userService.requestChangePassword("username");
 
         // Assert
-        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
-                .publishEvent(ArgumentMatchers.any());
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-email-change-password"), ArgumentMatchers.any(ChangePasswordEvent.class));
     }
 
     @Test
@@ -920,8 +819,8 @@ class UserServiceImplTest {
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(user);
 
-        Mockito.doNothing()
-                .when(applicationEventPublisher).publishEvent(ArgumentMatchers.any(OnVerificationNeededEvent.class));
+        Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+                .thenReturn(true);
 
         // Act
         CheckedResponse<Boolean> result = userService.changeEmailAddress("username", "test@traklibrary.com");
@@ -931,8 +830,8 @@ class UserServiceImplTest {
         Assertions.assertFalse(result.isError(), "There should be no errors for a successful email address change.");
         Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successful email address change.");
 
-        Mockito.verify(applicationEventPublisher, Mockito.atMostOnce())
-                .publishEvent(ArgumentMatchers.any(OnVerificationNeededEvent.class));
+        Mockito.verify(streamBridge, Mockito.atMostOnce())
+                .send(ArgumentMatchers.eq("trak-email-verification"), ArgumentMatchers.any(VerificationEvent.class));
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());

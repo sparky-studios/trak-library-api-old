@@ -6,9 +6,9 @@ import com.sparkystudios.traklibrary.authentication.repository.UserRepository;
 import com.sparkystudios.traklibrary.authentication.repository.UserRoleRepository;
 import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
-import com.sparkystudios.traklibrary.authentication.service.event.OnChangePasswordEvent;
-import com.sparkystudios.traklibrary.authentication.service.event.OnRecoveryNeededEvent;
-import com.sparkystudios.traklibrary.authentication.service.event.OnVerificationNeededEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.ChangePasswordEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.RecoveryEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.VerificationEvent;
 import com.sparkystudios.traklibrary.authentication.service.exception.InvalidUserException;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserMapper;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserResponseMapper;
@@ -17,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
 import org.passay.PasswordGenerator;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,6 +37,10 @@ import java.util.stream.IntStream;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String EMAIL_VERIFICATION_DESTINATION = "trak-email-verification";
+    private static final String EMAIL_RECOVERY_DESTINATION = "trak-email-recovery";
+    private static final String EMAIL_CHANGE_PASSWORD_DESTINATION = "trak-email-change-password";
+
     private static final String NOT_FOUND_MESSAGE = "user.exception.not-found";
     private static final String EXISTING_USERNAME_MESSAGE = "user.error.existing-username";
     private static final String EXISTING_EMAIL_ADDRESS_MESSAGE = "user.error.existing-email-address";
@@ -53,7 +57,7 @@ public class UserServiceImpl implements UserService {
     private final UserResponseMapper userResponseMapper;
     private final MessageSource messageSource;
     private final PasswordEncoder passwordEncoder;
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final StreamBridge streamBridge;
     private final AuthenticationService authenticationService;
 
     @Override
@@ -106,12 +110,15 @@ public class UserServiceImpl implements UserService {
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
         newUser.addUserRole(userRole.get());
+        newUser.setVerified(false);
+        newUser.setVerificationCode(createVerificationCode());
+        newUser.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
 
         var user = userRepository.save(newUser);
 
         // Dispatch an event to generate the verification token and send the email.
-        applicationEventPublisher
-                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
+        streamBridge.send(EMAIL_VERIFICATION_DESTINATION,
+                new VerificationEvent(user.getUsername(), user.getEmailAddress(), user.getVerificationCode()));
 
         return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user));
     }
@@ -148,12 +155,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public UserResponseDto findByUsername(String username) {
-        return userResponseMapper.userToUserResponseDto(getUserFromUsername(username));
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUsername(String username) {
         var user = getUserFromUsername(username);
@@ -165,54 +166,6 @@ public class UserServiceImpl implements UserService {
 
         // Delete the user. There's no recovery from here.
         userRepository.deleteById(user.getId());
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public String createVerificationCode(String username) {
-        var user = userRepository.findByUsername(username)
-                .orElse(null);
-
-        if (user != null) {
-            var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-            var verificationCode = new StringBuilder();
-            Random random = new SecureRandom();
-
-            IntStream.range(0, 5).forEach(i -> verificationCode.append(chars.charAt(random.nextInt(chars.length()))));
-
-            user.setVerified(false);
-            user.setVerificationCode(verificationCode.toString());
-            user.setVerificationExpiryDate(LocalDateTime.now());
-
-            userRepository.save(user);
-
-            return verificationCode.toString();
-        }
-
-        return "";
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public String createRecoveryToken(String username) {
-        var user = userRepository.findByUsername(username)
-                .orElse(null);
-
-        if (user != null) {
-            String recoveryToken = new PasswordGenerator().generatePassword(30,
-                    new CharacterRule(EnglishCharacterData.UpperCase, 1),
-                    new CharacterRule(EnglishCharacterData.LowerCase, 1),
-                    new CharacterRule(EnglishCharacterData.Digit, 1));
-
-            user.setRecoveryToken(recoveryToken);
-            user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-
-            userRepository.save(user);
-
-            return recoveryToken;
-        }
-
-        return "";
     }
 
     @Override
@@ -245,10 +198,15 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void reverify(String username) {
         var user = getUserFromUsername(username);
+        user.setVerified(false);
+        user.setVerificationCode(createVerificationCode());
+        user.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
 
-        // Resend the verification request to generate a new verification code and email.
-        applicationEventPublisher
-                .publishEvent(new OnVerificationNeededEvent(this, user.getUsername(), user.getEmailAddress()));
+        user = userRepository.save(user);
+
+        // Resend the verification request to generate a new email.
+        streamBridge.send(EMAIL_VERIFICATION_DESTINATION,
+                new VerificationEvent(user.getUsername(), user.getEmailAddress(), user.getVerificationCode()));
     }
 
     @Override
@@ -258,10 +216,14 @@ public class UserServiceImpl implements UserService {
         // The user has an email address registered with the system, process the reset request.
         if (optionalUser.isPresent()) {
             var user = optionalUser.get();
+            user.setRecoveryToken(createRecoveryToken());
+            user.setRecoveryTokenExpiryDate(LocalDateTime.now().plusDays(1));
+
+            user = userRepository.save(user);
 
             // Publish a reset password event to send an email.
-            applicationEventPublisher
-                    .publishEvent(new OnRecoveryNeededEvent(this, user.getEmailAddress(), user.getUsername()));
+            streamBridge.send(EMAIL_RECOVERY_DESTINATION,
+                    new RecoveryEvent(user.getUsername(), user.getEmailAddress(), user.getRecoveryToken()));
         }
     }
 
@@ -271,10 +233,14 @@ public class UserServiceImpl implements UserService {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
         var user = getUserFromUsername(username);
+        user.setRecoveryToken(createRecoveryToken());
+        user.setRecoveryTokenExpiryDate(LocalDateTime.now().plusDays(1));
+
+        user = userRepository.save(user);
 
         // Publish a change password event to send an email.
-        applicationEventPublisher
-                .publishEvent(new OnChangePasswordEvent(this, user.getEmailAddress(), username));
+        streamBridge.send(EMAIL_CHANGE_PASSWORD_DESTINATION,
+                new ChangePasswordEvent(user.getUsername(), user.getEmailAddress(), user.getRecoveryToken()));
     }
 
     @Override
@@ -319,11 +285,15 @@ public class UserServiceImpl implements UserService {
 
         // Update the user with the new email and persist it.
         user.setEmailAddress(emailAddress);
-        userRepository.save(user);
+        user.setVerified(false);
+        user.setVerificationCode(createVerificationCode());
+        user.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
+
+        user = userRepository.save(user);
 
         // Will need to re-generate the verification email as the users information has changed.
-        applicationEventPublisher
-                .publishEvent(new OnVerificationNeededEvent(this, username, emailAddress));
+        streamBridge.send(EMAIL_VERIFICATION_DESTINATION,
+                new VerificationEvent(user.getUsername(), user.getEmailAddress(), user.getVerificationCode()));
 
         return new CheckedResponse<>(true);
     }
@@ -348,5 +318,22 @@ public class UserServiceImpl implements UserService {
         }
 
         return user;
+    }
+
+    private String createVerificationCode() {
+        var chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        var verificationCode = new StringBuilder();
+        Random random = new SecureRandom();
+
+        IntStream.range(0, 5).forEach(i -> verificationCode.append(chars.charAt(random.nextInt(chars.length()))));
+
+        return verificationCode.toString();
+    }
+
+    private String createRecoveryToken() {
+        return new PasswordGenerator().generatePassword(30,
+                new CharacterRule(EnglishCharacterData.UpperCase, 1),
+                new CharacterRule(EnglishCharacterData.LowerCase, 1),
+                new CharacterRule(EnglishCharacterData.Digit, 1));
     }
 }
