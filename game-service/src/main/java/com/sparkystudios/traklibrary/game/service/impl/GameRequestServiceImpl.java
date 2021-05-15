@@ -5,12 +5,13 @@ import com.sparkystudios.traklibrary.game.repository.GameRequestRepository;
 import com.sparkystudios.traklibrary.game.repository.specification.GameRequestSpecification;
 import com.sparkystudios.traklibrary.game.service.GameRequestService;
 import com.sparkystudios.traklibrary.game.service.PatchService;
-import com.sparkystudios.traklibrary.game.service.client.NotificationClient;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
+import com.sparkystudios.traklibrary.game.service.event.NotificationEvent;
 import com.sparkystudios.traklibrary.game.service.mapper.GameRequestMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.exception.InvalidUserException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +39,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     private final AuthenticationService authenticationService;
     private final MessageSource messageSource;
     private final PatchService patchService;
-    private final NotificationClient notificationClient;
+    private final StreamBridge streamBridge;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -129,7 +130,8 @@ public class GameRequestServiceImpl implements GameRequestService {
                     .getMessage("game-request.notification.complete.content", new Object[] {gameRequestDto.getTitle()}, LocaleContextHolder.getLocale());
 
             // Dispatch the notification.
-            notificationClient.send(gameRequestDto.getUserId(), title, content);
+            streamBridge.send("trak-notification-send",
+                    new NotificationEvent(gameRequestDto.getUserId(), title, content));
         }
     }
 
@@ -155,7 +157,7 @@ public class GameRequestServiceImpl implements GameRequestService {
     public void deleteById(long id) {
         Optional<GameRequest> gameRequest = gameRequestRepository.findById(id);
 
-        if (!gameRequest.isPresent()) {
+        if (gameRequest.isEmpty()) {
             String errorMessage = messageSource
                     .getMessage(NOT_FOUND_MESSAGE, new Object[] { id }, LocaleContextHolder.getLocale());
 

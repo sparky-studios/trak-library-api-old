@@ -9,13 +9,7 @@ public interface UserService extends UserDetailsService {
 
     CheckedResponse<UserResponseDto> update(RecoveryRequestDto recoveryRequestDto);
 
-    UserResponseDto findByUsername(String username);
-
     void deleteByUsername(String username);
-
-    String createVerificationCode(String username);
-
-    String createRecoveryToken(String username);
 
     CheckedResponse<Boolean> verify(String username, String verificationCode);
 

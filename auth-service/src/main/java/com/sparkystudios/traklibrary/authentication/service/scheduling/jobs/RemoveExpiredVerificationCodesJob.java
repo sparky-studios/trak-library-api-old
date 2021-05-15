@@ -43,7 +43,7 @@ public class RemoveExpiredVerificationCodesJob implements Job {
 
         // Retrieve all of the accounts that aren't verified and verification code is older than 24 hours.
         Collection<User> users = userRepository
-                .findByVerifiedIsFalseAndVerificationExpiryDateBefore(LocalDateTime.now().minusDays(1));
+                .findByVerifiedIsFalseAndVerificationExpiryDateBefore(LocalDateTime.now());
 
         // Loop through each user that matches the criteria and remove both the expiry date and verification code.
         // A new verification code won't be automatically generated, the user will have to request a new one.

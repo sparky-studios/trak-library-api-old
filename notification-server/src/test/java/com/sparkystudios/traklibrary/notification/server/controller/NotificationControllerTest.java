@@ -38,9 +38,6 @@ class NotificationControllerTest {
     @MockBean
     private MobileDeviceLinkService mobileDeviceLinkService;
 
-    @MockBean
-    private NotificationService notificationService;
-
     @Test
     void register_withInvalidMobileDeviceLinkRegistrationRequestDto_returns400() throws Exception {
         // Act
@@ -123,79 +120,6 @@ class NotificationControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("user-id", "1")
                 .param("device-guid", "device-guid")
-                .accept("application/vnd.traklibrary.v1+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
-
-    @Test
-    void send_withMissingUserIdParameter_returns400() throws Exception {
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/send")
-                .param("title", "title")
-                .param("content", "content")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
-    }
-
-    @Test
-    void send_withMissingTitleParameter_returns400() throws Exception {
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/send")
-                .param("user-id", "1")
-                .param("content", "content")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
-    }
-
-    @Test
-    void send_withMissingContentParameter_returns400() throws Exception {
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/send")
-                .param("user-id", "1")
-                .param("title", "title")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.status", Matchers.is(HttpStatus.BAD_REQUEST.name())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.time").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.error").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.details").exists());
-    }
-
-    @Test
-    void send_withValidParameters_returns204() throws Exception {
-        // Arrange
-        Mockito.doNothing()
-                .when(notificationService).send(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString(), ArgumentMatchers.anyString());
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/send")
-                .param("user-id", "1")
-                .param("title", "title")
-                .param("content", "content")
-                .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
