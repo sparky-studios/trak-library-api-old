@@ -38,7 +38,7 @@ class UserMapperTest {
         user.setCreatedAt(LocalDateTime.now());
         user.setUpdatedAt(LocalDateTime.now());
         user.setVersion(1L);
-        user.addUserRole(userRole);
+        user.setUserRole(userRole);
 
         // Act
         UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
@@ -54,7 +54,7 @@ class UserMapperTest {
         Assertions.assertThat(result.getCreatedAt()).isEqualTo(user.getCreatedAt());
         Assertions.assertThat(result.getUpdatedAt()).isEqualTo(user.getUpdatedAt());
         Assertions.assertThat(result.getVersion()).isEqualTo(user.getVersion());
-        Assertions.assertThat(result.getAuthorities().iterator().next().getAuthority()).isEqualTo(user.getUserRoles().iterator().next().getRole());
+        Assertions.assertThat(result.getAuthorities().iterator().next().getAuthority()).isEqualTo(userRole.getRole());
     }
 
     @Test

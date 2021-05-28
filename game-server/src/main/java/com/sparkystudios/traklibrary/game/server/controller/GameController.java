@@ -7,7 +7,8 @@ import com.sparkystudios.traklibrary.game.service.*;
 import com.sparkystudios.traklibrary.game.service.dto.*;
 import com.sparkystudios.traklibrary.game.service.dto.request.NewGameRequest;
 import com.sparkystudios.traklibrary.game.service.dto.request.UpdateGameRequest;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithGameDeleteAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithGameWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -15,24 +16,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedResourcesAssembler;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
-import org.springframework.hateoas.MediaTypes;
-import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.json.JsonMergePatch;
@@ -82,7 +70,7 @@ public class GameController {
      *
      * @return The saved {@link GameDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> save(@Validated @RequestBody NewGameRequest newGameRequest) {
@@ -183,7 +171,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link GenreDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PutMapping(value = "/{id}/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> saveGenresForGameId(@PathVariable long id, @RequestBody Collection<Long> genreIds) {
         return gameRepresentationModelAssembler.toModel(gameService.saveGenresForGameId(id, genreIds));
@@ -203,7 +191,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link GenreDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PostMapping(value = "/{id}/genres", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> updateGenresForGameId(@PathVariable long id, @RequestBody Collection<Long> genreIds) {
         return gameRepresentationModelAssembler.toModel(gameService.updateGenresForGameId(id, genreIds));
@@ -239,7 +227,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link PlatformDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PutMapping(value = "/{id}/platforms", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> savePlatformsForGameId(@PathVariable long id, @RequestBody Collection<Long> platformIds) {
         return gameRepresentationModelAssembler.toModel(gameService.savePlatformsForGameId(id, platformIds));
@@ -259,7 +247,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link PlatformDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PostMapping(value = "/{id}/platforms", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> updatePlatformsForGameId(@PathVariable long id, @RequestBody Collection<Long> platformIds) {
         return gameRepresentationModelAssembler.toModel(gameService.updatePlatformsForGameId(id, platformIds));
@@ -295,7 +283,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link DeveloperDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PutMapping(value = "/{id}/developers", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> saveDevelopersForGameId(@PathVariable long id, @RequestBody Collection<Long> developerIds) {
         return gameRepresentationModelAssembler.toModel(gameService.saveDevelopersForGameId(id, developerIds));
@@ -315,7 +303,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link DeveloperDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PostMapping(value = "/{id}/developers", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> updateDevelopersForGameId(@PathVariable long id, @RequestBody Collection<Long> developerIds) {
         return gameRepresentationModelAssembler.toModel(gameService.updateDevelopersForGameId(id, developerIds));
@@ -351,7 +339,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link PublisherDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PutMapping(value = "/{id}/publishers", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> savePublishersForGameId(@PathVariable long id, @RequestBody Collection<Long> publisherIds) {
         return gameRepresentationModelAssembler.toModel(gameService.savePublishersForGameId(id, publisherIds));
@@ -371,7 +359,7 @@ public class GameController {
      *
      * @return The {@link GameDto} that the {@link PublisherDto} ID's have been associated with.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PostMapping(value = "/{id}/publishers", consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> updatePublishersForGameId(@PathVariable long id, @RequestBody Collection<Long> publisherIds) {
         return gameRepresentationModelAssembler.toModel(gameService.updatePublishersForGameId(id, publisherIds));
@@ -499,7 +487,7 @@ public class GameController {
      *
      * @return The updated {@link GameDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GameDto> update(@Validated @RequestBody UpdateGameRequest updateGameRequest) {
         return gameRepresentationModelAssembler.toModel(gameService.update(updateGameRequest));
@@ -521,7 +509,7 @@ public class GameController {
      *
      * @return The patched {@link GameDto} instance.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GameDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return gameRepresentationModelAssembler.toModel(gameService.patch(id, jsonMergePatch));
@@ -537,7 +525,7 @@ public class GameController {
      *
      * @param id The ID of the {@link GameDto} to delete.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameDeleteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

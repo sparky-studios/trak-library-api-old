@@ -10,7 +10,8 @@ import com.sparkystudios.traklibrary.game.service.GenreService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDetailsDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.GenreDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithGenreDeleteAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithGenreWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -57,7 +58,7 @@ public class GenreController {
      *
      * @return The saved {@link GenreDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGenreWriteAuthority
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GenreDto> save(@Validated @RequestBody GenreDto genreDto) {
@@ -213,7 +214,7 @@ public class GenreController {
      *
      * @return The updated {@link GenreDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGenreWriteAuthority
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<GenreDto> update(@Validated @RequestBody GenreDto genreDto) {
         return genreRepresentationModelAssembler.toModel(genreService.update(genreDto));
@@ -235,7 +236,7 @@ public class GenreController {
      *
      * @return The patched {@link GenreDto} instance.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGenreWriteAuthority
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<GenreDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return genreRepresentationModelAssembler.toModel(genreService.patch(id, jsonMergePatch));
@@ -251,7 +252,7 @@ public class GenreController {
      *
      * @param id The ID of the {@link GenreDto} to delete.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGenreDeleteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

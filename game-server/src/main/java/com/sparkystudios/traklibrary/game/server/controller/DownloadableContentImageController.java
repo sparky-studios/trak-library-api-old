@@ -4,21 +4,14 @@ import com.sparkystudios.traklibrary.game.domain.GameImage;
 import com.sparkystudios.traklibrary.game.domain.ImageSize;
 import com.sparkystudios.traklibrary.game.service.DownloadableContentImageService;
 import com.sparkystudios.traklibrary.game.service.dto.DownloadableContentDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithGameWriteAuthority;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -50,7 +43,7 @@ public class DownloadableContentImageController {
      * @param imageSize The size of the image to upload.
      * @param file The {@link MultipartFile} containing the image to upload.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithGameWriteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveDownloadableContentImageForDownloadableContentIdAndGameImageSize(@PathVariable long id,

@@ -10,7 +10,8 @@ import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.PublisherService;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
 import com.sparkystudios.traklibrary.game.service.dto.PublisherDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithPublisherDeleteAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithPublisherWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +71,7 @@ public class PublisherController {
      *
      * @return The saved {@link PublisherDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithPublisherWriteAuthority
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<PublisherDto> save(@Validated @RequestBody PublisherDto publisherDto) {
@@ -141,7 +142,7 @@ public class PublisherController {
      * @param id The ID of the {@link PublisherDto} to persist and image for.
      * @param file The {@link MultipartFile} containing the image to upload.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithPublisherWriteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveCompanyImageForCompanyId(@PathVariable long id, @RequestPart MultipartFile file) {
@@ -232,7 +233,7 @@ public class PublisherController {
      *
      * @return The updated {@link PublisherDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithPublisherWriteAuthority
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<PublisherDto> update(@Validated @RequestBody PublisherDto publisherDto) {
         return publisherRepresentationModelAssembler.toModel(publisherService.update(publisherDto));
@@ -254,7 +255,7 @@ public class PublisherController {
      *
      * @return The patched {@link PublisherDto} instance.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithPublisherWriteAuthority
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<PublisherDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return publisherRepresentationModelAssembler.toModel(publisherService.patch(id, jsonMergePatch));
@@ -270,7 +271,7 @@ public class PublisherController {
      *
      * @param id The ID of the {@link PublisherDto} to delete.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithPublisherDeleteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

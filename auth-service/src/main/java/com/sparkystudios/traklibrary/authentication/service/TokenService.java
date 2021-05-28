@@ -13,7 +13,7 @@ public interface TokenService {
      *
      * @return A new access token with user information and scopes provided.
      */
-    String createAccessToken(UserContext userContext);
+    String createAccessToken(UserContext userContext, String role, Iterable<String> scopes);
 
     /**
      * Creates a new refresh token which will allow the user to refresh an expired access token by provided

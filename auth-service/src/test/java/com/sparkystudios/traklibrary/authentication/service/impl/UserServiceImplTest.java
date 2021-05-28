@@ -341,19 +341,11 @@ class UserServiceImplTest {
     @Test
     void deleteByUsername_withValidUser_deletesUserRolesAndUser() {
         // Arrange
-        UserRole userRole = new UserRole();
-
-        User user = Mockito.spy(User.class);
-        user.addUserRole(userRole);
-
         Mockito.when(userRepository.findByUsername(ArgumentMatchers.anyString()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
-
-        Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(user);
 
         Mockito.doNothing()
                 .when(userRepository).deleteById(ArgumentMatchers.anyLong());
@@ -362,12 +354,6 @@ class UserServiceImplTest {
         userService.deleteByUsername("username");
 
         // Assert
-        Mockito.verify(user, Mockito.atMostOnce())
-                .removeUserRole(ArgumentMatchers.any());
-
-        Mockito.verify(userRepository, Mockito.atMostOnce())
-                .save(ArgumentMatchers.any());
-
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .deleteById(ArgumentMatchers.anyLong());
     }

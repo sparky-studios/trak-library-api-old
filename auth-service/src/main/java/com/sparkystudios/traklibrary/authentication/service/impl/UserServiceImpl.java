@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
-        newUser.addUserRole(userRole.get());
+        newUser.setUserRole(userRole.get());
         newUser.setVerified(false);
         newUser.setVerificationCode(createVerificationCode());
         newUser.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
@@ -158,12 +158,6 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteByUsername(String username) {
         var user = getUserFromUsername(username);
-
-        // The user won't be null at this point, so we don't need to do any additional checking before deleting.
-        // We need to remove its roles first before deleting otherwise it'll fail due to a foreign key constraint.
-        user.getUserRoles().forEach(user::removeUserRole);
-        user = userRepository.save(user);
-
         // Delete the user. There's no recovery from here.
         userRepository.deleteById(user.getId());
     }

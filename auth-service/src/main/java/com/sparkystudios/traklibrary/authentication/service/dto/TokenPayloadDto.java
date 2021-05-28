@@ -7,5 +7,11 @@ public class TokenPayloadDto {
 
     private String accessToken;
 
+    private String tokenType;
+
+    private long expiresIn;
+
     private String refreshToken;
+
+    private String scope;
 }

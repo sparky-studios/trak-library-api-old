@@ -10,10 +10,39 @@
             Create the initial database structure for the auth application.
         </comment>
 
+        <!-- Create the auth_user_role table -->
+        <createTable tableName="auth_user_role">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role" />
+            </column>
+            <column name="role" type="varchar(30)">
+                <constraints nullable="false" unique="true" />
+            </column>
+            <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
+        </createTable>
+
+        <!-- Insert the default user roles into the database when first generating -->
+        <insert tableName="auth_user_role">
+            <column name="id" valueComputed="1" />
+            <column name="role" value="ROLE_USER" />
+        </insert>
+        <insert tableName="auth_user_role">
+            <column name="id" valueComputed="2" />
+            <column name="role" value="ROLE_MODERATOR" />
+        </insert>
+        <insert tableName="auth_user_role">
+            <column name="id" valueComputed="3" />
+            <column name="role" value="ROLE_ADMIN" />
+        </insert>
+
         <!-- Create the auth_user table -->
         <createTable tableName="auth_user">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_user" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user" />
             </column>
             <column name="username" type="varchar(255)">
                 <constraints nullable="false"/>
@@ -31,12 +60,21 @@
             <column name="verification_expiry_date" type="datetime"/>
             <column name="recovery_token" type="varchar(30)"/>
             <column name="recovery_token_expiry_date" type="datetime"/>
+            <column name="auth_user_role_id" type="bigint" />
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>
             <column name="updated_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP"/>
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
+
+        <!-- auth_user foreign key constraints -->
+        <addForeignKeyConstraint
+                baseTableName="auth_user"
+                baseColumnNames="auth_user_role_id"
+                constraintName="fk_auth_user_auth_user_role_id"
+                referencedTableName="auth_user_role"
+                referencedColumnNames="id" />
 
         <!-- auth_user unique constraints -->
         <addUniqueConstraint
@@ -48,13 +86,19 @@
                 columnNames="email_address"
                 constraintName="unq_auth_user_email_address"/>
 
-        <!-- Create the auth_user_role table -->
-        <createTable tableName="auth_user_role">
+        <!-- Create the auth_user_authority table -->
+        <createTable tableName="auth_user_authority">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_authority" />
             </column>
-            <column name="role" type="varchar(30)">
-                <constraints nullable="false" unique="true" />
+            <column name="authority" type="varchar(255)">
+                <constraints nullable="false" />
+            </column>
+            <column name="feature" type="smallint">
+                <constraints nullable="false" />
+            </column>
+            <column name="authority_type" type="smallint">
+                <constraints nullable="false" />
             </column>
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
@@ -63,38 +107,149 @@
             <column name="op_lock_version" type="bigint" defaultValueNumeric="0"/>
         </createTable>
 
-        <!-- Create the auth_user_role_xref table -->
-        <createTable tableName="auth_user_role_xref">
+        <!-- auth_user_authority unique constraints -->
+        <addUniqueConstraint
+                tableName="auth_user_authority"
+                columnNames="authority,feature,authority_type"
+                constraintName="unq_auth_user_authority_authority_feature_authority_type"/>
+
+        <!-- Insert the default user authorities into the database when first generating -->
+        <!-- developer authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="1" />
+            <column name="authority" value="games/developer.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="2" />
+            <column name="authority" value="games/developer.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- franchise authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="3" />
+            <column name="authority" value="games/franchise.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="4" />
+            <column name="authority" value="games/franchise.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- game authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="5" />
+            <column name="authority" value="games/game.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="6" />
+            <column name="authority" value="games/game.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- genre authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="7" />
+            <column name="authority" value="games/genre.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="8" />
+            <column name="authority" value="games/genre.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- platform authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="9" />
+            <column name="authority" value="games/platform.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="10" />
+            <column name="authority" value="games/platform.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- publisher authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="11" />
+            <column name="authority" value="games/publisher.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="12" />
+            <column name="authority" value="games/publisher.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+        <!-- request authorities -->
+        <insert tableName="auth_user_authority">
+            <column name="id" value="13" />
+            <column name="authority" value="games/request.delete" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="0" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="14" />
+            <column name="authority" value="games/request.read" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="1" />
+        </insert>
+        <insert tableName="auth_user_authority">
+            <column name="id" value="15" />
+            <column name="authority" value="games/request.write" />
+            <column name="feature" value="1" />
+            <column name="authority_type" value="2" />
+        </insert>
+
+        <!-- Create the auth_user_auth_user_authority_xref table -->
+        <createTable tableName="auth_user_auth_user_authority_xref">
             <column name="id" type="bigint" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_role_xref" />
+                <constraints primaryKey="true" nullable="false" primaryKeyName="pk_auth_user_auth_user_authority_xref" />
             </column>
             <column name="auth_user_id" type="bigint">
                 <constraints nullable="false" />
             </column>
-            <column name="auth_user_role_id" type="bigint">
+            <column name="auth_user_authority_id" type="bigint">
                 <constraints nullable="false" />
             </column>
         </createTable>
 
-        <!-- auth_user_role_xref foreign key constraints -->
+        <!-- auth_user_auth_user_authority_xref foreign key constraints -->
         <addForeignKeyConstraint
-                baseTableName="auth_user_role_xref"
+                baseTableName="auth_user_auth_user_authority_xref"
                 baseColumnNames="auth_user_id"
-                constraintName="fk_auth_user_role_xref_auth_user_id"
+                constraintName="fk_auth_user_auth_user_authority_xref_auth_user_id"
                 referencedTableName="auth_user"
                 referencedColumnNames="id" />
         <addForeignKeyConstraint
-                baseTableName="auth_user_role_xref"
-                baseColumnNames="auth_user_role_id"
-                constraintName="fk_auth_user_role_xref_auth_user_role_id"
-                referencedTableName="auth_user_role"
+                baseTableName="auth_user_auth_user_authority_xref"
+                baseColumnNames="auth_user_authority_id"
+                constraintName="fk_auth_user_auth_user_authority_xref_auth_user_authority_id"
+                referencedTableName="auth_user_authority"
                 referencedColumnNames="id" />
 
-        <!-- auth_user_role_xref unique constraints -->
+        <!-- auth_user_auth_user_authority_xref unique constraints -->
         <addUniqueConstraint
-                tableName="auth_user_role_xref"
-                columnNames="auth_user_id,auth_user_role_id"
-                constraintName="unq_auth_user_role_xref_auth_user_id_auth_user_role_id" />
+                tableName="auth_user_auth_user_authority_xref"
+                columnNames="auth_user_id,auth_user_authority_id"
+                constraintName="unq_auth_user_auth_user_authority_xref_auth_user_id_auth_user_authority_id" />
 
+        <rollback>
+            <dropTable tableName="auth_user_auth_user_authority_xref" />
+            <dropTable tableName="auth_user_authority" />
+            <dropTable tableName="auth_user" />
+            <dropTable tableName="auth_user_role" />
+        </rollback>
     </changeSet>
 </databaseChangeLog>

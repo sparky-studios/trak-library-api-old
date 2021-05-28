@@ -7,8 +7,8 @@ import org.mapstruct.Mapping;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -17,11 +17,6 @@ public interface UserMapper {
         if (user == null) {
             return null;
         }
-
-        List<GrantedAuthority> authorities = user.getUserRoles()
-                .stream()
-                .map(userRole -> new SimpleGrantedAuthority(userRole.getRole()))
-                .collect(Collectors.toList());
 
         var userDto = new UserDto();
         userDto.setId(user.getId());
@@ -34,12 +29,20 @@ public interface UserMapper {
         userDto.setCreatedAt(user.getCreatedAt());
         userDto.setUpdatedAt(user.getUpdatedAt());
         userDto.setVersion(user.getVersion());
-        userDto.setAuthorities(authorities);
 
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        if (user.getUserRole() != null) {
+            authorities.add(new SimpleGrantedAuthority(user.getUserRole().getRole()));
+        }
+
+        user.getAuthorities()
+                .forEach(a -> authorities.add(new SimpleGrantedAuthority(a.getAuthority())));
+
+        userDto.setAuthorities(authorities);
         return userDto;
     }
 
-    @Mapping(target = "userRoles", ignore = true)
+    @Mapping(target = "userRole", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     User userDtoToUser(UserDto userDto);

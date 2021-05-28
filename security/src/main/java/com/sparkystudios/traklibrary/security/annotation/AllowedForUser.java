@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 @Documented
-@PreAuthorize("isAuthenticated() and (hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN'))")
+@PreAuthorize("isAuthenticated() and hasAnyRole('USER', 'MODERATOR', 'ADMIN')")
 public @interface AllowedForUser {
 }

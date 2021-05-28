@@ -50,6 +50,7 @@ services:
       - spring.cloud.config.profile=development
     ports:
       - 5006:5005
+      - 8888:8888
 
   discovery-server:
     build:

@@ -9,8 +9,8 @@ import com.sparkystudios.traklibrary.game.service.DeveloperService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.DeveloperDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.game.service.dto.PlatformDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithDeveloperDeleteAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithDeveloperWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +70,7 @@ public class DeveloperController {
      *
      * @return The saved {@link DeveloperDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithDeveloperWriteAuthority
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<DeveloperDto> save(@Validated @RequestBody DeveloperDto developerDto) {
@@ -136,12 +136,12 @@ public class DeveloperController {
      * If the file is in a incorrect format or a image already exists for the given {@link DeveloperDto}, an exception
      * will be thrown and an {@link ApiError} will be returned to the callee.
      *
-     * {@link PlatformDto}'s can only be created for users with moderator privileges.
+     * {@link DeveloperDto}'s images can only be created for users with moderator privileges.
      *
-     * @param id The ID of the {@link PlatformDto} to persist and image for.
+     * @param id The ID of the {@link DeveloperDto} to persist the image for.
      * @param file The {@link MultipartFile} containing the image to upload.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithDeveloperWriteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PostMapping(value = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveCompanyImageForCompanyId(@PathVariable long id, @RequestPart MultipartFile file) {
@@ -233,7 +233,7 @@ public class DeveloperController {
      *
      * @return The updated {@link DeveloperDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithDeveloperWriteAuthority
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<DeveloperDto> update(@Validated @RequestBody DeveloperDto developerDto) {
         return developerRepresentationModelAssembler.toModel(developerService.update(developerDto));
@@ -255,7 +255,7 @@ public class DeveloperController {
      *
      * @return The patched {@link DeveloperDto} instance.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithDeveloperWriteAuthority
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<DeveloperDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return developerRepresentationModelAssembler.toModel(developerService.patch(id, jsonMergePatch));
@@ -271,7 +271,7 @@ public class DeveloperController {
      *
      * @param id The ID of the {@link DeveloperDto} to delete.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithDeveloperDeleteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {
