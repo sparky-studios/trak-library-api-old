@@ -1,8 +1,6 @@
 package com.sparkystudios.traklibrary.authentication.domain;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -64,6 +62,12 @@ public class User {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "auth_user_role_id")
     private UserRole userRole;
+
+    @Column(name = "using_multi_factor_authentication", nullable = false)
+    private boolean usingMultiFactorAuthentication;
+
+    @Column(name = "multi_factor_authentication_secret")
+    private String multiFactorAuthenticationSecret;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

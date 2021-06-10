@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.email.service;
 
+import com.sparkystudios.traklibrary.email.service.dto.EmailPasswordChangedRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
@@ -46,15 +47,14 @@ public interface EmailService {
     void sendRecoveryEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
 
     /**
-     * Given an email address and a password, this method will dispatch a change password email
-     * to the specified address using the email provider defined within the {@link EmailService}
-     * implementation. If any errors occur when dispatching an email, an {@link EmailFailedException}
-     * will be thrown and the information will be returned to the API callee.
+     * Given an email address, this method will dispatch an email to the given email address informing
+     * the user that their password has been updated successfully. It will also include information if
+     * they have not requested an email change to reset their password and account.
      *
-     * It should be noted, that no validation needs to occur with any {@link EmailService}
-     * implementation, validation of the fields should occur at the controller level.
+     * If any errors occur when dispatching an email, an {@link EmailFailedException} will be thrown
+     * and the information will be returned to the API callee.
      *
-     * @param emailRecoveryRequestDto The email and recovery code to dispatch.
+     * @param emailPasswordChangedRequestDto The email address to dispatch the email to.
      */
-    void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto);
+    void sendPasswordChangedEmail(EmailPasswordChangedRequestDto emailPasswordChangedRequestDto);
 }

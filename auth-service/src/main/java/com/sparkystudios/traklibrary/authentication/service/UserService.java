@@ -5,21 +5,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
-    CheckedResponse<UserResponseDto> save(RegistrationRequestDto registrationRequestDto);
+    CheckedResponse<RegistrationResponseDto> save(RegistrationRequestDto registrationRequestDto);
 
     CheckedResponse<UserResponseDto> update(RecoveryRequestDto recoveryRequestDto);
 
-    void deleteByUsername(String username);
+    void deleteById(long id);
 
-    CheckedResponse<Boolean> verify(String username, String verificationCode);
+    CheckedResponse<Boolean> verify(long id, String verificationCode);
 
-    void reverify(String username);
+    void reverify(long id);
 
     void requestRecovery(String emailAddress);
 
-    void requestChangePassword(String username);
+    CheckedResponse<Boolean> changePassword(long id, ChangePasswordRequestDto changePasswordRequestDto);
 
-    CheckedResponse<Boolean> changePassword(String username, ChangePasswordRequestDto changePasswordRequestDto);
-
-    CheckedResponse<Boolean> changeEmailAddress(String username, String emailAddress);
+    CheckedResponse<Boolean> changeEmailAddress(long id, String emailAddress);
 }

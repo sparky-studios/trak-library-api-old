@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.email.service.impl;
 
+import com.sparkystudios.traklibrary.email.service.dto.EmailPasswordChangedRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
@@ -133,7 +134,7 @@ class EmailServiceThymeleafImplTest {
     }
 
     @Test
-    void sendChangePasswordEmail_withFailingToSend_throwsEmailFailedException() {
+    void sendPasswordChangedEmail_withFailingToSend_throwsEmailFailedException() {
         // Arrange
         emailService.setFromAddress("from@traklibrary.com");
 
@@ -143,17 +144,17 @@ class EmailServiceThymeleafImplTest {
         Mockito.when(javaMailSender.createMimeMessage())
                 .thenReturn(Mockito.mock(MimeMessage.class));
 
-        Mockito.when(templateEngine.process(ArgumentMatchers.eq("change-password-template"), ArgumentMatchers.any(IContext.class)))
+        Mockito.when(templateEngine.process(ArgumentMatchers.eq("password-changed-template"), ArgumentMatchers.any(IContext.class)))
                 .thenReturn("");
 
-        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
+        EmailPasswordChangedRequestDto emailPasswordChangedRequestDto = new EmailPasswordChangedRequestDto();
 
         // Assert
-        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendChangePasswordEmail(emailRecoveryRequestDto));
+        Assertions.assertThrows(EmailFailedException.class, () -> emailService.sendPasswordChangedEmail(emailPasswordChangedRequestDto));
     }
 
     @Test
-    void sendChangePasswordEmail_withNoIssues_sendsEmail() {
+    void sendPasswordChangedEmail_withNoIssues_sendsEmail() {
         // Arrange
         emailService.setFromAddress("from@traklibrary.com");
 
@@ -163,18 +164,17 @@ class EmailServiceThymeleafImplTest {
         Mockito.when(javaMailSender.createMimeMessage())
                 .thenReturn(Mockito.mock(MimeMessage.class));
 
-        Mockito.when(templateEngine.process(ArgumentMatchers.eq("change-password-template"), ArgumentMatchers.any(IContext.class)))
+        Mockito.when(templateEngine.process(ArgumentMatchers.eq("password-changed-template"), ArgumentMatchers.any(IContext.class)))
                 .thenReturn("");
 
         Mockito.doNothing()
                 .when(javaMailSender).send(ArgumentMatchers.any(MimeMessage.class));
 
-        EmailRecoveryRequestDto emailRecoveryRequestDto = new EmailRecoveryRequestDto();
-        emailRecoveryRequestDto.setEmailAddress("test@traklibrary.com");
-        emailRecoveryRequestDto.setRecoveryToken("12345");
+        EmailPasswordChangedRequestDto emailPasswordChangedRequestDto = new EmailPasswordChangedRequestDto();
+        emailPasswordChangedRequestDto.setEmailAddress("test@traklibrary.com");
 
         // Act
-        emailService.sendChangePasswordEmail(emailRecoveryRequestDto);
+        emailService.sendPasswordChangedEmail(emailPasswordChangedRequestDto);
 
         // Assert
         Mockito.verify(javaMailSender, Mockito.atMostOnce())

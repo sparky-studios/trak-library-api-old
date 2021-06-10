@@ -27,6 +27,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -45,6 +47,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -63,6 +67,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -81,6 +87,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -99,6 +107,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbccccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -117,6 +127,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
@@ -131,6 +143,8 @@ class UserTest {
         Assertions.assertThat(result.getVerificationExpiryDate()).isEqualToIgnoringNanos(user.getVerificationExpiryDate());
         Assertions.assertThat(result.getRecoveryToken()).isEqualTo(user.getRecoveryToken());
         Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualToIgnoringNanos(user.getRecoveryTokenExpiryDate());
+        Assertions.assertThat(result.isUsingMultiFactorAuthentication()).isEqualTo(user.isUsingMultiFactorAuthentication());
+        Assertions.assertThat(result.getMultiFactorAuthenticationSecret()).isEqualTo(user.getMultiFactorAuthenticationSecret());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();

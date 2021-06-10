@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.email.service.impl;
 
 import com.sparkystudios.traklibrary.email.service.EmailService;
 import com.sparkystudios.traklibrary.email.service.dto.EmailDto;
+import com.sparkystudios.traklibrary.email.service.dto.EmailPasswordChangedRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
 import com.sparkystudios.traklibrary.email.service.exception.EmailFailedException;
@@ -30,7 +31,7 @@ public class EmailServiceThymeleafImpl implements EmailService {
 
     private static final String VERIFICATION_SUBJECT = "email.verification.subject";
     private static final String RECOVERY_SUBJECT = "email.recovery.subject";
-    private static final String CHANGE_PASSWORD_SUBJECT = "email.change-password.subject";
+    private static final String PASSWORD_CHANGED_SUBJECT = "email.password-changed.subject";
 
     @Setter
     @Value("${trak.aws.ses.from-address}")
@@ -76,18 +77,17 @@ public class EmailServiceThymeleafImpl implements EmailService {
 
     @Async
     @Override
-    public void sendChangePasswordEmail(EmailRecoveryRequestDto emailRecoveryRequestDto) {
+    public void sendPasswordChangedEmail(EmailPasswordChangedRequestDto emailPasswordChangedRequestDto) {
         // Create the Email template and all the data it needs before sending.
         var emailDto = new EmailDto();
         emailDto.setFrom(fromAddress);
-        emailDto.setTo(emailRecoveryRequestDto.getEmailAddress());
-        emailDto.setSubject(messageSource.getMessage(CHANGE_PASSWORD_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
-        emailDto.setData(Collections.singletonMap("recoveryToken", emailRecoveryRequestDto.getRecoveryToken()));
+        emailDto.setTo(emailPasswordChangedRequestDto.getEmailAddress());
+        emailDto.setSubject(messageSource.getMessage(PASSWORD_CHANGED_SUBJECT, new Object[] {}, LocaleContextHolder.getLocale()));
 
         try {
-            javaMailSender.send(getMimeMessage(emailDto, "change-password-template"));
+            javaMailSender.send(getMimeMessage(emailDto, "password-changed-template"));
         } catch (Exception e) {
-            throw new EmailFailedException("Failed to send change password email.", e);
+            throw new EmailFailedException("Failed to send password changed email.", e);
         }
     }
 

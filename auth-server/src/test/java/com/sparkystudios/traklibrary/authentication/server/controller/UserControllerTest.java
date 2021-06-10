@@ -65,13 +65,12 @@ class UserControllerTest {
         registrationRequestDto.setPassword("Password123");
         registrationRequestDto.setEmailAddress("test@traklibrary.com");
 
-        UserResponseDto userResponseDto = new UserResponseDto();
-        userResponseDto.setId(1L);
-        userResponseDto.setUsername("username");
-        userResponseDto.setVerified(true);
+        var registrationResponseDto = new RegistrationResponseDto();
+        registrationResponseDto.setUserId(1L);
+        registrationResponseDto.setQrData(new byte[] { 'p' });
 
         Mockito.when(userService.save(ArgumentMatchers.any()))
-                .thenReturn(new CheckedResponse<>(userResponseDto));
+                .thenReturn(new CheckedResponse<>(registrationResponseDto));
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users")
@@ -82,9 +81,8 @@ class UserControllerTest {
         // Assert
         resultActions
                 .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.id", Matchers.is((int)userResponseDto.getId())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.username", Matchers.is(userResponseDto.getUsername())))
-                .andExpect(MockMvcResultMatchers.jsonPath("$.data.verified", Matchers.is(userResponseDto.isVerified())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.userId", Matchers.is((int)registrationResponseDto.getUserId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.data.qrData", Matchers.anything()))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.errorMessage", Matchers.emptyOrNullString()));
     }
 
@@ -136,13 +134,13 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteByUsername_withValidData_returns204() throws Exception {
+    void deleteById_withValidData_returns204() throws Exception {
         // Arrange
         Mockito.doNothing()
-                .when(userService).deleteByUsername(ArgumentMatchers.anyString());
+                .when(userService).deleteById(ArgumentMatchers.anyLong());
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/users/username")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
                 .accept("application/vnd.traklibrary.v1+json"));
 
         // Assert
@@ -153,7 +151,7 @@ class UserControllerTest {
     @Test
     void verify_withMissingParameters_returns400() throws Exception {
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/verify")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/verify")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json"));
 
@@ -165,11 +163,11 @@ class UserControllerTest {
     @Test
     void verify_withParameters_returns200AndValidResponse() throws Exception {
         // Arrange
-        Mockito.when(userService.verify(ArgumentMatchers.anyString(), ArgumentMatchers.anyString()))
+        Mockito.when(userService.verify(ArgumentMatchers.anyLong(), ArgumentMatchers.anyString()))
                 .thenReturn(new CheckedResponse<>(true));
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/verify")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/verify")
                 .param("verification-code", "12345")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json"));
@@ -184,10 +182,10 @@ class UserControllerTest {
     void reverify_withParameters_returns204() throws Exception {
         // Arrange
         Mockito.doNothing().when(userService)
-                .reverify(ArgumentMatchers.anyString());
+                .reverify(ArgumentMatchers.anyLong());
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/reverify")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/reverify")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json"));
 
@@ -226,25 +224,9 @@ class UserControllerTest {
     }
 
     @Test
-    void requestChangePassword_withValidData_returns204() throws Exception {
-        // Arrange
-        Mockito.doNothing().when(userService)
-                .requestChangePassword(ArgumentMatchers.anyString());
-
-        // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/trakuser/request-change-password")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
-
-        // Assert
-        resultActions
-                .andExpect(MockMvcResultMatchers.status().isNoContent());
-    }
-
-    @Test
     void changePassword_withInvalidChangePasswordRequestDto_returns400() throws Exception {
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-password")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(new ChangePasswordRequestDto())));
@@ -262,14 +244,14 @@ class UserControllerTest {
     void changePassword_withValidChangePasswordRequest_returns200AndValidResponse() throws Exception {
         // Arrange
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
-        changePasswordRequestDto.setRecoveryToken(String.join("", Collections.nCopies(30, "t")));
+        changePasswordRequestDto.setCurrentPassword("Password321");
         changePasswordRequestDto.setNewPassword("Password123");
 
-        Mockito.when(userService.changePassword(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        Mockito.when(userService.changePassword(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(new CheckedResponse<>(true));
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-password")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(changePasswordRequestDto)));
@@ -284,7 +266,7 @@ class UserControllerTest {
     @Test
     void changeEmailAddress_withInvalidChangeEmailAddressRequestDto_returns400() throws Exception {
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-email-address")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-email-address")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(new ChangeEmailAddressRequestDto())));
@@ -304,11 +286,11 @@ class UserControllerTest {
         ChangeEmailAddressRequestDto changeEmailAddressRequestDto = new ChangeEmailAddressRequestDto();
         changeEmailAddressRequestDto.setEmailAddress("test@traklibrary.com");
 
-        Mockito.when(userService.changeEmailAddress(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
+        Mockito.when(userService.changeEmailAddress(ArgumentMatchers.anyLong(), ArgumentMatchers.any()))
                 .thenReturn(new CheckedResponse<>(true));
 
         // Act
-        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/username/change-email-address")
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-email-address")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept("application/vnd.traklibrary.v1+json")
                 .content(objectMapper.writeValueAsString(changeEmailAddressRequestDto)));
