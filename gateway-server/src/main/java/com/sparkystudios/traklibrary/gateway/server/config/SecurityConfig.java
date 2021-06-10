@@ -25,14 +25,14 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${trak.security.jwt.secret-key}")
-    private String secretKey;
+    @Value("${trak.security.jwt.public-key}")
+    private String publicKeyText;
 
     @Order(1)
     @Bean
     SecurityWebFilterChain jwtSecurityWebFilterChain(ServerHttpSecurity http) {
 
-        var authenticationManager = new AuthenticationManager(secretKey);
+        var authenticationManager = new AuthenticationManager(publicKeyText);
         var securityContextRepository = new SecurityContextRepository(authenticationManager);
 
         http
@@ -44,8 +44,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/auth/token", "/auth/token/**", "/auth/users").permitAll()
                 .pathMatchers(HttpMethod.PUT, "/auth/users", "/auth/users/recover").permitAll()
                 .pathMatchers(HttpMethod.GET, "/images/**").permitAll()
-                .pathMatchers(HttpMethod.GET, "/games/*/image", "/games/*/image", "/games/*/image").permitAll()
-                .pathMatchers(HttpMethod.GET, "/games/dlc/*/image", "/games/dlc/*/image", "/games/dlc/*/image").permitAll()
+                .pathMatchers(HttpMethod.GET, "/games/*/image", "/games/developers/*/image", "/games/dlc/*/image", "/games/platforms/*/image", "/games/publishers/*/image").permitAll()
                 .anyExchange()
                 .authenticated()
                 .and()

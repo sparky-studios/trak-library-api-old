@@ -7,7 +7,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
-import java.util.List;
 
 /**
  * An implementation of the Spring Security {@link UserDetails} interface. The purpose is to associate the data
@@ -28,7 +27,7 @@ public class UserDto implements UserDetails {
     private String username;
     private String emailAddress;
     private String password;
-    private List<GrantedAuthority> authorities;
+    private Collection<GrantedAuthority> authorities;
     private boolean verified;
     private String verificationCode;
     private LocalDateTime verificationExpiryDate;

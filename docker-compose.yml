@@ -11,6 +11,7 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - trak.security.jwt.private-key-path=${PRIVATE_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
@@ -83,6 +84,7 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
@@ -103,6 +105,7 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
@@ -125,6 +128,7 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
@@ -145,6 +149,7 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server

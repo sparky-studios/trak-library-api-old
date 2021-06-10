@@ -1,9 +1,10 @@
 package com.sparkystudios.traklibrary.email.service.consumer;
 
 import com.sparkystudios.traklibrary.email.service.EmailService;
+import com.sparkystudios.traklibrary.email.service.dto.EmailPasswordChangedRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailRecoveryRequestDto;
 import com.sparkystudios.traklibrary.email.service.dto.EmailVerificationRequestDto;
-import com.sparkystudios.traklibrary.email.service.event.ChangePasswordEvent;
+import com.sparkystudios.traklibrary.email.service.event.PasswordChangedEvent;
 import com.sparkystudios.traklibrary.email.service.event.RecoveryEvent;
 import com.sparkystudios.traklibrary.email.service.event.VerificationEvent;
 import lombok.RequiredArgsConstructor;
@@ -64,22 +65,21 @@ public class EmailConsumer {
 
     /**
      * {@link Consumer} registered with Spring Cloud Stream that responds to any published
-     * "trak-email-change-password" events. Its' purpose is to merely convert from the
-     * {@link ChangePasswordEvent} sent from the publisher, to a {@link EmailRecoveryRequestDto}
+     * "trak-email-password-changed" events. Its' purpose is to merely convert from the
+     * {@link PasswordChangedEvent} sent from the publisher, to a {@link EmailRecoveryRequestDto}
      * so it can be send via the email provider in the {@link EmailService}.
      *
      * @return The {@link Consumer} that consumes the Spring Cloud Stream event.
      */
     @Bean
-    public Consumer<ChangePasswordEvent> sendChangePasswordEmail() {
-        return changePasswordEvent -> {
-            log.info("Running change password event for: " + changePasswordEvent.getUsername());
+    public Consumer<PasswordChangedEvent> sendPasswordChangedEmail() {
+        return passwordChangedEvent -> {
+            log.info("Running password changed event for: " + passwordChangedEvent.getUsername());
 
-            var emailRecoveryRequestDto = new EmailRecoveryRequestDto();
-            emailRecoveryRequestDto.setEmailAddress(changePasswordEvent.getEmailAddress());
-            emailRecoveryRequestDto.setRecoveryToken(changePasswordEvent.getRecoveryToken());
+            var emailRecoveryRequestDto = new EmailPasswordChangedRequestDto();
+            emailRecoveryRequestDto.setEmailAddress(passwordChangedEvent.getEmailAddress());
 
-            emailService.sendChangePasswordEmail(emailRecoveryRequestDto);
+            emailService.sendPasswordChangedEmail(emailRecoveryRequestDto);
         };
     }
 }

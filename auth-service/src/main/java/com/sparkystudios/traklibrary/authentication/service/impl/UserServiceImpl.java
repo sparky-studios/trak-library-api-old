@@ -6,13 +6,18 @@ import com.sparkystudios.traklibrary.authentication.repository.UserRepository;
 import com.sparkystudios.traklibrary.authentication.repository.UserRoleRepository;
 import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
-import com.sparkystudios.traklibrary.authentication.service.event.ChangePasswordEvent;
+import com.sparkystudios.traklibrary.authentication.service.event.PasswordChangedEvent;
 import com.sparkystudios.traklibrary.authentication.service.event.RecoveryEvent;
 import com.sparkystudios.traklibrary.authentication.service.event.VerificationEvent;
 import com.sparkystudios.traklibrary.authentication.service.exception.InvalidUserException;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserMapper;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserResponseMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
+import dev.samstevens.totp.code.HashingAlgorithm;
+import dev.samstevens.totp.exceptions.QrGenerationException;
+import dev.samstevens.totp.qr.QrData;
+import dev.samstevens.totp.qr.ZxingPngQrGenerator;
+import dev.samstevens.totp.secret.SecretGenerator;
 import lombok.RequiredArgsConstructor;
 import org.passay.CharacterRule;
 import org.passay.EnglishCharacterData;
@@ -37,9 +42,9 @@ import java.util.stream.IntStream;
 @Service
 public class UserServiceImpl implements UserService {
 
+    private static final String EMAIL_PASSWORD_CHANGED_DESTINATION = "trak-email-password-changed";
     private static final String EMAIL_VERIFICATION_DESTINATION = "trak-email-verification";
     private static final String EMAIL_RECOVERY_DESTINATION = "trak-email-recovery";
-    private static final String EMAIL_CHANGE_PASSWORD_DESTINATION = "trak-email-change-password";
 
     private static final String NOT_FOUND_MESSAGE = "user.exception.not-found";
     private static final String EXISTING_USERNAME_MESSAGE = "user.error.existing-username";
@@ -47,9 +52,11 @@ public class UserServiceImpl implements UserService {
     private static final String USER_ROLE_XREF_NOT_FOUND_MESSAGE = "user-role-xref.exception.not-found";
     private static final String NOT_EXISTENT_USERNAME_MESSAGE = "user.error.non-existent-username";
     private static final String INCORRECT_RECOVERY_TOKEN_MESSAGE = "user.error.incorrect-recovery-token";
+    private static final String INCORRECT_CURRENT_PASSWORD_MESSAGE = "user.error.incorrect-current-password";
     private static final String SAME_EMAIL_ADDRESS_MESSAGE = "user.error.same-email-address";
     private static final String INCORRECT_VERIFICATION_CODE_MESSAGE = "user.error.incorrect-verification-code";
     private static final String INVALID_USER_MESSAGE = "user.exception.invalid-user";
+    private static final String INVALID_QR_CODE = "user.error.invalid-qr-code";
 
     private final UserRepository userRepository;
     private final UserRoleRepository userRoleRepository;
@@ -59,6 +66,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder passwordEncoder;
     private final StreamBridge streamBridge;
     private final AuthenticationService authenticationService;
+    private final SecretGenerator secretGenerator;
 
     @Override
     @Transactional(readOnly = true)
@@ -76,7 +84,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CheckedResponse<UserResponseDto> save(RegistrationRequestDto registrationRequestDto) {
+    public CheckedResponse<RegistrationResponseDto> save(RegistrationRequestDto registrationRequestDto) {
         Optional<User> existingUsername = userRepository.findByUsername(registrationRequestDto.getUsername());
         // If the user already exists with the given username, don't save an identical one, throw an exception that it's already used.
         if (existingUsername.isPresent()) {
@@ -109,18 +117,48 @@ public class UserServiceImpl implements UserService {
         newUser.setUsername(registrationRequestDto.getUsername());
         newUser.setEmailAddress(registrationRequestDto.getEmailAddress());
         newUser.setPassword(passwordEncoder.encode(registrationRequestDto.getPassword()));
-        newUser.addUserRole(userRole.get());
+        newUser.setUserRole(userRole.get());
         newUser.setVerified(false);
         newUser.setVerificationCode(createVerificationCode());
         newUser.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
+        newUser.setUsingMultiFactorAuthentication(registrationRequestDto.isUseMultiFactorAuthentication());
+        if (newUser.isUsingMultiFactorAuthentication()) {
+            newUser.setMultiFactorAuthenticationSecret(secretGenerator.generate());
+        }
 
         var user = userRepository.save(newUser);
+
+        // Generate the response based on the data provided.
+        var registrationResponseDto = new RegistrationResponseDto();
+        registrationResponseDto.setUserId(user.getId());
+
+        // If they're using MFA, we'll need to generate a qr code for the client to display.
+        if (user.isUsingMultiFactorAuthentication()) {
+            QrData data = new QrData.Builder()
+                    .label(newUser.getUsername())
+                    .secret(newUser.getMultiFactorAuthenticationSecret())
+                    .issuer("Trak Library")
+                    .algorithm(HashingAlgorithm.SHA1)
+                    .digits(6)
+                    .period(30)
+                    .build();
+
+            try {
+                // We'll need to write the QR code to bytes.
+                registrationResponseDto.setQrData(new ZxingPngQrGenerator().generate(data));
+            } catch (QrGenerationException e) {
+                String errorMessage = messageSource
+                        .getMessage(INVALID_QR_CODE, new Object[]{}, LocaleContextHolder.getLocale());
+
+                return new CheckedResponse<>(null, errorMessage);
+            }
+        }
 
         // Dispatch an event to generate the verification token and send the email.
         streamBridge.send(EMAIL_VERIFICATION_DESTINATION,
                 new VerificationEvent(user.getUsername(), user.getEmailAddress(), user.getVerificationCode()));
 
-        return new CheckedResponse<>(userResponseMapper.userToUserResponseDto(user));
+        return new CheckedResponse<>(registrationResponseDto);
     }
 
     @Override
@@ -140,7 +178,7 @@ public class UserServiceImpl implements UserService {
         // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
         if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(recoveryRequestDto.getRecoveryToken())) {
             String errorMessage = messageSource
-                    .getMessage(INCORRECT_RECOVERY_TOKEN_MESSAGE, new Object[]{recoveryRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
+                    .getMessage(INCORRECT_RECOVERY_TOKEN_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(null, errorMessage);
         }
@@ -156,29 +194,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void deleteByUsername(String username) {
-        var user = getUserFromUsername(username);
-
-        // The user won't be null at this point, so we don't need to do any additional checking before deleting.
-        // We need to remove its roles first before deleting otherwise it'll fail due to a foreign key constraint.
-        user.getUserRoles().forEach(user::removeUserRole);
-        user = userRepository.save(user);
-
+    public void deleteById(long id) {
         // Delete the user. There's no recovery from here.
-        userRepository.deleteById(user.getId());
+        userRepository.deleteById(getUserFromId(id).getId());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CheckedResponse<Boolean> verify(String username, String verificationCode) {
-        var user = getUserFromUsername(username);
+    public CheckedResponse<Boolean> verify(long id, String verificationCode) {
+        var user = getUserFromId(id);
 
         // No point verifying for a user that's already verified.
         if (!user.isVerified()) {
             // If the verification code doesn't match, then the verification will have failed.
             if (user.getVerificationCode() == null || !user.getVerificationCode().equals(verificationCode)) {
                 String errorMessage = messageSource
-                        .getMessage(INCORRECT_VERIFICATION_CODE_MESSAGE, new Object[]{verificationCode, username}, LocaleContextHolder.getLocale());
+                        .getMessage(INCORRECT_VERIFICATION_CODE_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
 
                 return new CheckedResponse<>(false, errorMessage);
             }
@@ -196,8 +227,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void reverify(String username) {
-        var user = getUserFromUsername(username);
+    public void reverify(long id) {
+        var user = getUserFromId(id);
         user.setVerified(false);
         user.setVerificationCode(createVerificationCode());
         user.setVerificationExpiryDate(LocalDateTime.now().plusDays(1));
@@ -229,41 +260,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void requestChangePassword(String username) {
+    public CheckedResponse<Boolean> changePassword(long id, ChangePasswordRequestDto changePasswordRequestDto) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        var user = getUserFromUsername(username);
-        user.setRecoveryToken(createRecoveryToken());
-        user.setRecoveryTokenExpiryDate(LocalDateTime.now().plusDays(1));
+        var user = getUserFromId(id);
 
-        user = userRepository.save(user);
-
-        // Publish a change password event to send an email.
-        streamBridge.send(EMAIL_CHANGE_PASSWORD_DESTINATION,
-                new ChangePasswordEvent(user.getUsername(), user.getEmailAddress(), user.getRecoveryToken()));
-    }
-
-    @Override
-    @Transactional(rollbackFor = Exception.class)
-    public CheckedResponse<Boolean> changePassword(String username, ChangePasswordRequestDto changePasswordRequestDto) {
-        // Get the authenticated user associated with the given username. It'll throw an exception if they're
-        // not authenticated.
-        var user = getUserFromUsername(username);
-
-        // If the user has no recovery token or the one provided doesn't match, fail the recovery process.
-        if (user.getRecoveryToken() == null || !user.getRecoveryToken().equals(changePasswordRequestDto.getRecoveryToken())) {
+        // Ensure that the current password matches before making the change.
+        if (!passwordEncoder.matches(changePasswordRequestDto.getCurrentPassword(), user.getPassword())) {
             String errorMessage = messageSource
-                    .getMessage(INCORRECT_RECOVERY_TOKEN_MESSAGE, new Object[]{changePasswordRequestDto.getRecoveryToken()}, LocaleContextHolder.getLocale());
+                    .getMessage(INCORRECT_CURRENT_PASSWORD_MESSAGE, new Object[]{}, LocaleContextHolder.getLocale());
 
             return new CheckedResponse<>(false, errorMessage);
         }
 
-        // Reset was successful, remove any recovery information and change their password.
-        user.setRecoveryToken(null);
-        user.setRecoveryTokenExpiryDate(null);
+        // Reset was successful, change their password.
         user.setPassword(passwordEncoder.encode(changePasswordRequestDto.getNewPassword()));
+        user = userRepository.save(user);
 
-        userRepository.save(user);
+        // Will need to generate the password changed email as the users information has changed.
+        streamBridge.send(EMAIL_PASSWORD_CHANGED_DESTINATION,
+                new PasswordChangedEvent(user.getUsername(), user.getEmailAddress()));
 
         // No need to re-verify, just return the new information.
         return new CheckedResponse<>(true);
@@ -271,10 +287,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CheckedResponse<Boolean> changeEmailAddress(String username, String emailAddress) {
+    public CheckedResponse<Boolean> changeEmailAddress(long id, String emailAddress) {
         // Get the authenticated user associated with the given username. It'll throw an exception if they're
         // not authenticated.
-        var user = getUserFromUsername(username);
+        var user = getUserFromId(id);
 
         if (user.getEmailAddress().equals(emailAddress)) {
             String errorMessage = messageSource
@@ -298,12 +314,12 @@ public class UserServiceImpl implements UserService {
         return new CheckedResponse<>(true);
     }
 
-    private User getUserFromUsername(String username) {
-        Optional<User> optionalUser = userRepository.findByUsername(username);
+    private User getUserFromId(long id) {
+        Optional<User> optionalUser = userRepository.findById(id);
         // Can't verify a user if it doesn't exist.
         if (optionalUser.isEmpty()) {
             String errorMessage = messageSource
-                    .getMessage(NOT_FOUND_MESSAGE, new Object[]{username}, LocaleContextHolder.getLocale());
+                    .getMessage(NOT_FOUND_MESSAGE, new Object[]{id}, LocaleContextHolder.getLocale());
 
             throw new EntityNotFoundException(errorMessage);
         }

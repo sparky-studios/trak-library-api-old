@@ -27,6 +27,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -45,6 +47,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -63,6 +67,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -81,6 +87,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -99,6 +107,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbccccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -117,6 +127,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
+        user.setUsingMultiFactorAuthentication(true);
+        user.setMultiFactorAuthenticationSecret("123");
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
@@ -131,73 +143,123 @@ class UserTest {
         Assertions.assertThat(result.getVerificationExpiryDate()).isEqualToIgnoringNanos(user.getVerificationExpiryDate());
         Assertions.assertThat(result.getRecoveryToken()).isEqualTo(user.getRecoveryToken());
         Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualToIgnoringNanos(user.getRecoveryTokenExpiryDate());
+        Assertions.assertThat(result.isUsingMultiFactorAuthentication()).isEqualTo(user.isUsingMultiFactorAuthentication());
+        Assertions.assertThat(result.getMultiFactorAuthenticationSecret()).isEqualTo(user.getMultiFactorAuthenticationSecret());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
     }
 
     @Test
-    void persist_withValidUserRoleRelationships_mapsRelationships() {
+    void persist_withValidUserRoleRelationship_mapsRelationship() {
         // Arrange
-        UserRole userRole1 = new UserRole();
-        userRole1.setRole("ROLE_USER_ONE");
-        userRole1 = testEntityManager.persistFlushFind(userRole1);
-
-        UserRole userRole2 = new UserRole();
-        userRole2.setRole("ROLE_USER_TWO");
-        userRole2 = testEntityManager.persistFlushFind(userRole2);
+        UserRole userRole = new UserRole();
+        userRole.setRole("ROLE_USER_ONE");
+        userRole = testEntityManager.persistFlushFind(userRole);
 
         User user = new User();
         user.setUsername("username");
         user.setPassword("password");
         user.setEmailAddress("email@address.com");
         user.setVerified(true);
-        user.setVerificationCode("12345");
-        user.setVerificationExpiryDate(LocalDateTime.now());
-        user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
-        user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.addUserRole(userRole1);
-        user.addUserRole(userRole2);
+        user.setUserRole(userRole);
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getUserRoles().size()).isEqualTo(2);
+        Assertions.assertThat(result.getUserRole())
+                .isEqualTo(userRole);
     }
 
     @Test
     void persist_withValidRemovedUserRoleRelationships_mapsRelationships() {
         // Arrange
-        UserRole userRole1 = new UserRole();
-        userRole1.setRole("ROLE_USER_ONE");
-        userRole1 = testEntityManager.persistFlushFind(userRole1);
-
-        UserRole userRole2 = new UserRole();
-        userRole2.setRole("ROLE_USER_TWO");
-        userRole2 = testEntityManager.persistFlushFind(userRole2);
+        UserRole userRole = new UserRole();
+        userRole.setRole("ROLE_USER_ONE");
+        userRole = testEntityManager.persistFlushFind(userRole);
 
         User user = new User();
         user.setUsername("username");
         user.setPassword("password");
         user.setEmailAddress("email@address.com");
         user.setVerified(true);
-        user.setVerificationCode("12345");
-        user.setVerificationExpiryDate(LocalDateTime.now());
-        user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
-        user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.addUserRole(userRole1);
-        user.addUserRole(userRole2);
+        user.setUserRole(userRole);
         user = testEntityManager.persistFlushFind(user);
 
-        user.removeUserRole(testEntityManager.find(UserRole.class, userRole2.getId()));
+        user.setUserRole(null);
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getUserRoles().size()).isEqualTo(1);
-        Assertions.assertThat(result.getUserRoles().iterator().next().getId())
-                .isEqualTo(userRole1.getId());
+        Assertions.assertThat(result.getUserRole()).isNull();
+    }
+
+    @Test
+    void persist_withValidUserAuthorityRelationships_mapsRelationships() {
+        // Arrange
+        UserAuthority userAuthority1 = new UserAuthority();
+        userAuthority1.setAuthority("test-authority-1");
+        userAuthority1.setAuthorityType(AuthorityType.READ);
+        userAuthority1.setFeature(Feature.GAMES);
+        userAuthority1 = testEntityManager.persistFlushFind(userAuthority1);
+
+        UserAuthority userAuthority2 = new UserAuthority();
+        userAuthority2.setAuthority("test-authority-2");
+        userAuthority2.setAuthorityType(AuthorityType.READ);
+        userAuthority2.setFeature(Feature.GAMES);
+        userAuthority2 = testEntityManager.persistFlushFind(userAuthority2);
+
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmailAddress("email@address.com");
+        user.setVerified(true);
+        user.addAuthority(userAuthority1);
+        user.addAuthority(userAuthority2);
+        user = testEntityManager.persistFlushFind(user);
+
+        // Act
+        User result = testEntityManager.persistFlushFind(user);
+
+        // Assert
+        Assertions.assertThat(result.getAuthorities().size())
+                .isEqualTo(2);
+    }
+
+    @Test
+    void persist_withValidRemovedGenreRelationships_mapsRelationships() {
+        // Arrange
+        UserAuthority userAuthority1 = new UserAuthority();
+        userAuthority1.setAuthority("test-authority-1");
+        userAuthority1.setAuthorityType(AuthorityType.READ);
+        userAuthority1.setFeature(Feature.GAMES);
+        userAuthority1 = testEntityManager.persistFlushFind(userAuthority1);
+
+        UserAuthority userAuthority2 = new UserAuthority();
+        userAuthority2.setAuthority("test-authority-2");
+        userAuthority2.setAuthorityType(AuthorityType.READ);
+        userAuthority2.setFeature(Feature.GAMES);
+        userAuthority2 = testEntityManager.persistFlushFind(userAuthority2);
+
+        User user = new User();
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setEmailAddress("email@address.com");
+        user.setVerified(true);
+        user.addAuthority(userAuthority1);
+        user.addAuthority(userAuthority2);
+        user = testEntityManager.persistFlushFind(user);
+
+        user.removeAuthority(testEntityManager.find(UserAuthority.class, userAuthority2.getId()));
+
+        // Act
+        User result = testEntityManager.persistFlushFind(user);
+
+        // Assert
+        Assertions.assertThat(result.getAuthorities().size()).isEqualTo(1);
+        Assertions.assertThat(result.getAuthorities().iterator().next().getId())
+                .isEqualTo(userAuthority1.getId());
     }
 }

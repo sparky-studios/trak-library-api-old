@@ -7,11 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ChangePasswordEvent {
+public class PasswordChangedEvent {
 
     private String username;
 
     private String emailAddress;
-
-    private String recoveryToken;
 }

@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * The {@link UserRole} entity is used to represent all of the different user roles that can be assigned to a
+ * The {@link UserRole} entity is used to represent an individual role that can be assigned to a
  * user. These {@link UserRole}'s can only be accessed and manipulated by a user with administrator access.
  * A {@link User} does not have direct access to a {@link UserRole}, this table only represents the roles that
  * are available to users, the connection between the two tables is done via {@link UserRole} entities.
@@ -40,7 +40,7 @@ public class UserRole {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "userRoles", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "userRole", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -65,7 +65,7 @@ public class UserRole {
      */
     public void addUser(User user) {
         users.add(user);
-        user.getUserRoles().add(this);
+        user.setUserRole(this);
     }
 
     /**
@@ -78,6 +78,6 @@ public class UserRole {
      */
     public void removeUser(User user) {
         users.remove(user);
-        user.getUserRoles().remove(this);
+        user.setUserRole(null);
     }
 }

@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.security.provider;
 
+import com.sparkystudios.traklibrary.security.KeyService;
 import com.sparkystudios.traklibrary.security.context.UserContext;
 import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
 import io.jsonwebtoken.Jwts;
@@ -9,10 +10,13 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
+import javax.annotation.PostConstruct;
+import java.security.Key;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**
@@ -27,8 +31,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    @Value("${trak.security.jwt.secret-key}")
-    private String secretKey;
+    @Value("${trak.security.jwt.public-key}")
+    private String publicKeyText;
+
+    private Key publicKey;
+
+    private final KeyService keyService;
+
+    @PostConstruct
+    public void postConstruct() {
+        publicKey = keyService.readPublicKey(publicKeyText);
+    }
 
     /**
      * Checks whether the credentials contained within the {@link Authentication} contains a valid JWT
@@ -53,25 +66,27 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         String accessToken = (String) authentication.getCredentials();
 
         // Try to parse the JWT, if it fails an exception will be bubbled up the stack.
-        var claims = Jwts.parser()
-                .setSigningKey(secretKey.getBytes())
+        var claims = Jwts.parserBuilder()
+                .setSigningKey(publicKey)
+                .build()
                 .parseClaimsJws(accessToken)
                 .getBody();
 
         String username = claims.getSubject();
-        @SuppressWarnings("unchecked")
-        List<String> scopes = (List<String>) claims.get("scopes");
+        String role = claims.get("role", String.class);
 
         // Ensure that the authorization header token provided isn't a refresh token.
-        if (scopes.contains("TOKEN_REFRESH")) {
+        if (role.equals("ROLE_TOKEN_REFRESH")) {
             throw new InsufficientAuthenticationException("Refresh token cannot be used for authorization.");
         }
 
-        // This is classed as successful authorization at this point, so just populate a token with data.
-        List<SimpleGrantedAuthority> authorities = scopes
+        Collection<GrantedAuthority> authorities = ((Collection<String>) claims.get("scope"))
                 .stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+
+        // This is classed as successful authorization at this point, so just populate a token with data.
+        authorities.add(new SimpleGrantedAuthority(role));
 
         var userContext = new UserContext();
         userContext.setUserId(claims.get("userId", Long.class));

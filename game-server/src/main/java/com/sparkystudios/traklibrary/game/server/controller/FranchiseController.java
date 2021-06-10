@@ -8,7 +8,8 @@ import com.sparkystudios.traklibrary.game.service.FranchiseService;
 import com.sparkystudios.traklibrary.game.service.GameService;
 import com.sparkystudios.traklibrary.game.service.dto.FranchiseDto;
 import com.sparkystudios.traklibrary.game.service.dto.GameDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForModerator;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithFranchiseDeleteAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithFranchiseWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -53,7 +54,7 @@ public class FranchiseController {
      *
      * @return The saved {@link FranchiseDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithFranchiseWriteAuthority
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<FranchiseDto> save(@Validated @RequestBody FranchiseDto franchiseDto) {
@@ -175,7 +176,7 @@ public class FranchiseController {
      *
      * @return The updated {@link FranchiseDto} instance as a HATEOAS response.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithFranchiseWriteAuthority
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public EntityModel<FranchiseDto> update(@Validated @RequestBody FranchiseDto franchiseDto) {
         return franchiseRepresentationModelAssembler.toModel(franchiseService.update(franchiseDto));
@@ -197,7 +198,7 @@ public class FranchiseController {
      *
      * @return The patched {@link FranchiseDto} instance.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithFranchiseWriteAuthority
     @PatchMapping(value = "/{id}", consumes = "application/merge-patch+json")
     public EntityModel<FranchiseDto> patch(@PathVariable long id, @RequestBody JsonMergePatch jsonMergePatch) {
         return franchiseRepresentationModelAssembler.toModel(franchiseService.patch(id, jsonMergePatch));
@@ -213,7 +214,7 @@ public class FranchiseController {
      *
      * @param id The ID of the {@link FranchiseDto} to delete.
      */
-    @AllowedForModerator
+    @AllowedForModeratorWithFranchiseDeleteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable long id) {

@@ -34,7 +34,10 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         List<RequestMatcher> pathsToSkip = new ArrayList<>();
         pathsToSkip.add(new AntPathRequestMatcher("/*/image", HttpMethod.GET.name()));
+        pathsToSkip.add(new AntPathRequestMatcher("/developers/*/image", HttpMethod.GET.name()));
         pathsToSkip.add(new AntPathRequestMatcher("/dlc/*/image", HttpMethod.GET.name()));
+        pathsToSkip.add(new AntPathRequestMatcher("/platforms/*/image", HttpMethod.GET.name()));
+        pathsToSkip.add(new AntPathRequestMatcher("/publishers/*/image", HttpMethod.GET.name()));
 
         var skipPathRequestMatcher = new SkipPathRequestMatcher(pathsToSkip, "/**");
         var jwtAuthenticationProcessingFilter =
@@ -42,7 +45,7 @@ public class GameServerSecurityConfigurerAdapter extends WebSecurityConfigurerAd
 
         http
                 .authorizeRequests()
-                .antMatchers(HttpMethod.GET, "/*/image", "/dlc/*/image").permitAll()
+                .antMatchers(HttpMethod.GET, "/*/image", "/developers/*/image", "/dlc/*/image", "/platforms/*/image", "/publishers/*/image").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

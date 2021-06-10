@@ -28,4 +28,6 @@ public class RegistrationRequestDto {
 
     @ValidPassword(message = "{registration-request.validation.password.invalid}")
     private String password;
+
+    private boolean useMultiFactorAuthentication;
 }

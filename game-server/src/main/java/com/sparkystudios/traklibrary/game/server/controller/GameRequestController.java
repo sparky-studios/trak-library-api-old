@@ -4,7 +4,8 @@ import com.sparkystudios.traklibrary.game.repository.specification.GameRequestSp
 import com.sparkystudios.traklibrary.game.server.assembler.GameRequestRepresentationModelAssembler;
 import com.sparkystudios.traklibrary.game.service.GameRequestService;
 import com.sparkystudios.traklibrary.game.service.dto.GameRequestDto;
-import com.sparkystudios.traklibrary.security.annotation.AllowedForAdmin;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithRequestReadAuthority;
+import com.sparkystudios.traklibrary.security.annotation.AllowedForModeratorWithRequestWriteAuthority;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
 import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
@@ -95,7 +96,7 @@ public class GameRequestController {
      *
      * @return A {@link PagedModel} containing the {@link GameRequestDto} that match the requested page and criteria.
      */
-    @AllowedForUser
+    @AllowedForModeratorWithRequestReadAuthority
     @GetMapping
     public PagedModel<EntityModel<GameRequestDto>> findAll(GameRequestSpecification gameRequestSpecification,
                                                            @PageableDefault Pageable pageable,
@@ -150,7 +151,7 @@ public class GameRequestController {
      *
      * @param id The ID of the {@link GameRequestDto} to complete.
      */
-    @AllowedForAdmin
+    @AllowedForModeratorWithRequestWriteAuthority
     @ResponseStatus(HttpStatus.NO_CONTENT)
     @PutMapping(value = "/{id}/complete", consumes = MediaType.APPLICATION_JSON_VALUE)
     public void complete(@PathVariable long id) {

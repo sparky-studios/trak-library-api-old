@@ -6,6 +6,7 @@ import com.sparkystudios.traklibrary.authentication.service.UserService;
 import com.sparkystudios.traklibrary.authentication.service.dto.*;
 import com.sparkystudios.traklibrary.authentication.service.validation.ValidPassword;
 import com.sparkystudios.traklibrary.security.annotation.AllowedForUser;
+import com.sparkystudios.traklibrary.security.exception.ApiError;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -42,16 +43,17 @@ public class UserController {
      * must reach the minimum requirements provided within {@link ValidPassword}.
      *
      * If the end-point fails to create a {@link UserDto}, the endpoint will return an {@link ApiError}
-     * with additional details and exception messages, otherwise it'll return a {@link UserResponseDto} which
-     * contains their user ID and username.
+     * with additional details and exception messages, otherwise it'll return a {@link RegistrationResponseDto} which
+     * contains their user ID and MFA qr data.
      *
      * @param registrationRequestDto The registration information to try and create the {@link UserDto} with.
      *
-     * @return A {@link UserResponseDto} instance which represents some bare-bone details about the user.
+     * @return A {@link RegistrationResponseDto} instance which represents some bare-bone details about the user and MFA
+     * details.
      */
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CheckedResponse<UserResponseDto> save(@Validated @RequestBody RegistrationRequestDto registrationRequestDto) {
+    public CheckedResponse<RegistrationResponseDto> save(@Validated @RequestBody RegistrationRequestDto registrationRequestDto) {
         return userService.save(registrationRequestDto);
     }
 
@@ -75,7 +77,7 @@ public class UserController {
     }
 
     /**
-     * End-point that is used to delete the {@link UserDto} that is mapped to the given username. When a {@link UserDto} chooses
+     * End-point that is used to delete the {@link UserDto} that is mapped to the given ID. When a {@link UserDto} chooses
      * to delete their account, it will first check to ensure the account they're deleting exists and their authentication matches
      * the {@link UserDto} they're trying to delete, before deleting all of the {@link UserDto}'s roles and then the {@link UserDto}
      * itself.
@@ -83,17 +85,17 @@ public class UserController {
      * Similar to other end-points, the user can only delete accounts that they have the correct authentication for, they cannot
      * delete accounts they are not associated with unless they have elevated privileges.
      *
-     * @param username The username of the {@link UserDto} to delete.
+     * @param id The ID of the {@link UserDto} to delete.
      */
     @AllowedForUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @DeleteMapping("/{username}")
-    public void deleteByUsername(@PathVariable String username) {
-        userService.deleteByUsername(username);
+    @DeleteMapping("/{id}")
+    public void deleteById(@PathVariable long id) {
+        userService.deleteById(id);
     }
 
     /**
-     * End-point that is used to verify the {@link UserDto} associated with the given username. Verification is successful
+     * End-point that is used to verify the {@link UserDto} associated with the given ID. Verification is successful
      * when the username provided points to a valid entry and the verification code provided matches the one assigned to
      * the account.
      *
@@ -103,32 +105,32 @@ public class UserController {
      * endpoint, the user can only verify the account that matches their username, they cannot verify other accounts unless
      * they have elevated privileges.
      *
-     * @param username The username of the {@link UserDto} to verify.
+     * @param id The ID of the {@link UserDto} to verify.
      * @param verificationCode The verification code to check verification against.
      *
      * @return A {@link CheckedResponse} specifying the current verification state of the user.
      */
     @AllowedForUser
-    @PutMapping(value = "/{username}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CheckedResponse<Boolean> verify(@PathVariable String username, @RequestParam("verification-code") String verificationCode) {
-        return userService.verify(username, verificationCode);
+    @PutMapping(value = "/{id}/verify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CheckedResponse<Boolean> verify(@PathVariable long id, @RequestParam("verification-code") String verificationCode) {
+        return userService.verify(id, verificationCode);
     }
 
     /**
-     * End-point that is used to re-verify an existing {@link UserDto} that is associated with the given username. Re-verification
+     * End-point that is used to re-verify an existing {@link UserDto} that is associated with the given ID. Re-verification
      * will remove any verified information associated with the user and re-generate and re-populate the verification code and the
      * expiry date for the code.
      *
      * Similar to other end-points, the user can only re-verify accounts that they have the correct authentication for, they cannot
      * re-verify accounts they are not associated with unless they have elevated privileges.
      *
-     * @param username The username of the {@link UserDto} to re-verify.
+     * @param id The ID of the {@link UserDto} to re-verify.
      */
     @AllowedForUser
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping(value = "/{username}/reverify", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void reVerify(@PathVariable String username) {
-        userService.reverify(username);
+    @PutMapping(value = "/{id}/reverify", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public void reVerify(@PathVariable long id) {
+        userService.reverify(id);
     }
 
     /**
@@ -150,39 +152,22 @@ public class UserController {
     }
 
     /**
-     * End-point that is used when a user first requests that they wish to change the password of their account. This end-point will not
-     * change their password, instead this will send an email to the email address associated with their account containing a recovery token
-     * that will have to be entered alongside the new password they want when requesting for it to be changed.
+     * End-point that is used when a user wants to change their password. When the user wishes to change their password, they must provide their
+     * their current password to ensure that their credentials are correct, and the password that they wish to change it to. Similar to initial
+     * user registration, the new password must match the given password criteria of the app.
      *
-     * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
-     * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
+     * Similar to other end-points, the user can only request to change their password if they have the correct authentication for the account
+     * they're requesting the change for, they cannot request for an account they are not associated with unless they have elevated privileges.
      *
-     * @param username The name of the username to send the change password email to.
-     */
-    @AllowedForUser
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PutMapping(value = "/{username}/request-change-password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public void requestChangePassword(@PathVariable String username) {
-        userService.requestChangePassword(username);
-    }
-
-    /**
-     * End-point that is used when a user wants to change their password. When the user wishes to change their password, they must send
-     * their current username and their recovery token, which should have been emailed to their account when the {@link UserController#requestChangePassword(String)}
-     * was invoked. Without this second layer of authentication, the user cannot their their password.
-     *
-     * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
-     * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
-     *
-     * @param username The username of the {@link User} to change the password for.
+     * @param id The ID of the {@link User} to change the password for.
      * @param changePasswordRequestDto The DTO that contains the user's new requested password and the emailed recovery token.
      *
      * @return A {@link CheckedResponse} specifying if the password change was successful.
      */
     @AllowedForUser
-    @PutMapping(value = "{username}/change-password", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CheckedResponse<Boolean> changePassword(@PathVariable String username, @Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
-        return userService.changePassword(username, changePasswordRequestDto);
+    @PutMapping(value = "{id}/change-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CheckedResponse<Boolean> changePassword(@PathVariable long id, @Validated @RequestBody ChangePasswordRequestDto changePasswordRequestDto) {
+        return userService.changePassword(id, changePasswordRequestDto);
     }
 
     /**
@@ -194,14 +179,14 @@ public class UserController {
      * Similar to other end-points, the user can only request a change password email if they have the correct authentication for the account
      * they're requesting the email for, they cannot request for an account they are not associated with unless they have elevated privileges.
      *
-     * @param username The username of the {@link User} to change the email address for.
+     * @param id The ID of the {@link User} to change the email address for.
      * @param changeEmailAddressRequestDto The DTO that contains the user's new requested email address.
      *
      * @return A {@link CheckedResponse} specifying if the email change was successful.
      */
     @AllowedForUser
-    @PutMapping(value = "/{username}/change-email-address", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public CheckedResponse<Boolean> changeEmailAddress(@PathVariable String username, @Validated @RequestBody ChangeEmailAddressRequestDto changeEmailAddressRequestDto) {
-        return userService.changeEmailAddress(username, changeEmailAddressRequestDto.getEmailAddress());
+    @PutMapping(value = "/{id}/change-email-address", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public CheckedResponse<Boolean> changeEmailAddress(@PathVariable long id, @Validated @RequestBody ChangeEmailAddressRequestDto changeEmailAddressRequestDto) {
+        return userService.changeEmailAddress(id, changeEmailAddressRequestDto.getEmailAddress());
     }
 }
