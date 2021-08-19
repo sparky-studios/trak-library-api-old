@@ -77,7 +77,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new DeveloperDto())));
 
         // Assert
@@ -108,7 +108,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(developerDto)));
 
         // Assert
@@ -136,7 +136,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -163,7 +163,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/slug/test-slug")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -196,7 +196,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/developers/1/image")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -219,7 +219,7 @@ class DeveloperControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/developers/1/image")
                 .file(file)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -237,7 +237,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -282,7 +282,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -329,7 +329,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -358,7 +358,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -405,7 +405,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -454,7 +454,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/developers?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -477,7 +477,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new DeveloperDto())));
 
         // Assert
@@ -508,7 +508,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/developers")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(developerDto)));
 
         // Assert
@@ -537,7 +537,7 @@ class DeveloperControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/developers/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content("{ \"name\": \"test-name\" }"));
 
         // Assert
@@ -555,7 +555,7 @@ class DeveloperControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/developers/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions

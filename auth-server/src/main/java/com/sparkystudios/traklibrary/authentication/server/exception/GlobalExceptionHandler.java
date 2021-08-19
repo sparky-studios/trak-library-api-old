@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -40,6 +41,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(EntityExistsException.class)
     protected ResponseEntity<Object> handleEntityExists(EntityExistsException ex) {
         log.error("Entity exists", ex);
+
+        var apiError = new ApiError(HttpStatus.BAD_REQUEST);
+        apiError.setError(ex.getMessage());
+
+        return new ResponseEntity<>(apiError, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    protected ResponseEntity<Object> handlBadCredentials(BadCredentialsException ex) {
+        log.error("Bad credentials", ex);
 
         var apiError = new ApiError(HttpStatus.BAD_REQUEST);
         apiError.setError(ex.getMessage());

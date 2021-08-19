@@ -83,7 +83,7 @@ class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new GameUserEntryDto())));
 
         // Assert
@@ -113,7 +113,7 @@ class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(genreDto)));
 
         // Assert
@@ -140,7 +140,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -166,7 +166,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/slug/test-slug")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -186,7 +186,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -231,7 +231,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -278,7 +278,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -307,7 +307,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games/details")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -352,7 +352,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games/details")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -399,7 +399,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres/1/games/details?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -428,7 +428,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -473,7 +473,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -520,7 +520,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/genres?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -543,7 +543,7 @@ class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new GenreDto())));
 
         // Assert
@@ -573,7 +573,7 @@ class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/genres")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(genreDto)));
 
         // Assert
@@ -601,7 +601,7 @@ class GenreControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/genres/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content("{ \"name\": \"test-name-2\" }"));
 
         // Assert
@@ -619,7 +619,7 @@ class GenreControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/genres/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions

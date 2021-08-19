@@ -49,7 +49,7 @@ import java.util.stream.StreamSupport;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/publishers", produces = "application/vnd.traklibrary.v1.hal+json")
+@RequestMapping(value = "/publishers", produces = "application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
 public class PublisherController {
 
     private final PublisherService publisherService;

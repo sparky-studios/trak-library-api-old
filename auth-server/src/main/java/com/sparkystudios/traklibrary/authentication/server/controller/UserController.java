@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/users", produces = "application/vnd.traklibrary.v1+json")
+@RequestMapping(value = "/users", produces = "application/vnd.sparkystudios.traklibrary+json;version=1.0")
 public class UserController {
 
     private final UserService userService;

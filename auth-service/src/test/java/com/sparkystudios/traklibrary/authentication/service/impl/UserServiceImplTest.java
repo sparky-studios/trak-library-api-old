@@ -11,6 +11,7 @@ import com.sparkystudios.traklibrary.authentication.service.exception.InvalidUse
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserMapper;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserResponseMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -76,7 +77,7 @@ class UserServiceImplTest {
 
         // Assert
         Mockito.verify(userMapper, Mockito.atMostOnce())
-                .userToUserDto(ArgumentMatchers.any());
+                .fromUser(ArgumentMatchers.any());
     }
 
     @Test
@@ -143,7 +144,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
-        Mockito.when(userRoleRepository.findByRole(ArgumentMatchers.anyString()))
+        Mockito.when(userRoleRepository.findByRole((UserSecurityRole.ROLE_USER)))
                 .thenReturn(Optional.empty());
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
@@ -167,7 +168,7 @@ class UserServiceImplTest {
         Mockito.when(userRepository.findByEmailAddress(ArgumentMatchers.anyString()))
                 .thenReturn(Optional.empty());
 
-        Mockito.when(userRoleRepository.findByRole(ArgumentMatchers.anyString()))
+        Mockito.when(userRoleRepository.findByRole(UserSecurityRole.ROLE_USER))
                 .thenReturn(Optional.of(new UserRole()));
 
         Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
@@ -349,6 +350,9 @@ class UserServiceImplTest {
         Mockito.doNothing()
                 .when(userRepository).deleteById(ArgumentMatchers.anyLong());
 
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(new UserDto());
+
         // Act
         userService.deleteById(1L);
 
@@ -386,14 +390,17 @@ class UserServiceImplTest {
     @Test
     void verify_withVerifiedUser_doesntUpdateVerificationStatus() {
         // Arrange
-        User user = new User();
-        user.setVerified(true);
-
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
+
+        UserDto userDto = new UserDto();
+        userDto.setVerified(true);
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
@@ -410,17 +417,20 @@ class UserServiceImplTest {
     @Test
     void verify_withNonVerifiedUserButIncorrectVerificationCode_returnsCheckedResponseWithError() {
         // Arrange
-        User user = new User();
-        user.setVerificationCode("11112");
+        UserDto userDto = new UserDto();
+        userDto.setVerificationCode("11112");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("error");
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
@@ -437,16 +447,17 @@ class UserServiceImplTest {
     @Test
     void verify_withNonVerifiedUserWithNullVerificationCode_returnsCheckedResponseWithError() {
         // Arrange
-        User user = new User();
-
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("error");
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(new UserDto());
 
         // Act
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
@@ -463,17 +474,20 @@ class UserServiceImplTest {
     @Test
     void verify_withNonVerifiedUserWithCorrectVerificationCode_updatesUser() {
         // Arrange
-        User user = new User();
-        user.setVerificationCode("11111");
-
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new User());
+
+        UserDto userDto = new UserDto();
+        userDto.setVerificationCode("11111");
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
@@ -519,12 +533,12 @@ class UserServiceImplTest {
     @Test
     void reverify_withValidUserAndAuthentication_publishesOnVerificationNeededEvent() {
         // Arrange
-        User user = new User();
-        user.setEmailAddress("email@address.com");
-        user.setUsername("username");
+        UserDto userDto = new UserDto();
+        userDto.setEmailAddress("email@address.com");
+        userDto.setUsername("username");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
                 .thenReturn(new User());
@@ -534,6 +548,9 @@ class UserServiceImplTest {
 
         Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(true);
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         userService.reverify(1L);
@@ -610,11 +627,8 @@ class UserServiceImplTest {
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
         changePasswordRequestDto.setCurrentPassword("Password321");
 
-        User user = new User();
-        user.setPassword("Password123");
-
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -624,6 +638,12 @@ class UserServiceImplTest {
 
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("error");
+
+        UserDto userDto = new UserDto();
+        userDto.setPassword("Password123");
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.changePassword(1L, changePasswordRequestDto);
@@ -643,13 +663,13 @@ class UserServiceImplTest {
         ChangePasswordRequestDto changePasswordRequestDto = new ChangePasswordRequestDto();
         changePasswordRequestDto.setCurrentPassword("Password123");
 
-        User user = new User();
-        user.setUsername("username");
-        user.setPassword("Password123");
-        user.setEmailAddress("test@traklibrary.com");
+        UserDto userDto = new UserDto();
+        userDto.setUsername("username");
+        userDto.setPassword("Password123");
+        userDto.setEmailAddress("test@traklibrary.com");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -658,10 +678,13 @@ class UserServiceImplTest {
                 .thenReturn(true);
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(user);
+                .thenReturn(new User());
 
         Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(true);
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.changePassword(1L, changePasswordRequestDto);
@@ -710,11 +733,11 @@ class UserServiceImplTest {
     @Test
     void changeEmailAddress_withMatchingEmailAddress_returnsFalseCheckedResponse() {
         // Arrange
-        User user = new User();
-        user.setEmailAddress("test@traklibrary.com");
+        UserDto userDto = new UserDto();
+        userDto.setEmailAddress("test@traklibrary.com");
 
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
@@ -722,8 +745,11 @@ class UserServiceImplTest {
         Mockito.when(messageSource.getMessage(ArgumentMatchers.anyString(), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
                 .thenReturn("error");
 
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
+
         // Act
-        CheckedResponse<Boolean> result = userService.changeEmailAddress(1L, user.getEmailAddress());
+        CheckedResponse<Boolean> result = userService.changeEmailAddress(1L, userDto.getEmailAddress());
 
         // Assert
         Assertions.assertFalse(result.getData(), "The response should be false if email addresses match.");
@@ -737,20 +763,24 @@ class UserServiceImplTest {
     @Test
     void changeEmailAddress_withNonMatchingEmailAddressAndValidUser_returnsTrueCheckedResponse() {
         // Arrange
-        User user = Mockito.spy(User.class);
-        user.setEmailAddress("email.address");
-
         Mockito.when(userRepository.findById(ArgumentMatchers.anyLong()))
-                .thenReturn(Optional.of(user));
+                .thenReturn(Optional.of(new User()));
 
         Mockito.when(authenticationService.isCurrentAuthenticatedUser(ArgumentMatchers.anyLong()))
                 .thenReturn(true);
 
         Mockito.when(userRepository.save(ArgumentMatchers.any()))
-                .thenReturn(user);
+                .thenReturn(new User());
 
         Mockito.when(streamBridge.send(ArgumentMatchers.anyString(), ArgumentMatchers.any()))
                 .thenReturn(true);
+
+        UserDto userDto = Mockito.mock(UserDto.class);
+        Mockito.when(userDto.getEmailAddress())
+                        .thenReturn("email.address");
+
+        Mockito.when(userMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(userDto);
 
         // Act
         CheckedResponse<Boolean> result = userService.changeEmailAddress(1L, "test@traklibrary.com");
@@ -766,7 +796,7 @@ class UserServiceImplTest {
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
-        Mockito.verify(user, Mockito.atMost(2))
+        Mockito.verify(userDto, Mockito.atMost(1))
                 .setEmailAddress(ArgumentMatchers.anyString());
     }
 }

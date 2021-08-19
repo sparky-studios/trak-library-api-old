@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/barcodes", produces = "application/vnd.traklibrary.v1.hal+json")
+@RequestMapping(value = "/barcodes", produces = "application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
 public class GameBarcodeController {
 
     private final GameBarcodeService gameBarcodeService;

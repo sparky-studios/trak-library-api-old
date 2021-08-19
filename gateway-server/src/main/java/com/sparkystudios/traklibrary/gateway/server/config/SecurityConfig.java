@@ -2,6 +2,7 @@ package com.sparkystudios.traklibrary.gateway.server.config;
 
 import com.sparkystudios.traklibrary.gateway.server.filter.AuthenticationManager;
 import com.sparkystudios.traklibrary.gateway.server.filter.SecurityContextRepository;
+import com.sparkystudios.traklibrary.security.token.SecurityTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -9,6 +10,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authorization.AuthorityReactiveAuthorizationManager;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.core.userdetails.MapReactiveUserDetailsService;
@@ -25,14 +27,13 @@ import reactor.core.publisher.Mono;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-    @Value("${trak.security.jwt.public-key}")
-    private String publicKeyText;
+    private final SecurityTokenService securityTokenService;
 
     @Order(1)
     @Bean
     SecurityWebFilterChain jwtSecurityWebFilterChain(ServerHttpSecurity http) {
 
-        var authenticationManager = new AuthenticationManager(publicKeyText);
+        var authenticationManager = new AuthenticationManager(securityTokenService);
         var securityContextRepository = new SecurityContextRepository(authenticationManager);
 
         http
@@ -41,12 +42,13 @@ public class SecurityConfig {
                 .securityContextRepository(securityContextRepository)
                 .authorizeExchange()
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                .pathMatchers(HttpMethod.POST, "/auth/token", "/auth/token/**", "/auth/users").permitAll()
+                .pathMatchers(HttpMethod.POST, "/auth/token", "/auth/users").permitAll()
+                .pathMatchers(HttpMethod.POST, "/auth/token/2fa").hasRole("TWO_FACTOR_AUTHENTICATION_TOKEN")
                 .pathMatchers(HttpMethod.PUT, "/auth/users", "/auth/users/recover").permitAll()
                 .pathMatchers(HttpMethod.GET, "/images/**").permitAll()
                 .pathMatchers(HttpMethod.GET, "/games/*/image", "/games/developers/*/image", "/games/dlc/*/image", "/games/platforms/*/image", "/games/publishers/*/image").permitAll()
                 .anyExchange()
-                .authenticated()
+                .access(AuthorityReactiveAuthorizationManager.hasAnyRole("USER", "MODERATOR", "ADMIN"))
                 .and()
                 .cors()
                 .and()

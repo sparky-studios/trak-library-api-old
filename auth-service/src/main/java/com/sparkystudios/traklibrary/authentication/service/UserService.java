@@ -5,9 +5,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 
 public interface UserService extends UserDetailsService {
 
+    UserDto findById(long id);
+
     CheckedResponse<RegistrationResponseDto> save(RegistrationRequestDto registrationRequestDto);
 
     CheckedResponse<UserResponseDto> update(RecoveryRequestDto recoveryRequestDto);
+
+    UserDto update(UserDto userDto);
 
     void deleteById(long id);
 

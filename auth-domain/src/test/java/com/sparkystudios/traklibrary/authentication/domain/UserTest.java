@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.authentication.domain;
 
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +28,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -47,8 +48,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -67,8 +68,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -87,8 +88,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -107,8 +108,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbccccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -127,8 +128,8 @@ class UserTest {
         user.setVerificationExpiryDate(LocalDateTime.now());
         user.setRecoveryToken("aaaaaaaaaabbbbbbbbbbcccccccccc");
         user.setRecoveryTokenExpiryDate(LocalDateTime.now());
-        user.setUsingMultiFactorAuthentication(true);
-        user.setMultiFactorAuthenticationSecret("123");
+        user.setUsingTwoFactorAuthentication(true);
+        user.setTwoFactorAuthenticationSecret("123");
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
@@ -143,8 +144,8 @@ class UserTest {
         Assertions.assertThat(result.getVerificationExpiryDate()).isEqualToIgnoringNanos(user.getVerificationExpiryDate());
         Assertions.assertThat(result.getRecoveryToken()).isEqualTo(user.getRecoveryToken());
         Assertions.assertThat(result.getRecoveryTokenExpiryDate()).isEqualToIgnoringNanos(user.getRecoveryTokenExpiryDate());
-        Assertions.assertThat(result.isUsingMultiFactorAuthentication()).isEqualTo(user.isUsingMultiFactorAuthentication());
-        Assertions.assertThat(result.getMultiFactorAuthenticationSecret()).isEqualTo(user.getMultiFactorAuthenticationSecret());
+        Assertions.assertThat(result.isUsingTwoFactorAuthentication()).isEqualTo(user.isUsingTwoFactorAuthentication());
+        Assertions.assertThat(result.getTwoFactorAuthenticationSecret()).isEqualTo(user.getTwoFactorAuthenticationSecret());
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
@@ -153,9 +154,7 @@ class UserTest {
     @Test
     void persist_withValidUserRoleRelationship_mapsRelationship() {
         // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setRole("ROLE_USER_ONE");
-        userRole = testEntityManager.persistFlushFind(userRole);
+        UserRole userRole = testEntityManager.find(UserRole.class, UserSecurityRole.ROLE_USER.getId());
 
         User user = new User();
         user.setUsername("username");
@@ -175,9 +174,7 @@ class UserTest {
     @Test
     void persist_withValidRemovedUserRoleRelationships_mapsRelationships() {
         // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setRole("ROLE_USER_ONE");
-        userRole = testEntityManager.persistFlushFind(userRole);
+        UserRole userRole = testEntityManager.find(UserRole.class, UserSecurityRole.ROLE_USER.getId());
 
         User user = new User();
         user.setUsername("username");
@@ -216,15 +213,15 @@ class UserTest {
         user.setPassword("password");
         user.setEmailAddress("email@address.com");
         user.setVerified(true);
-        user.addAuthority(userAuthority1);
-        user.addAuthority(userAuthority2);
+        user.addUserAuthority(userAuthority1);
+        user.addUserAuthority(userAuthority2);
         user = testEntityManager.persistFlushFind(user);
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getAuthorities().size())
+        Assertions.assertThat(result.getUserAuthorities().size())
                 .isEqualTo(2);
     }
 
@@ -248,18 +245,18 @@ class UserTest {
         user.setPassword("password");
         user.setEmailAddress("email@address.com");
         user.setVerified(true);
-        user.addAuthority(userAuthority1);
-        user.addAuthority(userAuthority2);
+        user.addUserAuthority(userAuthority1);
+        user.addUserAuthority(userAuthority2);
         user = testEntityManager.persistFlushFind(user);
 
-        user.removeAuthority(testEntityManager.find(UserAuthority.class, userAuthority2.getId()));
+        user.removeUserAuthority(testEntityManager.find(UserAuthority.class, userAuthority2.getId()));
 
         // Act
         User result = testEntityManager.persistFlushFind(user);
 
         // Assert
-        Assertions.assertThat(result.getAuthorities().size()).isEqualTo(1);
-        Assertions.assertThat(result.getAuthorities().iterator().next().getId())
+        Assertions.assertThat(result.getUserAuthorities().size()).isEqualTo(1);
+        Assertions.assertThat(result.getUserAuthorities().iterator().next().getId())
                 .isEqualTo(userAuthority1.getId());
     }
 }

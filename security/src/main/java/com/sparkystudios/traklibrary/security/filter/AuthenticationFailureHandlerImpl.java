@@ -46,7 +46,7 @@ public class AuthenticationFailureHandlerImpl implements AuthenticationFailureHa
         var apiError = new ApiError(HttpStatus.UNAUTHORIZED);
 
         if (e instanceof BadCredentialsException) {
-            apiError.setError("Invalid username or password");
+            apiError.setError("Invalid credentials.");
         } else if (e instanceof AuthenticationMethodNotSupportedException) {
             apiError.setError(e.getMessage());
         } else {

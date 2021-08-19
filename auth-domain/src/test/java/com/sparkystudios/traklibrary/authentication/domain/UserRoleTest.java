@@ -1,6 +1,8 @@
 package com.sparkystudios.traklibrary.authentication.domain;
 
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.assertj.core.api.Assertions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -26,24 +28,10 @@ class UserRoleTest {
     }
 
     @Test
-    void persist_withRoleExceedingLength_throwsPersistenceException() {
-        // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbccccccccccc");
-
-        // Assert
-        Assertions.assertThatExceptionOfType(PersistenceException.class)
-                .isThrownBy(() -> testEntityManager.persistFlushFind(userRole));
-    }
-
-    @Test
     void persist_withNonUniqueRole_throwsPersistenceException() {
         // Arrange
         UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
-
-        // Act
-        testEntityManager.persistFlushFind(userRole);
+        userRole.setRole(UserSecurityRole.ROLE_USER);
 
         // Assert
         Assertions.assertThatExceptionOfType(PersistenceException.class)
@@ -52,16 +40,12 @@ class UserRoleTest {
 
     @Test
     void persist_withValidUserRole_mapsUserRole() {
-        // Arrange
-        UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
-
         // Act
-        UserRole result = testEntityManager.persistFlushFind(userRole);
+        UserRole result = testEntityManager.find(UserRole.class, UserSecurityRole.ROLE_USER.getId());
 
         // Assert
         Assertions.assertThat(result.getId()).isPositive();
-        Assertions.assertThat(result.getRole()).isEqualTo(userRole.getRole());
+        Assertions.assertThat(result.getRole()).isEqualTo(UserSecurityRole.ROLE_USER);
         Assertions.assertThat(result.getCreatedAt()).isNotNull();
         Assertions.assertThat(result.getUpdatedAt()).isNotNull();
         Assertions.assertThat(result.getVersion()).isNotNull().isNotNegative();
@@ -92,13 +76,12 @@ class UserRoleTest {
         user2.setRecoveryTokenExpiryDate(LocalDateTime.now());
         user2 = testEntityManager.persistAndFlush(user2);
 
-        UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        UserRole userRole = testEntityManager.find(UserRole.class, UserSecurityRole.ROLE_USER.getId());
         userRole.addUser(user1);
         userRole.addUser(user2);
 
         // Act
-        UserRole result = testEntityManager.persistFlushFind(userRole);
+        UserRole result = testEntityManager.merge(userRole);
 
         // Assert
         Assertions.assertThat(result.getUsers().size()).isEqualTo(2);
@@ -129,16 +112,15 @@ class UserRoleTest {
         user2.setRecoveryTokenExpiryDate(LocalDateTime.now());
         user2 = testEntityManager.persistAndFlush(user2);
 
-        UserRole userRole = new UserRole();
-        userRole.setRole("aaaaaaaaaabbbbbbbbbbcccccccccc");
+        UserRole userRole = testEntityManager.find(UserRole.class, UserSecurityRole.ROLE_USER.getId());
         userRole.addUser(user1);
         userRole.addUser(user2);
-        userRole = testEntityManager.persistFlushFind(userRole);
+        userRole = testEntityManager.merge(userRole);
 
         userRole.removeUser(testEntityManager.find(User.class, user2.getId()));
 
         // Act
-        UserRole result = testEntityManager.persistFlushFind(userRole);
+        UserRole result = testEntityManager.merge(userRole);
 
         // Assert
         Assertions.assertThat(result.getUsers().size()).isEqualTo(1);

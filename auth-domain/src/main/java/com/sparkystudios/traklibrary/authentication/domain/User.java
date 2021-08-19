@@ -63,11 +63,11 @@ public class User {
     @JoinColumn(name = "auth_user_role_id")
     private UserRole userRole;
 
-    @Column(name = "using_multi_factor_authentication", nullable = false)
-    private boolean usingMultiFactorAuthentication;
+    @Column(name = "using_two_factor_authentication", nullable = false)
+    private boolean usingTwoFactorAuthentication;
 
-    @Column(name = "multi_factor_authentication_secret")
-    private String multiFactorAuthenticationSecret;
+    @Column(name = "two_factor_authentication_secret")
+    private String twoFactorAuthenticationSecret;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
@@ -77,7 +77,7 @@ public class User {
             joinColumns = {@JoinColumn(name = "auth_user_id")},
             inverseJoinColumns = {@JoinColumn(name = "auth_user_authority_id")}
     )
-    private Set<UserAuthority> authorities = new HashSet<>();
+    private Set<UserAuthority> userAuthorities = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate
@@ -99,8 +99,8 @@ public class User {
      *
      * @param userAuthority The {@link UserAuthority} to add to the {@link User}.
      */
-    public void addAuthority(UserAuthority userAuthority) {
-        authorities.add(userAuthority);
+    public void addUserAuthority(UserAuthority userAuthority) {
+        userAuthorities.add(userAuthority);
         userAuthority.getUsers().add(this);
     }
 
@@ -112,8 +112,8 @@ public class User {
      *
      * @param userAuthority The {@link UserAuthority} to remove to the {@link User}.
      */
-    public void removeAuthority(UserAuthority userAuthority) {
-        authorities.remove(userAuthority);
+    public void removeUserAuthority(UserAuthority userAuthority) {
+        userAuthorities.remove(userAuthority);
         userAuthority.getUsers().remove(this);
     }
 }

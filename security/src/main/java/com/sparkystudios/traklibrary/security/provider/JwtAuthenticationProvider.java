@@ -1,23 +1,18 @@
 package com.sparkystudios.traklibrary.security.provider;
 
-import com.sparkystudios.traklibrary.security.KeyService;
-import com.sparkystudios.traklibrary.security.context.UserContext;
-import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
-import io.jsonwebtoken.Jwts;
+import com.sparkystudios.traklibrary.security.token.SecurityTokenService;
+import com.sparkystudios.traklibrary.security.token.authentication.JwtAuthenticationToken;
+import com.sparkystudios.traklibrary.security.token.data.SecurityToken;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
-import java.security.Key;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 /**
  * The {@link JwtAuthenticationProvider} is an authentication provider that is used by any micro-service
@@ -31,17 +26,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JwtAuthenticationProvider implements AuthenticationProvider {
 
-    @Value("${trak.security.jwt.public-key}")
-    private String publicKeyText;
-
-    private Key publicKey;
-
-    private final KeyService keyService;
-
-    @PostConstruct
-    public void postConstruct() {
-        publicKey = keyService.readPublicKey(publicKeyText);
-    }
+    private final SecurityTokenService securityTokenService;
 
     /**
      * Checks whether the credentials contained within the {@link Authentication} contains a valid JWT
@@ -64,37 +49,13 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         // The credentials should be the JWT as the authentication should be a JwtAuthenticationToken
         // instance.
         String accessToken = (String) authentication.getCredentials();
+        SecurityToken securityToken = securityTokenService.getToken(accessToken);
 
-        // Try to parse the JWT, if it fails an exception will be bubbled up the stack.
-        var claims = Jwts.parserBuilder()
-                .setSigningKey(publicKey)
-                .build()
-                .parseClaimsJws(accessToken)
-                .getBody();
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(securityToken.getRole());
+        authorities.addAll(securityToken.getAuthorities());
 
-        String username = claims.getSubject();
-        String role = claims.get("role", String.class);
-
-        // Ensure that the authorization header token provided isn't a refresh token.
-        if (role.equals("ROLE_TOKEN_REFRESH")) {
-            throw new InsufficientAuthenticationException("Refresh token cannot be used for authorization.");
-        }
-
-        Collection<GrantedAuthority> authorities = ((Collection<String>) claims.get("scope"))
-                .stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-
-        // This is classed as successful authorization at this point, so just populate a token with data.
-        authorities.add(new SimpleGrantedAuthority(role));
-
-        var userContext = new UserContext();
-        userContext.setUserId(claims.get("userId", Long.class));
-        userContext.setUsername(username);
-        userContext.setVerified(claims.get("verified", Boolean.class));
-        userContext.setAuthorities(authorities);
-
-        return new JwtAuthenticationToken(userContext, authorities);
+        return new JwtAuthenticationToken(securityToken, authorities);
     }
 
     /**

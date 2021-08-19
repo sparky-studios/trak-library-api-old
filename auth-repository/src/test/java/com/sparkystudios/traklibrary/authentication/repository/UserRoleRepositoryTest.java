@@ -1,6 +1,7 @@
 package com.sparkystudios.traklibrary.authentication.repository;
 
 import com.sparkystudios.traklibrary.authentication.domain.UserRole;
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,7 +26,7 @@ class UserRoleRepositoryTest {
     @Test
     void findByRole_withNonExistentUserRole_returnsEmptyOptional() {
         // Act
-        Optional<UserRole> result = userRoleRepository.findByRole("ROLE_TEST");
+        Optional<UserRole> result = userRoleRepository.findByRole(UserSecurityRole.ROLE_USER);
 
         // Assert
         Assertions.assertThat(result).isNotPresent();
@@ -35,12 +36,12 @@ class UserRoleRepositoryTest {
     void findByRole_withUserRole_returnsUserRole() {
         // Arrange
         UserRole userRole = new UserRole();
-        userRole.setRole("ROLE_TEST");
+        userRole.setRole(UserSecurityRole.ROLE_USER);
 
         userRole = userRoleRepository.save(userRole);
 
         // Act
-        Optional<UserRole> result = userRoleRepository.findByRole("ROLE_TEST");
+        Optional<UserRole> result = userRoleRepository.findByRole(UserSecurityRole.ROLE_USER);
 
         // Assert
         Assertions.assertThat(result).isPresent()

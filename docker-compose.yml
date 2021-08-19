@@ -1,6 +1,32 @@
 version: "3.3"
 services:
+  rabbitmq:
+    container_name: traklibrary-rabbitmq
+    image: rabbitmq:3.8-management
+    ports:
+      - 5672:5672
+      - 15672:15672
+    networks:
+      - trak-network
+
+  db:
+    container_name: traklibrary-db
+    image: postgres:13.2
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=postgres
+    volumes:
+      - trak-db-data:/var/lib/postgresql/data
+      - ./scripts/db:/docker-entrypoint-initdb.d
+    ports:
+      - 5433:5432
+    networks:
+      - trak-network
+
   auth-server:
+    build:
+      context: ./auth-server
     container_name: traklibrary-auth-api
     image: sparkystudios/traklibrary-auth-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
@@ -11,10 +37,16 @@ services:
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
+      - spring.cloud.config.profile=development
       - trak.security.jwt.private-key-path=${PRIVATE_JWT_KEY_PATH}
     depends_on:
+      - db
+      - rabbitmq
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     restart: on-failure
     expose:
       - 8080
@@ -22,51 +54,70 @@ services:
       - trak-network
 
   config-server:
+    build:
+      context: ./config-server
     container_name: traklibrary-config-api
     image: sparkystudios/traklibrary-config-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.config.profile=development
       - spring.cloud.config.server.git.password=${CONFIG_SERVER_GIT_PASSWORD}
       - spring.cloud.config.server.git.username=${CONFIG_SERVER_GIT_USERNAME}
       - spring.security.user.name=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.security.user.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
     depends_on:
       - discovery-server
+    volumes:
+      - ./logs:/app/logs
+    restart: on-failure
     expose:
       - 8888
-    restart: on-failure
     networks:
       - trak-network
 
   discovery-server:
+    build:
+      context: ./discovery-server
     container_name: traklibrary-discovery-api
     image: sparkystudios/traklibrary-discovery-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
+      - spring.cloud.config.profile=development
+      - spring.profiles.active=development
       - spring.security.user.name=${DISCOVERY_SERVER_USERNAME}
       - spring.security.user.password=${DISCOVERY_SERVER_PASSWORD}
     ports:
     - 8761:8761
+    volumes:
+      - ./logs:/app/logs
     networks:
       - trak-network
 
   email-server:
+    build:
+      context: ./email-server
     container_name: traklibrary-email-api
     image: sparkystudios/traklibrary-email-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
     environment:
       - encrypt.key=${CONFIG_SERVER_ENCRYPT_KEY}
+      - spring.cloud.config.profile=development
       - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
     depends_on:
+      - rabbitmq
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     expose:
       - 8080
     restart: on-failure
@@ -74,6 +125,8 @@ services:
       - trak-network
 
   game-server:
+    build:
+      context: ./game-server
     container_name: traklibrary-game-api
     image: sparkystudios/traklibrary-game-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
@@ -82,12 +135,18 @@ services:
       - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+      - spring.cloud.config.profile=development
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
       - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
+      - db
+      - rabbitmq
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     expose:
       - 8080
     restart: on-failure
@@ -95,6 +154,8 @@ services:
       - trak-network
 
   gateway-server:
+    build:
+      context: ./gateway-server
     container_name: traklibrary-gateway-api
     image: sparkystudios/traklibrary-gateway-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
@@ -103,12 +164,16 @@ services:
       - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+      - spring.cloud.config.profile=development
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
       - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     expose:
       - 8080
     ports:
@@ -118,6 +183,8 @@ services:
       - trak-network
 
   image-server:
+    build:
+      context: ./image-server
     container_name: traklibrary-image-api
     image: sparkystudios/traklibrary-image-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
@@ -126,12 +193,16 @@ services:
       - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+      - spring.cloud.config.profile=development
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
       - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     expose:
       - 8080
     restart: on-failure
@@ -139,6 +210,8 @@ services:
       - trak-network
 
   notification-server:
+    build:
+      context: ./notification-server
     container_name: traklibrary-notification-api
     image: sparkystudios/traklibrary-notification-api:${VERSION}
     command: ["-m", "512m", "-XX:MinRAMPercentage=50", "-XX:MaxRAMPercentage=80"]
@@ -147,12 +220,18 @@ services:
       - spring.cloud.bootstrap.enabled=true
       - spring.cloud.config.username=${CONFIG_SERVER_SECURITY_USERNAME}
       - spring.cloud.config.password=${CONFIG_SERVER_SECURITY_PASSWORD}
+      - spring.cloud.config.profile=development
       - spring.cloud.discovery.username=${DISCOVERY_SERVER_USERNAME}
       - spring.cloud.discovery.password=${DISCOVERY_SERVER_PASSWORD}
+      - spring.profiles.active=development
       - trak.security.jwt.public-key-path=${PUBLIC_JWT_KEY_PATH}
     depends_on:
+      - db
+      - rabbitmq
       - discovery-server
       - config-server
+    volumes:
+      - ./logs:/app/logs
     expose:
       - 8080
     restart: on-failure
@@ -162,3 +241,6 @@ services:
 networks:
   trak-network:
     driver: bridge
+
+volumes:
+  trak-db-data:

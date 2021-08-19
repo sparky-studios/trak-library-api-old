@@ -61,10 +61,10 @@
             <column name="recovery_token" type="varchar(30)"/>
             <column name="recovery_token_expiry_date" type="datetime"/>
             <column name="auth_user_role_id" type="bigint" />
-            <column name="using_multi_factor_authentication" type="boolean" defaultValueBoolean="false">
+            <column name="using_two_factor_authentication" type="boolean" defaultValueBoolean="false">
                 <constraints nullable="false" />
             </column>
-            <column name="multi_factor_authentication_secret" type="varchar(255)" />
+            <column name="two_factor_authentication_secret" type="varchar(255)" />
             <column name="created_at" type="TIMESTAMP WITHOUT TIME ZONE" defaultValueComputed="CURRENT_TIMESTAMP">
                 <constraints nullable="false"/>
             </column>

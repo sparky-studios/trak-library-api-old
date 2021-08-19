@@ -1,5 +1,6 @@
 package com.sparkystudios.traklibrary.authentication.domain;
 
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -36,7 +37,7 @@ public class UserRole {
     private long id;
 
     @Column(name = "role", nullable = false, unique = true, length = 30)
-    private String role;
+    private UserSecurityRole role;
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude

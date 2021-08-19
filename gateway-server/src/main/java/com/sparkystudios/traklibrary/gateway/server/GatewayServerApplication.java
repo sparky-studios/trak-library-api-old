@@ -6,7 +6,8 @@ import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 
 @EnableDiscoveryClient
 @SpringBootApplication(scanBasePackages = {
-        "com.sparkystudios.traklibrary.gateway.server"
+        "com.sparkystudios.traklibrary.gateway.server",
+        "com.sparkystudios.traklibrary.security.token"
 })
 public class GatewayServerApplication {
 

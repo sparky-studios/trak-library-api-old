@@ -211,6 +211,7 @@
         <module>notification-server</module>
         <module>report-aggregator</module>
         <module>security</module>
+        <module>security-token</module>
     </modules>
 
     <repositories>
