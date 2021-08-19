@@ -36,6 +36,28 @@ class TwoFactorAuthenticationControllerTest {
     private TwoFactorAuthenticationService twoFactorAuthenticationService;
 
     @Test
+    void createTwoFactorAuthenticationSecret_withDefaultData_returns200AndValidResponse() throws Exception {
+        // Arrange
+        RegistrationResponseDto registrationResponseDto = new RegistrationResponseDto();
+        registrationResponseDto.setUserId(1L);
+        registrationResponseDto.setQrData(new byte[] { 'a', 'b' });
+
+        Mockito.when(twoFactorAuthenticationService.createTwoFactorAuthenticationSecret(ArgumentMatchers.anyLong()))
+                .thenReturn(registrationResponseDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users/1/2fa")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.userId", Matchers.is((int)registrationResponseDto.getUserId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.qrData", Matchers.notNullValue()));
+    }
+
+    @Test
     void enable_withNoTwoFactorAuthenticationRequestDtoBody_returns400() throws Exception {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/2fa")
@@ -100,4 +122,30 @@ class TwoFactorAuthenticationControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.verified", Matchers.is(userResponseDto.isVerified())));
     }
 
+    @Test
+    void disable_withDefaultData_returns200AndValidResponse() throws Exception {
+        // Arrange
+        TwoFactorAuthenticationRequestDto twoFactorAuthenticationRequestDto = new TwoFactorAuthenticationRequestDto();
+        twoFactorAuthenticationRequestDto.setCode("123");
+
+        var userResponseDto = new UserResponseDto();
+        userResponseDto.setId(1L);
+        userResponseDto.setUsername("username");
+        userResponseDto.setVerified(true);
+
+        Mockito.when(twoFactorAuthenticationService.disable(ArgumentMatchers.anyLong()))
+                .thenReturn(userResponseDto);
+
+        // Act
+        ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/users/1/2fa")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
+
+        // Assert
+        resultActions
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.id", Matchers.is((int)userResponseDto.getId())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.username", Matchers.is(userResponseDto.getUsername())))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.verified", Matchers.is(userResponseDto.isVerified())));
+    }
 }

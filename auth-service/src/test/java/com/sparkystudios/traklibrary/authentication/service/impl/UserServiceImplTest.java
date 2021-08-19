@@ -12,7 +12,7 @@ import com.sparkystudios.traklibrary.authentication.service.mapper.UserMapper;
 import com.sparkystudios.traklibrary.authentication.service.mapper.UserResponseMapper;
 import com.sparkystudios.traklibrary.security.AuthenticationService;
 import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
-import org.junit.jupiter.api.Assertions;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -63,7 +63,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(""));
+        Assertions.assertThatThrownBy(() -> userService.loadUserByUsername(""))
+                        .isInstanceOf(UsernameNotFoundException.class);
     }
 
     @Test
@@ -98,9 +99,12 @@ class UserServiceImplTest {
         CheckedResponse<RegistrationResponseDto> result = userService.save(registrationRequestDto);
 
         // Assert
-        Assertions.assertNull(result.getData(), "There should be no response data if the username is already in use.");
-        Assertions.assertEquals("username-error", result.getErrorMessage(), "The error message doesn't match.");
-        Assertions.assertTrue(result.isError(), "The response should be an error for a user that already exists.");
+        Assertions.assertThat(result.getData())
+                .isNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("username-error");
+        Assertions.assertThat(result.isError())
+                .isTrue();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -127,9 +131,12 @@ class UserServiceImplTest {
         CheckedResponse<RegistrationResponseDto> result = userService.save(registrationRequestDto);
 
         // Assert
-        Assertions.assertNull(result.getData(), "There should be no response data if the email address is already in use.");
-        Assertions.assertEquals("email-error", result.getErrorMessage(), "The error message doesn't match.");
-        Assertions.assertTrue(result.isError(), "The response should be an error for a email address that already exists.");
+        Assertions.assertThat(result.getData())
+                .isNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("email-error");
+        Assertions.assertThat(result.isError())
+                .isTrue();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -156,7 +163,8 @@ class UserServiceImplTest {
         registrationRequestDto.setPassword("password");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.save(registrationRequestDto));
+        Assertions.assertThatThrownBy(() -> userService.save(registrationRequestDto))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -192,15 +200,60 @@ class UserServiceImplTest {
         CheckedResponse<RegistrationResponseDto> result = userService.save(registrationRequestDto);
 
         // Assert
-        Assertions.assertNotNull(result, "The response of the save should not be null.");
-        Assertions.assertEquals("", result.getErrorMessage(), "There should be no error message for a valid response.");
-        Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
+        Assertions.assertThat(result).isNotNull();
+        Assertions.assertThat(result.getErrorMessage()).isEmpty();
+        Assertions.assertThat(result.isError()).isFalse();
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
 
         Mockito.verify(streamBridge, Mockito.atMostOnce())
                 .send(ArgumentMatchers.eq("trak-email-verification"), ArgumentMatchers.any(VerificationEvent.class));
+    }
+
+    @Test
+    void update_withNullUserDto_throwsNullPointerException() {
+        // Arrange
+        UserDto userDto = null;
+
+        // Assert
+        Assertions.assertThatThrownBy(() -> userService.update(userDto))
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void update_withNonExistentUser_throwsEntityNotFoundException() {
+        // Arrange
+        Mockito.when(userRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(false);
+
+        Mockito.when(messageSource.getMessage(ArgumentMatchers.eq("user.exception.not-found"), ArgumentMatchers.any(Object[].class), ArgumentMatchers.any(Locale.class)))
+                .thenReturn("");
+
+        UserDto userDto = new UserDto();
+
+        // Assert
+        Assertions.assertThatThrownBy(() -> userService.update(userDto))
+                .isInstanceOf(EntityNotFoundException.class);
+    }
+
+    @Test
+    void update_withUserDto_updatesUserDto() {
+        // Arrange
+        Mockito.when(userRepository.existsById(ArgumentMatchers.anyLong()))
+                .thenReturn(true);
+
+        UserDto userDto = new UserDto();
+
+        Mockito.when(userRepository.save(ArgumentMatchers.any()))
+                .thenReturn(new User());
+
+        // Act
+        userService.update(userDto);
+
+        // Assert
+        Mockito.verify(userRepository, Mockito.atMostOnce())
+                .save(ArgumentMatchers.any());
     }
 
     @Test
@@ -219,9 +272,12 @@ class UserServiceImplTest {
         CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
 
         // Assert
-        Assertions.assertNull(result.getData(), "There should be no user data if the username wasn't found.");
-        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
-        Assertions.assertTrue(result.isError(), "The response should be an error for a username that doesn't exist.");
+        Assertions.assertThat(result.getData())
+                .isNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("user-error");
+        Assertions.assertThat(result.isError())
+                .isTrue();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -244,9 +300,12 @@ class UserServiceImplTest {
         CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
 
         // Assert
-        Assertions.assertNull(result.getData(), "There should be no user data if the user has no recovery token.");
-        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
-        Assertions.assertTrue(result.isError(), "The response should be an error if the user has no recovery token.");
+        Assertions.assertThat(result.getData())
+                .isNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("user-error");
+        Assertions.assertThat(result.isError())
+                .isTrue();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -272,9 +331,12 @@ class UserServiceImplTest {
         CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
 
         // Assert
-        Assertions.assertNull(result.getData(), "There should be no user data if the recovery token doesn't match.");
-        Assertions.assertEquals("user-error", result.getErrorMessage(), "The error message doesn't match.");
-        Assertions.assertTrue(result.isError(), "The response should be an error if the recovery token doesn't match.");
+        Assertions.assertThat(result.getData())
+                .isNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("user-error");
+        Assertions.assertThat(result.isError())
+                .isTrue();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -295,6 +357,9 @@ class UserServiceImplTest {
         Mockito.when(passwordEncoder.encode(ArgumentMatchers.anyString()))
                 .thenReturn("password");
 
+        Mockito.when(userResponseMapper.fromUser(ArgumentMatchers.any()))
+                .thenReturn(new UserResponseDto());
+
         RecoveryRequestDto recoveryRequestDto = new RecoveryRequestDto();
         recoveryRequestDto.setUsername("username");
         recoveryRequestDto.setRecoveryToken("recovery");
@@ -304,9 +369,12 @@ class UserServiceImplTest {
         CheckedResponse<UserResponseDto> result = userService.update(recoveryRequestDto);
 
         // Assert
-        Assertions.assertNotNull(result, "The response of the update should not be null.");
-        Assertions.assertEquals("", result.getErrorMessage(), "There should be no error message for a valid response.");
-        Assertions.assertFalse(result.isError(), "The response should have no errors for a valid response.");
+        Assertions.assertThat(result.getData())
+                .isNotNull();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEmpty();
+        Assertions.assertThat(result.isError())
+                .isFalse();
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
@@ -319,7 +387,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.deleteById(1L));
+        Assertions.assertThatThrownBy(() -> userService.deleteById(1L))
+                        .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -335,7 +404,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.deleteById(1L));
+        Assertions.assertThatThrownBy(() -> userService.deleteById(1L))
+                .isInstanceOf(InvalidUserException.class);
     }
 
     @Test
@@ -368,7 +438,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.verify(1L, "11111"));
+        Assertions.assertThatThrownBy(() -> userService.verify(1L, "11111"))
+                        .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -384,7 +455,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.verify(1L, "11111"));
+        Assertions.assertThatThrownBy(() -> userService.verify(1L, "11111"))
+                .isInstanceOf(InvalidUserException.class);
     }
 
     @Test
@@ -406,9 +478,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
 
         // Assert
-        Assertions.assertTrue(result.getData(), "The response should be true if the user is already verified.");
-        Assertions.assertFalse(result.isError(), "There should be no errors for an already verified user.");
-        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for an already verified user.");
+        Assertions.assertThat(result.getData())
+                .isTrue();
+        Assertions.assertThat(result.isError())
+                .isFalse();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEmpty();
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -436,9 +511,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
 
         // Assert
-        Assertions.assertFalse(result.getData(), "The response should be false if the verification code is incorrect.");
-        Assertions.assertTrue(result.isError(), "There should be errors if the verification code is incorrect.");
-        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+        Assertions.assertThat(result.getData())
+                .isFalse();
+        Assertions.assertThat(result.isError())
+                .isTrue();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("error");
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -463,9 +541,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
 
         // Assert
-        Assertions.assertFalse(result.getData(), "The response should be false if the user verification code is null.");
-        Assertions.assertTrue(result.isError(), "There should be errors if the user verification code is null.");
-        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+        Assertions.assertThat(result.getData())
+                .isFalse();
+        Assertions.assertThat(result.isError())
+                .isTrue();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("error");
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -493,9 +574,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.verify(1L, "11111");
 
         // Assert
-        Assertions.assertTrue(result.getData(), "The response should be true if the user has been successfully verified.");
-        Assertions.assertFalse(result.isError(), "There should be no errors for an successfully verified user.");
-        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successfully verified user.");
+        Assertions.assertThat(result.getData())
+                .isTrue();
+        Assertions.assertThat(result.isError())
+                .isFalse();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEmpty();
 
         Mockito.verify(userRepository, Mockito.atMostOnce())
                 .save(ArgumentMatchers.any());
@@ -511,7 +595,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.reverify(1L));
+        Assertions.assertThatThrownBy(() -> userService.reverify(1L))
+                        .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -527,7 +612,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.reverify(1L));
+        Assertions.assertThatThrownBy(() -> userService.reverify(1L))
+                .isInstanceOf(InvalidUserException.class);
     }
 
     @Test
@@ -600,7 +686,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.changePassword(1L, changePasswordRequestDto));
+        Assertions.assertThatThrownBy(() -> userService.changePassword(1L, changePasswordRequestDto))
+                        .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -618,7 +705,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.changePassword(1L, changePasswordRequestDto));
+        Assertions.assertThatThrownBy(() -> userService.changePassword(1L, changePasswordRequestDto))
+                .isInstanceOf(InvalidUserException.class);
     }
 
     @Test
@@ -649,9 +737,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.changePassword(1L, changePasswordRequestDto);
 
         // Assert
-        Assertions.assertFalse(result.getData(), "The response should be false if the user recovery token is null.");
-        Assertions.assertTrue(result.isError(), "There should be errors if the user recovery token is null.");
-        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+        Assertions.assertThat(result.getData())
+                .isFalse();
+        Assertions.assertThat(result.isError())
+                .isTrue();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("error");
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -690,9 +781,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.changePassword(1L, changePasswordRequestDto);
 
         // Assert
-        Assertions.assertTrue(result.getData(), "The response should be true if the user's password was successfully changed.");
-        Assertions.assertFalse(result.isError(), "There should be no errors for a successful password change.");
-        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successful password change.");
+        Assertions.assertThat(result.getData())
+                .isTrue();
+        Assertions.assertThat(result.isError())
+                .isFalse();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEmpty();
 
         Mockito.verify(passwordEncoder, Mockito.atMostOnce())
                 .encode(ArgumentMatchers.anyString());
@@ -711,7 +805,8 @@ class UserServiceImplTest {
                 .thenReturn(Optional.empty());
 
         // Assert
-        Assertions.assertThrows(EntityNotFoundException.class, () -> userService.changeEmailAddress(1L, "test@traklibrary.com"));
+        Assertions.assertThatThrownBy(() -> userService.changeEmailAddress(1L, "test@traklibrary.com"))
+                .isInstanceOf(EntityNotFoundException.class);
     }
 
     @Test
@@ -727,7 +822,8 @@ class UserServiceImplTest {
                 .thenReturn("");
 
         // Assert
-        Assertions.assertThrows(InvalidUserException.class, () -> userService.changeEmailAddress(1L, "test@traklibrary.com"));
+        Assertions.assertThatThrownBy(() -> userService.changeEmailAddress(1L, "test@traklibrary.com"))
+                .isInstanceOf(InvalidUserException.class);
     }
 
     @Test
@@ -752,9 +848,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.changeEmailAddress(1L, userDto.getEmailAddress());
 
         // Assert
-        Assertions.assertFalse(result.getData(), "The response should be false if email addresses match.");
-        Assertions.assertTrue(result.isError(), "There should be errors if the email addresses match.");
-        Assertions.assertEquals("error", result.getErrorMessage(), "The error message should contain an error message.");
+        Assertions.assertThat(result.getData())
+                .isFalse();
+        Assertions.assertThat(result.isError())
+                .isTrue();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEqualTo("error");
 
         Mockito.verify(userRepository, Mockito.never())
                 .save(ArgumentMatchers.any());
@@ -786,9 +885,12 @@ class UserServiceImplTest {
         CheckedResponse<Boolean> result = userService.changeEmailAddress(1L, "test@traklibrary.com");
 
         // Assert
-        Assertions.assertTrue(result.getData(), "The response should be true if the user's email address was successfully changed.");
-        Assertions.assertFalse(result.isError(), "There should be no errors for a successful email address change.");
-        Assertions.assertEquals("", result.getErrorMessage(), "The error message should be empty for a successful email address change.");
+        Assertions.assertThat(result.getData())
+                .isTrue();
+        Assertions.assertThat(result.isError())
+                .isFalse();
+        Assertions.assertThat(result.getErrorMessage())
+                .isEmpty();
 
         Mockito.verify(streamBridge, Mockito.atMostOnce())
                 .send(ArgumentMatchers.eq("trak-email-verification"), ArgumentMatchers.any(VerificationEvent.class));
