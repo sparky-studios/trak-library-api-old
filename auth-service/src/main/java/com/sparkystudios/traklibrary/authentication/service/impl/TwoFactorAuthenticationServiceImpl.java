@@ -78,6 +78,9 @@ public class TwoFactorAuthenticationServiceImpl implements TwoFactorAuthenticati
             throw new IllegalStateException(errorMessage);
         }
 
+        // Update the user after generating the new secret code.
+        userService.update(userDto);
+
         return registrationResponseDto;
     }
 

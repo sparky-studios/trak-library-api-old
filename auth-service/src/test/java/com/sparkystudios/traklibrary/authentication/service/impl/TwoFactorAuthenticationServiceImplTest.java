@@ -64,6 +64,9 @@ class TwoFactorAuthenticationServiceImplTest {
         // Assert
         Assertions.assertThatThrownBy(() -> twoFactorAuthenticationService.createTwoFactorAuthenticationSecret(1L))
                 .isInstanceOf(EntityExistsException.class);
+
+        Mockito.verify(userService, Mockito.never())
+                .update(ArgumentMatchers.any(UserDto.class));
     }
 
     @Test
@@ -88,6 +91,9 @@ class TwoFactorAuthenticationServiceImplTest {
         // Assert
         Assertions.assertThatThrownBy(() -> twoFactorAuthenticationService.createTwoFactorAuthenticationSecret(1L))
                 .isInstanceOf(IllegalStateException.class);
+
+        Mockito.verify(userService, Mockito.never())
+                .update(ArgumentMatchers.any(UserDto.class));
     }
 
     @Test
@@ -112,6 +118,9 @@ class TwoFactorAuthenticationServiceImplTest {
         // Assert
         Assertions.assertThat(result.getUserId()).isEqualTo(userDto.getId());
         Assertions.assertThat(result.getQrData()).isNotNull();
+
+        Mockito.verify(userService, Mockito.atMostOnce())
+                .update(ArgumentMatchers.any(UserDto.class));
     }
 
     @Test
