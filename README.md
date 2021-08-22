@@ -57,7 +57,7 @@ mvn clean package
 
 Once the images have been built, the application can be deployed by running:
 ```shell script
-docker-compose -f ./docker-compose.yml -f docker-compose.development.yml up -d
+docker-compose up -d
 ```
 
 It is not uncommon to see exceptions when starting the application, this is a work-in-progress to address this.

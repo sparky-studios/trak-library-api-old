@@ -31,7 +31,7 @@ public class JwtHeaderExtractor {
             throw new AuthenticationServiceException("The authorization header is invalid.");
         }
 
-        if (header.length() < HEADER_PREFIX.length() || !header.startsWith(HEADER_PREFIX)) {
+        if (!header.startsWith(HEADER_PREFIX)) {
             throw new AuthenticationServiceException("The authorization header is not prefixed with 'Bearer'");
         }
 

@@ -46,7 +46,7 @@ public class UserAuthority {
 
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(mappedBy = "authorities", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "userAuthorities", cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH}, fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -71,7 +71,7 @@ public class UserAuthority {
      */
     public void addUser(User user) {
         users.add(user);
-        user.getAuthorities().add(this);
+        user.getUserAuthorities().add(this);
     }
 
     /**
@@ -84,6 +84,6 @@ public class UserAuthority {
      */
     public void removeUser(User user) {
         users.remove(user);
-        user.getAuthorities().remove(this);
+        user.getUserAuthorities().remove(this);
     }
 }

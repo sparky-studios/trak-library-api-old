@@ -43,7 +43,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new MobileDeviceLinkRegistrationRequestDto())));
 
         // Assert
@@ -69,7 +69,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/register")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(mobileDeviceLinkRegistrationRequestDto)));
 
         // Assert
@@ -83,7 +83,7 @@ class NotificationControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("device-guid", "device-guid")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -99,7 +99,7 @@ class NotificationControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("user-id", "1")
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -120,7 +120,7 @@ class NotificationControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/unregister")
                 .param("user-id", "1")
                 .param("device-guid", "device-guid")
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions

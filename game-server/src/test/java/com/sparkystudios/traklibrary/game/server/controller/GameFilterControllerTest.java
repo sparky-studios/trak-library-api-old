@@ -80,7 +80,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/filters")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -101,7 +101,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/filters")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -118,7 +118,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -150,7 +150,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?platform-ids=1,2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -184,7 +184,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?genre-ids=1,2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -218,7 +218,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?game-modes=SINGLE_PLAYER")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -252,7 +252,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/search?platform-ids=1,2&genre-ids=1,2&game-modes=SINGLE_PLAYER&age-ratings=EVERYONE")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -270,7 +270,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?platform-ids=1,2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -288,7 +288,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?genre-ids=1,2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -306,7 +306,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?game-modes=SINGLE_PLAYER")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -324,7 +324,7 @@ class GameFilterControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?statuses=BACKLOG")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -341,7 +341,7 @@ class GameFilterControllerTest {
                 .thenReturn(List.of(new GameUserEntryDto(), new GameUserEntryDto()));
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/entries/search?platform-ids=1,2&genre-ids=1,2&game-modes=SINGLE_PLAYER&age-ratings=EVERYONE&statuses=BACKLOG")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions

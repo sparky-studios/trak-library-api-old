@@ -71,7 +71,7 @@ class FranchiseControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/franchises")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new FranchiseDto())));
 
         // Assert
@@ -101,7 +101,7 @@ class FranchiseControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/franchises")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(franchiseDto)));
 
         // Assert
@@ -128,7 +128,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -154,7 +154,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/slug/test-slug")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -174,7 +174,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -219,7 +219,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -266,7 +266,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -295,7 +295,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -340,7 +340,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -387,7 +387,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/franchises?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -410,7 +410,7 @@ class FranchiseControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/franchises")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new FranchiseDto())));
 
         // Assert
@@ -440,7 +440,7 @@ class FranchiseControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/franchises")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(franchiseDto)));
 
         // Assert
@@ -468,7 +468,7 @@ class FranchiseControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/franchises/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content("{ \"name\": \"test-name-2\" }"));
 
         // Assert
@@ -486,7 +486,7 @@ class FranchiseControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/franchises/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions

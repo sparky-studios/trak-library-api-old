@@ -1,12 +1,6 @@
 package com.sparkystudios.traklibrary.game.repository;
 
-import com.sparkystudios.traklibrary.game.domain.AgeRating;
-import com.sparkystudios.traklibrary.game.domain.Developer;
-import com.sparkystudios.traklibrary.game.domain.Game;
-import com.sparkystudios.traklibrary.game.domain.GameMode;
-import com.sparkystudios.traklibrary.game.domain.Genre;
-import com.sparkystudios.traklibrary.game.domain.Platform;
-import com.sparkystudios.traklibrary.game.domain.Publisher;
+import com.sparkystudios.traklibrary.game.domain.*;
 import com.sparkystudios.traklibrary.game.repository.specification.GameSearchSpecification;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 package com.sparkystudios.traklibrary.security.filter;
 
-import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
+import com.sparkystudios.traklibrary.security.token.authentication.JwtAuthenticationToken;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;

@@ -1,7 +1,8 @@
 package com.sparkystudios.traklibrary.security.impl;
 
-import com.sparkystudios.traklibrary.security.context.UserContext;
-import com.sparkystudios.traklibrary.security.token.JwtAuthenticationToken;
+import com.sparkystudios.traklibrary.security.token.authentication.JwtAuthenticationToken;
+import com.sparkystudios.traklibrary.security.token.data.SecurityToken;
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -56,7 +57,7 @@ class AuthenticationServiceImplTest {
     }
 
     @Test
-    void isCurrentAuthenticatedUser_withJwtAuthenticationToken_returnsFalse() {
+    void isCurrentAuthenticatedUser_withNonJwtAuthenticationToken_returnsFalse() {
         // Arrange
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -74,8 +75,12 @@ class AuthenticationServiceImplTest {
     @Test
     void isCurrentAuthenticatedUser_withAdminRole_returnsTrue() {
         // Arrange
+        SecurityToken securityToken = Mockito.mock(SecurityToken.class);
+        Mockito.when(securityToken.getRole())
+                .thenReturn(new SimpleGrantedAuthority(UserSecurityRole.ROLE_ADMIN.name()));
+
         JwtAuthenticationToken token =
-                new JwtAuthenticationToken(null, Collections.singleton(new SimpleGrantedAuthority("ROLE_ADMIN")));
+                new JwtAuthenticationToken(securityToken, null);
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -93,10 +98,13 @@ class AuthenticationServiceImplTest {
     @Test
     void isCurrentAuthenticatedUser_withDifferentUser_returnsFalse() {
         // Arrange
-        UserContext userContext = new UserContext();
-        userContext.setUserId(1L);
+        SecurityToken securityToken = Mockito.mock(SecurityToken.class);
+        Mockito.when(securityToken.getUserId())
+                .thenReturn(1L);
+        Mockito.when(securityToken.getRole())
+                .thenReturn(new SimpleGrantedAuthority(UserSecurityRole.ROLE_USER.name()));
 
-        JwtAuthenticationToken token = new JwtAuthenticationToken(userContext, Collections.emptySet());
+        JwtAuthenticationToken token = new JwtAuthenticationToken(securityToken, Collections.emptySet());
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())
@@ -114,10 +122,13 @@ class AuthenticationServiceImplTest {
     @Test
     void isCurrentAuthenticatedUser_withSameUser_returnsTrue() {
         // Arrange
-        UserContext userContext = new UserContext();
-        userContext.setUserId(1L);
+        SecurityToken securityToken = Mockito.mock(SecurityToken.class);
+        Mockito.when(securityToken.getUserId())
+                .thenReturn(1L);
+        Mockito.when(securityToken.getRole())
+                .thenReturn(new SimpleGrantedAuthority(UserSecurityRole.ROLE_USER.name()));
 
-        JwtAuthenticationToken token = new JwtAuthenticationToken(userContext, Collections.emptySet());
+        JwtAuthenticationToken token = new JwtAuthenticationToken(securityToken, Collections.emptySet());
 
         SecurityContext securityContext = Mockito.mock(SecurityContext.class);
         Mockito.when(securityContext.getAuthentication())

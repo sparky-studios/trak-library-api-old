@@ -48,7 +48,7 @@ import java.util.stream.StreamSupport;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/developers", produces = "application/vnd.traklibrary.v1.hal+json")
+@RequestMapping(value = "/developers", produces = "application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
 public class DeveloperController {
 
     private final DeveloperService developerService;

@@ -3,28 +3,40 @@ package com.sparkystudios.traklibrary.authentication.service.mapper;
 import com.sparkystudios.traklibrary.authentication.domain.User;
 import com.sparkystudios.traklibrary.authentication.domain.UserRole;
 import com.sparkystudios.traklibrary.authentication.service.dto.UserDto;
+import com.sparkystudios.traklibrary.security.token.data.UserSecurityRole;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.time.LocalDateTime;
 
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {
+        UserMapperImpl.class
+})
 class UserMapperTest {
 
+    @Autowired
+    private UserMapper userMapper;
+
     @Test
-    void userToUserDto_withNull_returnsNull() {
+    void fromUser_withNull_returnsNull() {
         // Act
-        UserDto result = AuthMappers.USER_MAPPER.userToUserDto(null);
+        UserDto result = userMapper.fromUser(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void userToUserDto_withUser_mapsFields() {
+    void fromUser_withUser_mapsFields() {
         // Arrange
         UserRole userRole = new UserRole();
         userRole.setId(1L);
-        userRole.setRole("ROLE_TEST");
+        userRole.setRole(UserSecurityRole.ROLE_USER);
         userRole.setVersion(3L);
 
         User user = new User();
@@ -41,7 +53,7 @@ class UserMapperTest {
         user.setUserRole(userRole);
 
         // Act
-        UserDto result = AuthMappers.USER_MAPPER.userToUserDto(user);
+        UserDto result = userMapper.fromUser(user);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(user.getId());
@@ -54,20 +66,21 @@ class UserMapperTest {
         Assertions.assertThat(result.getCreatedAt()).isEqualTo(user.getCreatedAt());
         Assertions.assertThat(result.getUpdatedAt()).isEqualTo(user.getUpdatedAt());
         Assertions.assertThat(result.getVersion()).isEqualTo(user.getVersion());
-        Assertions.assertThat(result.getAuthorities().iterator().next().getAuthority()).isEqualTo(userRole.getRole());
+        Assertions.assertThat(result.getAuthorities().iterator().next().getAuthority())
+                .isEqualTo(userRole.getRole().name());
     }
 
     @Test
-    void userDtoToUser_withNull_returnsNull() {
+    void toUser_withNull_returnsNull() {
         // Act
-        User result = AuthMappers.USER_MAPPER.userDtoToUser(null);
+        User result = userMapper.toUser(null);
 
         // Assert
         Assertions.assertThat(result).isNull();
     }
 
     @Test
-    void userDtoToUser_withUserDto_mapsFields() {
+    void toUser_withUserDto_mapsFields() {
         // Arrange
         UserDto userDto = new UserDto();
         userDto.setId(5L);
@@ -82,7 +95,7 @@ class UserMapperTest {
         userDto.setVersion(1L);
 
         // Act
-        User result = AuthMappers.USER_MAPPER.userDtoToUser(userDto);
+        User result = userMapper.toUser(userDto);
 
         // Assert
         Assertions.assertThat(result.getId()).isEqualTo(userDto.getId());

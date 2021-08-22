@@ -76,7 +76,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/platforms")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new PlatformDto())));
 
         // Assert
@@ -106,7 +106,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/platforms")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(platformDto)));
 
         // Assert
@@ -133,7 +133,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -159,7 +159,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms/slug/test-slug")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -192,7 +192,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/platforms/1/image")
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -215,7 +215,7 @@ class PlatformControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.multipart("/platforms/1/image")
                 .file(file)
                 .contentType(MediaType.MULTIPART_FORM_DATA)
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -233,7 +233,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -278,7 +278,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms/1/games")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -326,7 +326,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms/1/games?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -355,7 +355,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -400,7 +400,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -447,7 +447,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.get("/platforms?page=2")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions
@@ -470,7 +470,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/platforms")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new PlatformDto())));
 
         // Assert
@@ -500,7 +500,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/platforms")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content(objectMapper.writeValueAsString(platformDto)));
 
         // Assert
@@ -528,7 +528,7 @@ class PlatformControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.patch("/platforms/1")
                 .contentType("application/merge-patch+json")
-                .accept("application/vnd.traklibrary.v1.hal+json")
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
                 .content("{ \"name\": \"test-name-2\" }"));
 
         // Assert
@@ -546,7 +546,7 @@ class PlatformControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/platforms/1")
-                .accept("application/vnd.traklibrary.v1.hal+json"));
+                .accept("application/vnd.sparkystudios.traklibrary-hal+json;version=1.0"));
 
         // Assert
         resultActions

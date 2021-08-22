@@ -16,7 +16,7 @@ class FeatureAttributeConverterTest {
     }
 
     @Test
-    void convertToDatabaseColumn_withValidAuthorityType_returnsIdOfAuthorityType() {
+    void convertToDatabaseColumn_withValidFeature_returnsIdOfFeature() {
         // Act
         Short result = new FeatureAttributeConverter().convertToDatabaseColumn(Feature.GAMES);
 

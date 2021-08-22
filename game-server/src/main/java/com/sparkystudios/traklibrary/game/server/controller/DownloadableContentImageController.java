@@ -26,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/dlc/{id}/image", produces = "application/vnd.traklibrary.v1.hal+json")
+@RequestMapping(value = "/dlc/{id}/image", produces = "application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
 public class DownloadableContentImageController {
 
     private final DownloadableContentImageService downloadableContentImageService;

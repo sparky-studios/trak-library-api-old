@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/", produces = "application/vnd.traklibrary.v1.hal+json")
+@RequestMapping(value = "/", produces = "application/vnd.sparkystudios.traklibrary-hal+json;version=1.0")
 public class DownloadableContentController {
 
     private final DownloadableContentService downloadableContentService;

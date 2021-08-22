@@ -2,48 +2,39 @@ package com.sparkystudios.traklibrary.authentication.service.mapper;
 
 import com.sparkystudios.traklibrary.authentication.domain.User;
 import com.sparkystudios.traklibrary.authentication.service.dto.UserDto;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    default UserDto userToUserDto(User user) {
-        if (user == null) {
-            return null;
-        }
+    @Mapping(target = "authorities", ignore = true)
+    UserDto fromUser(User user);
 
-        var userDto = new UserDto();
-        userDto.setId(user.getId());
-        userDto.setUsername(user.getUsername());
-        userDto.setEmailAddress(user.getEmailAddress());
-        userDto.setPassword(user.getPassword());
-        userDto.setVerified(user.isVerified());
-        userDto.setVerificationCode(user.getVerificationCode());
-        userDto.setVerificationExpiryDate(user.getVerificationExpiryDate());
-        userDto.setCreatedAt(user.getCreatedAt());
-        userDto.setUpdatedAt(user.getUpdatedAt());
-        userDto.setVersion(user.getVersion());
+    @Mapping(target = "userRole", ignore = true)
+    @Mapping(target = "authUserRoleId", ignore = true)
+    @Mapping(target = "userAuthorities", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    User toUser(UserDto userDto);
 
-        Collection<GrantedAuthority> authorities = new ArrayList<>();
+    @AfterMapping
+    default void afterMapping(@MappingTarget UserDto userDto, User user) {
+        Set<GrantedAuthority> authorities = new HashSet<>();
         if (user.getUserRole() != null) {
-            authorities.add(new SimpleGrantedAuthority(user.getUserRole().getRole()));
+            authorities.add(new SimpleGrantedAuthority(user.getUserRole().getRole().name()));
         }
 
-        user.getAuthorities()
+        user.getUserAuthorities()
                 .forEach(a -> authorities.add(new SimpleGrantedAuthority(a.getAuthority())));
 
         userDto.setAuthorities(authorities);
-        return userDto;
     }
-
-    @Mapping(target = "userRole", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    User userDtoToUser(UserDto userDto);
 }

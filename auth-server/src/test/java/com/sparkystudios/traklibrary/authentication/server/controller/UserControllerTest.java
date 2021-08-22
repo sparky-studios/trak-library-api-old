@@ -45,7 +45,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(registrationRequestDto)));
 
         // Assert
@@ -75,7 +75,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(registrationRequestDto)));
 
         // Assert
@@ -94,7 +94,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(recoveryRequestDto)));
 
         // Assert
@@ -115,13 +115,13 @@ class UserControllerTest {
         userResponseDto.setUsername("username");
         userResponseDto.setVerified(true);
 
-        Mockito.when(userService.update(ArgumentMatchers.any()))
+        Mockito.when(userService.update(ArgumentMatchers.any(RecoveryRequestDto.class)))
                 .thenReturn(new CheckedResponse<>(userResponseDto));
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(recoveryRequestDto)));
 
         // Assert
@@ -141,7 +141,7 @@ class UserControllerTest {
 
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.delete("/users/1")
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -153,7 +153,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/verify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -170,7 +170,7 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/verify")
                 .param("verification-code", "12345")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -187,7 +187,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/reverify")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -199,7 +199,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/recover")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -216,7 +216,7 @@ class UserControllerTest {
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/recover")
                 .param("email-address", "test@traklibrary.com")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json"));
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0"));
 
         // Assert
         resultActions
@@ -228,7 +228,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new ChangePasswordRequestDto())));
 
         // Assert
@@ -253,7 +253,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(changePasswordRequestDto)));
 
         // Assert
@@ -268,7 +268,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-email-address")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(new ChangeEmailAddressRequestDto())));
 
         // Assert
@@ -292,7 +292,7 @@ class UserControllerTest {
         // Act
         ResultActions resultActions = mockMvc.perform(MockMvcRequestBuilders.put("/users/1/change-email-address")
                 .contentType(MediaType.APPLICATION_JSON)
-                .accept("application/vnd.traklibrary.v1+json")
+                .accept("application/vnd.sparkystudios.traklibrary+json;version=1.0")
                 .content(objectMapper.writeValueAsString(changeEmailAddressRequestDto)));
 
         // Assert

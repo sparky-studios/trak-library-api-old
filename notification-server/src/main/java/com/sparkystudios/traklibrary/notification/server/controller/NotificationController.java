@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
  */
 @RequiredArgsConstructor
 @RestController
-@RequestMapping(value = "/", produces = "application/vnd.traklibrary.v1+json")
+@RequestMapping(value = "/", produces = "application/vnd.sparkystudios.traklibrary+json;version=1.0")
 public class NotificationController {
 
     private final MobileDeviceLinkService mobileDeviceLinkService;
