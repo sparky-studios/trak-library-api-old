@@ -14,7 +14,7 @@
     <name>Trak Library API Authentication Service</name>
 
     <properties>
-        <org.passay.version>1.6.0</org.passay.version>
+        <org.passay.version>1.6.6</org.passay.version>
         <sonar.coverage.jacoco.xmlReportPaths>${project.basedir}/../${aggregate.report.dir}</sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
