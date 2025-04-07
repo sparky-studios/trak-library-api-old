@@ -151,7 +151,7 @@
         <com.amazonaws.version>1.11.772</com.amazonaws.version>
         <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
-        <com.github.slugify.version>2.5</com.github.slugify.version>
+        <com.github.slugify.version>3.0.7</com.github.slugify.version>
         <com.google.guava.version>30.1.1-jre</com.google.guava.version>
         <dev.samstevens.totp.version>1.7.1</dev.samstevens.totp.version>
         <io.jsonwebtoken.version>0.11.2</io.jsonwebtoken.version>
