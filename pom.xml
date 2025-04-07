@@ -160,7 +160,7 @@
         <net.kaczmarzyk.specification.version>2.1.1</net.kaczmarzyk.specification.version>
         <org.apache.httpcomponents.version>4.5.3</org.apache.httpcomponents.version>
         <org.apache.maven.plugins.version>3.8.1</org.apache.maven.plugins.version>
-        <org.assertj.version>3.16.1</org.assertj.version>
+        <org.assertj.version>3.27.3</org.assertj.version>
         <org.bouncycastle.version>1.68</org.bouncycastle.version>
         <org.jacoco.version>0.8.5</org.jacoco.version>
         <org.glassfish.javax.json.version>1.1.4</org.glassfish.javax.json.version>
