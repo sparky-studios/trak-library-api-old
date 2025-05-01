@@ -148,7 +148,7 @@
         <sonar.moduleKey>${project.groupId}:${project.artifactId}</sonar.moduleKey>
         <!-- Dependency versions -->
         <!-- AWS versions -->
-        <com.amazonaws.version>1.11.772</com.amazonaws.version>
+        <com.amazonaws.version>1.12.783</com.amazonaws.version>
         <!-- Other version -->
         <com.github.faker.version>1.0.2</com.github.faker.version>
         <com.github.slugify.version>2.5</com.github.slugify.version>
