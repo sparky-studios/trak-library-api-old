@@ -167,7 +167,7 @@
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
         <org.sonarsource.scanner.maven.version>3.7.0.1746</org.sonarsource.scanner.maven.version>
         <org.projectlombok.version>1.18.12</org.projectlombok.version>
-        <org.springframework.cloud.version>2020.0.0</org.springframework.cloud.version>
+        <org.springframework.cloud.version>2025.0.0</org.springframework.cloud.version>
         <!-- Used to specify parameters for sonarcloud analysis. -->
         <aggregate.report.dir>report-aggregator/target/site/jacoco-aggregate/jacoco.xml</aggregate.report.dir>
     </properties>
